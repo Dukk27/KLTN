@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "Thanh toán thất bại";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Thanh toán thất bại!</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-times-circle text-danger" style="font-size: 5rem;"></i>
+                    </div>
+                    <h5 class="card-title text-center">Đã xảy ra lỗi trong quá trình thanh toán</h5>
+                    <p class="card-text text-center">Vui lòng thử lại sau hoặc liên hệ với chúng tôi để được hỗ trợ.</p>
+                    <div class="text-center mt-4">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Quay lại trang chủ</a>
+                        <a asp-controller="Payments" asp-action="Payment" asp-route-houseId="@ViewBag.HouseId" class="btn btn-success">Thử lại</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

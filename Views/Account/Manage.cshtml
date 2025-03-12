@@ -1,0 +1,171 @@
+@model IEnumerable<KLTN.Models.Account>
+
+@{
+    ViewData["Title"] = "Quản lý tài khoản";
+}
+
+<style>
+    /* Thiết lập giao diện cho tiêu đề */
+    h2 {
+        text-align: center;
+        color: #333;
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* Cải thiện giao diện bảng */
+    .table {
+        width: 70%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .table th,
+    .table td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        color: #495057;
+    }
+
+    .table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Các nút hành động */
+    .btn {
+        padding: 6px 12px;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border: 1px solid #ffc107;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: 1px solid #dc3545;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.8;
+    }
+
+    /* Thông báo thành công và lỗi */
+    .alert {
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+
+    .alert-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .alert-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    /* Định dạng container chứa thông báo */
+    #alert-container {
+        margin-top: 20px;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+
+<!-- Tiêu đề của trang -->
+<h2>Quản lý tài khoản</h2>
+
+<!-- Thêm thông báo thành công hoặc lỗi -->
+<div id="alert-container"></div>
+
+<!-- Bảng hiển thị danh sách tài khoản -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tên đăng nhập</th>
+            <th>Vai trò</th>
+            <th>Số điện thoại</th>
+            <th>Email</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var account in Model)
+        {
+            <tr id="account-@account.IdUser">
+                <td>@account.UserName</td>
+                <td>
+                    @{
+                        string roleName = account.Role switch
+                        {
+                            0 => "Admin",
+                            1 => "Chủ trọ",
+                            2 => "Người tìm phòng",
+                            _ => "Không xác định"
+                        };
+                    }
+                    @roleName
+                </td>
+
+                <td>@account.PhoneNumber</td>
+                <td>@account.Email</td>
+                <td>
+                    <!-- Nút sửa tài khoản -->
+                    <a href="@Url.Action("Edit", new { id = account.IdUser })" class="btn btn-warning btn-sm">Sửa</a> |
+                    <!-- Nút xóa tài khoản -->
+                    <button class="btn btn-danger btn-sm delete-account" data-id="@account.IdUser">Xóa</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Thêm thư viện jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // Xử lý sự kiện xóa tài khoản bằng AJAX
+    $(document).on('click', '.delete-account', function () {
+        var accountId = $(this).data('id');
+
+        if (confirm('Bạn có chắc chắn muốn xóa tài khoản này?')) {
+            $.ajax({
+                url: '@Url.Action("DeleteAccount", "Account")',
+                type: 'POST',
+                data: { id: accountId },
+                success: function (response) {
+                    if (response.success) {
+                        // Hiển thị thông báo thành công
+                        $('#alert-container').html('<div class="alert alert-success">' + response.message + '</div>');
+
+                        // Loại bỏ dòng tài khoản khỏi bảng mà không cần tải lại trang
+                        $('#account-' + accountId).remove();
+                    } else {
+                        // Hiển thị thông báo lỗi nếu có
+                        $('#alert-container').html('<div class="alert alert-danger">' + response.message + '</div>');
+                    }
+                },
+                error: function () {
+                    // Hiển thị thông báo lỗi khi có lỗi xảy ra trong quá trình xóa
+                    $('#alert-container').html('<div class="alert alert-danger">Có lỗi xảy ra. Vui lòng thử lại.</div>');
+                }
+            });
+        }
+    });
+</script>

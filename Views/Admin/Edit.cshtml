@@ -1,0 +1,126 @@
+@model KLTN.Models.Account
+
+@{
+    ViewData["Title"] = "Sửa tài khoản";
+}
+
+<h2 class="page-title">Sửa tài khoản</h2>
+
+<form asp-action="Edit" method="post" class="account-form">
+    <input type="hidden" asp-for="IdUser" />
+
+    <div class="form-group">
+        <label for="UserName" class="form-label">Tên đăng nhập</label>
+        <input type="text" class="form-control" id="UserName" name="UserName" value="@Model.UserName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Password" class="form-label">Mật khẩu</label>
+        <input type="password" class="form-control" id="Password" name="Password" value="@Model.Password" required />
+    </div>
+
+    <!-- Vai trò - sử dụng radio buttons -->
+    <div class="form-group mb-4">
+        <label class="form-label">Vai trò</label><br />
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="role1" name="Role" value="1" @(Model.Role == 1 ? "checked" : "") required />
+            <label class="form-check-label" for="role1">Chủ trọ</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="role2" name="Role" value="2" @(Model.Role == 2 ? "checked" : "") required />
+            <label class="form-check-label" for="role2">Người tìm phòng</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="PhoneNumber" class="form-label">Số điện thoại</label>
+        <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" />
+    </div>
+
+    <div class="form-group">
+        <label for="Email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" />
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-submit">Cập nhật</button>
+</form>
+
+<style>
+    /* Đặt kiểu cho trang */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fc;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.page-title {
+    text-align: center;
+    color: #5d5d5d;
+    margin-top: 30px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.account-form {
+    width: 50%;
+    margin: 40px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #555;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-top: 8px;
+    background-color: #f9f9f9;
+}
+
+.form-control:focus {
+    border-color: #5cb85c;
+    box-shadow: 0 0 5px rgba(92, 184, 92, 0.8);
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 10px;
+    background-color: #5cb85c;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background-color: #4cae4c;
+}
+
+.form-check-inline {
+    margin-right: 15px;
+}
+
+.form-check-label {
+    font-size: 14px;
+}
+
+.mb-4 {
+    margin-bottom: 20px !important;
+}
+
+</style>

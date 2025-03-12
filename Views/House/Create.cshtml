@@ -1,0 +1,649 @@
+@model KLTN.ViewModels.HousePostViewModel
+
+<link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+
+<h2 style="color: rgb(35, 164, 207); text-align: center; padding-top: 80px;">Đăng bài nhà trọ mới</h2>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+{
+    <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
+}
+<form asp-action="Create" method="post" enctype="multipart/form-data" id="createHouseForm">
+    <div class="section">
+            <h4>Thông tin chi tiết</h4>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="HouseDetail.DienTich">Diện tích (m²) *</label>
+                        <input asp-for="HouseDetail.DienTich" class="form-control" placeholder="0" />
+                        <span asp-validation-for="HouseDetail.DienTich" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="HouseDetail.Price">Giá thuê (VNĐ/tháng) *</label>
+                        <input asp-for="HouseDetail.Price" class="form-control" placeholder="0.00" />
+                        <span asp-validation-for="HouseDetail.Price" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="House.NameHouse">Tiêu đề *</label>
+                        <input asp-for="House.NameHouse" class="form-control" placeholder="Nhập tiêu đề bài đăng" />
+                        <span asp-validation-for="House.NameHouse" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="HouseDetail.TienDien">Giá điện (vnđ/kwh) *</label>
+                        <input asp-for="HouseDetail.TienDien" class="form-control" />
+                        <span asp-validation-for="HouseDetail.TienDien" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="HouseDetail.TienNuoc">Giá nước (vnđ/m³) *</label>
+                        <input asp-for="HouseDetail.TienNuoc" class="form-control" />
+                        <span asp-validation-for="HouseDetail.TienNuoc" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="HouseDetail.Describe">Mô tả *</label>
+                        <textarea asp-for="HouseDetail.Describe" class="form-control" rows="5" placeholder="Nhập mô tả..."></textarea>
+                        <span asp-validation-for="HouseDetail.Describe" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Tiền cọc (VNĐ)</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Loại nhà trọ *</label>
+                        <select asp-for="SelectedHouseType" asp-items="Model.HouseTypes" class="form-control">
+                            <option value="">-- Chọn loại nhà trọ --</option>
+                        </select>
+                        <span asp-validation-for="SelectedHouseType" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="HouseDetail.TienDv">Giá dịch vụ khác</label>
+                        <input asp-for="HouseDetail.TienDv" class="form-control" />
+                        <span asp-validation-for="HouseDetail.TienDv" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thêm các phần khác của form tại đây -->
+        
+        <div class="section">
+            <h4>Địa chỉ</h4>
+            <div class="row">
+               <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="province">Tỉnh/Thành phố *</label>
+                        <select id="province" class="form-control required" required>
+                        </select>
+                        <span id="provinceError" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="district">Quận/Huyện *</label>
+                        <select id="district" class="form-control required" required>
+                            <option value="">-- Chọn Quận/Huyện --</option>
+                        </select>
+                        <span id="districtError" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="ward">Phường/Xã *</label>
+                        <select id="ward" class="form-control required" required>
+                            <option value="">-- Chọn Phường/Xã --</option>
+                        </select>
+                        <span id="wardError" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2">
+                <label for="fullAddress">Địa chỉ đầy đủ *</label>
+                <input type="text" id="fullAddress" class="form-control required" placeholder="Nhập địa chỉ đầy đủ" required />
+                <span id="fullAddressError" class="text-danger"></span>
+            </div>
+            <input type="hidden" id="address" name="HouseDetail.Address" />
+        </div>
+
+        <div class="section">
+            <h4>Tiện ích</h4>
+            <div class="amenities-container">
+                <div class="row">
+                    @foreach (var amenity in Model.Amenities)
+                    {
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input type="checkbox" name="SelectedAmenities" value="@amenity.IdAmenity" class="form-check-input"
+                                @(Model.SelectedAmenities?.Contains(amenity.IdAmenity) == true ? "checked" : "") />
+                                <label class="form-check-label">@amenity.Name</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+         <div class="form-group">
+        <label>Trạng thái</label>
+
+        <div class="form-check">
+            <input type="radio" id="statusAvailable" name="HouseDetail.Status" class="form-check-input"
+                value="Chưa cho thuê" @(Model.HouseDetail.Status == "Chưa cho thuê" ? "checked" : "") />
+            <label class="form-check-label" for="statusAvailable">Chưa cho thuê</label>
+        </div>
+
+        <div class="form-check">
+            <input type="radio" id="statusRented" name="HouseDetail.Status" class="form-check-input" value="Đã cho thuê"
+            @(Model.HouseDetail.Status == "Đã cho thuê" ? "checked" : "") />
+            <label class="form-check-label" for="statusRented">Đã cho thuê</label>
+        </div>
+
+        <span asp-validation-for="HouseDetail.Status" class="text-danger"></span>
+    </div>
+
+        <div class="section">
+            <h4>Hình ảnh</h4>
+            <div class="form-group">
+                <label asp-for="HouseDetail.Image">Hình ảnh nhà trọ</label>
+                <input asp-for="HouseDetail.Image" type="file" class="form-control" name="imageFile" id="imageFile" />
+                <div class="image-preview mt-2" id="imagePreview">
+                    @if (!string.IsNullOrEmpty(Model.HouseDetail.Image))
+                    {
+                        <img src="~/@Model.HouseDetail.Image" alt="Ảnh của nhà trọ" style="max-width: 200px;" />
+                    }
+                </div>
+                <span asp-validation-for="HouseDetail.Image" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row button-row">
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+        </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script>
+    $(document).ready(function () {
+        const apiBase = "https://provinces.open-api.vn/api/";
+
+        // Kiểm tra API có phản hồi đúng không
+        $.get(apiBase + "?depth=1", function (data) {
+            console.log("Danh sách tỉnh/thành phố:", data); // Log dữ liệu ra Console
+            if (data.length > 0) {
+                $("#province").append('<option value="">-- Chọn Tỉnh/Thành --</option>');
+                data.forEach(province => {
+                    $("#province").append(new Option(province.name, province.code));
+                });
+            } else {
+                console.error("API không trả về dữ liệu!");
+            }
+        }).fail(function () {
+            console.error("Không thể tải danh sách tỉnh/thành! Lỗi API.");
+        });
+
+        // Khi chọn tỉnh, load danh sách quận/huyện
+        $("#province").change(function () {
+            let provinceId = $(this).val();
+            $("#district").empty().append('<option value="">-- Chọn Quận/Huyện --</option>');
+            $("#ward").empty().append('<option value="">-- Chọn Phường/Xã --</option>');
+            $("#provinceError").text('');
+
+            if (provinceId) {
+                $.get(apiBase + "p/" + provinceId + "?depth=2", function (data) {
+                    console.log("Danh sách quận/huyện:", data.districts);
+                    if (data.districts.length > 0) {
+                        data.districts.forEach(district => {
+                            $("#district").append(new Option(district.name, district.code));
+                        });
+                    } else {
+                        console.warn("Không có quận/huyện nào cho tỉnh này!");
+                    }
+                }).fail(function () {
+                    console.error("Không thể tải danh sách quận/huyện! Lỗi API.");
+                });
+            }
+        });
+
+        // Khi chọn quận/huyện, load danh sách phường/xã
+        $("#district").change(function () {
+            let districtId = $(this).val();
+            $("#ward").empty().append('<option value="">-- Chọn Phường/Xã --</option>');
+            $("#districtError").text('');
+
+            if (districtId) {
+                $.get(apiBase + "d/" + districtId + "?depth=2", function (data) {
+                    console.log("Danh sách phường/xã:", data.wards);
+                    if (data.wards.length > 0) {
+                        data.wards.forEach(ward => {
+                            $("#ward").append(new Option(ward.name, ward.code));
+                        });
+                    } else {
+                        console.warn("Không có phường/xã nào cho quận này!");
+                    }
+                }).fail(function () {
+                    console.error("Không thể tải danh sách phường/xã! Lỗi API.");
+                });
+            }
+        });
+
+        // Khi chọn xong, cập nhật địa chỉ vào input ẩn
+        $("#ward").change(function () {
+            $("#wardError").text('');
+            updateAddress();
+        });
+
+        // Khi người dùng nhập địa chỉ cụ thể, cập nhật địa chỉ đầy đủ
+        $("#fullAddress").keyup(function () {
+            $("#fullAddressError").text('');
+            updateAddress();
+        });
+
+        function updateAddress() {
+            let province = $("#province option:selected").text();
+            let district = $("#district option:selected").text();
+            let ward = $("#ward option:selected").text();
+            let specificAddress = $("#fullAddress").val();
+
+            // Kiểm tra nếu là giá trị mặc định thì không thêm vào địa chỉ
+            province = province === "-- Chọn Tỉnh/Thành --" ? "" : province;
+            district = district === "-- Chọn Quận/Huyện --" ? "" : district;
+            ward = ward === "-- Chọn Phường/Xã --" ? "" : ward;
+
+            let addressParts = [specificAddress, ward, district, province].filter(part => part.trim() !== "");
+            let fullAddress = addressParts.join(", ");
+            
+            $("#address").val(fullAddress);
+            console.log("Địa chỉ đầy đủ:", fullAddress);
+        }
+
+        // Xử lý xem trước hình ảnh
+        $("#imageFile").change(function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#imagePreview').html('<img src="' + e.target.result + '" alt="Preview" style="max-width: 200px;" />');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Validate form khi submit
+        $("#createHouseForm").submit(function(e) {
+            let isValid = true;
+            
+            // Kiểm tra tỉnh/thành
+            if (!$("#province").val()) {
+                $("#provinceError").text("Vui lòng chọn Tỉnh/Thành phố");
+                isValid = false;
+            }
+            
+            // Kiểm tra quận/huyện
+            if (!$("#district").val()) {
+                $("#districtError").text("Vui lòng chọn Quận/Huyện");
+                isValid = false;
+            }
+            
+            // Kiểm tra phường/xã
+            if (!$("#ward").val()) {
+                $("#wardError").text("Vui lòng chọn Phường/Xã");
+                isValid = false;
+            }
+            
+            // Kiểm tra địa chỉ đầy đủ
+            if (!$("#fullAddress").val().trim()) {
+                $("#fullAddressError").text("Vui lòng nhập địa chỉ cụ thể");
+                isValid = false;
+            }
+            
+            // Nếu có lỗi, ngăn form submit và cuộn đến phần lỗi đầu tiên
+            if (!isValid) {
+                e.preventDefault();
+                
+                // Cuộn đến thông báo lỗi đầu tiên
+                const firstError = $(".text-danger").filter(function() {
+                    return $(this).text() !== "";
+                }).first();
+                
+                if (firstError.length) {
+                    $('html, body').animate({
+                        scrollTop: firstError.offset().top - 100
+                    }, 500);
+                }
+            }
+        });
+    });
+    
+</script>
+
+
+<style>
+    /* CSS cho trang tạo bài đăng nhà trọ */
+
+    /* Reset và thiết lập cơ bản */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f5f5f5;
+    }
+
+    /* Container chung */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Tiêu đề chính */
+    h2 {
+        color: rgb(35, 164, 207);
+        text-align: center;
+        padding-top: 80px;
+        margin-bottom: 30px;
+        font-weight: 600;
+    }
+
+    /* Form */
+    form {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 50px;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Section */
+    .section {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+    }
+
+    .section h4 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #333;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Layout hàng và cột */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+        margin-bottom: 15px;
+    }
+
+    .col-md-2, .col-md-3, .col-md-4, .col-md-6, .col-md-12 {
+        position: relative;
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .col-md-2 {
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+
+    .col-md-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+
+    .col-md-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .col-md-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    /* Form groups */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    /* Đánh dấu trường bắt buộc */
+    label[for="HouseDetail_DienTich"]::after,
+    label[for="HouseDetail_Price"]::after,
+    label[for="House_NameHouse"]::after,
+    label[for="HouseDetail_TienDien"]::after,
+    label[for="HouseDetail_TienNuoc"]::after,
+    label[for="HouseDetail_Describe"]::after,
+    label:contains("Loại nhà trọ")::after,
+    label[for="province"]::after,
+    label[for="district"]::after,
+    label[for="ward"]::after,
+    label[for="fullAddress"]::after {
+        content: " *";
+        color: #dc3545;
+    }
+
+    /* Form controls */
+    .form-control {
+        display: block;
+        width: 100%;
+        height: calc(1.5em + 0.75rem + 2px);
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-control:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    /* Hiển thị viền đỏ cho trường bắt buộc khi chưa nhập */
+    .form-control.required:invalid {
+        border-color: #dc3545;
+    }
+
+    .form-control.required:invalid:focus {
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    /* Textarea */
+    textarea.form-control {
+        height: auto;
+        min-height: 120px;
+    }
+
+    /* Select */
+    select.form-control {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 8px 10px;
+        padding-right: 1.5rem;
+    }
+
+    /* Checkboxes */
+    .form-check {
+        position: relative;
+        display: block;
+        padding-left: 1.25rem;
+        margin-bottom: 10px;
+    }
+
+    .form-check-input {
+        position: absolute;
+        margin-top: 0.3rem;
+        margin-left: -1.25rem;
+    }
+
+    .form-check-label {
+        margin-bottom: 0;
+    }
+
+    /* Validation errors */
+    .text-danger {
+        color: #dc3545;
+        font-size: 80%;
+        margin-top: 0.25rem;
+    }
+
+    /* Alert */
+    .alert {
+        position: relative;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    /* Buttons */
+    .btn {
+        display: inline-block;
+        font-weight: 400;
+        color: #212529;
+        text-align: center;
+        vertical-align: middle;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+
+    .btn-secondary {
+        color: #fff;
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        color: #fff;
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    /* Button row */
+    .button-row {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    /* Margin utilities */
+    .mt-2 {
+        margin-top: 0.5rem;
+    }
+
+    /* Image preview */
+    .image-preview {
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        padding: 5px;
+        display: inline-block;
+        background-color: #f9f9f9;
+        min-height: 50px;
+        min-width: 100px;
+    }
+
+    /* Amenities container */
+    .amenities-container {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid #e9ecef;
+    }
+
+</style>

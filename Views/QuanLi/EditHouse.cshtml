@@ -1,0 +1,116 @@
+@model KLTN.ViewModels.HousePostViewModel
+
+<link rel="stylesheet" href="~/css/edit.css" asp-append-version="true" />
+
+<h2 style="color: rgb(35, 164, 207); text-align: center;">Chỉnh sửa thông tin nhà trọ</h2>
+
+<form asp-action="EditHouse" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="House.IdHouse" />
+
+    <div class="form-group">
+        <label asp-for="House.NameHouse">Tên nhà trọ</label>
+        <input asp-for="House.NameHouse" class="form-control" />
+        <span asp-validation-for="House.NameHouse" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Loại nhà trọ</label>
+        <select asp-for="SelectedHouseType" asp-items="Model.HouseTypes" class="form-control">
+            <option value="">-- Chọn loại nhà trọ --</option>
+        </select>
+        <span asp-validation-for="SelectedHouseType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HouseDetail.Address">Địa chỉ</label>
+        <input asp-for="HouseDetail.Address" class="form-control" />
+        <span asp-validation-for="HouseDetail.Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HouseDetail.Price">Giá thuê</label>
+        <input asp-for="HouseDetail.Price" class="form-control" />
+        <span asp-validation-for="HouseDetail.Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HouseDetail.DienTich">Diện tích (m²)</label>
+        <input asp-for="HouseDetail.DienTich" class="form-control" />
+        <span asp-validation-for="HouseDetail.DienTich" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HouseDetail.TienDien">Tiền điện</label>
+        <input asp-for="HouseDetail.TienDien" class="form-control" />
+        <span asp-validation-for="HouseDetail.TienDien" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HouseDetail.TienNuoc">Tiền nước</label>
+        <input asp-for="HouseDetail.TienNuoc" class="form-control" />
+        <span asp-validation-for="HouseDetail.TienNuoc" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HouseDetail.TienDv">Tiền dịch vụ</label>
+        <input asp-for="HouseDetail.TienDv" class="form-control" />
+        <span asp-validation-for="HouseDetail.TienDv" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HouseDetail.Describe">Mô tả</label>
+        <textarea asp-for="HouseDetail.Describe" class="form-control"></textarea>
+        <span asp-validation-for="HouseDetail.Describe" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Trạng thái</label>
+
+        <div class="form-check">
+            <input type="radio" id="statusAvailable" name="HouseDetail.Status" class="form-check-input"
+                value="Chưa cho thuê" @(Model.HouseDetail.Status == "Chưa cho thuê" ? "checked" : "") />
+            <label class="form-check-label" for="statusAvailable">Chưa cho thuê</label>
+        </div>
+
+        <div class="form-check">
+            <input type="radio" id="statusRented" name="HouseDetail.Status" class="form-check-input" value="Đã cho thuê"
+            @(Model.HouseDetail.Status == "Đã cho thuê" ? "checked" : "") />
+            <label class="form-check-label" for="statusRented">Đã cho thuê</label>
+        </div>
+
+        <span asp-validation-for="HouseDetail.Status" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label for="imageFile">Hình ảnh</label>
+        <input type="file" class="form-control" id="imageFile" name="imageFile" />
+
+        @if (!string.IsNullOrEmpty(Model.HouseDetail?.Image))
+        {
+            <div class="mt-2">
+                <img src="@Model.HouseDetail.Image" alt="Ảnh nhà trọ" style="max-width: 200px;" />
+            </div>
+        }
+    </div>
+    <div class="form-group">
+        <label>Tiện ích</label>
+        @foreach (var amenity in Model.Amenities)
+        {
+            <div class="form-check">
+                <input type="checkbox" name="SelectedAmenities" value="@amenity.IdAmenity" class="form-check-input"
+                @(Model.SelectedAmenities.Contains(amenity.IdAmenity) ? "checked" : "") />
+                <label class="form-check-label">@amenity.Name</label>
+            </div>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+    <a asp-action="ListHouseRoom" class="btn btn-secondary">Hủy</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

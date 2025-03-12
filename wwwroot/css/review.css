@@ -1,0 +1,85 @@
+.review-form {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding-top: 20px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.review-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #333;
+    font-weight: bold;
+}
+
+.star-rating {
+    direction: rtl;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star-rating label {
+    width: 70px; /* Kích thước cố định của ngôi sao */
+    height: 70px;
+    background-image: url("/img/star.png"); /* Hình ngôi sao mặc định */
+    background-size: cover;
+    cursor: pointer;
+    transition: background-image 0.2s ease; /* Chuyển đổi ảnh ngôi sao khi hover */
+}
+
+/* Khi hover hoặc chọn, đổi ngôi sao thành ngôi sao được chọn */
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+    background-image: url("https://sharecode.vn/FilesUpload/News/images/Sang%20tao%20icons%20co%20do%20sao%20vang%20bang%20CSS3%201.jpg"); /* Ngôi sao màu vàng */
+}
+
+.review-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+    resize: vertical;
+}
+
+.review-form button {
+    width: 100%;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.review-form button:hover {
+    background-color: #0056b3;
+}
+
+#reviewMessage {
+    margin-top: 15px;
+    font-size: 18px;
+    color: red;
+    display: block;
+    text-align: center;
+}

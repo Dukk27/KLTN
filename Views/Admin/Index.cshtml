@@ -1,0 +1,107 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2" id="sidebar">
+            <h3><i class="fas fa-cogs"></i> Quản lý hệ thống</h3>
+            <ul class="nav flex-column">
+                <li class="nav-item main-nav-item">
+                    <a href="#" class="nav-link" id="manageAccountsLink">
+                        <i class="fas fa-user"></i> Quản lý tài khoản
+                    </a>
+                </li>
+                <li class="nav-item main-nav-item">
+                    <a href="#" class="nav-link" id="managePostsLink">
+                        <i class="fas fa-file-alt"></i> Quản lí bài đăng
+                    </a>
+                </li>
+                <li class="nav-item main-nav-item">
+                    <a href="#" class="nav-link" id="manageReviewsLink">
+                        <i class="fas fa-comments"></i> Quản lý bình luận
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Nội dung bên phải -->
+        <div class="col-md-10" id="content">
+            
+            <div id="contentPlaceholder">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thêm một chút style cho Sidebar -->
+<style>
+    #sidebar {
+        background-color: #f8f9fa;
+        padding-top: 20px;
+    }
+
+    #sidebar .nav-item {
+        margin-bottom: 10px;
+    }
+    
+    #sidebar .main-nav-item a {
+        font-size: 18px;
+        font-weight: 600;
+        padding: 10px 15px;
+    }
+    
+    #sidebar .main-nav-item:hover a {
+        background-color: #e9ecef;
+    }
+
+    #content {
+        background-color: #fff;
+        padding: 20px;
+        border-left: 1px solid #ddd;
+    }
+    
+    #sidebar i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+    
+    #sidebar h3 i {
+        margin-right: 10px;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.get('@Url.Action("ManageAccounts", "Admin")', function (data) {
+                $('#contentPlaceholder').html(data); // Hiển thị bảng tài khoản
+            });
+
+            $('#manageAccountsLink').on('click', function (e) {
+                e.preventDefault();
+                $.get('@Url.Action("ManageAccounts", "Admin")', function (data) {
+                    $('#contentPlaceholder').html(data); // Hiển thị bảng tài khoản
+                });
+            });
+
+            $('#managePostsLink').on('click', function (e) {
+                e.preventDefault();
+                $.get('@Url.Action("ManagePosts", "Admin")', function (data) {
+                    $('#contentPlaceholder').html(data); // Hiển thị bảng bài đăng
+                });
+            });
+
+            $('#manageReviewsLink').on('click', function (e) {
+                e.preventDefault();
+                $.get('@Url.Action("ManageReviews", "Admin")', function (data) {
+                    $('#contentPlaceholder').html(data); // Hiển thị bảng bình luận
+                });
+            });
+        });
+    </script>
+}

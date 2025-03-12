@@ -1,0 +1,429 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\obj\\Release\\net8.0\\win-x64\\scopedcss\\projectbundle\\G23NHNT.bundle.scp.css",
+      "PackagePath": "staticwebassets\\G23NHNT.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\css\\Detail\\Detail.css",
+      "PackagePath": "staticwebassets\\css\\Detail\\Detail.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\css\\create.css",
+      "PackagePath": "staticwebassets\\css\\create.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\css\\edit.css",
+      "PackagePath": "staticwebassets\\css\\edit.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\css\\index.css",
+      "PackagePath": "staticwebassets\\css\\index.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\css\\review.css",
+      "PackagePath": "staticwebassets\\css\\review.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\0148f232-9086-45ef-8814-bfba24a7370a.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\0148f232-9086-45ef-8814-bfba24a7370a.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\03d19e00-c499-4350-be4e-d41284fb6e9b.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\03d19e00-c499-4350-be4e-d41284fb6e9b.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\07f85570-0d75-4276-a550-d1ba732ab65c.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\07f85570-0d75-4276-a550-d1ba732ab65c.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\1f6162dd-b146-450b-9d87-fb0124c6031d.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\1f6162dd-b146-450b-9d87-fb0124c6031d.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\26443402-234a-493b-9b71-e24b039aaef8.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\26443402-234a-493b-9b71-e24b039aaef8.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\2789bd5c-6a3b-485f-8540-cdfb1901638a.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\2789bd5c-6a3b-485f-8540-cdfb1901638a.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\4328b5e9-fc1f-4d9b-badd-66efbdb04361.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\4328b5e9-fc1f-4d9b-badd-66efbdb04361.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\4b33b69e-2cfa-4b60-8cdb-e6bc7edf242f.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\4b33b69e-2cfa-4b60-8cdb-e6bc7edf242f.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\65352e2c-caf8-4088-ae5a-efe793f223d9.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\65352e2c-caf8-4088-ae5a-efe793f223d9.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\70e46e84-179d-441c-a962-bb311d2fe24a.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\70e46e84-179d-441c-a962-bb311d2fe24a.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\77d66984-61e0-4257-a5c8-124c20c19939.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\77d66984-61e0-4257-a5c8-124c20c19939.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\81d0e052-1dc4-4cbe-8bc6-b076d6a551bb.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\81d0e052-1dc4-4cbe-8bc6-b076d6a551bb.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\82854a4a-1920-477f-b204-5d123779f2d0.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\82854a4a-1920-477f-b204-5d123779f2d0.PNG"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\84d7d7f3-287d-4df8-8ca7-0beff1b5b3de.png",
+      "PackagePath": "staticwebassets\\img\\houses\\84d7d7f3-287d-4df8-8ca7-0beff1b5b3de.png"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\85e8ec14-8521-4689-81e1-2e62c039bbe9.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\85e8ec14-8521-4689-81e1-2e62c039bbe9.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\861f676d-7e18-4fbe-ab0f-f5417a59417b.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\861f676d-7e18-4fbe-ab0f-f5417a59417b.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\89eecfdb-c866-40ac-a718-5ddd763c40be.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\89eecfdb-c866-40ac-a718-5ddd763c40be.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\99414328-cb7a-412d-8b87-b9f416915885.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\99414328-cb7a-412d-8b87-b9f416915885.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\9cbdccd8-9cf5-4755-9ae4-592de458088f.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\9cbdccd8-9cf5-4755-9ae4-592de458088f.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\9dab833d-f963-4f21-a4b2-ac8512868ae9.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\9dab833d-f963-4f21-a4b2-ac8512868ae9.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\a2aef5a7-e65e-45c8-a538-d1b336f99f73.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\a2aef5a7-e65e-45c8-a538-d1b336f99f73.PNG"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\ab41373c-b378-4c7d-8993-2f4c043e95c6.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\ab41373c-b378-4c7d-8993-2f4c043e95c6.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\c4f152d7-8cef-41f3-b3d1-6e98e6bed695.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\c4f152d7-8cef-41f3-b3d1-6e98e6bed695.PNG"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\cb93afd3-96d4-43d8-9d4f-4dcd3e645c9a.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\cb93afd3-96d4-43d8-9d4f-4dcd3e645c9a.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\d4707cf8-a72e-414b-a46f-b3f59d887fb9.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\d4707cf8-a72e-414b-a46f-b3f59d887fb9.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\d800d792-06ee-449b-bea5-2099091d38d8.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\d800d792-06ee-449b-bea5-2099091d38d8.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\e7c95c60-a11c-42ee-a541-0d753d20d87b.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\e7c95c60-a11c-42ee-a541-0d753d20d87b.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\eb224adf-265c-4ef3-9fca-e19674d6b6d4.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\eb224adf-265c-4ef3-9fca-e19674d6b6d4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\f0244e5c-345e-42b8-8b31-b64f3f7fe1a3.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\f0244e5c-345e-42b8-8b31-b64f3f7fe1a3.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\f615f5ec-f0b6-4b63-995f-f0b805034cfa.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\f615f5ec-f0b6-4b63-995f-f0b805034cfa.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\f96de022-1b85-4010-b385-817acf9cf640.png",
+      "PackagePath": "staticwebassets\\img\\houses\\f96de022-1b85-4010-b385-817acf9cf640.png"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\fbf0c8f3-9842-4a2a-986f-aa3bfbe54d00.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\fbf0c8f3-9842-4a2a-986f-aa3bfbe54d00.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\fc29eafd-23d2-4997-8ca3-2f65b66f5515.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\fc29eafd-23d2-4997-8ca3-2f65b66f5515.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\fc2a6317-1405-4f68-bb8a-fd8fbf332d62.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\fc2a6317-1405-4f68-bb8a-fd8fbf332d62.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\houses\\ff88d779-6d59-4f76-a1e9-25ed5a3fb94d.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\ff88d779-6d59-4f76-a1e9-25ed5a3fb94d.PNG"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\img\\star.png",
+      "PackagePath": "staticwebassets\\img\\star.png"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\bootstrap"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "C:\\Users\\dn596\\Downloads\\LTWNC_G23\\G23NHNT\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\win-x64\\staticwebassets\\msbuild.G23NHNT.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\win-x64\\staticwebassets\\msbuild.build.G23NHNT.props",
+      "PackagePath": "build\\G23NHNT.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\win-x64\\staticwebassets\\msbuild.buildMultiTargeting.G23NHNT.props",
+      "PackagePath": "buildMultiTargeting\\G23NHNT.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\win-x64\\staticwebassets\\msbuild.buildTransitive.G23NHNT.props",
+      "PackagePath": "buildTransitive\\G23NHNT.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

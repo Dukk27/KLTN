@@ -1,0 +1,264 @@
+@model KLTN.Models.HomeViewModel
+
+<div class="container">
+    <h2>Danh sách bài đăng của người dùng @ViewBag.UserName</h2>
+
+    <h3>Danh sách các nhà trọ</h3>
+    <table class="table-custom">
+        <thead>
+            <tr>
+                <th hidden>ID</th>
+                <th>Tên nhà trọ</th>
+                <th>Địa chỉ</th>
+                <th>Giá</th>
+                @if (@Model.IsAdmin)
+                {
+                    <th>Người đăng</th>
+                }
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var house in Model.Houses)
+            {
+                <tr>
+                    <td hidden>@house.IdHouse</td>
+                    <td>@house.NameHouse</td>
+                    <td>@house.HouseDetails.FirstOrDefault()?.Address</td>
+                    <td>@house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new
+                                 System.Globalization.CultureInfo("vi-VN")) VND</td>
+                    @if (@Model.IsAdmin)
+                    {
+                        <td>@house.IdUserNavigation.UserName</td>
+                    }
+                    <td>
+                        <button class="btn btn-view-detail" onclick="viewDetail(@house.IdHouse, 'house')">Xem chi
+                            tiết</button>
+                        @if(true){ 
+                        <button class="btn btn-warning" onclick="editItem(@house.IdHouse, 'house')">Sửa</button>
+                        <button class="btn btn-danger" onclick="deleteHouse(@house.IdHouse)">Xóa</button>
+                        @if (house.Status == HouseStatus.Active || house.Status == HouseStatus.Approved) 
+                            {
+                                <button class="btn btn-secondary btn-hide" data-id="@house.IdHouse">Ẩn bài</button>
+                            }
+                         
+                        @if (house.Status == HouseStatus.Hidden) 
+                            {
+                                <button class="btn btn-success btn-show" data-id="@house.IdHouse">Hiện bài</button>
+                            }
+                        }          
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class=" mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay Lại
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function viewDetail(id, type) {
+            const url = `/Home/Detail?id=${id}&type=${type}`;
+            fetch(url, { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = url;
+                    } else {
+                        alert('Không thể tải chi tiết. Vui lòng thử lại.');
+                    }
+                })
+                .catch(() => alert('Đã xảy ra lỗi khi xử lý yêu cầu.'));
+        }
+        function editItem(id) {
+            const url = `/QuanLi/EditHouse?id=${id}`
+            fetch(url, { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = url;
+                    } else {
+                        alert('Không thể tải trang chỉnh sửa. Vui lòng thử lại.');
+                    }
+                })
+                .catch(() => alert('Đã xảy ra lỗi khi xử lý yêu cầu.'));
+        }
+        
+        async function deleteHouse(id) {
+            const confirmDelete = confirm('Bạn có chắc chắn muốn xóa nhà trọ này?');
+            if (!confirmDelete) return;
+            try {
+                const response = await fetch(`/QuanLi/DeleteHouse?id=${id}`, { method: 'DELETE' });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(result.message);
+                    location.reload();
+                } else {
+                    alert('Không thể xóa: ' + result.message);
+                }
+            } catch (error) {
+                alert('Đã xảy ra lỗi khi xóa nhà trọ.');
+            }
+        }
+
+        function showUnauthorizedMessage() {
+        alert('Bạn không đủ thẩm quyền để truy cập chức năng này.');
+    }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".btn-hide").on("click", function () {
+                const houseId = $(this).data("id");
+
+                Swal.fire({
+                    title: "Bạn có chắc muốn ẩn bài này?",
+                    text: "Bài đăng sẽ không hiển thị công khai!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Có, ẩn ngay!",
+                    cancelButtonText: "Hủy"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.post("/QuanLi/HideHouse", { id: houseId }, function (response) {
+                            if (response.success) {
+                                Swal.fire("Thành công!", response.message, "success").then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire("Lỗi!", response.message, "error");
+                            }
+                        }).fail(function () {
+                            Swal.fire("Lỗi!", "Không thể thực hiện yêu cầu!", "error");
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $(".btn-show").on("click", function () {
+                const houseId = $(this).data("id");
+
+                Swal.fire({
+                    title: "Bạn có chắc muốn hiện bài này?",
+                    text: "Bài đăng sẽ hiển thị công khai trở lại!",
+                    icon: "info",
+                    showCancelButton: true,
+                    confirmButtonColor: "#28a745",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Có, hiện ngay!",
+                    cancelButtonText: "Hủy"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.post("/QuanLi/ShowHouse", { id: houseId }, function (response) {
+                            if (response.success) {
+                                Swal.fire("Thành công!", response.message, "success").then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire("Lỗi!", response.message, "error");
+                            }
+                        }).fail(function () {
+                            Swal.fire("Lỗi!", "Không thể thực hiện yêu cầu!", "error");
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
+<style>
+    h2,
+    h3 {
+        font-family: Arial, sans-serif;
+        color: #333;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .table-custom {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+    }
+
+    .table-custom th,
+    .table-custom td {
+        padding: 15px;
+        text-align: left;
+    }
+
+    .table-custom thead {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        color: #555;
+        border-bottom: 2px solid #ddd;
+    }
+
+    .table-custom tbody tr {
+        border-bottom: 1px solid #ddd;
+        transition: background-color 0.3s;
+    }
+
+    .table-custom tbody tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    .table-custom th,
+    .table-custom td {
+        border-right: 1px solid #ddd;
+    }
+
+    .table-custom th:last-child,
+    .table-custom td:last-child {
+        border-right: none;
+    }
+
+    .btn {
+        padding: 8px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        color: white;
+        margin-right: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-view-detail {
+        background-color: #4CAF50;
+    }
+
+    .btn-warning {
+        background-color: #FFA500;
+    }
+
+    .btn-danger {
+        background-color: #e74c3c;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+
+    .btn-view-detail:hover {
+        background-color: #45a049;
+    }
+
+    /* Định dạng khác cho phần container */
+    .container {
+        width: 90%;
+        margin: auto;
+        font-family: Arial, sans-serif;
+    }
+</style>

@@ -1,0 +1,71 @@
+@model IEnumerable<KLTN.Models.Account>
+
+<h3>Quản lý tài khoản</h3>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên người dùng</th>
+            <th>Số điện thoại</th>
+            <th>Email</th>
+            <th>Vai trò</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var account in Model)
+        {
+            <tr>
+                <td>@account.IdUser</td>
+                <td>@account.UserName</td>
+                <td>@account.PhoneNumber</td>
+                <td>@account.Email</td>
+                <td>@account.Role</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Admin", new { id = account.IdUser })" class="btn btn-sm btn-primary">
+                        <i class="fas fa-edit"></i> 
+                    </a>
+
+                    <button class="btn btn-sm btn-danger delete-account" data-id="@account.IdUser">
+                        <i class="fas fa-trash-alt"></i> 
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function () {
+        $(".delete-account").on("click", function () {
+            const id = $(this).data("id");
+
+            Swal.fire({
+                title: "Xác nhận xóa",
+                text: "Bạn có chắc muốn xóa tài khoản này?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Xóa",
+                cancelButtonText: "Hủy"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post("@Url.Action("DeleteAccount", "Admin")", { id: id }, function (response) {
+                        if (response.success) {
+                            Swal.fire("Thành công", response.message, "success");
+                            $(`tr:has(button[data-id='${id}'])`).remove(); // Xóa hàng khỏi bảng mà không reload
+                        } else {
+                            Swal.fire("Lỗi", response.message, "error");
+                        }
+                    }).fail(() => {
+                        Swal.fire("Lỗi!", "Đã xảy ra lỗi khi xóa tài khoản.", "error");
+                    });
+                }
+            });
+        });
+    });
+</script>
+

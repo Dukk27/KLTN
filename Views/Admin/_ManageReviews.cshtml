@@ -1,0 +1,67 @@
+@model IEnumerable<KLTN.Models.Review>
+
+<h3>Quản lý bình luận</h3>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Người dùng</th>
+            <th>Bài đăng</th>
+            <th>Nội dung</th>
+            <th>Mức sao đánh giá</th>
+            <th>Ngày đánh giá</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var review in Model)
+        {
+            <tr>
+                <td>@review.IdReview</td>
+                <td>@review.IdUser</td>
+                <td>@review.IdHouse</td>
+                <td>@review.Content</td>
+                <td>@review.Rating</td>
+                <td>@review.ReviewDate?.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <button class="btn btn-sm btn-danger delete-review" data-id="@review.IdReview"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function () {
+        $(".delete-review").on("click", function () {
+            const id = $(this).data("id");
+
+            Swal.fire({
+                title: "Xác nhận xóa",
+                text: "Bạn có chắc muốn xóa bình luận này?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Xóa",
+                cancelButtonText: "Hủy"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post("@Url.Action("DeleteReview", "Admin")", { id: id }, function (response) {
+                        if (response.success) {
+                            Swal.fire("Thành công", response.message, "success");
+                            $(`tr:has(button[data-id='${id}'])`).remove(); // Xóa hàng khỏi bảng mà không reload
+                        } else {
+                            Swal.fire("Lỗi", response.message, "error");
+                        }
+                    }).fail(() => {
+                        Swal.fire("Lỗi!", "Đã xảy ra lỗi khi xóa bình luận.", "error");
+                    });
+                }
+            });
+        });
+    });
+</script>
+

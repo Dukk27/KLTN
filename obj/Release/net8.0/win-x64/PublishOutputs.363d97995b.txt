@@ -1,0 +1,5 @@
+C:\Users\dn596\Downloads\LTWNC_G23\G23NHNT\bin\Release\net8.0\win-x64\publish\appsettings.json
+C:\Users\dn596\Downloads\LTWNC_G23\G23NHNT\bin\Release\net8.0\win-x64\publish\G23NHNT.pdb
+C:\Users\dn596\Downloads\LTWNC_G23\G23NHNT\bin\Release\net8.0\win-x64\publish\aspnetcorev2_inprocess.dll
+C:\Users\dn596\Downloads\LTWNC_G23\G23NHNT\bin\Release\net8.0\win-x64\publish\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\dn596\Downloads\LTWNC_G23\G23NHNT\bin\Release\net8.0\win-x64\publish\G23NHNT.exe

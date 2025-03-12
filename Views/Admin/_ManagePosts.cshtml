@@ -1,0 +1,197 @@
+@model IEnumerable<KLTN.Models.House>
+
+<h3>Quản lý bài đăng</h3>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên nhà trọ</th>
+            <th>Địa chỉ</th>
+            <th>Giá</th>
+            <th>Người đăng</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var house in Model)
+        {
+            @if (house.Status == HouseStatus.Unpaid)
+        {
+            continue; // Bỏ qua bài chưa thanh toán
+        }
+            <tr>
+                <td>@house.IdHouse</td>
+                <td>@house.NameHouse</td>
+                <td>@house.HouseDetails.FirstOrDefault()?.Address</td>
+                <td>@house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</td>
+                <td>@house.IdUserNavigation.UserName</td>
+                <td>
+                    @if (house.Status == HouseStatus.Pending)
+                    {
+                        <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                    }
+                    else if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden )
+                    {
+                        <span class="badge bg-success">Đã duyệt</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Bị từ chối</span>
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("EditHouse", "QuanLi", new { id = house.IdHouse })" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
+                    <button class="btn btn-sm btn-danger delete-house" data-id="@house.IdHouse"><i class="fas fa-trash-alt"></i></button>
+
+                    @if (house.Status == HouseStatus.Pending || house.Status == HouseStatus.Rejected)
+                    {
+                        <button class="btn btn-sm btn-success approve-house" data-id="@house.IdHouse"><i class="fas fa-check"></i> Duyệt</button>
+                    }
+
+                    @if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden)
+                    {
+                        <button class="btn btn-sm btn-danger reject-house" data-id="@house.IdHouse"><i class="fas fa-times"></i> Từ chối</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function () {
+    // Xóa bài đăng
+    $(document).on("click", ".delete-house", function () {
+        const id = $(this).data("id");
+        Swal.fire({
+            title: "Xác nhận xóa",
+            text: "Bạn có chắc muốn xóa bài đăng này?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Xóa",
+            cancelButtonText: "Hủy"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.post("@Url.Action("DeletePost", "Admin")", { id: id }, function (response) {
+                    if (response.success) {
+                        Swal.fire("Thông báo", response.message, "success");
+                        $(`tr:has(button[data-id='${id}'])`).remove();
+                    } else {
+                        Swal.fire("Lỗi!", response.message, "error");
+                    }
+                }).fail(() => {
+                    Swal.fire("Lỗi!", "Đã xảy ra lỗi khi xóa bài đăng.", "error");
+                });
+            }
+        });
+    });
+
+    // Duyệt bài đăng
+    $(document).on("click", ".approve-house", function () {
+        const id = $(this).data("id");
+        Swal.fire({
+            title: "Xác nhận duyệt",
+            text: "Bạn có chắc muốn duyệt bài đăng này?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Duyệt",
+            cancelButtonText: "Hủy"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.post("@Url.Action("ApprovePost", "Admin")", { id: id }, function (response) {
+                    if (response.success) {
+                        updateStatus(id, "Đã duyệt", "bg-success");
+                        toggleButtons(id, "reject"); // Chuyển nút sang "Từ chối"
+                        Swal.fire("Thành công!", "Bài đăng đã được duyệt.", "success");
+                    } else {
+                        Swal.fire("Lỗi!", response.message, "error");
+                    }
+                }).fail(() => {
+                    Swal.fire("Lỗi!", "Đã xảy ra lỗi khi duyệt bài đăng.", "error");
+                });
+            }
+        });
+    });
+
+    // Từ chối bài đăng
+    $(document).on("click", ".reject-house", function () {
+        const id = $(this).data("id");
+        Swal.fire({
+            title: "Xác nhận từ chối",
+            text: "Bạn có chắc muốn từ chối bài đăng này?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ffc107",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Từ chối",
+            cancelButtonText: "Hủy"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.post("@Url.Action("RejectPost", "Admin")", { id: id }, function (response) {
+                    if (response.success) {
+                        updateStatus(id, "Bị từ chối", "bg-danger");
+                        toggleButtons(id, "approve"); // Chuyển nút sang "Duyệt"
+                        Swal.fire("Thành công!", "Bài đăng đã được duyệt.", "success");
+                    } else {
+                        Swal.fire("Lỗi!", response.message, "error");
+                    }
+                }).fail(() => {
+                    Swal.fire("Lỗi!", "Đã xảy ra lỗi khi từ chối bài đăng.", "error");
+                });
+            }
+        });
+    });
+
+    // Hàm cập nhật trạng thái trên giao diện
+    function updateStatus(id, statusText, statusClass) {
+        const statusCell = $(`tr:has(button[data-id='${id}']) td:nth-child(6)`);
+        statusCell.html(`<span class="badge ${statusClass}">${statusText}</span>`);
+    }
+
+    // Hàm đổi nút duyệt, từ chối
+    function toggleButtons(id, action) {
+        const actionCell = $(`tr:has(button[data-id='${id}']) td:last-child`);
+        if (action === "reject") {
+            actionCell.find(".approve-house").replaceWith(
+                `<button class="btn btn-sm btn-danger reject-house" data-id="${id}">
+                    <i class="fas fa-times"></i> Từ chối
+                </button>`
+            );
+        } else {
+            actionCell.find(".reject-house").replaceWith(
+                `<button class="btn btn-sm btn-success approve-house" data-id="${id}">
+                    <i class="fas fa-check"></i> Duyệt
+                </button>`
+            );
+        }
+    }
+});
+
+</script>
+
+
+<style>
+    td:last-child {
+        white-space: nowrap; /* Ngăn xuống dòng */
+        text-align: center; /* Căn giữa nội dung */
+    }
+
+    td:last-child .btn {
+        margin: 2px; /* Tạo khoảng cách giữa các nút */
+    }
+
+    td:last-child {
+        display: flex;
+        justify-content: center;
+        gap: 5px; /* Khoảng cách giữa các nút */
+        flex-wrap: wrap; /* Cho phép xuống dòng nếu cần */
+    }
+
+</style>

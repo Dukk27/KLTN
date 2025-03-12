@@ -1,0 +1,993 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\NHNT.bundle.scp.css",
+      "PackagePath": "staticwebassets\\NHNT.bundle.scp.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\css\\Detail\\Detail.css",
+      "PackagePath": "staticwebassets\\css\\Detail\\Detail.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\css\\create.css",
+      "PackagePath": "staticwebassets\\css\\create.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\css\\edit.css",
+      "PackagePath": "staticwebassets\\css\\edit.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\css\\index.css",
+      "PackagePath": "staticwebassets\\css\\index.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\css\\review.css",
+      "PackagePath": "staticwebassets\\css\\review.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\0148f232-9086-45ef-8814-bfba24a7370a.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\0148f232-9086-45ef-8814-bfba24a7370a.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\01a6f9e7-9adf-4051-9e06-ed245ff322fd.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\01a6f9e7-9adf-4051-9e06-ed245ff322fd.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\01dad31a-2b81-478f-87d8-3266a360effb.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\01dad31a-2b81-478f-87d8-3266a360effb.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\024a7130-856d-4d1d-8946-159851c18e87.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\024a7130-856d-4d1d-8946-159851c18e87.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\02dc6c91-0946-4fc2-8053-84acdcadbdbd.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\02dc6c91-0946-4fc2-8053-84acdcadbdbd.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\03d19e00-c499-4350-be4e-d41284fb6e9b.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\03d19e00-c499-4350-be4e-d41284fb6e9b.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\04d4cd8f-ff7b-4fba-ae90-7c1479b4d565.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\04d4cd8f-ff7b-4fba-ae90-7c1479b4d565.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\061fc592-14de-41df-bb73-f5c4f7ea470b.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\061fc592-14de-41df-bb73-f5c4f7ea470b.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\06924cad-7f43-436c-b5c5-2070e5115bb3.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\06924cad-7f43-436c-b5c5-2070e5115bb3.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\06c366c8-df9c-480d-851d-ae921962a083.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\06c366c8-df9c-480d-851d-ae921962a083.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\07f85570-0d75-4276-a550-d1ba732ab65c.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\07f85570-0d75-4276-a550-d1ba732ab65c.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\0bbf3249-9e33-4d87-9e4a-dc95f76f9a77.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\0bbf3249-9e33-4d87-9e4a-dc95f76f9a77.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\0c12b7c2-fc5b-4334-975a-6bdc582c2792.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\0c12b7c2-fc5b-4334-975a-6bdc582c2792.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\0d9e172b-cabf-433c-8b66-6298daee0ce8.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\0d9e172b-cabf-433c-8b66-6298daee0ce8.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\0fc14da4-3093-4b16-80c0-78c8dab4e420.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\0fc14da4-3093-4b16-80c0-78c8dab4e420.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\123c71c1-c8c3-42a7-91a9-18ceeda9987b.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\123c71c1-c8c3-42a7-91a9-18ceeda9987b.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\1652dd3a-9ba6-4bc2-8acb-f797771895e6.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\1652dd3a-9ba6-4bc2-8acb-f797771895e6.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\173c2aba-eafd-4771-bc07-4814b7ed9f5f.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\173c2aba-eafd-4771-bc07-4814b7ed9f5f.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\1871555b-0ea6-4ab6-a390-397f39fbbbe6.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\1871555b-0ea6-4ab6-a390-397f39fbbbe6.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\18c0fc2a-d52f-4265-aa2e-1c049a49d72d.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\18c0fc2a-d52f-4265-aa2e-1c049a49d72d.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\18dd73b6-8af8-4e53-b32e-76559d03e8bc.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\18dd73b6-8af8-4e53-b32e-76559d03e8bc.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\1a1c489a-6556-4b9e-a8b1-db8c9f0e4fd7.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\1a1c489a-6556-4b9e-a8b1-db8c9f0e4fd7.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\1b5994fc-0492-47a3-b0ae-0da02b0348d5.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\1b5994fc-0492-47a3-b0ae-0da02b0348d5.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\1bf65be1-7dfa-4f5d-a1dd-2e04d6ab7efa.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\1bf65be1-7dfa-4f5d-a1dd-2e04d6ab7efa.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\1bfcd83f-6a66-4ead-a078-0b3455f37551.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\1bfcd83f-6a66-4ead-a078-0b3455f37551.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\1d474c80-c5a4-4aac-bcb7-a98f4214b9f1.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\1d474c80-c5a4-4aac-bcb7-a98f4214b9f1.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\1f1c2b39-1f08-4f80-92f3-b636d2aac1d1.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\1f1c2b39-1f08-4f80-92f3-b636d2aac1d1.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\1f6162dd-b146-450b-9d87-fb0124c6031d.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\1f6162dd-b146-450b-9d87-fb0124c6031d.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\24c91abc-2885-4f6b-b010-bfcc80ad3f62.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\24c91abc-2885-4f6b-b010-bfcc80ad3f62.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\26443402-234a-493b-9b71-e24b039aaef8.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\26443402-234a-493b-9b71-e24b039aaef8.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\2789bd5c-6a3b-485f-8540-cdfb1901638a.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\2789bd5c-6a3b-485f-8540-cdfb1901638a.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\2ac224ef-2da1-4397-9aed-ebf1a1b92ed9.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\2ac224ef-2da1-4397-9aed-ebf1a1b92ed9.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\2ed1d5e6-9e59-4a8f-bd0e-de5ac3c946c5.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\2ed1d5e6-9e59-4a8f-bd0e-de5ac3c946c5.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\333b9c67-f6cc-4626-9f46-6b72075b5ef8.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\333b9c67-f6cc-4626-9f46-6b72075b5ef8.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\363bcdbd-3e0f-4407-8383-2bdcbeeb823d.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\363bcdbd-3e0f-4407-8383-2bdcbeeb823d.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\371c3681-7233-4cd4-bc38-b4114f2cdc5b.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\371c3681-7233-4cd4-bc38-b4114f2cdc5b.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\37bc6e78-be07-4348-9316-c268c64643ba.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\37bc6e78-be07-4348-9316-c268c64643ba.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\39faf7cd-8575-4a47-8218-573a99142c03.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\39faf7cd-8575-4a47-8218-573a99142c03.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\3a22967a-e08b-40e9-b875-1f0938440e17.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\3a22967a-e08b-40e9-b875-1f0938440e17.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\3c831137-17ec-421d-94bb-a6885b166f3a.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\3c831137-17ec-421d-94bb-a6885b166f3a.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\3cb117bd-2610-4627-ab33-f58fc029b9a6.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\3cb117bd-2610-4627-ab33-f58fc029b9a6.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\416e910d-32a9-4bee-9114-d90a6f571a67.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\416e910d-32a9-4bee-9114-d90a6f571a67.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\424dda83-ec22-4d2e-92db-2fc4668d842a.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\424dda83-ec22-4d2e-92db-2fc4668d842a.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\427f5023-327a-4389-8911-fc3fa00cc703.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\427f5023-327a-4389-8911-fc3fa00cc703.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\4328b5e9-fc1f-4d9b-badd-66efbdb04361.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\4328b5e9-fc1f-4d9b-badd-66efbdb04361.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\47e87264-f02d-47f9-a16e-936a75b656fb.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\47e87264-f02d-47f9-a16e-936a75b656fb.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\48711b36-c1a2-475b-a481-9e8afa925797.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\48711b36-c1a2-475b-a481-9e8afa925797.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\497dced1-3c1b-4440-8df3-9e3120c7f911.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\497dced1-3c1b-4440-8df3-9e3120c7f911.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\4a22dc6b-6a9f-4262-bbce-82f0afa689c3.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\4a22dc6b-6a9f-4262-bbce-82f0afa689c3.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\4ac3c68c-e528-41b8-b69e-c1912d05f6f5.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\4ac3c68c-e528-41b8-b69e-c1912d05f6f5.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\4b33b69e-2cfa-4b60-8cdb-e6bc7edf242f.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\4b33b69e-2cfa-4b60-8cdb-e6bc7edf242f.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\4f3a6d99-e5f4-44dd-9f8a-7f1030a000c7.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\4f3a6d99-e5f4-44dd-9f8a-7f1030a000c7.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\51fb63b8-7def-448f-abc2-c4e04087a4ab.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\51fb63b8-7def-448f-abc2-c4e04087a4ab.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\536e51d9-14f3-4e33-b879-d40ea40bd803.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\536e51d9-14f3-4e33-b879-d40ea40bd803.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\546d50fe-fec9-4b07-bbc7-cfd998694b72.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\546d50fe-fec9-4b07-bbc7-cfd998694b72.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\55e59351-8c08-482b-8268-cc58a0bb8e3b.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\55e59351-8c08-482b-8268-cc58a0bb8e3b.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\564bc80f-273e-4376-9d7f-65d13d3a9316.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\564bc80f-273e-4376-9d7f-65d13d3a9316.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\56df1d46-3aa5-415a-9261-895f712d467f.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\56df1d46-3aa5-415a-9261-895f712d467f.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\57c7b3c2-d564-4187-82c0-62b9591f75b5.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\57c7b3c2-d564-4187-82c0-62b9591f75b5.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\598f5860-7e5f-463f-b20c-85fe5dfbeb9c.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\598f5860-7e5f-463f-b20c-85fe5dfbeb9c.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\5c1248e0-3fd3-470e-a0e9-424b14ddfaec.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\5c1248e0-3fd3-470e-a0e9-424b14ddfaec.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\5ccf1da3-a9ba-40ef-bc44-fb297b716dea.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\5ccf1da3-a9ba-40ef-bc44-fb297b716dea.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\5f01c57e-fc6f-497f-a9e5-729ef01593ff.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\5f01c57e-fc6f-497f-a9e5-729ef01593ff.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\624fad75-0dbb-4b3e-b418-5def23ecf255.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\624fad75-0dbb-4b3e-b418-5def23ecf255.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\64bd9a7a-21b2-470d-95c4-afc40a689073.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\64bd9a7a-21b2-470d-95c4-afc40a689073.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\65352e2c-caf8-4088-ae5a-efe793f223d9.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\65352e2c-caf8-4088-ae5a-efe793f223d9.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\65bfa2e3-28dc-435d-81ef-ddb419865cee.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\65bfa2e3-28dc-435d-81ef-ddb419865cee.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\65e063e5-a6d2-439b-a4de-4c839aaa86d4.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\65e063e5-a6d2-439b-a4de-4c839aaa86d4.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\6787b23d-cbf0-43e5-ab33-4e72478774ec.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\6787b23d-cbf0-43e5-ab33-4e72478774ec.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\699237af-b0da-446b-9e7d-e3503ed4ef25.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\699237af-b0da-446b-9e7d-e3503ed4ef25.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\6c76bded-d7e1-4651-bdc6-e77e3ab73e7c.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\6c76bded-d7e1-4651-bdc6-e77e3ab73e7c.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\70e46e84-179d-441c-a962-bb311d2fe24a.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\70e46e84-179d-441c-a962-bb311d2fe24a.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\71990f6c-38f9-48a0-8be8-40f04a5a7d97.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\71990f6c-38f9-48a0-8be8-40f04a5a7d97.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\71b0c9dd-8246-4282-952c-83e8a0a34ac5.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\71b0c9dd-8246-4282-952c-83e8a0a34ac5.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\7263963d-96f1-4f67-bb56-a0d563191cc5.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\7263963d-96f1-4f67-bb56-a0d563191cc5.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\737dccbe-ca0d-4e0a-b71a-fb681f991232.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\737dccbe-ca0d-4e0a-b71a-fb681f991232.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\7434d7bc-62a5-415e-bbe0-11fae5e141ab.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\7434d7bc-62a5-415e-bbe0-11fae5e141ab.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\75a3390a-d64a-4522-9165-aa183ae7e401.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\75a3390a-d64a-4522-9165-aa183ae7e401.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\77d66984-61e0-4257-a5c8-124c20c19939.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\77d66984-61e0-4257-a5c8-124c20c19939.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\78025b46-a9c9-4bf4-9da7-6d8a4051ec4a.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\78025b46-a9c9-4bf4-9da7-6d8a4051ec4a.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\78d0b8eb-998d-4f09-8ba9-d33e1512b5ed.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\78d0b8eb-998d-4f09-8ba9-d33e1512b5ed.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\7db56241-c8e7-49b9-a0d7-92b325434b7a.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\7db56241-c8e7-49b9-a0d7-92b325434b7a.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\7ebee578-e458-49c4-97e0-de8092c3466f.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\7ebee578-e458-49c4-97e0-de8092c3466f.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\7fc282b9-38c1-4a98-84a3-e20f56e88424.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\7fc282b9-38c1-4a98-84a3-e20f56e88424.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\8028f79a-508a-4a9a-823d-15a66ba94e77.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\8028f79a-508a-4a9a-823d-15a66ba94e77.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\81d0e052-1dc4-4cbe-8bc6-b076d6a551bb.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\81d0e052-1dc4-4cbe-8bc6-b076d6a551bb.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\826f2f60-8fd6-4c71-8391-101ba86f1011.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\826f2f60-8fd6-4c71-8391-101ba86f1011.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\82854a4a-1920-477f-b204-5d123779f2d0.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\82854a4a-1920-477f-b204-5d123779f2d0.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\82a99175-3590-4e48-a68e-a2aae0da1ae9.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\82a99175-3590-4e48-a68e-a2aae0da1ae9.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\83187f45-f27c-46e1-8b65-8dc2f8c80a44.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\83187f45-f27c-46e1-8b65-8dc2f8c80a44.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\84380c04-56e9-47ef-91db-edb24a0f8aad.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\84380c04-56e9-47ef-91db-edb24a0f8aad.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\84d7d7f3-287d-4df8-8ca7-0beff1b5b3de.png",
+      "PackagePath": "staticwebassets\\img\\houses\\84d7d7f3-287d-4df8-8ca7-0beff1b5b3de.png"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\85e8ec14-8521-4689-81e1-2e62c039bbe9.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\85e8ec14-8521-4689-81e1-2e62c039bbe9.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\861f676d-7e18-4fbe-ab0f-f5417a59417b.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\861f676d-7e18-4fbe-ab0f-f5417a59417b.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\89738236-b5df-4fb1-85b9-aeed50e04b49.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\89738236-b5df-4fb1-85b9-aeed50e04b49.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\89eecfdb-c866-40ac-a718-5ddd763c40be.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\89eecfdb-c866-40ac-a718-5ddd763c40be.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\8a1c1ce2-4d27-4707-af91-621da511db95.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\8a1c1ce2-4d27-4707-af91-621da511db95.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\8c5f2a39-ee92-4613-aa0e-f388c43d10f9.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\8c5f2a39-ee92-4613-aa0e-f388c43d10f9.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\8f4611c4-eeed-432a-b9f2-dd1c2c30cacd.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\8f4611c4-eeed-432a-b9f2-dd1c2c30cacd.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\905d2051-03f8-46f2-9827-854a72bd794c.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\905d2051-03f8-46f2-9827-854a72bd794c.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\92046af3-cd38-4765-b455-38f00c587886.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\92046af3-cd38-4765-b455-38f00c587886.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\92c5654c-4627-4bfc-b6f8-77abf3525b60.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\92c5654c-4627-4bfc-b6f8-77abf3525b60.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\954b49b7-70fb-4ac4-888c-ba62d6d0e69b.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\954b49b7-70fb-4ac4-888c-ba62d6d0e69b.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\95567025-8c84-42b0-8a1b-cdfdc378e0ee.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\95567025-8c84-42b0-8a1b-cdfdc378e0ee.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\991f70ba-5c43-4a02-9b3f-07eced66c7bb.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\991f70ba-5c43-4a02-9b3f-07eced66c7bb.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\99414328-cb7a-412d-8b87-b9f416915885.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\99414328-cb7a-412d-8b87-b9f416915885.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\9cbdccd8-9cf5-4755-9ae4-592de458088f.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\9cbdccd8-9cf5-4755-9ae4-592de458088f.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\9dab833d-f963-4f21-a4b2-ac8512868ae9.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\9dab833d-f963-4f21-a4b2-ac8512868ae9.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\9e350d31-5466-4ef7-a6e4-fcdaefcb7a6f.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\9e350d31-5466-4ef7-a6e4-fcdaefcb7a6f.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\9fc42b4d-09c3-4687-8042-cb00a0b142a8.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\9fc42b4d-09c3-4687-8042-cb00a0b142a8.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\a0c803bd-1863-45a6-810b-b86705fabd46.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\a0c803bd-1863-45a6-810b-b86705fabd46.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\a2757a58-a772-49fd-a1a8-522f9f00d1e6.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\a2757a58-a772-49fd-a1a8-522f9f00d1e6.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\a2aef5a7-e65e-45c8-a538-d1b336f99f73.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\a2aef5a7-e65e-45c8-a538-d1b336f99f73.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\a6bcda5d-5100-4c56-b4d6-220041d1643b.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\a6bcda5d-5100-4c56-b4d6-220041d1643b.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\a6ecfd68-d34b-4b98-8bc4-902916ab6f4e.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\a6ecfd68-d34b-4b98-8bc4-902916ab6f4e.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\aae1ea61-3e02-4ddc-bcee-b0117c7392d1.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\aae1ea61-3e02-4ddc-bcee-b0117c7392d1.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\ab41373c-b378-4c7d-8993-2f4c043e95c6.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\ab41373c-b378-4c7d-8993-2f4c043e95c6.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\abcc720b-925a-449b-83b2-06b3748c0c1a.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\abcc720b-925a-449b-83b2-06b3748c0c1a.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\ae2f31ef-3b51-46fe-a545-90dfa8baea38.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\ae2f31ef-3b51-46fe-a545-90dfa8baea38.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\b23c472a-19af-42aa-a351-8d52c67ce58f.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\b23c472a-19af-42aa-a351-8d52c67ce58f.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\b626bc36-36c3-473f-af59-68633f29d98b.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\b626bc36-36c3-473f-af59-68633f29d98b.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\b7d4c9bd-0141-437c-9621-78f20973ff04.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\b7d4c9bd-0141-437c-9621-78f20973ff04.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\b999ff69-b927-4095-919d-7be18d3ef966.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\b999ff69-b927-4095-919d-7be18d3ef966.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\b9a3137c-fcb7-42f5-8e15-1519101cb034.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\b9a3137c-fcb7-42f5-8e15-1519101cb034.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\ba14f5ac-36c1-46cc-a029-2e833da70dd2.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\ba14f5ac-36c1-46cc-a029-2e833da70dd2.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\bb956a84-0077-462b-a039-62d4d93c53db.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\bb956a84-0077-462b-a039-62d4d93c53db.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\bbf1760b-320e-4a3b-bdf4-52b8e8c034fe.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\bbf1760b-320e-4a3b-bdf4-52b8e8c034fe.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\bbfe6ca3-b015-4844-8a05-336717a17103.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\bbfe6ca3-b015-4844-8a05-336717a17103.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\bc543314-a384-4493-be96-298b065fb1e0.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\bc543314-a384-4493-be96-298b065fb1e0.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\bf3f186c-7e54-407b-998e-ff3db94a5268.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\bf3f186c-7e54-407b-998e-ff3db94a5268.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\c2c988b6-9cba-436d-95fd-30faceb294c9.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\c2c988b6-9cba-436d-95fd-30faceb294c9.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\c3532742-6bd2-45e6-a92f-6859c347e20e.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\c3532742-6bd2-45e6-a92f-6859c347e20e.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\c3866d7b-37a7-4b30-ae70-0b6f940c4cb7.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\c3866d7b-37a7-4b30-ae70-0b6f940c4cb7.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\c4f152d7-8cef-41f3-b3d1-6e98e6bed695.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\c4f152d7-8cef-41f3-b3d1-6e98e6bed695.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\c6bd4efd-8e65-431a-92e8-f88afb3a8774.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\c6bd4efd-8e65-431a-92e8-f88afb3a8774.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\c93ebc56-316c-44ed-a89a-7523ae33ebed.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\c93ebc56-316c-44ed-a89a-7523ae33ebed.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\ca280e3e-090d-4d1a-8fae-d486877c61b1.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\ca280e3e-090d-4d1a-8fae-d486877c61b1.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\ca47629f-eb2b-486c-bdb5-9dde4059ec8b.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\ca47629f-eb2b-486c-bdb5-9dde4059ec8b.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\cb93afd3-96d4-43d8-9d4f-4dcd3e645c9a.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\cb93afd3-96d4-43d8-9d4f-4dcd3e645c9a.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\cc40c13f-4a4c-47ca-aa4d-154dc14eaf1f.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\cc40c13f-4a4c-47ca-aa4d-154dc14eaf1f.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\d0e29a8d-d8d5-4916-8050-71df0e77539e.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\d0e29a8d-d8d5-4916-8050-71df0e77539e.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\d0e688d4-6b03-465e-a61b-5aa4324b1b94.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\d0e688d4-6b03-465e-a61b-5aa4324b1b94.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\d100ad79-c55f-4128-8d75-9079048e0fc5.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\d100ad79-c55f-4128-8d75-9079048e0fc5.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\d3f21cf3-471f-4b76-9752-ca10871d4ea1.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\d3f21cf3-471f-4b76-9752-ca10871d4ea1.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\d459b1bf-0ddc-40e0-83f2-a02f468d1fa9.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\d459b1bf-0ddc-40e0-83f2-a02f468d1fa9.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\d4707cf8-a72e-414b-a46f-b3f59d887fb9.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\d4707cf8-a72e-414b-a46f-b3f59d887fb9.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\d5fff531-1f0e-479b-8a39-fd9ba7643f18.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\d5fff531-1f0e-479b-8a39-fd9ba7643f18.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\d800d792-06ee-449b-bea5-2099091d38d8.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\d800d792-06ee-449b-bea5-2099091d38d8.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\e1c35f92-b14a-4cfd-83d9-9019e1c8e08c.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\e1c35f92-b14a-4cfd-83d9-9019e1c8e08c.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\e2a2d88f-2e26-4cb0-b268-a882547b47de.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\e2a2d88f-2e26-4cb0-b268-a882547b47de.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\e7682892-6fe7-4ee0-b5a4-33ec74e0ee6f.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\e7682892-6fe7-4ee0-b5a4-33ec74e0ee6f.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\e779c57a-fe51-4fcb-bb20-afc0f4484cab.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\e779c57a-fe51-4fcb-bb20-afc0f4484cab.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\e7c065b8-5025-482f-acb1-9d44167ef47b.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\e7c065b8-5025-482f-acb1-9d44167ef47b.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\e7c95c60-a11c-42ee-a541-0d753d20d87b.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\e7c95c60-a11c-42ee-a541-0d753d20d87b.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\e7d047ae-4620-4842-95d0-524e161539f6.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\e7d047ae-4620-4842-95d0-524e161539f6.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\e7eafc3a-c039-47d1-8fb3-9fcad4efac4d.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\e7eafc3a-c039-47d1-8fb3-9fcad4efac4d.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\eb224adf-265c-4ef3-9fca-e19674d6b6d4.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\eb224adf-265c-4ef3-9fca-e19674d6b6d4.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f010ac02-e897-4c9b-af51-2b85a0806b90.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\f010ac02-e897-4c9b-af51-2b85a0806b90.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f0244e5c-345e-42b8-8b31-b64f3f7fe1a3.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\f0244e5c-345e-42b8-8b31-b64f3f7fe1a3.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f0b468a4-c628-48d2-be4f-4539afa7f590.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\f0b468a4-c628-48d2-be4f-4539afa7f590.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f14d726e-b971-4335-b913-435e555713bd.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\f14d726e-b971-4335-b913-435e555713bd.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f2f12d30-e6da-4d31-b152-e85775f06688.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\f2f12d30-e6da-4d31-b152-e85775f06688.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f3f260b0-0964-4fc1-82c8-fa8e24183012.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\f3f260b0-0964-4fc1-82c8-fa8e24183012.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f4224394-b2e7-4f90-889e-a274f322e8ac.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\f4224394-b2e7-4f90-889e-a274f322e8ac.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f511f236-8567-49e6-ba28-be55b712fc21.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\f511f236-8567-49e6-ba28-be55b712fc21.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f615f5ec-f0b6-4b63-995f-f0b805034cfa.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\f615f5ec-f0b6-4b63-995f-f0b805034cfa.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f727bd65-75e7-433c-a50c-e4db855d8665.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\f727bd65-75e7-433c-a50c-e4db855d8665.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f96de022-1b85-4010-b385-817acf9cf640.png",
+      "PackagePath": "staticwebassets\\img\\houses\\f96de022-1b85-4010-b385-817acf9cf640.png"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\f99660f2-4333-4a07-8bfa-27c02fbf4944.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\f99660f2-4333-4a07-8bfa-27c02fbf4944.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\fb44a327-536c-4e38-97f0-a1852b415b81.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\fb44a327-536c-4e38-97f0-a1852b415b81.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\fbf0c8f3-9842-4a2a-986f-aa3bfbe54d00.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\fbf0c8f3-9842-4a2a-986f-aa3bfbe54d00.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\fbfb148a-8650-47bb-8d1e-42e9368d4e0a.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\fbfb148a-8650-47bb-8d1e-42e9368d4e0a.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\fc29eafd-23d2-4997-8ca3-2f65b66f5515.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\fc29eafd-23d2-4997-8ca3-2f65b66f5515.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\fc2a6317-1405-4f68-bb8a-fd8fbf332d62.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\fc2a6317-1405-4f68-bb8a-fd8fbf332d62.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\fef9d324-b671-4e02-987a-67dcb9de7b1b.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\fef9d324-b671-4e02-987a-67dcb9de7b1b.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\houses\\ff88d779-6d59-4f76-a1e9-25ed5a3fb94d.PNG",
+      "PackagePath": "staticwebassets\\img\\houses\\ff88d779-6d59-4f76-a1e9-25ed5a3fb94d.PNG"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\img\\star.png",
+      "PackagePath": "staticwebassets\\img\\star.png"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\bootstrap"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "D:\\KLTN\\NHNT_OTP\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.NHNT.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.NHNT.props",
+      "PackagePath": "build\\NHNT.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.NHNT.props",
+      "PackagePath": "buildMultiTargeting\\NHNT.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.NHNT.props",
+      "PackagePath": "buildTransitive\\NHNT.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

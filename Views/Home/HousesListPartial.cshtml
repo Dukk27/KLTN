@@ -1,0 +1,164 @@
+@model KLTN.Models.HomeViewModel
+
+<link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-warning" role="alert">
+        @TempData["Message"]
+    </div>
+
+    <script>
+        setTimeout(function () {
+            $('.alert').fadeOut('slow');
+        }, 2000); // Ẩn thông báo sau 2 giây
+    </script>
+}
+
+<div class="container-fluid mt-3">
+    <div class="container-body">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Tìm kiếm -->
+            <div class="d-flex align-items-center">
+                @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-inline" }))
+                {
+                    <div class="form-group">
+                        <input type="text" name="searchString" class="form-control"
+                            placeholder="Tìm kiếm theo địa chỉ,tên nhà trọ..." style="width: 400px; margin-right: 12px;"
+                            value="@ViewBag.Keyword" />
+                        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                    </div>
+                }
+            </div>
+
+            <!-- Nhóm 4 nút -->
+            <div class="d-flex align-items-center">
+                <div class="dropdown" style="margin-right: 4px;">
+                    <button class="dropdown-button">
+                        Danh mục <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-content">
+                        @foreach (var houseType in Model.HouseTypes)
+                        {
+                            <a href="@Url.Action("HousesByType", "Home", new { id = houseType.IdHouseType })">
+                                @houseType.Name
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                @if (!User.Identity.IsAuthenticated || Model.IsChuTro || Model.IsAdmin)
+                {
+                    <a id="createHouse" class="btn btn-primary ml-3 " href="javascript:void(0)" onclick="navigateToCreate()"
+                        style="height: 45px;">
+                        Cung cấp thông tin nhà trọ
+                    </a>
+
+                    <a asp-action="ListHouseRoom" asp-controller="QuanLi" id="managePosts"
+                        asp-route-userId="@ViewBag.userId" class="btn btn-primary ml-2" style="height: 45px">
+                        Quản lí bài đăng
+                    </a>
+                }
+
+                @if (Model.IsAdmin)
+                {
+                    <a asp-action="Manage" asp-controller="Account" class="btn btn-primary ml-2" style="height: 45px">
+                        Quản lí tài khoản
+                    </a>
+                }
+            </div>
+        </div>
+
+        @if (Model.Houses == null || !Model.Houses.Any())
+        {
+            <div class="text-center">
+                <h4>Không có nhà trọ nào thuộc danh mục này.</h4>
+                <p>Vui lòng chọn danh mục khác hoặc quay lại trang chủ.</p>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">
+                    <i class="fas fa-arrow-left"></i> Quay Lại Trang Chủ
+                </a>
+            </div>
+        }
+        else
+        {
+            <h1 class="mb-4" style="color: rgb(35, 164, 207); padding-bottom: 15px;">Danh sách nhà trọ thuộc
+                @Model.SelectedHouseType.Name</h1>
+            <div class="row">
+                @foreach (var house in Model.Houses)
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <img src="@house.HouseDetails.FirstOrDefault()?.Image" class="card-img-top" alt="@house.NameHouse"
+                                style="height: 200px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title">@house.NameHouse</h5>
+                                <p class="card-text"><strong>Địa chỉ:</strong> @house.HouseDetails.FirstOrDefault()?.Address</p>
+                                <p class="card-text">
+                                    <strong>Giá nhà:</strong>
+                                    @house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new
+                                             System.Globalization.CultureInfo("vi-VN")) VND
+                                </p>
+                                <p class="card-text">
+                                    <strong>Diện tích:</strong> @house.HouseDetails.FirstOrDefault()?.DienTich
+                                    m²
+                                </p>
+                                <p class="card-text">
+                                    <strong>Ngày đăng:</strong>
+                                    @house.HouseDetails.FirstOrDefault()?.TimePost.ToString("dd/MM/yyyy")
+                                </p>
+                                <p class="card-text">
+                                    <strong>Loại nhà trọ:</strong> @house.HouseType?.Name
+                                </p>
+                                <p class="card-text">
+                                    <strong>Trạng thái:</strong>
+                                    @if (house.HouseDetails.FirstOrDefault()?.Status == "Chưa cho thuê")
+                                    {
+                                        <span class="status-not-rented">Chưa cho thuê</span>
+                                    }
+                                    else if (house.HouseDetails.FirstOrDefault()?.Status == "Đã cho thuê")
+                                    {
+                                        <span class="status-rented">Đã cho thuê</span>
+                                    }
+                                </p>
+                                <a asp-controller="Home" asp-action="Detail" asp-route-id="@house.IdHouse"
+                                    asp-route-type="house" class="btn btn-view-detail">
+                                    <i class="fas fa-eye icon"></i> Xem Chi Tiết
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="mt-4">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Quay Lại
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    const isAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
+    const isChuTro = @Model.IsChuTro.ToString().ToLower();
+
+    const createHouseButton = document.getElementById('createHouse');
+    const managePostsButton = document.getElementById('managePosts');
+
+    createHouseButton?.addEventListener('click', (e) => {
+        if (!isAuthenticated) {
+            e.preventDefault();
+            alert('Bạn chưa đăng nhập. Vui lòng đăng nhập với tư cách chủ trọ để thực hiện chức năng này.');
+        } else {
+            window.location.href = '@Url.Action("Create", "House")';
+        }
+    });
+    managePostsButton?.addEventListener('click', (e) => {
+        if (!isAuthenticated) {
+            e.preventDefault();
+            alert('Bạn chưa đăng nhập. Vui lòng đăng nhập với tư cách chủ trọ để thực hiện chức năng này.');
+        } else {
+            window.location.href = '@Url.Action("ListHouseRoom", "QuanLi", new { userId = ViewBag.userId })';
+        }
+    });
+</script>
