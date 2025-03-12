@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\KLTN\\NHNT_OTP\\NHNT.csproj": {}
+    "D:\\KLTN_VNPAY\\KLTN\\NHNT.csproj": {}
   },
   "projects": {
-    "D:\\KLTN\\NHNT_OTP\\NHNT.csproj": {
+    "D:\\KLTN_VNPAY\\KLTN\\NHNT.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\KLTN\\NHNT_OTP\\NHNT.csproj",
+        "projectUniqueName": "D:\\KLTN_VNPAY\\KLTN\\NHNT.csproj",
         "projectName": "NHNT",
-        "projectPath": "D:\\KLTN\\NHNT_OTP\\NHNT.csproj",
+        "projectPath": "D:\\KLTN_VNPAY\\KLTN\\NHNT.csproj",
         "packagesPath": "C:\\Users\\dn596\\.nuget\\packages\\",
-        "outputPath": "D:\\KLTN\\NHNT_OTP\\obj\\",
+        "outputPath": "D:\\KLTN_VNPAY\\KLTN\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\dn596\\AppData\\Roaming\\NuGet\\NuGet.Config"
