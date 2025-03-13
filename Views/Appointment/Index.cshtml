@@ -11,9 +11,8 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Người Đặt</th>
-                <th>Nhà</th>
+                <th>Người Đặt Hẹn</th>
+                <th>Tên Nhà Trọ</th>
                 <th>Ngày Hẹn</th>
                 <th>Trạng Thái</th>
                 <th>Hành Động</th>
@@ -23,7 +22,6 @@ else
             @foreach (var appointment in Model)
             {
                 <tr>
-                    <td>@appointment.AppointmentId</td>
                     <td>@appointment.User?.UserName</td>
                     <td>@appointment.House?.NameHouse</td>
                     <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy")</td>
@@ -81,6 +79,15 @@ else
 </script>
 
 <style>
+    h2{
+        font-family: Arial, sans-serif;
+        color: #333;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        text-align: center;
+    }
+
     .table {
         width: 100%;
         border-collapse: collapse;
@@ -98,16 +105,24 @@ else
     }
 
     .table th {
-        background: #007bff;
-        color: white;
-        text-transform: uppercase;
+        background: #f2f2f2;
+        color: #555;
+        font-weight: bold;
+        border-bottom: 2px solid #ddd;
     }
 
     .table tbody tr:hover {
-        background: #f1f1f1;
+        background-color: #f9f9f9;
     }
 
-    /* Badge trạng thái */
+    .table td {
+        border-right: 1px solid #ddd;
+    }
+
+    .table th:last-child, .table td:last-child {
+        border-right: none;
+    }
+
     .badge {
         display: inline-block;
         padding: 6px 12px;
@@ -131,31 +146,68 @@ else
         color: #fff;
     }
 
-    /* Nút bấm */
     .btn {
         padding: 8px 12px;
-        border: none;
-        border-radius: 5px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: 0.3s;
+        border-radius: 4px;
+        text-decoration: none;
+        color: white;
+        margin-right: 5px;
+        transition: background-color 0.3s;
     }
 
     .btn-success {
-        background: #28a745;
-        color: white;
+        background-color: #28a745;
     }
 
     .btn-success:hover {
-        background: #218838;
+        background-color: #218838;
     }
 
     .btn-danger {
-        background: #dc3545;
-        color: white;
+        background-color: #dc3545;
     }
 
     .btn-danger:hover {
-        background: #c82333;
+        background-color: #c82333;
+    }
+
+    .btn-warning {
+        background-color: #FFA500;
+    }
+
+    .btn-warning:hover {
+        background-color: #e68900;
+    }
+
+    .btn-view-detail {
+        background-color: #4CAF50;
+    }
+
+    .btn-view-detail:hover {
+        background-color: #45a049;
+    }
+
+    .container {
+        width: 90%;
+        margin: auto;
+        font-family: Arial, sans-serif;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6368;
+    }
+
+    .alert-info {
+        background-color: #d9edf7;
+        border-color: #bce8f1;
+        color: #31708f;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
     }
 </style>

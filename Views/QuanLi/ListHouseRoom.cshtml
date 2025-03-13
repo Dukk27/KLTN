@@ -16,6 +16,7 @@
                     <th>Người đăng</th>
                 }
                 <th>Hành động</th>
+                <th>Trạng thái</th>
             </tr>
         </thead>
         <tbody>
@@ -46,7 +47,21 @@
                             {
                                 <button class="btn btn-success btn-show" data-id="@house.IdHouse">Hiện bài</button>
                             }
-                        }          
+                        }    
+                    </td>
+                    <td>
+                        @if (house.Status == HouseStatus.Pending)
+                            {
+                                <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                            }  
+                        else if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden)
+                            {
+                                <span class="badge bg-success">Đã duyệt</span>
+                            }
+                        else 
+                            {
+                                <span class="badge bg-danger">Bị từ chối</span>
+                            }
                     </td>
                 </tr>
             }

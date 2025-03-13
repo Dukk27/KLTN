@@ -1,3 +1,8 @@
+body {
+  padding-top: 65px; 
+  background-color: rgb(246, 240, 237);
+}
+
 .custom-container {
   padding-left: 60px;
   padding-right: 60px;
@@ -10,6 +15,8 @@
   overflow: hidden;
   position: relative;
   margin-bottom: 20px;
+  /* max-width: 300px;
+  max-height: 700px; */
 }
 
 .card:hover {
@@ -58,6 +65,8 @@
   padding-left: 50px;
   padding-right: 50px;
   margin: 0px;
+  margin-bottom: 10px;
+  margin-top: 10px !important;
 }
 
 .icon {
@@ -105,7 +114,6 @@
   flex: 1;
   max-width: 400px;
   margin: 0;
-  /* Xóa khoảng cách bên ngoài */
 }
 
 .functional-bar .search-bar input {
@@ -295,6 +303,72 @@ button.btn-secondary:hover {
   display: block;
   animation: slideUp 0.3s ease-out;
 }
+
+.hero-search-section {
+  position: relative; /* Tạo vùng chứa tương đối */
+  width: 100%;
+  min-height: 50vh; /* Đảm bảo full màn hình */
+  padding: 20px 0;
+  background: url("/img/image.png") no-repeat center center;
+  background-size: cover;
+  background-attachment: fixed; /* Cố định ảnh nền khi cuộn */
+  margin-bottom: 20px;
+}
+
+/* Lớp phủ làm tối ảnh nền */
+.hero-search-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(44, 68, 100, 0.8); /* Màu nền tối mờ */
+  z-index: 0; /* Nằm dưới nội dung */
+}
+
+/* Nội dung nổi trên ảnh nền */
+.search-content {
+  position: relative;
+  z-index: 1; /* Nằm trên lớp phủ */
+  color: white;
+}
+
+/* Dropdown menu */
+.dropdown-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  z-index: 2;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block; /* Hiện menu khi hover */
+}
+
+/* Responsive tối ưu cho màn hình nhỏ */
+@media (max-width: 768px) {
+  .form-group input {
+    width: 100%; /* Input full chiều rộng */
+  }
+
+  .dropdown-button {
+    width: 100%;
+    text-align: left;
+  }
+}
+
 @keyframes slideUp {
   from {
     transform: translateX(-50%) translateY(100%);

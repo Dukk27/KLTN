@@ -46,6 +46,12 @@ namespace KLTN.Controllers
                 else
                 {
                     houses = await _houseRepository.GetHousesByUserId(userId);
+                    houses = houses.Where(h =>
+                        h.Status == HouseStatus.Approved
+                        || h.Status == HouseStatus.Pending
+                        || h.Status == HouseStatus.Active
+                        || h.Status == HouseStatus.Hidden
+                    );
                 }
                 var viewModel = new HomeViewModel
                 {
@@ -90,6 +96,9 @@ namespace KLTN.Controllers
                         Selected = ht.IdHouseType == house.HouseTypeId,
                     })
                     .ToList(),
+
+                ContactName2 = house.HouseDetails.FirstOrDefault()?.ContactName2,
+                ContactPhone2 = house.HouseDetails.FirstOrDefault()?.ContactPhone2,
             };
             return View(viewModel);
         }
@@ -100,6 +109,8 @@ namespace KLTN.Controllers
             IFormFile? imageFile
         )
         {
+            Console.WriteLine($"ContactName2 nhận từ View: {viewModel.ContactName2}");
+            Console.WriteLine($"ContactPhone2 nhận từ View: {viewModel.ContactPhone2}");
             if (!ModelState.IsValid)
             {
                 viewModel.Amenities = (await _amenityRepository.GetAllAmenitiesAsync()).ToList();
@@ -129,6 +140,14 @@ namespace KLTN.Controllers
             existingHouseDetail.Address = !string.IsNullOrEmpty(viewModel.HouseDetail.Address)
                 ? viewModel.HouseDetail.Address
                 : existingHouseDetail.Address;
+            existingHouseDetail.ContactName2 = !string.IsNullOrEmpty(viewModel.ContactName2)
+                ? viewModel.ContactName2
+                : existingHouseDetail.ContactName2;
+
+            existingHouseDetail.ContactPhone2 = !string.IsNullOrEmpty(viewModel.ContactPhone2)
+                ? viewModel.ContactPhone2
+                : existingHouseDetail.ContactPhone2;
+
             existingHouseDetail.Price =
                 viewModel.HouseDetail.Price != 0
                     ? viewModel.HouseDetail.Price
@@ -199,6 +218,13 @@ namespace KLTN.Controllers
                     }
                 }
             }
+            Console.WriteLine(
+                $"ContactName2 trước: {existingHouseDetail.ContactName2}, sau: {viewModel.ContactName2}"
+            );
+            Console.WriteLine(
+                $"ContactPhone2 trước: {existingHouseDetail.ContactPhone2}, sau: {viewModel.ContactPhone2}"
+            );
+
             await _houseRepository.UpdateAsync(existingHouse);
             await _houseDetailRepository.UpdateAsync(existingHouseDetail);
 

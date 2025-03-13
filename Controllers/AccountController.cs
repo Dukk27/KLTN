@@ -239,7 +239,7 @@ namespace KLTN.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             int id,
-            [Bind("IdUser,UserName,Password,Role,PhoneNumber,Email")] Account account
+            [Bind("IdUser,UserName,Password,Role,PhoneNumber,Email,FreePostsUsed")] Account account
         )
         {
             if (id != account.IdUser)
@@ -250,7 +250,7 @@ namespace KLTN.Controllers
             // if (ModelState.IsValid)
             // {
             await _accountRepository.UpdateAccountAsync(account);
-            return RedirectToAction(nameof(Manage));
+            return RedirectToAction(nameof(Index), "Home");
             //}
             return View(account);
         }
@@ -395,6 +395,24 @@ namespace KLTN.Controllers
             mailMessage.To.Add(toEmail);
 
             await client.SendMailAsync(mailMessage);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var account = await _accountRepository.GetAccountByIdAsync(userId.Value);
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            return PartialView("_Profile", account);
         }
     }
 }

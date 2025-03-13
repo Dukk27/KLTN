@@ -42,6 +42,8 @@ namespace KLTN.Models
         public string? Image { get; set; }
 
         public DateTime TimePost { get; set; }
+        public string? ContactName2 { get; set; } 
+        public string? ContactPhone2 { get; set; }
 
         // Foreign Key for House
         [ForeignKey("IdHouse")]

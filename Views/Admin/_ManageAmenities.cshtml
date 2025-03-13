@@ -1,0 +1,175 @@
+@model IEnumerable<KLTN.Models.Amenity>
+
+<div class="container">
+    <h4>Quản lý Tiện Nghi</h4>
+    <button class="btn btn-primary mb-2" onclick="openCreateModal()">
+        <i class="fa fa-plus-circle"></i> Thêm mới
+    </button>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên Tiện Nghi</th>
+                <th>Hành Động</th>
+            </tr>
+        </thead>
+        <tbody id="amenityTableBody">
+            @{
+                int index = 1;
+            }
+            @foreach (var amenity in Model)
+            {
+                <tr id="row_@amenity.IdAmenity">
+                    <td>@index</td>
+                    <td>@amenity.Name</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm"
+                            onclick="openEditModal(@amenity.IdAmenity, '@amenity.Name')"><i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAmenity(@amenity.IdAmenity)"><i
+                                class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+                index++;
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal để thêm/sửa tiện nghi -->
+<div id="amenityModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="modalTitle">Thêm Tiện Nghi</h5>
+                <button type="button" class="close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="amenityId">
+                <label>Tên Tiện Nghi:</label>
+                <input type="text" id="amenityName" class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="saveAmenity()">Lưu</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thêm thư viện SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function openCreateModal() {
+        $("#modalTitle").text("Thêm Tiện Nghi");
+        $("#amenityId").val('');
+        $("#amenityName").val('');
+        $("#amenityModal").modal("show");
+    }
+
+    function openEditModal(id, name) {
+        $("#modalTitle").text("Sửa Tiện Nghi");
+        $("#amenityId").val(id);
+        $("#amenityName").val(name);
+        $("#amenityModal").modal("show");
+    }
+
+    function closeModal() {
+        $("#amenityModal").modal("hide");
+    }
+
+    function saveAmenity() {
+        let id = $("#amenityId").val();
+        let name = $("#amenityName").val().trim();
+
+        if (!name) {
+            Swal.fire({
+                icon: "warning",
+                title: "Lỗi!",
+                text: "Tên tiện nghi không được để trống.",
+            });
+            return;
+        }
+
+        let url = id ? "/Admin/EditAmenity" : "/Admin/CreateAmenity";
+        let data = JSON.stringify({ IdAmenity: id ? parseInt(id) : 0, Name: name });
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: data,
+            success: function (response) {
+                Swal.fire({
+                    icon: response.success ? "success" : "error",
+                    title: response.success ? "Thành công!" : "Lỗi!",
+                    text: response.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    if (response.success) {
+                        closeModal();
+                        updateAmenityTable();
+                    }
+                });
+            },
+            error: function () {
+                Swal.fire({
+                    icon: "error",
+                    title: "Lỗi!",
+                    text: "Có lỗi xảy ra, vui lòng thử lại.",
+                });
+            }
+        });
+    }
+
+    function deleteAmenity(id) {
+        Swal.fire({
+            title: "Bạn có chắc chắn muốn xóa?",
+            text: "Hành động này không thể hoàn tác!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Xóa",
+            cancelButtonText: "Hủy"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/DeleteAmenity",
+                    data: { id: id },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: response.success ? "success" : "error",
+                            title: response.success ? "Đã xóa!" : "Lỗi!",
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            if (response.success) {
+                                $("#row_" + id).remove();
+                                updateAmenityTable();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    function updateAmenityTable() {
+        $.get("/Admin/ManageAmenities", function (data) {
+            let newTableBody = $(data).find("#amenityTableBody").html();
+            $("#amenityTableBody").html(newTableBody);
+            // Cập nhật lại ID để đảm bảo nó tăng từ 1
+            let rows = $("#amenityTableBody tr");
+            rows.each(function (index) {
+                $(this).find("td:first").text(index + 1);
+            });
+        });
+    }
+</script>

@@ -5,9 +5,6 @@
     int userRole = ViewBag.UserRole;
 }
 
-<p>Vai trò của bạn: @userRole</p>
-
-
 <head>
     <title>Chi Tiết Nhà</title>
     <link rel="stylesheet" href="~/css/Detail/Detail.css" asp-append-version="true" />
@@ -44,6 +41,18 @@
                             <td>@detail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</td>
                         </tr>
                         <tr>
+                            <td><i class="fa fa-user" style="color: #007bff;"></i><strong>Người liên hệ 1</strong></td>
+                            <td>@Model.IdUserNavigation?.UserName</td>
+                            <td><i class="fa fa-phone" style="color: #17a2b8;"></i> <strong>Số điện thoại</strong></td>
+                            <td colspan="3">@Model.IdUserNavigation?.PhoneNumber</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fa fa-user" style="color: #007bff;"></i><strong>Người liên hệ 2</strong></td>
+                            <td>@detail.ContactName2</td>
+                            <td><i class="fa fa-phone" style="color: #17a2b8;"></i> <strong>Số điện thoại 2</strong></td>
+                            <td colspan="3">@detail.ContactPhone2</td>
+                        </tr>
+                        <tr>
                             <td> <i class="fa fa-expand" style="color: #6c757d;"></i><strong>Diện tích</strong></td>
                             <td>@detail.DienTich m²</td>
                             <td><i class="fa fa-bolt" style="color: #ffc107;"></i><strong> Tiền điện</strong></td>
@@ -74,10 +83,6 @@
                         <tr>
                             <td> <i class="fa fa-info-circle" style="color: #343a40;"></i> <strong>Mô tả</strong></td>
                             <td colspan="3">@detail.Describe</td>
-                        </tr>
-                        <tr>
-                            <td><i class="fa fa-phone" style="color: #17a2b8;"></i> <strong>Số điện thoại</strong></td>
-                            <td colspan="3">@Model.IdUserNavigation?.PhoneNumber</td>
                         </tr>
                     </tbody>
                 </table>

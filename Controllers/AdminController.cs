@@ -12,16 +12,22 @@ namespace KLTN.Controllers
         private readonly IAccountRepository _accountRepository;
         private readonly IHouseRepository _housesRepository;
         private readonly IReviewRepository _reviewRepository;
+        private readonly IHouseTypeRepository _houseTypeRepository;
+        private readonly IAmenityRepository _amenityRepository;
 
         public AdminController(
             IAccountRepository accountRepository,
             IHouseRepository housesRepository,
-            IReviewRepository reviewRepository
+            IReviewRepository reviewRepository,
+            IHouseTypeRepository houseTypeRepository,
+            IAmenityRepository amenityRepository
         )
         {
             _accountRepository = accountRepository;
             _housesRepository = housesRepository;
             _reviewRepository = reviewRepository;
+            _houseTypeRepository = houseTypeRepository;
+            _amenityRepository = amenityRepository;
         }
 
         // Trang Dashboard
@@ -57,7 +63,7 @@ namespace KLTN.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             int id,
-            [Bind("IdUser,UserName,Password,Role,PhoneNumber,Email")] Account account
+            [Bind("IdUser,UserName,Password,Role,PhoneNumber,Email,FreePostsUsed")] Account account
         )
         {
             if (id != account.IdUser)
@@ -65,18 +71,17 @@ namespace KLTN.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid) // Kiểm tra tính hợp lệ của dữ liệu
-            {
-                await _accountRepository.UpdateAccountAsync(account);
+            // if (ModelState.IsValid) // Kiểm tra tính hợp lệ của dữ liệu
+            // {
+            await _accountRepository.UpdateAccountAsync(account);
 
-                // Chuyển hướng về trang trước khi gọi action Edit
-                var previousPage = TempData["PreviousPage"] as string;
-                if (string.IsNullOrEmpty(previousPage))
-                {
-                    return RedirectToAction(nameof(ManageAccounts)); // Nếu không có URL trước đó thì quay lại trang quản lý tài khoản
-                }
-                return Redirect(previousPage); // Quay lại trang trước đó
+            // Chuyển hướng về trang trước khi gọi action Edit
+            var previousPage = TempData["PreviousPage"] as string;
+            if (string.IsNullOrEmpty(previousPage))
+            {
+                return RedirectToAction(nameof(ManageAccounts)); // Nếu không có URL trước đó thì quay lại trang quản lý tài khoản
             }
+            return Redirect(previousPage); // Quay lại trang trước đó
 
             return View(account); // Trả về View nếu có lỗi
         }
@@ -173,6 +178,122 @@ namespace KLTN.Controllers
             await _housesRepository.UpdateAsync(house);
 
             return Json(new { success = true, message = "Bài đăng đã bị từ chối." });
+        }
+
+        public async Task<IActionResult> ManageHouseTypes()
+        {
+            var houseTypes = await _houseTypeRepository.GetAllHouseTypes();
+            return PartialView("_ManageHouseTypes", houseTypes);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateHouseType([FromBody] HouseType houseType)
+        {
+            if (houseType == null || string.IsNullOrWhiteSpace(houseType.Name))
+            {
+                return Json(new { success = false, message = "Dữ liệu không hợp lệ." });
+            }
+
+            try
+            {
+                await _houseTypeRepository.CreateHouseTypeAsync(houseType);
+                return Json(new { success = true, message = "Thêm loại nhà thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditHouseType([FromBody] HouseType houseType)
+        {
+            if (houseType == null || string.IsNullOrWhiteSpace(houseType.Name))
+            {
+                return Json(new { success = false, message = "Dữ liệu không hợp lệ." });
+            }
+
+            try
+            {
+                await _houseTypeRepository.UpdateHouseTypeAsync(houseType);
+                return Json(new { success = true, message = "Cập nhật loại nhà thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteHouseType(int id)
+        {
+            try
+            {
+                await _houseTypeRepository.DeleteHouseTypeAsync(id);
+                return Json(new { success = true, message = "Xóa loại nhà thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+            }
+        }
+
+        public async Task<IActionResult> ManageAmenities()
+        {
+            var amenities = await _amenityRepository.GetAllAmenitiesAsync();
+            return PartialView("_ManageAmenities", amenities);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAmenity([FromBody] Amenity amenity)
+        {
+            if (amenity == null || string.IsNullOrWhiteSpace(amenity.Name))
+            {
+                return Json(new { success = false, message = "Dữ liệu không hợp lệ." });
+            }
+
+            try
+            {
+                await _amenityRepository.AddAsync(amenity);
+                return Json(new { success = true, message = "Thêm tiện nghi thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditAmenity([FromBody] Amenity amenity)
+        {
+            if (amenity == null || string.IsNullOrWhiteSpace(amenity.Name))
+            {
+                return Json(new { success = false, message = "Dữ liệu không hợp lệ." });
+            }
+
+            try
+            {
+                await _amenityRepository.UpdateAsync(amenity);
+                return Json(new { success = true, message = "Cập nhật tiện nghi thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAmenity(int id)
+        {
+            try
+            {
+                await _amenityRepository.DeleteAsync(id);
+                return Json(new { success = true, message = "Xóa tiện nghi thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+            }
         }
     }
 }

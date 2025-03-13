@@ -20,7 +20,6 @@ namespace KLTN.Repositories
             string priceRange,
             string sortBy,
             string roomType,
-            List<string> amenities
-        );
+            List<string> amenities);
     }
 }

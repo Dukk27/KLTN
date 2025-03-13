@@ -4,24 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KLTN.Models
 {
-    // public enum HouseTypeEnum
-    // {
-    //     [Display(Name = "Nhà trọ & phòng trọ")]
-    //     HouseAndRoom = 1,
-
-    //     [Display(Name = "Nhà nguyên căn")]
-    //     EntireHouse = 2,
-
-    //     [Display(Name = "Nhà tập thể")]
-    //     CollectiveHouse = 3,
-
-    //     [Display(Name = "Kí túc xá")]
-    //     Dormitory = 4,
-
-    //     [Display(Name = "Chung cư mi ni")]
-    //     MiniApartment = 5
-    // }
-
     public partial class HouseType
     {
         [Key]

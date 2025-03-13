@@ -180,8 +180,7 @@ namespace KLTN.Repositories
             if (!string.IsNullOrEmpty(searchString))
             {
                 query = query.Where(h =>
-                    h.NameHouse.Contains(searchString)
-                    || h.HouseDetails.Any(hd => hd.Address.Contains(searchString))
+                    h.HouseDetails.Any(hd => hd.Address.Contains(searchString))
                 );
             }
             if (!string.IsNullOrEmpty(priceRange))

@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <div class="col-md-2" id="sidebar">
+        <div class="col-md-3" id="sidebar">
             <h3><i class="fas fa-cogs"></i> Quản lý hệ thống</h3>
             <ul class="nav flex-column">
                 <li class="nav-item main-nav-item">
@@ -25,11 +25,22 @@
                         <i class="fas fa-comments"></i> Quản lý bình luận
                     </a>
                 </li>
+                <li class="nav-item main-nav-item">
+                    <a href="#" class="nav-link" id="manageHouseTypesLink">
+                        <i class="fas fa-house"></i> Quản lý Danh mục loại nhà
+                    </a>
+                </li>
+
+                <li class="nav-item main-nav-item">
+                    <a href="#" class="nav-link" id="manageAmenitiesLink">
+                        <i class="fas fa-tools"></i> Quản lý Danh mục tiện nghi
+                    </a>
+                </li>
             </ul>
         </div>
 
         <!-- Nội dung bên phải -->
-        <div class="col-md-10" id="content">
+        <div class="col-md-9" id="content">
             
             <div id="contentPlaceholder">
             </div>
@@ -100,6 +111,20 @@
                 e.preventDefault();
                 $.get('@Url.Action("ManageReviews", "Admin")', function (data) {
                     $('#contentPlaceholder').html(data); // Hiển thị bảng bình luận
+                });
+            });
+
+            $('#manageHouseTypesLink').on('click', function (e) {
+                e.preventDefault();
+                $.get('@Url.Action("ManageHouseTypes", "Admin")', function (data) {
+                    $('#contentPlaceholder').html(data); // Hiển thị bảng loại nhà
+                });
+            });
+
+            $('#manageAmenitiesLink').on('click', function (e) {
+                e.preventDefault();
+                $.get('@Url.Action("ManageAmenities", "Admin")', function (data) {
+                    $('#contentPlaceholder').html(data); // Hiển thị bảng tiện nghi
                 });
             });
         });

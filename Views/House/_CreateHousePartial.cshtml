@@ -2,8 +2,6 @@
 
 <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
 
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
@@ -11,6 +9,31 @@
     <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
 }
 <form asp-action="Create" method="post" enctype="multipart/form-data" id="createHouseForm" target="_top">
+    <div class="section">
+        <h4>Thông tin liên hệ</h4>
+        <div class="row">
+
+        </div> 
+
+        <!-- Trường liên hệ thứ 2 (có thể để trống) -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="HouseDetail.ContactName2">Người liên hệ 2</label>
+                    <input asp-for="HouseDetail.ContactName2" class="form-control"
+                        placeholder="Nhập tên người liên hệ thứ 2" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="HouseDetail.ContactPhone2">Số liên hệ 2</label>
+                    <input asp-for="HouseDetail.ContactPhone2" class="form-control"
+                        placeholder="Nhập số điện thoại thứ 2" />
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="section">
         <h4>Thông tin chi tiết</h4>
         <div class="row">

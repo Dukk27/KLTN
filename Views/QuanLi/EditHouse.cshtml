@@ -27,6 +27,13 @@
         <span asp-validation-for="HouseDetail.Address" class="text-danger"></span>
     </div>
 
+    <label for="ContactName2">Người liên hệ phụ:</label>
+    <input type="text" id="ContactName2" asp-for="ContactName2" class="form-control" />
+
+    <label for="ContactPhone2">Số điện thoại phụ:</label>
+    <input type="text" id="ContactPhone2" asp-for="ContactPhone2" class="form-control" />
+
+
     <div class="form-group">
         <label asp-for="HouseDetail.Price">Giá thuê</label>
         <input asp-for="HouseDetail.Price" class="form-control" />
@@ -74,7 +81,7 @@
 
         <div class="form-check">
             <input type="radio" id="statusRented" name="HouseDetail.Status" class="form-check-input" value="Đã cho thuê"
-            @(Model.HouseDetail.Status == "Đã cho thuê" ? "checked" : "") />
+                @(Model.HouseDetail.Status == "Đã cho thuê" ? "checked" : "") />
             <label class="form-check-label" for="statusRented">Đã cho thuê</label>
         </div>
 
@@ -99,7 +106,7 @@
         {
             <div class="form-check">
                 <input type="checkbox" name="SelectedAmenities" value="@amenity.IdAmenity" class="form-check-input"
-                @(Model.SelectedAmenities.Contains(amenity.IdAmenity) ? "checked" : "") />
+                    @(Model.SelectedAmenities.Contains(amenity.IdAmenity) ? "checked" : "") />
                 <label class="form-check-label">@amenity.Name</label>
             </div>
         }

@@ -1,0 +1,42 @@
+@model KLTN.Models.Account
+
+<link rel="stylesheet" href="~/css/profile.css">
+
+<div class="profile">
+    <h3>Thông tin cá nhân</h3>
+    <table class="table">
+        <tr>
+            <td><strong>Họ và tên:</strong></td>
+            <td>@Model.UserName</td>
+        </tr>
+        <tr>
+            <td><strong>Email:</strong></td>
+            <td>@Model.Email</td>
+        </tr>
+        <tr>
+            <td><strong>Số điện thoại:</strong></td>
+            <td>@Model.PhoneNumber</td>
+        </tr>
+        <tr>
+            <td><strong>Vai trò:</strong></td>
+            <td>
+                @switch (Model.Role)
+                {
+                    case 0:
+                        @:Admin
+                        break;
+                    case 1:
+                        @:Chủ trọ
+                        break;
+                    default:
+                        @:Người tìm phòng
+                        break;
+                }
+            </td>
+        </tr>
+    </table>
+</div>
+
+<button onclick="location.href='@Url.Action("Edit", "Account", new { id = Model.IdUser })'" class="btn btn-primary">
+    Chỉnh sửa thông tin
+</button>

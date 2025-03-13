@@ -138,7 +138,7 @@
                     if (response.success) {
                         updateStatus(id, "Bị từ chối", "bg-danger");
                         toggleButtons(id, "approve"); // Chuyển nút sang "Duyệt"
-                        Swal.fire("Thành công!", "Bài đăng đã được duyệt.", "success");
+                        Swal.fire("Thành công!", "Bài đăng đã được từ chối.", "success");
                     } else {
                         Swal.fire("Lỗi!", response.message, "error");
                     }
