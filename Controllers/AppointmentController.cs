@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using KLTN.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ namespace KLTN.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Create([FromBody] Appointment appointment)
         {
             if (appointment == null || appointment.HouseId <= 0)
@@ -39,11 +41,16 @@ namespace KLTN.Controllers
             _context.SaveChanges();
 
             return Json(
-                new { success = true, message = "Đặt lịch thành công! Vui lòng chờ xác nhận." }
+                new
+                {
+                    success = true,
+                    message = "Đặt lịch thành công! Vui lòng chờ người đăng tin xác nhận.",
+                }
             );
         }
 
         // Hiển thị danh sách lịch hẹn
+        [Authorize]
         public IActionResult Index()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -59,6 +66,7 @@ namespace KLTN.Controllers
 
         // Xác nhận lịch hẹn
         [HttpPost]
+        [Authorize]
         public IActionResult Confirm(int id)
         {
             var appointment = _context.Appointments.Find(id);
@@ -72,6 +80,7 @@ namespace KLTN.Controllers
 
         // Hủy lịch hẹn
         [HttpPost]
+        [Authorize]
         public IActionResult Cancel(int id)
         {
             var appointment = _context.Appointments.Find(id);

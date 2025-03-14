@@ -4,10 +4,10 @@
     <h2>Danh sách bài đăng của người dùng @ViewBag.UserName</h2>
 
     <h3>Danh sách các nhà trọ</h3>
+    
     <table class="table-custom">
         <thead>
             <tr>
-                <th hidden>ID</th>
                 <th>Tên nhà trọ</th>
                 <th>Địa chỉ</th>
                 <th>Giá</th>
@@ -23,7 +23,6 @@
             @foreach (var house in Model.Houses)
             {
                 <tr>
-                    <td hidden>@house.IdHouse</td>
                     <td>@house.NameHouse</td>
                     <td>@house.HouseDetails.FirstOrDefault()?.Address</td>
                     <td>@house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new
@@ -67,14 +66,11 @@
             }
         </tbody>
     </table>
-    <div class=" mt-4">
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Quay Lại
-        </a>
-    </div>
 </div>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         function viewDetail(id, type) {
             const url = `/Home/Detail?id=${id}&type=${type}`;
@@ -102,31 +98,39 @@
         }
         
         async function deleteHouse(id) {
-            const confirmDelete = confirm('Bạn có chắc chắn muốn xóa nhà trọ này?');
-            if (!confirmDelete) return;
-            try {
-                const response = await fetch(`/QuanLi/DeleteHouse?id=${id}`, { method: 'DELETE' });
-                const result = await response.json();
+        Swal.fire({
+            title: "Bạn có chắc chắn muốn xóa?",
+            text: "Dữ liệu này sẽ không thể khôi phục!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Xóa ngay!",
+            cancelButtonText: "Hủy"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`/QuanLi/DeleteHouse?id=${id}`, { method: "DELETE" });
+                    const result = await response.json();
 
-                if (result.success) {
-                    alert(result.message);
-                    location.reload();
-                } else {
-                    alert('Không thể xóa: ' + result.message);
+                    if (result.success) {
+                        Swal.fire("Xóa thành công!", result.message, "success").then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire("Lỗi!", result.message, "error");
+                    }
+                } catch (error) {
+                    Swal.fire("Lỗi!", "Không thể xóa nhà trọ!", "error");
                 }
-            } catch (error) {
-                alert('Đã xảy ra lỗi khi xóa nhà trọ.');
             }
-        }
+        });
+    }
 
         function showUnauthorizedMessage() {
-        alert('Bạn không đủ thẩm quyền để truy cập chức năng này.');
-    }
-    </script>
+            alert('Bạn không đủ thẩm quyền để truy cập chức năng này.');
+        }
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
         $(document).ready(function () {
             $(".btn-hide").on("click", function () {
                 const houseId = $(this).data("id");
@@ -157,9 +161,7 @@
                 });
             });
         });
-    </script>
 
-    <script>
         $(document).ready(function () {
             $(".btn-show").on("click", function () {
                 const houseId = $(this).data("id");
@@ -192,6 +194,7 @@
         });
     </script>
 }
+
 <style>
     h2,
     h3 {
@@ -207,11 +210,13 @@
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 30px;
+        border: 1px solid #333;
+        background-color: #ffffff;
     }
 
     .table-custom th,
     .table-custom td {
-        padding: 15px;
+        padding: 6px;
         text-align: left;
     }
 
@@ -219,7 +224,7 @@
         background-color: #f2f2f2;
         font-weight: bold;
         color: #555;
-        border-bottom: 2px solid #ddd;
+        border: 1px solid #333;
     }
 
     .table-custom tbody tr {
@@ -233,7 +238,7 @@
 
     .table-custom th,
     .table-custom td {
-        border-right: 1px solid #ddd;
+        border: 1px solid #333;
     }
 
     .table-custom th:last-child,
@@ -242,11 +247,11 @@
     }
 
     .btn {
-        padding: 8px 12px;
+        padding: 8px 8px;
         border-radius: 4px;
         text-decoration: none;
         color: white;
-        margin-right: 5px;
+        margin-right: 2px;
         transition: background-color 0.3s;
     }
 

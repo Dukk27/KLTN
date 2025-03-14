@@ -3,8 +3,10 @@
     ViewData["Title"] = "Đăng ký";
 }
 
-<div class="container mt-5">
-    <div class="card shadow-lg mx-auto" style="max-width: 450px; padding: 20px;">
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+<div class="register-container">
+    <div class="card shadow-lg register-card">
         <h2 class="text-center mb-4">Đăng ký</h2>
 
         @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
@@ -37,20 +39,20 @@
                 <label for="email">Email</label>
                 <input asp-for="Email" class="form-control" id="email" />
                 <span asp-validation-for="Email" class="text-danger"></span>
-            <div class="form-group mb-4">
-                <label>Vai trò</label><br />
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="role1" name="Role" value="1" required />
-                    <label class="form-check-label" for="role1">Chủ trọ</label>
+                <div class="form-group mb-4">
+                    <label>Vai trò</label><br />
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="role1" name="Role" value="1" required />
+                        <label class="form-check-label" for="role1">Chủ trọ</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="role2" name="Role" value="2" required />
+                        <label class="form-check-label" for="role2">Người tìm phòng</label>
+                    </div>
                 </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="role2" name="Role" value="2" required />
-                    <label class="form-check-label" for="role2">Người tìm phòng</label>
+                <div class="text-center mb-3">
+                    <button type="submit" class="btn btn-primary" style="width: 250px;">Đăng ký</button>
                 </div>
-            </div>
-            <div class="text-center mb-3">
-                <button type="submit" class="btn btn-primary" style="width: 250px;">Đăng ký</button>
-            </div>
         </form>
 
         <p class="text-center mt-3">
@@ -62,6 +64,7 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const roleRadios = document.querySelectorAll('input[name="Role"]');
@@ -76,75 +79,27 @@
                     }
                 });
             });
+
+            // Hiển thị thông báo nếu có lỗi
+            var errorMessage = '@Html.Raw(ViewBag.Error)';
+            if (errorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Đăng ký thất bại',
+                    text: errorMessage,
+                });
+            }
+
+            var successMessage = '@Html.Raw(ViewBag.Success)';
+            if (successMessage) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: successMessage,
+                }).then(() => {
+                    window.location.href = '@Url.Action("Login", "Account")';
+                });
+            }
         });
     </script>
 }
-
-<style>
-    body {
-        background-color: #f8f9fa;
-        font-family: 'Arial', sans-serif;
-    }
-
-    h2 {
-        color: #343a40;
-        font-size: 2.2rem;
-    }
-
-    .card {
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s, box-shadow 0.3s;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-    }
-
-    .form-control {
-        border-radius: 8px;
-        transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .form-control:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    }
-
-    .btn-primary {
-        border-radius: 8px;
-        transition: background-color 0.3s, transform 0.2s;
-        font-size: 1.1rem;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-        transform: scale(1.05);
-    }
-
-    .alert {
-        margin-top: 20px;
-        transition: opacity 0.5s ease;
-    }
-
-    .alert.show {
-        opacity: 1;
-    }
-
-    .alert.hide {
-        opacity: 0;
-    }
-
-    a {
-        color: #007bff;
-        text-decoration: none;
-        transition: color 0.3s;
-    }
-
-    a:hover {
-        color: #0056b3;
-        text-decoration: underline;
-    }
-</style>

@@ -233,7 +233,7 @@ namespace KLTN.Controllers
                 return RedirectToAction("Index", "Admin");
             }
 
-            return RedirectToAction("Index", "Home");
+            return Json(new { success = true, message = "Cập nhật thành công!" });
             //return Json(new { success = true, message = "Sửa nhà trọ thành công.", updatedHouse = existingHouse });
         }
 

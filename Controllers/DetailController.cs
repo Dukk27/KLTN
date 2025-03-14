@@ -45,6 +45,7 @@ public class DetailController : ControllerBase
         var userId = HttpContext.Session.GetInt32("UserId");
         if (userId == null)
             return Unauthorized(new { message = "Hãy đăng nhập để được đánh giá." });
+        
 
         ModelState.Remove("IdUserNavigation");
 

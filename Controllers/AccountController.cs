@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using KLTN.Models;
 using KLTN.Repositories;
@@ -173,39 +174,40 @@ namespace KLTN.Controllers
 
             if (isRegistered)
             {
-                HttpContext.Session.SetString("UserName", model.UserName);
+                // HttpContext.Session.SetString("UserName", model.UserName);
 
-                string role;
-                switch (model.Role)
-                {
-                    case 1:
-                        role = "ChuTro";
-                        break;
-                    case 2:
-                        role = "NguoiTimPhong";
-                        break;
-                    default:
-                        throw new InvalidOperationException("Role không hợp lệ");
-                }
+                // string role;
+                // switch (model.Role)
+                // {
+                //     case 1:
+                //         role = "ChuTro";
+                //         break;
+                //     case 2:
+                //         role = "NguoiTimPhong";
+                //         break;
+                //     default:
+                //         throw new InvalidOperationException("Role không hợp lệ");
+                // }
 
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, model.UserName),
-                    new Claim(ClaimTypes.Role, role),
-                };
-                var claimsIdentity = new ClaimsIdentity(
-                    claims,
-                    CookieAuthenticationDefaults.AuthenticationScheme
-                );
-                var authProperties = new AuthenticationProperties { IsPersistent = true };
+                // var claims = new List<Claim>
+                // {
+                //     new Claim(ClaimTypes.Name, model.UserName),
+                //     new Claim(ClaimTypes.Role, role),
+                // };
+                // var claimsIdentity = new ClaimsIdentity(
+                //     claims,
+                //     CookieAuthenticationDefaults.AuthenticationScheme
+                // );
+                // var authProperties = new AuthenticationProperties { IsPersistent = true };
 
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    authProperties
-                );
+                // await HttpContext.SignInAsync(
+                //     CookieAuthenticationDefaults.AuthenticationScheme,
+                //     new ClaimsPrincipal(claimsIdentity),
+                //     authProperties
+                // );
+                ViewBag.Success = "Đăng ký thành công! Hãy đăng nhập để tiếp tục.";
 
-                return RedirectToAction("Login", "Account");
+                return View(model);
             }
 
             ViewBag.Error = "Đăng ký thất bại.";
@@ -234,7 +236,6 @@ namespace KLTN.Controllers
             return View(account);
         }
 
-        // Xử lý việc cập nhật tài khoản
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
@@ -244,15 +245,80 @@ namespace KLTN.Controllers
         {
             if (id != account.IdUser)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Không tìm thấy tài khoản!" });
             }
 
-            // if (ModelState.IsValid)
-            // {
             await _accountRepository.UpdateAccountAsync(account);
-            return RedirectToAction(nameof(Index), "Home");
-            //}
-            return View(account);
+
+            return Json(new { success = true, message = "Cập nhật thông tin thành công!" });
+        }
+
+        [Authorize]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(
+            string currentPassword,
+            string newPassword,
+            string confirmPassword
+        )
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Bạn cần đăng nhập để thực hiện chức năng này!",
+                    }
+                );
+            }
+
+            var user = await _accountRepository.GetAccountByIdAsync(userId.Value);
+            if (user == null)
+            {
+                return Json(new { success = false, message = "Tài khoản không tồn tại!" });
+            }
+
+            if (user.Password != currentPassword)
+            {
+                return Json(new { success = false, message = "Mật khẩu cũ không đúng!" });
+            }
+
+            if (newPassword != confirmPassword)
+            {
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Mật khẩu mới và xác nhận mật khẩu không khớp!",
+                    }
+                );
+            }
+
+            // Kiểm tra mật khẩu mới theo chuẩn Regex: ít nhất 8 ký tự, có số và chữ
+            var passwordPattern = @"^(?=.*\d)(?=.*[a-zA-Z]).{8,}$";
+            if (!Regex.IsMatch(newPassword, passwordPattern))
+            {
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ và số!",
+                    }
+                );
+            }
+
+            // Cập nhật mật khẩu mới
+            user.Password = newPassword;
+            await _accountRepository.UpdateAccountAsync(user);
+
+            return Json(new { success = true, message = "Mật khẩu đã được thay đổi thành công!" });
         }
 
         [HttpPost]
@@ -274,15 +340,15 @@ namespace KLTN.Controllers
             return View();
         }
 
-        // Xử lý gửi OTP qua email
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(string email)
         {
             var user = await _accountRepository.GetAccountByEmailAsync(email);
             if (user == null)
             {
-                ViewBag.Error = "Email không tồn tại trong hệ thống.";
-                return View();
+                return Json(
+                    new { success = false, message = "Email không tồn tại trong hệ thống." }
+                );
             }
 
             // Tạo mã OTP
@@ -296,7 +362,14 @@ namespace KLTN.Controllers
             var body = $"Mã OTP của bạn là: <b>{otp}</b>. Mã này sẽ hết hạn sau 5 phút.";
             await SendEmailAsync(email, subject, body);
 
-            return RedirectToAction("VerifyOtp", new { email });
+            return Json(
+                new
+                {
+                    success = true,
+                    message = "Mã OTP đã được gửi đến email của bạn.",
+                    email,
+                }
+            );
         }
 
         // Giao diện nhập OTP
@@ -306,30 +379,32 @@ namespace KLTN.Controllers
             return View();
         }
 
-        // Xác nhận OTP
         [HttpPost]
         public IActionResult VerifyOtp(string email, int otp)
         {
-            // Kiểm tra OTP từ MemoryCache
             if (_memoryCache.TryGetValue($"OTP_{email}", out string savedOtp))
             {
                 if (savedOtp == otp.ToString())
                 {
-                    // OTP hợp lệ, chuyển đến đặt lại mật khẩu
-                    return RedirectToAction("ResetPassword", new { email });
+                    // Xóa OTP khỏi cache sau khi xác minh thành công
+                    _memoryCache.Remove($"OTP_{email}");
+
+                    return Json(
+                        new
+                        {
+                            success = true,
+                            message = "Xác minh thành công! Đang chuyển hướng...",
+                            redirectUrl = Url.Action("ResetPassword", "Account", new { email }),
+                        }
+                    );
                 }
                 else
                 {
-                    ViewBag.Message = "Mã OTP không chính xác!";
+                    return Json(new { success = false, message = "Mã OTP không chính xác!" });
                 }
             }
-            else
-            {
-                ViewBag.Message = "Mã OTP đã hết hạn hoặc không tồn tại!";
-            }
 
-            ViewBag.Email = email;
-            return View();
+            return Json(new { success = false, message = "Mã OTP đã hết hạn hoặc không tồn tại!" });
         }
 
         // Giao diện đặt lại mật khẩu
@@ -347,30 +422,44 @@ namespace KLTN.Controllers
             string confirmPassword
         )
         {
+            var passwordPattern = @"^(?=.*\d)(?=.*[a-zA-Z]).{8,}$";
+            if (!Regex.IsMatch(newPassword, passwordPattern))
+            {
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ và số!",
+                    }
+                );
+            }
+
             if (newPassword != confirmPassword)
             {
-                ViewBag.Message = "Mật khẩu xác nhận không khớp!";
-                ViewBag.Email = email;
-                return View();
+                return Json(new { success = false, message = "Mật khẩu xác nhận không khớp!" });
             }
 
             // Lấy user theo email
             var user = await _accountRepository.GetAccountByEmailAsync(email);
             if (user == null)
             {
-                ViewBag.Message = "Tài khoản không tồn tại!";
-                return View();
+                return Json(new { success = false, message = "Tài khoản không tồn tại!" });
             }
 
             // Cập nhật mật khẩu mới
             user.Password = newPassword;
             await _accountRepository.UpdateAccountAsync(user);
 
-            ViewBag.Message = "Mật khẩu đã được cập nhật thành công!";
-            return RedirectToAction("Login");
+            return Json(
+                new
+                {
+                    success = true,
+                    message = "Mật khẩu đã được cập nhật thành công!",
+                    redirectUrl = Url.Action("Login", "Account"),
+                }
+            );
         }
 
-        // Hàm gửi email
         private async Task SendEmailAsync(string toEmail, string subject, string body)
         {
             var smtpServer = _configuration["EmailSettings:SmtpServer"];

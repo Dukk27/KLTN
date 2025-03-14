@@ -1,5 +1,8 @@
 @model KLTN.ViewModels.HousePostViewModel
 
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <link rel="stylesheet" href="~/css/edit.css" asp-append-version="true" />
 
 <h2 style="color: rgb(35, 164, 207); text-align: center;">Chỉnh sửa thông tin nhà trọ</h2>
@@ -120,4 +123,51 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+
+            form.addEventListener("submit", function (event) {
+                event.preventDefault(); // Ngăn chặn submit mặc định
+
+                Swal.fire({
+                    title: "Xác nhận?",
+                    text: "Bạn có chắc muốn lưu thay đổi?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Lưu",
+                    cancelButtonText: "Hủy"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(form.action, {
+                            method: "POST",
+                            body: new FormData(form)
+                        })
+                        .then(response => response.json()) 
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: "Thành công!",
+                                    text: data.message,
+                                    icon: "success",
+                                    confirmButtonText: "OK"
+                                }).then(() => {
+                                    @* window.location.href = "/QuanLi/ListHouseRoom"; *@
+                                    window.location.href = "/Home/Index";
+                                });
+                            } else {
+                                Swal.fire("Lỗi!", data.message || "Có lỗi xảy ra!", "error");
+                            }
+                        })
+                        .catch(() => {
+                            Swal.fire("Lỗi!", "Không thể lưu thay đổi!", "error");
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 }

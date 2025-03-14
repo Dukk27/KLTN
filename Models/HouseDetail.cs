@@ -16,8 +16,12 @@ namespace KLTN.Models
         [StringLength(200, ErrorMessage = "Địa chỉ không được quá 200 ký tự.")]
         public string Address { get; set; } = null!;
 
+        [Required(ErrorMessage = "Tiền thuê là bắt buộc.")]
+        [Range(0, 999999999, ErrorMessage = "Tiền thuê không hợp lệ.")]
         public decimal Price { get; set; }
 
+        [Required(ErrorMessage = "Diện tích là bắt buộc.")]
+        [Range(0, 999999999, ErrorMessage = "Diện tích không hợp lệ.")]
         public double DienTich { get; set; }
 
         [Required(ErrorMessage = "Tiền điện là bắt buộc.")]

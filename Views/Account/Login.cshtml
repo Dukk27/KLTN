@@ -1,16 +1,23 @@
 @{
     ViewData["Title"] = "Đăng nhập";
 }
-<div class="container mt-5">
-    <div class="card shadow-lg mx-auto" style="max-width: 450px; padding: 20px;">
-        <div class="card-body">
-            <h1 class="text-center mb-4" style="color: purple;">Chào mừng quý khách đến với TIMTRODE</h1>
 
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+
+<div class="login-container">
+    <div class="card login-card">
+        <div class="card-body">
+            <h1>Chào mừng quý khách đến với TIMTRODE</h1>
             <h2 class="text-center mb-4">Đăng nhập</h2>
 
             @if (ViewBag.Error != null)
             {
-                <div class="alert alert-danger">@ViewBag.Error</div>
+                <div class="alert alert-danger show">@ViewBag.Error</div>
             }
 
             <form method="post" asp-action="Login">
@@ -25,7 +32,7 @@
                         placeholder="Nhập mật khẩu" />
                 </div>
                 <div class="text-center mb-3">
-                    <button type="submit" class="btn btn-primary" style="width: 250px;">Đăng nhập</button>
+                    <button type="submit" class="btn btn-primary">Đăng nhập</button>
                 </div>
             </form>
 
@@ -34,93 +41,11 @@
             </p>
 
             <p class="text-center mt-3">
-                <a>Chưa có tài khoản? <a asp-action="Register">Đăng ký ngay!</a></a>
+                Chưa có tài khoản? <a asp-action="Register">Đăng ký ngay!</a>
             </p>
         </div>
     </div>
 </div>
-
-<style>
-    body {
-        background-color: #f8f9fa;
-        font-family: 'Arial', sans-serif;
-        height: 100vh;
-        /* Chiều cao toàn màn hình */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0;
-    }
-
-    .container {
-        margin-top: 80px;
-        /* Đẩy form xuống để tránh header */
-    }
-
-    h2 {
-        color: #343a40;
-        font-size: 2.2rem;
-        transition: color 0.3s;
-    }
-
-    .card {
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s, box-shadow 0.3s;
-        background: white;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-    }
-
-    .form-control {
-        border-radius: 8px;
-        transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .form-control:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    }
-
-    .btn-primary {
-        border-radius: 8px;
-        transition: background-color 0.3s, transform 0.2s;
-        font-size: 1.1rem;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-        transform: scale(1.05);
-    }
-
-    .alert {
-        margin-top: 20px;
-        transition: opacity 0.5s ease;
-    }
-
-    .alert.show {
-        opacity: 1;
-    }
-
-    .alert.hide {
-        opacity: 0;
-    }
-
-    a {
-        color: #007bff;
-        text-decoration: none;
-        transition: color 0.3s;
-    }
-
-    a:hover {
-        color: #0056b3;
-        text-decoration: underline;
-    }
-</style>
 
 <script>
     $(document).ready(function () {

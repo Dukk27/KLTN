@@ -10,22 +10,25 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<input type="hidden" id="userAuthenticated" value="@User.Identity.IsAuthenticated.ToString().ToLower()" />
+<script src="~/js/ListHouse.js" asp-append-version="true"></script>
+
 
 <div class="container-fluid mt-2">
     <div class="d-flex align-items-center justify-content-end">
         @if (Model.IsChuTro || Model.IsAdmin)
         {
             <button id="showCreateHouseForm" class="btn btn-primary ml-2" style="height: 45px">
-                Cung cấp thông tin nhà trọ
+                <i class="fas fa-home"></i> Cung cấp thông tin nhà trọ
             </button>
 
             <a asp-action="ListHouseRoom" asp-controller="QuanLi" id="managePosts" asp-route-userId="@ViewBag.userId"
-               class="btn btn-primary ml-2" style="height: 45px">
-                Quản lí bài đăng
+            class="btn btn-primary ml-2" style="height: 45px">
+                <i class="fas fa-file-alt"></i> Quản lí bài đăng
             </a>
 
             <a asp-action="Index" asp-controller="Appointment" class="btn btn-primary ml-2" style="height: 45px">
-                Lịch hẹn
+                <i class="fas fa-calendar-check"></i> Lịch hẹn
             </a>
         }
     </div>
@@ -49,7 +52,7 @@
                                     <input type="text" name="searchString" class="form-control"
                                         placeholder="Tìm kiếm theo địa chỉ..."
                                         style="width: 400px; margin-right: 12px;" value="@ViewBag.Keyword" />
-                                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Tìm kiếm</button>
                                 </div>
                             }
                         </div>
@@ -61,7 +64,7 @@
                     <div class="d-flex align-items-center">
                         <div class="dropdown" style="margin-right: 4px;">
                             <button class="dropdown-button">
-                                Danh mục <span class="dropdown-arrow">▼</span>
+                                <i class="fas fa-list-alt"></i>&nbsp;Danh mục <span class="dropdown-arrow">▼</span>
                             </button>
                             <div class="dropdown-content">
                                 @foreach (var houseType in Model.HouseTypes)
@@ -75,6 +78,7 @@
 
                     <button class="btn btn-secondary" data-toggle="modal" data-target="#filterModal"
                         style="margin-left: 10px; background-color: #007bff;">
+                        <i class="fas fa-sliders-h"></i>
                         Bộ lọc
                     </button>
                 </div>
@@ -205,7 +209,6 @@
                     <div class="card-body">
                         <h5 class="card-title">@house.NameHouse</h5>
                         <p class="card-text"><strong>Địa chỉ:</strong> @house.HouseDetails.FirstOrDefault()?.Address</p>
-                        @* <p class="card-text"><strong>Verifykey: @house.VerifyKey</strong></p> *@
                         <p class="card-text">
                             <strong>Giá nhà:</strong>
                             @house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new
@@ -242,189 +245,4 @@
     </div>
 </div>
 
-<!-- JavaScript -->
-<script>
-    // Xử lý khi click vào nút "Cung cấp thông tin nhà trọ"
-    $(document).ready(function() {
-        // Lưu trữ các hàm giao tiếp giữa iframe và trang chính
-        window.closeModalFromIframe = function() {
-            $('#createHouseModal').modal('hide');
-        };
-        
-        // Xử lý sự kiện khi modal đóng
-        $('#createHouseModal').on('hidden.bs.modal', function () {
-            // Reset nội dung iframe
-            $('#createHouseIframe').attr('src', '');
-            $('#createHouseIframe').hide();
-            $('#loadingSpinner').show();
-        });
-        
-        $("#showCreateHouseForm").click(function() {
-            const isAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
-            
-            if (!isAuthenticated) {
-                alert('Bạn chưa đăng nhập. Vui lòng đăng nhập để thực hiện chức năng này.');
-                return;
-            }
-            
-            // Hiển thị modal với loading
-            $("#createHouseModal").modal('show');
-            $('#loadingSpinner').show();
-            $('#createHouseIframe').hide();
-            
-            // Sử dụng iframe để tải form
-            var iframeSrc = '@Url.Action("CreatePartial", "House")';
-            $('#createHouseIframe').attr('src', iframeSrc);
-            
-            // Khi iframe đã tải xong
-            $('#createHouseIframe').on('load', function() {
-                $('#loadingSpinner').hide();
-                $('#createHouseIframe').show();
-                
-                // Điều chỉnh chiều cao iframe theo nội dung
-                try {
-                    var iframeHeight = $('#createHouseIframe').contents().find('body').height();
-                    $('#createHouseIframe').height(iframeHeight + 50);
-                } catch (e) {
-                    console.error("Không thể điều chỉnh chiều cao iframe:", e);
-                    $('#createHouseIframe').height(600); // Chiều cao mặc định
-                }
-                
-                // Truyền hàm đóng modal vào iframe
-                try {
-                    $('#createHouseIframe')[0].contentWindow.closeModal = window.closeModalFromIframe;
-                } catch (e) {
-                    console.error("Không thể truyền hàm closeModal vào iframe:", e);
-                }
-            });
-        });
-        
-        // Đóng modal khi nhấn nút đóng
-        $("#closeModalBtn, #closeModalFooterBtn").click(function() {
-            $('#createHouseModal').modal('hide');
-        });
-    });
 
-    function goToDetail(houseId) {
-        const detailUrl = `/Home/Detail?id=${houseId}`;
-        fetch(detailUrl, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = detailUrl;
-                } else {
-                    alert('Không tìm thấy trang chi tiết cho nhà trọ này.');
-                }
-            })
-            .catch(error => {
-                console.error('Có lỗi xảy ra:', error);
-                alert('Đã xảy ra lỗi khi chuyển đến trang chi tiết.');
-            });
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const filterModal = document.getElementById('filterModal');
-        if (filterModal) {
-            filterModal.addEventListener('show.bs.modal', function () {
-                const form = filterModal.querySelector('form');
-                if (form) {
-                    form.reset();
-                }
-            });
-        }
-    });
-</script>
-
-<style>
-    /* Thêm CSS cho modal tạo nhà trọ */
-    .modal-xl {
-        max-width: 1140px;
-    }
-    
-    /* Đảm bảo modal có z-index cao hơn các phần tử khác */
-    .modal {
-        z-index: 1050;
-    }
-    
-    .modal-backdrop {
-        z-index: 1040;
-    }
-    
-    /* Loại bỏ padding của modal body để iframe có thể sử dụng toàn bộ không gian */
-    .modal-body.p-0 {
-        padding: 0 !important;
-    }
-    
-    /* CSS cho spinner loading */
-    .spinner-border {
-        display: inline-block;
-        width: 2rem;
-        height: 2rem;
-        vertical-align: text-bottom;
-        border: 0.25em solid currentColor;
-        border-right-color: transparent;
-        border-radius: 50%;
-        animation: spinner-border .75s linear infinite;
-    }
-    
-    /* Đảm bảo nút đóng hiển thị đúng */
-    .close {
-        float: right;
-        font-size: 1.5rem;
-        font-weight: 700;
-        line-height: 1;
-        color: #000;
-        text-shadow: 0 1px 0 #fff;
-        opacity: .5;
-        background-color: transparent;
-        border: 0;
-        padding: 0;
-        margin: 0;
-    }
-    
-    .close:hover {
-        color: #000;
-        text-decoration: none;
-        opacity: .75;
-    }
-    
-    /* Đảm bảo form-inline hoạt động đúng */
-    .form-inline {
-        display: flex;
-        flex-flow: row wrap;
-        align-items: center;
-    }
-    
-    .form-inline .form-control {
-        display: inline-block;
-        width: auto;
-        vertical-align: middle;
-    }
-
-    /* Đảm bảo iframe hiển thị đúng */
-    #createHouseIframe {
-        width: 100% !important;
-        height: 800px !important;
-        border: none !important;
-    }
-    
-    /* Đảm bảo modal content có kích thước đủ lớn */
-    .modal-content {
-        width: 100% !important;
-        height: auto !important;
-        min-height: 800px !important;
-    }
-    
-    /* Đảm bảo loading spinner hiển thị đúng vị trí */
-    #loadingSpinner {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1060;
-    }
-</style>

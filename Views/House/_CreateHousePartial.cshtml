@@ -8,12 +8,13 @@
 {
     <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
 }
+
 <form asp-action="Create" method="post" enctype="multipart/form-data" id="createHouseForm" target="_top">
     <div class="section">
         <h4>Thông tin liên hệ</h4>
         <div class="row">
 
-        </div> 
+        </div>
 
         <!-- Trường liên hệ thứ 2 (có thể để trống) -->
         <div class="row">
@@ -21,14 +22,14 @@
                 <div class="form-group">
                     <label asp-for="HouseDetail.ContactName2">Người liên hệ 2</label>
                     <input asp-for="HouseDetail.ContactName2" class="form-control"
-                        placeholder="Nhập tên người liên hệ thứ 2" />
+                        placeholder="Tên người liên hệ (VD: Nguyễn Văn A)" />
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label asp-for="HouseDetail.ContactPhone2">Số liên hệ 2</label>
                     <input asp-for="HouseDetail.ContactPhone2" class="form-control"
-                        placeholder="Nhập số điện thoại thứ 2" />
+                        placeholder="Số điện thoại (VD: 0912345678)" />
                 </div>
             </div>
         </div>
@@ -40,21 +41,22 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label asp-for="HouseDetail.DienTich">Diện tích (m²) *</label>
-                    <input asp-for="HouseDetail.DienTich" class="form-control" placeholder="0" />
+                    <input asp-for="HouseDetail.DienTich" class="form-control" placeholder="Diện tích (VD: 25)" />
                     <span asp-validation-for="HouseDetail.DienTich" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label asp-for="HouseDetail.Price">Giá thuê (VNĐ/tháng) *</label>
-                    <input asp-for="HouseDetail.Price" class="form-control" placeholder="0.00" />
+                    <input asp-for="HouseDetail.Price" class="form-control" placeholder="Giá thuê (VD: 3.000.000)" />
                     <span asp-validation-for="HouseDetail.Price" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label asp-for="House.NameHouse">Tiêu đề *</label>
-                    <input asp-for="House.NameHouse" class="form-control" placeholder="Nhập tiêu đề bài đăng" />
+                    <input asp-for="House.NameHouse" class="form-control"
+                        placeholder="Tiêu đề (VD: Phòng trọ giá rẻ)" />
                     <span asp-validation-for="House.NameHouse" class="text-danger"></span>
                 </div>
             </div>
@@ -64,14 +66,14 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label asp-for="HouseDetail.TienDien">Giá điện (vnđ/kwh) *</label>
-                    <input asp-for="HouseDetail.TienDien" class="form-control" />
+                    <input asp-for="HouseDetail.TienDien" class="form-control" placeholder="Giá điện (VD: 3.500)" />
                     <span asp-validation-for="HouseDetail.TienDien" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label asp-for="HouseDetail.TienNuoc">Giá nước (vnđ/m³) *</label>
-                    <input asp-for="HouseDetail.TienNuoc" class="form-control" />
+                    <input asp-for="HouseDetail.TienNuoc" class="form-control" placeholder="Giá nước (VD: 10.000)" />
                     <span asp-validation-for="HouseDetail.TienNuoc" class="text-danger"></span>
                 </div>
             </div>
@@ -79,7 +81,7 @@
                 <div class="form-group">
                     <label asp-for="HouseDetail.Describe">Mô tả *</label>
                     <textarea asp-for="HouseDetail.Describe" class="form-control" rows="5"
-                        placeholder="Nhập mô tả..."></textarea>
+                        placeholder="Mô tả chi tiết về nhà trọ (VD: Phòng rộng rãi, có ban công...)"></textarea>
                     <span asp-validation-for="HouseDetail.Describe" class="text-danger"></span>
                 </div>
             </div>
@@ -89,7 +91,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Tiền cọc (VNĐ)</label>
-                    <input type="text" class="form-control" />
+                    <input type="text" class="form-control" placeholder="Tiền cọc (VD: 1.000.000)" />
                 </div>
             </div>
             <div class="col-md-3">
@@ -107,14 +109,12 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label asp-for="HouseDetail.TienDv">Giá dịch vụ khác</label>
-                    <input asp-for="HouseDetail.TienDv" class="form-control" />
+                    <input asp-for="HouseDetail.TienDv" class="form-control" placeholder="Giá dịch vụ (VD: 100.000)" />
                     <span asp-validation-for="HouseDetail.TienDv" class="text-danger"></span>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Thêm các phần khác của form tại đây -->
 
     <div class="section">
         <h4>Địa chỉ</h4>
@@ -148,8 +148,8 @@
         </div>
         <div class="mt-2">
             <label for="fullAddress">Địa chỉ đầy đủ *</label>
-            <input type="text" id="fullAddress" class="form-control required" placeholder="Nhập địa chỉ đầy đủ"
-                required />
+            <input type="text" id="fullAddress" class="form-control required"
+                placeholder="Địa chỉ cụ thể (VD: 96 Định Công)" required />
             <span id="fullAddressError" class="text-danger"></span>
         </div>
         <input type="hidden" id="address" name="HouseDetail.Address" />

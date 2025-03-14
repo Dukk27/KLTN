@@ -16,3 +16,190 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Đảm bảo trang có đủ chiều cao để footer nằm dưới đáy */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Nội dung chính sẽ đẩy footer xuống nếu cần */
+.header {
+  flex: 1;
+}
+
+/* Footer cố định dưới đáy, không để khoảng trống thừa */
+.footer {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+}
+
+.footer a {
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.footer a:hover {
+  color: #f8f9fa;
+}
+
+.footer .row {
+  margin-bottom: 10px;
+}
+
+.footer hr {
+  width: 80%;
+  margin: 10px auto;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  /* Điều chỉnh khoảng cách so với header/footer */
+  padding: 20px 0;
+}
+
+/* Card chứa form */
+.login-card {
+  max-width: 450px;
+  width: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+body {
+padding-top: 70px; /* Giảm khoảng cách với header */
+padding-bottom: 50px; /* Giảm khoảng cách với footer */
+}
+
+/* Tiêu đề */
+.login-card h1 {
+  font-size: 22px;
+  color: purple;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Nhãn */
+.login-card label {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Ô nhập liệu */
+.login-card input {
+  border-radius: 6px;
+  padding: 10px;
+}
+
+/* Nút đăng nhập */
+.login-card .btn-primary {
+  width: 100%;
+  background-color: #007bff;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.login-card .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Link hỗ trợ */
+.login-card a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.login-card a:hover {
+  text-decoration: underline;
+}
+
+/* Hiệu ứng thông báo lỗi */
+.alert {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.alert.show {
+  opacity: 1;
+}
+
+.alert.hide {
+  opacity: 0;
+}
+
+
+    /* Định dạng chung cho trang đăng ký */
+    .register-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 120px);
+      /* Điều chỉnh khoảng cách so với header/footer */
+      padding: 20px 0;
+  }
+
+  /* Card chứa form đăng ký */
+  .register-card {
+      max-width: 450px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Điều chỉnh khoảng cách của body để header và footer không bị chồng chéo */
+  body {
+      padding-top: 70px;
+      /* Giảm khoảng cách với header */
+      padding-bottom: 50px;
+      /* Giảm khoảng cách với footer */
+  }
+
+  /* Nút đăng ký */
+  .register-card .btn-primary {
+      width: 100%;
+      background-color: #007bff;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: 0.3s;
+  }
+
+  .register-card .btn-primary:hover {
+      background-color: #0056b3;
+  }
+
+  /* Radio button */
+  .register-card .form-check-input {
+      margin-right: 5px;
+  }
+
+  .register-card .form-check-label {
+      font-weight: normal;
+  }
+
+  /* Căn giữa phần đăng nhập */
+  .register-card p {
+      text-align: center;
+  }

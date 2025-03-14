@@ -22,8 +22,8 @@ namespace KLTN.Models
 
         [Required(ErrorMessage = "Mật khẩu là bắt buộc.")]
         [RegularExpression(
-            @"^(?=.*\d).{8,}$",
-            ErrorMessage = "Mật khẩu phải có ít nhất 8 ký tự và chứa ít nhất 1 ký tự là số."
+            @"^(?=.*\d)(?=.*[a-zA-Z]).{8,}$",
+            ErrorMessage = "Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ cái và 1 số."
         )]
         public string Password { get; set; }
 

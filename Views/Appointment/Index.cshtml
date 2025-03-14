@@ -4,82 +4,152 @@
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">Chưa có lịch hẹn nào cho bài đăng của bạn.</div>
+    <div class="no-appointments">Chưa có lịch hẹn nào cho bài đăng của bạn.</div>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Người Đặt Hẹn</th>
-                <th>Tên Nhà Trọ</th>
-                <th>Ngày Hẹn</th>
-                <th>Trạng Thái</th>
-                <th>Hành Động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var appointment in Model)
-            {
+    <div class="table-container">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@appointment.User?.UserName</td>
-                    <td>@appointment.House?.NameHouse</td>
-                    <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy")</td>
-                    <td>
-                        @if (appointment.Status == AppointmentStatus.Pending)
-                        {
-                            <span class="badge badge-warning">Chờ xác nhận</span>
-                        }
-                        else if (appointment.Status == AppointmentStatus.Confirmed)
-                        {
-                            <span class="badge badge-success">Đã xác nhận</span>
-                        }
-                        else
-                        {
-                            <span class="badge badge-danger">Đã hủy</span>
-                        }
-                    </td>
-                    <td>
-                        @if (appointment.Status == AppointmentStatus.Pending)
-                        {
-                            <button class="btn btn-success confirm-btn" data-id="@appointment.AppointmentId">Xác nhận</button>
-                            <button class="btn btn-danger cancel-btn" data-id="@appointment.AppointmentId">Hủy</button>
-                        }
-                        else
-                        {
-                            <span class="text-muted">Không khả dụng</span>
-                        }
-                    </td>
+                    <th>Người Đặt Hẹn</th>
+                    <th>Tên Nhà Trọ</th>
+                    <th>Ngày Hẹn</th>
+                    <th>Trạng Thái</th>
+                    <th>Hành Động</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var appointment in Model)
+                {
+                    <tr>
+                        <td>@appointment.User?.UserName</td>
+                        <td>@appointment.House?.NameHouse</td>
+                        <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (appointment.Status == AppointmentStatus.Pending)
+                            {
+                                <span class="badge badge-warning">Chờ xác nhận</span>
+                            }
+                            else if (appointment.Status == AppointmentStatus.Confirmed)
+                            {
+                                <span class="badge badge-success">Đã xác nhận</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Đã hủy</span>
+                            }
+                        </td>
+                        <td>
+                            @if (appointment.Status == AppointmentStatus.Pending)
+                            {
+                                <button class="btn btn-success confirm-btn" data-id="@appointment.AppointmentId">Xác nhận</button>
+                                <button class="btn btn-danger cancel-btn" data-id="@appointment.AppointmentId">Hủy</button>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Không khả dụng</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     document.querySelectorAll('.confirm-btn').forEach(button => {
         button.addEventListener('click', async function () {
             const id = this.getAttribute('data-id');
-            const response = await fetch('/Appointment/Confirm?id=' + id, { method: 'POST' });
-            const result = await response.json();
-            alert(result.message);
-            location.reload();
+
+            Swal.fire({
+                title: "Xác nhận lịch hẹn?",
+                text: "Bạn có chắc chắn muốn xác nhận lịch hẹn này?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#28a745",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Xác nhận",
+                cancelButtonText: "Hủy"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const response = await fetch('/Appointment/Confirm?id=' + id, { method: 'POST' });
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        Swal.fire({
+                            title: "Thành công!",
+                            text: result.message,
+                            icon: "success",
+                            confirmButtonColor: "#28a745"
+                        });
+
+                        // **Cập nhật giao diện**
+                        const row = button.closest('tr');
+
+                        // Cập nhật trạng thái
+                        const statusCell = row.querySelector('td:nth-child(4)');
+                        statusCell.innerHTML = '<span class="badge badge-success">Đã xác nhận</span>';
+
+                        // Xóa các nút xác nhận và hủy, thay bằng chữ "Không khả dụng"
+                        const actionCell = row.querySelector('td:nth-child(5)');
+                        actionCell.innerHTML = '<span class="text-muted">Không khả dụng</span>';
+                    }
+                }
+            });
         });
     });
 
     document.querySelectorAll('.cancel-btn').forEach(button => {
         button.addEventListener('click', async function () {
             const id = this.getAttribute('data-id');
-            const response = await fetch('/Appointment/Cancel?id=' + id, { method: 'POST' });
-            const result = await response.json();
-            alert(result.message);
-            location.reload();
+
+            Swal.fire({
+                title: "Hủy lịch hẹn?",
+                text: "Bạn có chắc chắn muốn hủy lịch hẹn này?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc3545",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Hủy",
+                cancelButtonText: "Quay lại"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const response = await fetch('/Appointment/Cancel?id=' + id, { method: 'POST' });
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        Swal.fire({
+                            title: "Đã hủy!",
+                            text: result.message,
+                            icon: "success",
+                            confirmButtonColor: "#dc3545"
+                        });
+
+                        // **Cập nhật giao diện**
+                        const row = button.closest('tr');
+
+                        // Cập nhật trạng thái
+                        const statusCell = row.querySelector('td:nth-child(4)');
+                        statusCell.innerHTML = '<span class="badge badge-danger">Đã hủy</span>';
+
+                        // Xóa các nút xác nhận và hủy, thay bằng chữ "Không khả dụng"
+                        const actionCell = row.querySelector('td:nth-child(5)');
+                        actionCell.innerHTML = '<span class="text-muted">Không khả dụng</span>';
+                    }
+                }
+            });
         });
     });
+
 </script>
 
 <style>
-    h2{
+    h2 {
         font-family: Arial, sans-serif;
         color: #333;
         margin-top: 20px;
@@ -88,20 +158,35 @@ else
         text-align: center;
     }
 
-    .table {
-        width: 100%;
-        border-collapse: collapse;
+    .table-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
         margin-top: 20px;
-        background: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .table th, .table td {
+    .table {
+        width: 100%;
+        max-width: 1300px;
+        border-collapse: collapse;
+        background: #fff;
+        overflow: hidden;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid #333;
+        margin-bottom: 30px;
+    }
+
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th,
+    .table td {
         padding: 12px;
         text-align: center;
         border-bottom: 1px solid #ddd;
+        border: 1px solid #333;
+
     }
 
     .table th {
@@ -109,6 +194,7 @@ else
         color: #555;
         font-weight: bold;
         border-bottom: 2px solid #ddd;
+        border: 1px solid #333;
     }
 
     .table tbody tr:hover {
@@ -116,10 +202,11 @@ else
     }
 
     .table td {
-        border-right: 1px solid #ddd;
+        border-right: 1px solid #333;
     }
 
-    .table th:last-child, .table td:last-child {
+    .table th:last-child,
+    .table td:last-child {
         border-right: none;
     }
 
@@ -202,12 +289,19 @@ else
         background-color: #5a6368;
     }
 
-    .alert-info {
-        background-color: #d9edf7;
-        border-color: #bce8f1;
-        color: #31708f;
-        padding: 10px;
-        border-radius: 5px;
-        margin-top: 10px;
+    .no-appointments {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: #555;
+        background-color: #f8d7da;
+        /* Màu nền nhẹ nhàng */
+        border: 1px solid #f5c6cb;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
     }
 </style>

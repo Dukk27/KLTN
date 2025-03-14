@@ -101,12 +101,14 @@
         <div id="appointmentForm" class="appointment-form">
             <h3>Đặt Lịch Hẹn Xem Nhà</h3>
             <label for="appointmentDate">Chọn ngày:</label>
-            <input type="date" id="appointmentDate" required>
+            <input type="date" id="appointmentDate" required min="">
             <div class="appointment-buttons">
                 <button id="submitAppointment" class="btn btn-success">Xác nhận</button>
                 <button id="closeForm" class="btn btn-secondary">Hủy</button>
             </div>
         </div>
+        <input type="hidden" id="isAuthenticated" value="@User.Identity.IsAuthenticated.ToString().ToLower()" />
+        <input type="hidden" id="userRole" value="@ViewBag.UserRole" />
     }
 
     <h3 class="section-title">Tiện Ích</h3>
@@ -116,6 +118,8 @@
             <li class="amenity-item">@amenity.Name</li>
         }
     </ul>
+
+    <input type="hidden" id="house-address" data-address="@Model.HouseDetails.FirstOrDefault()?.Address" />
 
     <!-- Bản đồ -->
     <h3 class="section-title">Bản Đồ Vị Trí</h3>
@@ -171,187 +175,5 @@
 
 </div>
 
-
-<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-    var map = L.map('map').setView([21.028511, 105.804817], 13); // Mặc định là Hà Nội
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    var marker = L.marker([21.028511, 105.804817]).addTo(map); // Đặt marker mặc định tại Hà Nội
-
-    // Lấy địa chỉ từ Model (cần kiểm tra xem có giá trị không)
-    var addressFromModel = "@Model.HouseDetails.FirstOrDefault()?.Address";
-    var decodedAddress = new DOMParser().parseFromString(addressFromModel, "text/html").body.textContent;
-
-    console.log("Decoded Address: ", decodedAddress);
-
-    async function setInitialAddress() {
-        if (decodedAddress) {
-            const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(decodedAddress)}&format=json`);
-            const data = await response.json();
-
-            if (data.length > 0) {
-                const { lat, lon, display_name } = data[0];
-                map.setView([lat, lon], 15);
-                marker.setLatLng([lat, lon]).bindPopup(`<strong>Địa chỉ:</strong> ${display_name}`).openPopup();
-            }
-        }
-    }
-
-    // Gọi hàm để hiển thị vị trí khi trang tải
-    setInitialAddress();
-
-    // Hàm giải mã HTML entities
-    function decodeHtmlEntities(input) {
-        var doc = new DOMParser().parseFromString(input, 'text/html');
-        return doc.documentElement.textContent;
-    }
-
-    async function getDirections() {
-        var decodedAddress = "@Model.HouseDetails.FirstOrDefault()?.Address";
-
-        // Giải mã HTML entities
-        var address = decodeHtmlEntities(decodedAddress);
-
-        console.log("Decoded Address: ", address);  // Kiểm tra địa chỉ sau khi giải mã
-
-        if (!address) {
-            alert("Địa chỉ không hợp lệ.");
-            return;
-        }
-
-        // Mã hóa địa chỉ cho Google Maps
-        var googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
-        window.open(googleMapsUrl, '_blank');
-    }
-
-    async function submitReview() {
-        const rating = document.querySelector('input[name="rating"]:checked');
-        const content = document.getElementById('Content').value;
-        const reviewMessage = document.getElementById('reviewMessage');
-
-        if (!rating || !content) {
-            reviewMessage.innerText = "Vui lòng nhập đầy đủ thông tin.";
-            reviewMessage.style.display = "block";
-            return;
-        }
-        const houseId = document.querySelector('.review-form').getAttribute('data-house-id');
-        if (!houseId) {
-            reviewMessage.innerText = "Không tìm thấy IdHouse. Vui lòng thử lại.";
-            reviewMessage.style.display = "block";
-            return;
-        }
-        const reviewData = {
-            Rating: parseInt(rating.value),
-            Content: content
-        };
-
-        console.log("houseId:", houseId);
-        console.log("Review Data:", reviewData);
-
-        try {
-            const response = await fetch(`/api/Detail/house/detail/${houseId}/addreview`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(reviewData)
-            });
-
-            if (!response.ok) {
-                const errorDetail = await response.json();
-                console.error("Error Detail:", errorDetail);
-
-                reviewMessage.innerText = errorDetail.message || "Đã xảy ra lỗi.";
-                if (errorDetail.errors) {
-                    reviewMessage.innerHTML += "<br>" + errorDetail.errors.join("<br>");
-                }
-                reviewMessage.style.display = "block";
-                return;
-            }
-            const result = await response.json();
-            alert(result.message);
-            location.reload();
-        } catch (error) {
-            console.error("Unexpected Error:", error);
-            reviewMessage.innerText = "Đã xảy ra lỗi không xác định. Vui lòng thử lại.";
-            reviewMessage.style.display = "block";
-        }
-    }
-
-    async function locateUser() {
-        var addressFromModel = "@Model.HouseDetails.FirstOrDefault()?.Address"; // Địa chỉ từ Model
-        var decodedAddress = new DOMParser().parseFromString(addressFromModel, "text/html").body.textContent; // Giải mã HTML entities
-
-        console.log("Decoded Address: ", decodedAddress); // Kiểm tra giá trị của địa chỉ
-
-        if (!decodedAddress) {
-            alert("Địa chỉ không hợp lệ.");
-            return;
-        }
-
-        // Sử dụng OpenStreetMap Nominatim API để tìm tọa độ từ địa chỉ
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(decodedAddress)}&format=json`);
-        const data = await response.json();
-
-        if (data.length > 0) {
-            const { lat, lon, display_name } = data[0];
-            map.setView([lat, lon], 15); // Di chuyển bản đồ đến vị trí mới
-            marker.setLatLng([lat, lon]) // Cập nhật vị trí marker
-                .bindPopup(`<strong>Địa chỉ:</strong> ${display_name}`).openPopup(); // Hiển thị thông tin địa chỉ
-        } else {
-            alert("Không tìm thấy vị trí cho địa chỉ này.");
-        }
-    }
-
-</script>
-<script>
-    document.getElementById('bookAppointmentBtn').addEventListener('click', function () {
-        document.getElementById('appointmentForm').style.display = 'block';
-    });
-
-    document.getElementById('closeForm').addEventListener('click', function () {
-        document.getElementById('appointmentForm').style.display = 'none';
-    });
-
-    document.addEventListener('click', function (event) {
-        const form = document.getElementById('appointmentForm');
-        if (form.style.display === 'block' && !form.contains(event.target) && event.target.id !== 'bookAppointmentBtn') {
-            form.style.display = 'none';
-        }
-    });
-    document.getElementById('submitAppointment').addEventListener('click', async function () {
-        const date = document.getElementById('appointmentDate').value;
-        const houseId = "@Model.IdHouse";
-
-        if (!date) {
-            alert("Vui lòng chọn ngày!");
-            return;
-        }
-
-        const appointmentData = {
-            HouseId: houseId,
-            AppointmentDate: date
-        };
-
-        try {
-            const response = await fetch('/Appointment/Create', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(appointmentData)
-            });
-
-            const result = await response.json();
-            alert(result.message);
-            if (result.success) {
-                document.getElementById('appointmentForm').style.display = 'none';
-            }
-        } catch (error) {
-            alert("Có lỗi xảy ra! Vui lòng thử lại.");
-        }
-    });
-</script>
+<script src="~/js/Detail.js" asp-append-version="true"></script>

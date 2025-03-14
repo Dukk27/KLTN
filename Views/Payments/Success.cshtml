@@ -14,16 +14,17 @@
                         <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
                     </div>
                     <h5 class="card-title text-center">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi</h5>
-                    <p class="card-text text-center">Bài đăng của bạn đã được thanh toán thành công và sẽ được hiển thị trên hệ thống.</p>
-                    
+                    <p class="card-text text-center">Bài đăng của bạn đã được thanh toán thành công và sẽ được hiển thị
+                        trên hệ thống.</p>
+
                     @if (ViewBag.TransactionId != null)
                     {
                         <div class="alert alert-info mt-3">
                             <p><strong>Mã giao dịch:</strong> @ViewBag.TransactionId</p>
-                            <p><strong>Số tiền:</strong> @(ViewBag.Amount?.ToString("#,##0") ?? "100,000") VNĐ</p>
+                            <p><strong>Số tiền:</strong> @(ViewBag.Amount?.ToString("#,##0") ?? "50,000") VNĐ</p>
                         </div>
                     }
-                    
+
                     <div class="text-center mt-4">
                         <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Quay lại trang chủ</a>
                     </div>
@@ -32,3 +33,28 @@
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        max-width: 900px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .card-header {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .alert {
+        padding: 20px;
+    }
+
+    .btn-primary {
+        padding: 15px 30px;
+        font-size: 18px;}
+</style>
