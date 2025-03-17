@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using KLTN.Models;
 using KLTN.Repositories;
 using KLTN.Services;
 using KLTN.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -157,7 +150,7 @@ namespace KLTN.Controllers
                             }
                         );
                     }
-
+                    TempData["SuccessMessage"] = "Bài đăng của bạn đã được gửi đến quản trị viên!";
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -202,15 +195,36 @@ namespace KLTN.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetFreePostsRemaining()
+        {
+            int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
+            var user = await _context.Accounts.FindAsync(userId);
+
+            if (user == null)
+            {
+                return Json(new { success = false, message = "Người dùng không tồn tại." });
+            }
+
+            int freePostsRemaining = Math.Max(3 - user.FreePostsUsed, 0);
+
+            return Json(new { success = true, freePostsRemaining });
+        }
+
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> CreatePartial()
         {
+            int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
+            var user = await _context.Accounts.FindAsync(userId);
+            int freePostsRemaining = Math.Max(3 - (user?.FreePostsUsed ?? 0), 0);
+
             var model = new HousePostViewModel
             {
                 Amenities = (await _amenityRepository.GetAllAmenitiesAsync()).ToList(),
                 HouseTypes = (await _houseTypeRepository.GetAllHouseTypes()).Select(
                     ht => new SelectListItem { Value = ht.IdHouseType.ToString(), Text = ht.Name }
                 ),
+                FreePostsRemaining = freePostsRemaining,
             };
 
             return PartialView("_CreateHousePartial", model);

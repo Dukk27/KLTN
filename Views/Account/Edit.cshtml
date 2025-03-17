@@ -4,6 +4,15 @@
     ViewData["Title"] = "Chỉnh sửa thông tin tài khoản";
 }
 
+<link rel="stylesheet" href="~/css/iziToast.css">
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Chỉnh Sửa Thông Tin Tài Khoản @Model.UserName</li>
+    </ol>
+</nav>
+
 <h2 class="page-title">Chỉnh sửa thông tin tài khoản</h2>
 
 <form asp-action="Edit" method="post" class="account-form">
@@ -12,21 +21,6 @@
     <div class="form-group">
         <label for="UserName" class="form-label">Tên đăng nhập</label>
         <input type="text" class="form-control" id="UserName" name="UserName" value="@Model.UserName" required />
-    </div>
-
-    <!-- Vai trò - sử dụng radio buttons -->
-    <div class="form-group mb-4">
-        <label class="form-label">Vai trò</label><br />
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="role1" name="Role" value="1" @(Model.Role == 1 ? "checked"
-                                : "") required />
-            <label class="form-check-label" for="role1">Chủ trọ</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="role2" name="Role" value="2" @(Model.Role == 2 ? "checked"
-                                : "") required />
-            <label class="form-check-label" for="role2">Người tìm phòng</label>
-        </div>
     </div>
 
     <div class="form-group">
@@ -49,8 +43,16 @@
         </button>
     </div>
 
-
     <div class="form-group">
+        <label for="Role" class="form-label">Vai trò</label>
+        <input type="text" class="form-control" id="RoleDisplay"
+            value="@(Model.Role == 0 ? "Admin" : Model.Role == 1 ? "Chủ trọ" : "Người tìm thuê")" readonly />
+
+        <!-- Input ẩn để giữ giá trị thực của Role khi gửi form -->
+        <input type="hidden" id="Role" name="Role" value="@Model.Role" />
+    </div>
+
+    <div class="form-group" hidden>
         <label for="FreePostUsed" class="form-label">Số bài đăng free đã dùng</label>
         <input type="text" class="form-control" id="FreePostsUsed" name="FreePostsUsed" value="@Model.FreePostsUsed"
             readonly />
@@ -160,58 +162,81 @@
     }
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Thêm iziToast -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelector(".account-form").addEventListener("submit", function (event) {
-            event.preventDefault(); // Ngăn chặn form submit mặc định
+            event.preventDefault();
 
             let form = this;
             let formData = new FormData(form);
 
-            Swal.fire({
-                title: "Xác nhận cập nhật",
-                text: "Bạn có chắc chắn muốn cập nhật thông tin tài khoản không?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Có, cập nhật!",
-                cancelButtonText: "Không"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(form.action, {
-                        method: "POST",
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                icon: "success",
-                                title: "Cập nhật thành công!",
-                                text: "Thông tin tài khoản của bạn đã được cập nhật.",
-                                showConfirmButton: false,
-                                timer: 2000
-                            }).then(() => {
-                                window.location.href = '@Url.Action("Index", "Home")';
+            iziToast.question({
+                timeout: 20000,
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                zindex: 999,
+                title: '🔔 Xác nhận cập nhật',
+                message: 'Bạn có chắc chắn muốn cập nhật thông tin không?',
+                position: 'center',
+                class: 'iziToast-custom', /* Áp dụng class mới */
+                buttons: [
+                    ['<button><i class="fa fa-check"></i>Có, cập nhật</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                        fetch(form.action, {
+                            method: "POST",
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    iziToast.success({
+                                        title: 'Thành công!',
+                                        message: 'Thông tin tài khoản đã được cập nhật.',
+                                        position: 'topRight',
+                                        timeout: 1500,
+                                    });
+
+                                    document.querySelector(".breadcrumb-item.active").innerHTML =
+                                        `Chỉnh Sửa Thông Tin Tài Khoản ${data.updatedData.userName}`;
+                                    document.querySelector("#UserName").value = data.updatedData.userName;
+                                    document.querySelector("#PhoneNumber").value = data.updatedData.phoneNumber;
+                                    document.querySelector("#Email").value = data.updatedData.email;
+                                    document.getElementById("headerUserName").innerText = data.updatedData.userName;
+
+                                } else {
+                                    iziToast.error({
+                                        title: 'Thất bại!',
+                                        message: data.message,
+                                        position: 'topRight'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                iziToast.error({
+                                    title: 'Lỗi hệ thống!',
+                                    message: 'Không thể gửi yêu cầu, kiểm tra kết nối.',
+                                    position: 'topRight'
+                                });
                             });
-                        } else {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Cập nhật thất bại!",
-                                text: "Đã xảy ra lỗi, vui lòng thử lại.",
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Lỗi hệ thống!",
-                            text: "Không thể gửi yêu cầu, vui lòng kiểm tra lại kết nối.",
+
+                    }, true],
+
+                    ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                        iziToast.info({
+                            title: 'Thông báo',
+                            message: 'Bạn đã hủy cập nhật.',
+                            position: 'topRight'
                         });
-                    });
-                }
+                    }]
+                ]
             });
         });
     });

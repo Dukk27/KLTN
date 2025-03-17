@@ -1,5 +1,6 @@
 using System.Net;
 using System.Security.Claims;
+using KLTN.Helpers;
 using KLTN.Models;
 using KLTN.Repositories;
 using KLTN.Repository.House;
@@ -58,6 +59,7 @@ builder.Services.AddScoped<IAmenityRepository, AmenityRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<HouseService>();
 builder.Services.AddScoped<IHouseTypeRepository, HouseTypeRepository>();
+builder.Services.AddSingleton<EmailService>();
 
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())

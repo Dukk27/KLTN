@@ -2,38 +2,44 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3" id="sidebar">
-            <h3><i class="fas fa-cogs"></i> Quản lý hệ thống</h3>
+            <h3><i class="fas fa-cogs"></i> Quản Lý Hệ Thống</h3>
             <ul class="nav flex-column">
                 <li class="nav-item main-nav-item">
                     <a href="#" class="nav-link" id="manageAccountsLink">
-                        <i class="fas fa-user"></i> Quản lý tài khoản
+                        <i class="fas fa-user"></i> Quản Lý Tài Khoản
                     </a>
                 </li>
                 <li class="nav-item main-nav-item">
                     <a href="#" class="nav-link" id="managePostsLink">
-                        <i class="fas fa-file-alt"></i> Quản lí bài đăng
+                        <i class="fas fa-file-alt"></i> Quản Lí Bài Đăng
                     </a>
                 </li>
                 <li class="nav-item main-nav-item">
                     <a href="#" class="nav-link" id="manageReviewsLink">
-                        <i class="fas fa-comments"></i> Quản lý bình luận
+                        <i class="fas fa-comments"></i> Quản Lý Bình Luận
                     </a>
                 </li>
                 <li class="nav-item main-nav-item">
                     <a href="#" class="nav-link" id="manageHouseTypesLink">
-                        <i class="fas fa-house"></i> Quản lý Danh mục loại nhà
+                        <i class="fas fa-house"></i> Quản Lý Danh Mục Loại Nhà
                     </a>
                 </li>
 
                 <li class="nav-item main-nav-item">
                     <a href="#" class="nav-link" id="manageAmenitiesLink">
-                        <i class="fas fa-tools"></i> Quản lý Danh mục tiện nghi
+                        <i class="fas fa-tools"></i> Quản Lý Danh Mục Tiện Nghi
+                    </a>
+                </li>
+
+                <li class="nav-item main-nav-item">
+                    <a href="#" class="nav-link" id="postReportLink">
+                        <i class="fas fa-file-alt"></i> Thống Kê Bài Đăng Theo Tài Khoản
                     </a>
                 </li>
             </ul>
@@ -124,6 +130,13 @@
                 e.preventDefault();
                 $.get('@Url.Action("ManageAmenities", "Admin")', function (data) {
                     $('#contentPlaceholder').html(data); // Hiển thị bảng tiện nghi
+                });
+            });
+
+            $('#postReportLink').on('click', function (e) {
+                e.preventDefault();
+                $.get('@Url.Action("PostReport", "Admin")', function (data) {
+                    $('#contentPlaceholder').html(data); 
                 });
             });
         });

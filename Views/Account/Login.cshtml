@@ -7,19 +7,14 @@
 }
 
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
+<link rel="stylesheet" href="~/css/iziToast.css">
 
 <div class="login-container">
     <div class="card login-card">
         <div class="card-body">
             <h1>Chào mừng quý khách đến với TIMTRODE</h1>
             <h2 class="text-center mb-4">Đăng nhập</h2>
-
-            @if (ViewBag.Error != null)
-            {
-                <div class="alert alert-danger show">@ViewBag.Error</div>
-            }
-
+            
             <form method="post" asp-action="Login">
                 <div class="form-group mb-3">
                     <label for="userName">Tên đăng nhập</label>
@@ -47,14 +42,23 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        var errorMessage = $('.alert');
-        if (errorMessage.length) {
-            errorMessage.addClass('show');
-            setTimeout(function () {
-                errorMessage.removeClass('show').addClass('hide');
-            }, 3000); // 3 giây
-        }
-    });
-</script>
+@section Scripts {
+    <!-- Thêm thư viện iziToast -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+
+    <script>
+        $(document).ready(function () {
+            var errorMessage = '@Html.Raw(ViewBag.Error)';
+            if (errorMessage) {
+                iziToast.error({
+                    title: 'Lỗi đăng nhập',
+                    message: errorMessage,
+                    position: 'topRight',
+                    timeout: 1000
+                });
+            }
+        });
+    </script>
+}
+

@@ -1,7 +1,9 @@
 @model IEnumerable<KLTN.Models.HouseType>
 
+<link rel="stylesheet" href="~/css/iziToast.css">
+
 <div class="container">
-    <h4>Quản lý Loại Nhà</h4>
+    <h3 class="text-center mt-3">Quản lý Loại Nhà</h3>
     <button class="btn btn-primary mb-2" onclick="openCreateModal()">
         <i class="fa fa-plus-circle"></i> Thêm mới
     </button>
@@ -24,10 +26,10 @@
                     <td>@index</td>
                     <td>@houseType.Name</td>
                     <td>
-                        <button class="btn btn-primary btn-sm"
-                            onclick="openEditModal(@houseType.IdHouseType, '@houseType.Name')"><i class="fas fa-edit"></i>
+                        <button class="btn btn-warning btn-sm"
+                            onclick="openEditModal(@houseType.IdHouseType, '@houseType.Name')" title="Chỉnh sửa loại nhà"><i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteHouseType(@houseType.IdHouseType)"><i
+                        <button class="btn btn-danger btn-sm" onclick="deleteHouseType(@houseType.IdHouseType)" title="Xoá loại nhà"><i
                                 class="fas fa-trash-alt"></i> </button>
                     </td>
                 </tr>
@@ -58,8 +60,9 @@
     </div>
 </div>
 
-<!-- Thêm thư viện SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Thêm thư viện iziToast -->
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
 
 <script>
     function openCreateModal() {
@@ -85,10 +88,10 @@
         let name = $("#houseTypeName").val().trim();
 
         if (!name) {
-            Swal.fire({
-                icon: "warning",
+            iziToast.warning({
                 title: "Lỗi!",
-                text: "Tên loại nhà không được để trống.",
+                message: "Tên loại nhà không được để trống.",
+                position: "topRight"
             });
             return;
         }
@@ -103,61 +106,76 @@
             dataType: "json",
             data: data,
             success: function (response) {
-                Swal.fire({
-                    icon: response.success ? "success" : "error",
-                    title: response.success ? "Thành công!" : "Lỗi!",
-                    text: response.message,
-                    timer: 2000,
-                    showConfirmButton: false
-                }).then(() => {
-                    if (response.success) {
-                        closeModal();
-                        updateHouseTypeTable();
-                    }
+                iziToast.show({
+                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                    message: response.message,
+                    position: "topRight",
+                    color: response.success ? "green" : "red",
+                    timeout: 1000
                 });
+
+                if (response.success) {
+                    closeModal();
+                    updateHouseTypeTable();
+                }
             },
             error: function () {
-                Swal.fire({
-                    icon: "error",
+                iziToast.error({
                     title: "Lỗi!",
-                    text: "Có lỗi xảy ra, vui lòng thử lại.",
+                    message: "Có lỗi xảy ra, vui lòng thử lại.",
+                    position: "topRight"
                 });
             }
         });
     }
 
     function deleteHouseType(id) {
-        Swal.fire({
-            title: "Bạn có chắc chắn muốn xóa?",
-            text: "Hành động này không thể hoàn tác!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Xóa",
-            cancelButtonText: "Hủy"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "POST",
-                    url: "/Admin/DeleteHouseType",
-                    data: { id: id },
-                    success: function (response) {
-                        Swal.fire({
-                            icon: response.success ? "success" : "error",
-                            title: response.success ? "Đã xóa!" : "Lỗi!",
-                            text: response.message,
-                            timer: 2000,
-                            showConfirmButton: false
-                        }).then(() => {
-                            if (response.success) {
-                                $("#row_" + id).remove();
-                                updateHouseTypeTable();
+        iziToast.show({
+            class: "iziToast-custom",
+            title: "🔔 Xác nhận xóa",
+            message: "Bạn có chắc chắn muốn xóa? Hành động này không thể hoàn tác!",
+            position: "center",
+            timeout: false,
+            close: false,
+            overlay: true,
+            displayMode: "once",
+            drag: false,
+            icon: "fa fa-question-circle",
+            buttons: [
+                [
+                    '<button><i class="fa fa-check"></i> Có, xóa</button>',
+                    function (instance, toast) {
+                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Admin/DeleteHouseType",
+                            data: { id: id },
+                            success: function (response) {
+                                iziToast.show({
+                                    title: response.success ? "✅ Đã xóa!" : "❌ Lỗi!",
+                                    message: response.message,
+                                    position: "topRight",
+                                    color: response.success ? "green" : "red",
+                                    timeout: 1000
+                                });
+
+                                if (response.success) {
+                                    $("#row_" + id).remove();
+                                    updateHouseTypeTable();
+                                }
                             }
                         });
+                    },
+                    true
+                ],
+                [
+                    '<button><i class="fa fa-times"></i> Hủy</button>',
+                    function (instance, toast) {
+                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
                     }
-                });
-            }
+                ]
+            ]
         });
     }
 

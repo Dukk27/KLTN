@@ -10,11 +10,27 @@
     <link rel="stylesheet" href="~/css/Detail/Detail.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/review.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            @if (ViewBag.UserRole == 0)
+            {
+                <a href="@Url.Action("Index", "Admin")">Trang Chủ Admin</a>
+            }
+            else
+            {
+                <a href="@Url.Action("Index", "Home")">Trang Chủ</a>
+            }
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Thông Tin Chi Tiết Bài Đăng Nhà Trọ "@Model.NameHouse"
+        </li>
+    </ol>
+</nav>
 
 <div class="detail-container">
     <h1 class="section-title">Thông Tin Chi Tiết</h1>
@@ -35,38 +51,39 @@
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
-                            <td><i class="fa fa-map-marker" style="color: #007bff;"></i><strong>Địa chỉ</strong></td>
+                            <td><i class="fas fa-map-marker" style="color: #007bff;"></i><strong>Địa chỉ</strong></td>
                             <td>@detail.Address</td>
-                            <td><i class="fa fa-money-bill" style="color: #28a745;"></i><strong>Giá tiền</strong></td>
+                            <td><i class="fas fa-money-bill" style="color: #28a745;"></i><strong>Giá tiền</strong></td>
                             <td>@detail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</td>
                         </tr>
                         <tr>
-                            <td><i class="fa fa-user" style="color: #007bff;"></i><strong>Người liên hệ 1</strong></td>
+                            <td><i class="fas fa-user" style="color: #007bff;"></i><strong>Người liên hệ 1</strong></td>
                             <td>@Model.IdUserNavigation?.UserName</td>
-                            <td><i class="fa fa-phone" style="color: #17a2b8;"></i> <strong>Số điện thoại</strong></td>
+                            <td><i class="fas fa-phone" style="color: #17a2b8;"></i> <strong>Số điện thoại</strong></td>
                             <td colspan="3">@Model.IdUserNavigation?.PhoneNumber</td>
                         </tr>
                         <tr>
-                            <td><i class="fa fa-user" style="color: #007bff;"></i><strong>Người liên hệ 2</strong></td>
+                            <td><i class="fas fa-user" style="color: #007bff;"></i><strong>Người liên hệ 2</strong></td>
                             <td>@detail.ContactName2</td>
-                            <td><i class="fa fa-phone" style="color: #17a2b8;"></i> <strong>Số điện thoại 2</strong></td>
+                            <td><i class="fas fa-phone" style="color: #17a2b8;"></i> <strong>Số điện thoại 2</strong></td>
                             <td colspan="3">@detail.ContactPhone2</td>
                         </tr>
                         <tr>
-                            <td> <i class="fa fa-expand" style="color: #6c757d;"></i><strong>Diện tích</strong></td>
+                            <td> <i class="fas fa-ruler-combined" style="color: #6c757d;"></i><strong>Diện tích</strong>
+                            </td>
                             <td>@detail.DienTich m²</td>
-                            <td><i class="fa fa-bolt" style="color: #ffc107;"></i><strong> Tiền điện</strong></td>
+                            <td><i class="fas fa-bolt" style="color: #ffc107;"></i><strong> Tiền điện</strong></td>
                             <td>@detail.TienDien VND</td>
                         </tr>
                         <tr>
-                            <td><i class="fa fa-tint" style="color: #17a2b8;"></i> <strong>Tiền nước</strong></td>
+                            <td><i class="fas fa-tint" style="color: #17a2b8;"></i> <strong>Tiền nước</strong></td>
                             <td>@detail.TienNuoc VND</td>
-                            <td><i class="fa fa-cogs" style="color: #dc3545;"></i><strong>Tiền dịch vụ</strong></td>
+                            <td><i class="fas fa-coins" style="color: #dc3545;"></i><strong>Tiền dịch vụ</strong></td>
                             <td>@detail.TienDv VND</td>
                         </tr>
 
                         <tr>
-                            <td> <i class="fa fa-check-circle" style="color: #28a745;"></i><strong>Trạng thái</strong></td>
+                            <td> <i class="fas fa-check-circle" style="color: #28a745;"></i><strong>Trạng thái</strong></td>
                             <td>
                                 @if (detail.Status == "Chưa cho thuê")
                                 {
@@ -77,11 +94,11 @@
                                     <span class="status-rented">Đã cho thuê</span>
                                 }
                             </td>
-                            <td> <i class="fa fa-calendar" style="color: #007bff;"></i><strong>Ngày đăng</strong></td>
+                            <td> <i class="fas fa-calendar" style="color: #007bff;"></i><strong>Ngày đăng</strong></td>
                             <td>@detail.TimePost.ToString("dd/MM/yyyy")</td>
                         </tr>
                         <tr>
-                            <td> <i class="fa fa-info-circle" style="color: #343a40;"></i> <strong>Mô tả</strong></td>
+                            <td> <i class="fas fa-info-circle" style="color: #343a40;"></i> <strong>Mô tả</strong></td>
                             <td colspan="3">@detail.Describe</td>
                         </tr>
                     </tbody>
@@ -90,7 +107,7 @@
         </div>
     </div>
 
-    @if (userRole == 2)
+    @if (Model.IdUserNavigation?.UserName != ViewBag.UserId)
     {
         <div class="appointment-section">
             <button id="bookAppointmentBtn" class="btn btn-primary">Đặt lịch hẹn</button>
@@ -109,15 +126,22 @@
         </div>
         <input type="hidden" id="isAuthenticated" value="@User.Identity.IsAuthenticated.ToString().ToLower()" />
         <input type="hidden" id="userRole" value="@ViewBag.UserRole" />
+        <input type="hidden" id="houseOwnerId" value="@Model.IdUserNavigation.IdUser" />
+        <input type="hidden" id="currentUserId" value="@ViewBag.currentUserId" />
     }
 
     <h3 class="section-title">Tiện Ích</h3>
-    <ul class="amenities-list">
+    <div class="row">
         @foreach (var amenity in Model.IdAmenities)
         {
-            <li class="amenity-item">@amenity.Name</li>
+            <div class="col-md-3 col-sm-6 col-12 mb-3">
+                <div class="amenity-item">
+                    <i class="fas fa-check-circle" style="color: green; margin-right: 5px;"></i> @amenity.Name
+                </div>
+            </div>
         }
-    </ul>
+    </div>
+
 
     <input type="hidden" id="house-address" data-address="@Model.HouseDetails.FirstOrDefault()?.Address" />
 
@@ -172,8 +196,9 @@
         <p id="reviewMessage" style="display: none;"></p>
         <button type="button" onclick="submitReview()">Gửi đánh giá</button>
     </div>
-
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="~/js/Detail.js" asp-append-version="true"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />

@@ -1,7 +1,3 @@
-document.addEventListener('DOMContentLoaded', function () {
-    let today = new Date().toISOString().split('T')[0];
-    document.getElementById('appointmentDate').setAttribute('min', today);
-});
 
 // Khởi tạo bản đồ Leaflet
 var map = L.map('map').setView([21.028511, 105.804817], 13); // Mặc định là Hà Nội
@@ -46,50 +42,6 @@ function decodeHtmlEntities(input) {
     return doc.documentElement.textContent;
 }
 
-// Gửi đánh giá
-async function submitReview() {
-    const rating = document.querySelector('input[name="rating"]:checked');
-    const content = document.getElementById('Content').value;
-    const reviewMessage = document.getElementById('reviewMessage');
-
-    if (!rating || !content) {
-        reviewMessage.innerText = "Vui lòng nhập đầy đủ thông tin.";
-        reviewMessage.style.display = "block";
-        return;
-    }
-
-    const houseId = document.querySelector('.review-form').dataset.houseId;
-    if (!houseId) {
-        reviewMessage.innerText = "Không tìm thấy IdHouse. Vui lòng thử lại.";
-        reviewMessage.style.display = "block";
-        return;
-    }
-
-    const reviewData = {
-        Rating: parseInt(rating.value),
-        Content: content
-    };
-
-    try {
-        const response = await fetch(`/api/Detail/house/detail/${houseId}/addreview`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(reviewData)
-        });
-
-        const result = await response.json();
-        alert(result.message);
-        if (response.ok) {
-            location.reload();
-        }
-    } catch (error) {
-        reviewMessage.innerText = "Đã xảy ra lỗi. Vui lòng thử lại.";
-        reviewMessage.style.display = "block";
-    }
-}
-
 // Định vị vị trí
 async function locateUser() {
     if (!decodedAddress) {
@@ -109,37 +61,105 @@ async function locateUser() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    let today = new Date().toISOString().split('T')[0];
-    document.getElementById('appointmentDate').setAttribute('min', today);
-});
+// Gửi đánh giá
+async function submitReview() {
+    const rating = document.querySelector('input[name="rating"]:checked');
+    const content = document.getElementById('Content').value;
+
+    if (!rating || !content) {
+        iziToast.warning({
+            title: "Cảnh báo",
+            message: "Vui lòng nhập đầy đủ thông tin.",
+            position: "topRight",
+            timeout: 1500
+        });
+        return;
+    }
+
+    const houseId = document.querySelector('.review-form').dataset.houseId;
+    if (!houseId) {
+        iziToast.error({
+            title: "Lỗi",
+            message: "Không tìm thấy IdHouse. Vui lòng thử lại.",
+            position: "topRight"
+        });
+        return;
+    }
+
+    const reviewData = {
+        Rating: parseInt(rating.value),
+        Content: content
+    };
+
+    try {
+        const response = await fetch(`/api/Detail/house/detail/${houseId}/addreview`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reviewData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            iziToast.success({
+                title: "Thành công",
+                message: result.message,
+                position: "topRight",
+                timeout: 1500
+            });
+
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            iziToast.error({
+                title: "Lỗi",
+                message: result.message || "Đã xảy ra lỗi khi gửi đánh giá.",
+                position: "topRight",
+                timeout: 1500
+            });
+        }
+    } catch (error) {
+        iziToast.error({
+            title: "Lỗi",
+            message: "Đã xảy ra lỗi. Vui lòng thử lại.",
+            position: "topRight",
+            timeout: 1500
+        });
+    }
+}
 
 document.addEventListener("DOMContentLoaded", function () {
+    let today = new Date().toISOString().split('T')[0];
+    document.getElementById('appointmentDate').setAttribute('min', today);
+
     let isAuthenticated = document.getElementById("isAuthenticated").value === "true";
-    let userRole = parseInt(document.getElementById("userRole").value);
+    let houseOwnerId = document.getElementById("houseOwnerId")?.value;
+    let currentUserId = document.getElementById("currentUserId")?.value;
 
     document.getElementById("bookAppointmentBtn").addEventListener("click", function () {
         if (!isAuthenticated) {
-            Swal.fire({
-                icon: "warning",
-                title: "Yêu cầu đăng nhập",
-                text: "Bạn cần đăng nhập để đặt lịch hẹn.",
-                confirmButtonText: "Đăng nhập",
-                showCancelButton: true,
-                cancelButtonText: "Hủy"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "/Account/Login"; // Chuyển hướng đến trang login
-                }
+            iziToast.warning({
+                title: "Cảnh báo",
+                message: "Bạn cần đăng nhập để đặt lịch hẹn.",
+                position: "topRight",
+                timeout: 1000, 
             });
+
+            setTimeout(function () {
+                window.location.href = "/Account/Login";
+            }, 1000);
+        
             return;
         }
+        
 
-        if (userRole !== 2) {
-            Swal.fire({
-                icon: "error",
-                title: "Không có quyền!",
-                text: "Bạn không có quyền đặt lịch hẹn.",
+        if (houseOwnerId === currentUserId) {
+            iziToast.error({
+                title: "Lỗi!",
+                message: "Bạn không thể đặt lịch hẹn cho bài đăng của chính mình.",
+                position: "topRight",
+                timeout: 1500
             });
             return;
         }
@@ -153,55 +173,66 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("appointmentOverlay").style.display = "none";
     });
 
-    document.getElementById("submitAppointment")?.addEventListener("click", async function () {
-        const date = document.getElementById("appointmentDate").value;
-        const houseId = document.querySelector(".review-form").dataset.houseId;
+    if (!document.getElementById("submitAppointment").dataset.listenerAdded) {
+        document.getElementById("submitAppointment").dataset.listenerAdded = "true";
 
-        if (!date) {
-            Swal.fire({
-                icon: "warning",
-                title: "Lỗi!",
-                text: "Vui lòng chọn ngày đặt lịch hẹn.",
-            });
-            return;
-        }
+        document.getElementById("submitAppointment").addEventListener("click", async function (event) {
+            event.preventDefault();
+            
+            const date = document.getElementById("appointmentDate").value;
+            const houseId = document.querySelector(".review-form").dataset.houseId;
 
-        const appointmentData = { HouseId: houseId, AppointmentDate: date };
+            if (!date || date < today) {
+                iziToast.error({
+                    title: "Lỗi!",
+                    message: "Vui lòng chọn ngày hợp lệ trước khi đặt lịch.",
+                    position: "topRight",
+                    timeout: 1500
+                });
+                return;
+            }
 
-        try {
-            const response = await fetch("/Appointment/Create", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(appointmentData)
-            });
+            const appointmentData = { HouseId: houseId, AppointmentDate: date };
 
-            const result = await response.json();
+            try {
+                const response = await fetch("/Appointment/Create", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(appointmentData)
+                });
 
-            if (result.success) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Thành công!",
-                    text: result.message,
-                }).then(() => {
+                const result = await response.json();
+
+                if (result.success) {
+                    iziToast.success({
+                        title: "Thành công!",
+                        message: result.message,
+                        position: "topRight",
+                        timeout: 1500
+                    });
+
                     document.getElementById("appointmentForm").style.display = "none";
                     document.getElementById("appointmentOverlay").style.display = "none";
+                } else {
+                    iziToast.error({
+                        title: "Lỗi!",
+                        message: result.message || "Đã xảy ra lỗi khi đặt lịch.",
+                        position: "topRight",
+                        timeout: 1000
+                    });
+                }
+            } catch (error) {
+                iziToast.warning({
+                    title: "Cảnh báo",
+                    message: "Bạn cần đăng nhập để đặt lịch hẹn.",
+                    position: "topRight",
+                    timeout: 1000, 
                 });
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Lỗi!",
-                    text: result.message || "Đã xảy ra lỗi khi đặt lịch.",
-                });
+
+                setTimeout(function () {
+                    window.location.href = "/Account/Login";
+                }, 1000);
             }
-        } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Lỗi!",
-                text: "Vui lòng đăng nhập để đặt lịch hẹn.",
-                confirmButtonText: "Đăng nhập"
-            }).then(() => {
-                window.location.href = "/Account/Login";
-            });
-        }
-    });
+        });
+    }
 });

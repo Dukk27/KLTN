@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using KLTN.Models;
 using KLTN.Repositories;
+using KLTN.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,6 +45,17 @@ namespace KLTN.Controllers
             return PartialView("_ManageAccounts", accounts); // Trả về PartialView
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var account = await _accountRepository.GetAccountByIdAsync(id);
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            return View(account);
+        }
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -68,22 +80,30 @@ namespace KLTN.Controllers
         {
             if (id != account.IdUser)
             {
-                return NotFound();
+                return Json(new { success = false, message = "ID tài khoản không hợp lệ." });
             }
 
-            // if (ModelState.IsValid) // Kiểm tra tính hợp lệ của dữ liệu
-            // {
-            await _accountRepository.UpdateAccountAsync(account);
-
-            // Chuyển hướng về trang trước khi gọi action Edit
-            var previousPage = TempData["PreviousPage"] as string;
-            if (string.IsNullOrEmpty(previousPage))
+            try
             {
-                return RedirectToAction(nameof(ManageAccounts)); // Nếu không có URL trước đó thì quay lại trang quản lý tài khoản
-            }
-            return Redirect(previousPage); // Quay lại trang trước đó
+                await _accountRepository.UpdateAccountAsync(account);
 
-            return View(account); // Trả về View nếu có lỗi
+                string previousPage =
+                    TempData["PreviousPage"] as string
+                    ?? Url.Action(nameof(ManageAccounts), "Admin");
+
+                return Json(
+                    new
+                    {
+                        success = true,
+                        message = "Cập nhật tài khoản thành công!",
+                        previousPage,
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [HttpPost]
@@ -137,17 +157,25 @@ namespace KLTN.Controllers
             return PartialView("_ManageReviews", reviews); // Trả về PartialView
         }
 
-        // [HttpPost]
-        public async Task<IActionResult> DeleteReview(int id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteSelectedReviews([FromBody] List<int> ids)
         {
-            var review = await _reviewRepository.GetReviewByIdAsync(id);
-            if (review == null)
+            if (ids == null || !ids.Any())
             {
-                return Json(new { success = false, message = "Bình luận không tồn tại." });
+                return Json(new { success = false, message = "Không có bình luận nào được chọn." });
             }
 
-            await _reviewRepository.DeleteReviewAsync(id);
-            return Json(new { success = true, message = "Bình luận đã được xóa thành công." });
+            try
+            {
+                await _reviewRepository.DeleteReviewsAsync(ids);
+                return Json(new { success = true, message = "Đã xóa bình luận thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(
+                    new { success = false, message = "Lỗi khi xóa bình luận: " + ex.Message }
+                );
+            }
         }
 
         [HttpPost]
@@ -294,6 +322,88 @@ namespace KLTN.Controllers
             {
                 return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
             }
+        }
+
+        [Authorize]
+        public async Task<IActionResult> ListHouseRoom()
+        {
+            if (HttpContext.Session.GetInt32("UserId") != null)
+            {
+                int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
+                string userName = HttpContext.Session.GetString("UserName") ?? "";
+
+                IEnumerable<House> houses;
+                if (userName == "Admin")
+                {
+                    houses = await _housesRepository.GetAllHousesAsync();
+                }
+                else
+                {
+                    houses = await _housesRepository.GetHousesByUserId(userId);
+                    houses = houses.Where(h =>
+                        h.Status == HouseStatus.Approved
+                        || h.Status == HouseStatus.Pending
+                        || h.Status == HouseStatus.Active
+                        || h.Status == HouseStatus.Hidden
+                    );
+                }
+                var viewModel = new HomeViewModel
+                {
+                    Houses = houses,
+                    IsChuTro = userName != "Admin",
+                    IsAdmin = User.IsInRole("Admin"),
+                };
+
+                ViewBag.UserId = userId;
+                // ViewBag.UserName = userName;
+                ViewBag.UserName = User.Identity.Name;
+                return View(viewModel);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PostReport()
+        {
+            // Lấy toàn bộ danh sách tài khoản
+            var accounts = await _accountRepository.GetAllAccountsAsync();
+
+            // Lấy toàn bộ danh sách bài đăng
+            var houses = await _housesRepository.GetAllHousesAsync();
+
+            if (accounts == null || !accounts.Any())
+            {
+                return PartialView("_PostReport", new List<AccountReportViewModel>());
+            }
+
+            // Đảm bảo houses không bị trùng lặp
+            var distinctHouses = houses.GroupBy(h => h.IdHouse).Select(g => g.First()).ToList();
+
+            // Tạo danh sách báo cáo từ Account và House
+            var accountReports = accounts
+                .Select(account =>
+                {
+                    var userPosts = distinctHouses.Where(h => h.IdUser == account.IdUser).ToList();
+
+                    return new AccountReportViewModel
+                    {
+                        IdUser = account.IdUser,
+                        UserName = account.UserName,
+                        PhoneNumber = account.PhoneNumber,
+                        Email = account.Email,
+                        TotalPosts = userPosts.Count, 
+                        ApprovedPosts = userPosts.Count(h => h.Status == HouseStatus.Approved || h.Status == HouseStatus.Active ),
+                        RejectedPosts = userPosts.Count(h => h.Status == HouseStatus.Rejected),
+                        PendingPosts = userPosts.Count(h => h.Status == HouseStatus.Pending),
+                        HiddenPosts = userPosts.Count(h => h.Status == HouseStatus.Hidden),
+                    };
+                })
+                .ToList();
+
+            return PartialView("_PostReport", accountReports);
         }
     }
 }

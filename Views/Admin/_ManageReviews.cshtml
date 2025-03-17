@@ -1,67 +1,204 @@
 @model IEnumerable<KLTN.Models.Review>
 
-<h3>Quản lý bình luận</h3>
+<link rel="stylesheet" href="~/css/iziToast.css">
+
+<h3 class="text-center mt-3">Quản lý bình luận</h3>
+
+<button class="btn btn-danger delete-selected-btn" disabled><i class="fas fa-trash-alt"></i>&nbsp;Xóa bình luận đã chọn</button><br><br>
 
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>ID</th>
+            <th><input type="checkbox" id="select-all"></th>
             <th>Người dùng</th>
             <th>Bài đăng</th>
             <th>Nội dung</th>
             <th>Mức sao đánh giá</th>
             <th>Ngày đánh giá</th>
-            <th>Hành động</th>
+            @* <th>Hành động</th> *@
         </tr>
     </thead>
     <tbody>
         @foreach (var review in Model)
         {
             <tr>
-                <td>@review.IdReview</td>
+                <td><input type="checkbox" class="review-checkbox" value="@review.IdReview"></td>
                 <td>@review.IdUser</td>
                 <td>@review.IdHouse</td>
                 <td>@review.Content</td>
                 <td>@review.Rating</td>
                 <td>@review.ReviewDate?.ToString("dd/MM/yyyy")</td>
-                <td>
-                    <button class="btn btn-sm btn-danger delete-review" data-id="@review.IdReview"><i class="fas fa-trash-alt"></i></button>
-                </td>
+                @* <td>
+                    <button class="btn btn-sm btn-danger delete-review" data-id="@review.IdReview" title="Xoá bình luận"><i
+                            class="fas fa-trash-alt"></i></button>
+                </td> *@
             </tr>
         }
     </tbody>
 </table>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Thêm thư viện iziToast -->
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+
 <script>
+    $(document).ready(function () {
+        // Xóa từng bình luận
+        $(".delete-review").on("click", function () {
+            const id = $(this).data("id");
+            confirmDelete([id]);
+        });
+
+        // Xóa nhiều bình luận đã chọn
+        $(".delete-selected-btn").on("click", function () {
+            const selectedIds = $(".review-checkbox:checked").map(function () {
+                return $(this).val();
+            }).get();
+
+            if (selectedIds.length === 0) return;
+            confirmDelete(selectedIds);
+        });
+
+        // Chọn tất cả checkbox
+        $("#select-all").on("change", function () {
+            $(".review-checkbox").prop("checked", this.checked);
+            toggleDeleteSelectedButton();
+        });
+
+        // Khi chọn checkbox riêng lẻ
+        $(document).on("change", ".review-checkbox", function () {
+            $("#select-all").prop("checked", $(".review-checkbox:checked").length === $(".review-checkbox").length);
+            toggleDeleteSelectedButton();
+        });
+
+        // Bật/tắt nút "Xóa đã chọn"
+        function toggleDeleteSelectedButton() {
+            $(".delete-selected-btn").prop("disabled", $(".review-checkbox:checked").length === 0);
+        }
+
+        // Xác nhận xóa
+        function confirmDelete(ids) {
+            iziToast.show({
+                class: "iziToast-custom",
+                title: "🔔 Xác nhận xóa",
+                message: `Bạn có chắc muốn xóa ${ids.length > 1 ? "các bình luận" : "bình luận"} đã chọn?`,
+                position: "center",
+                timeout: false,
+                close: false,
+                overlay: true,
+                buttons: [
+                    [
+                        '<button><i class="fa fa-trash"></i> Xóa</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                            $.ajax({
+                                url: "@Url.Action("DeleteSelectedReviews", "Admin")",
+                                type: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify(ids),
+                                success: function (response) {
+                                    iziToast.show({
+                                        title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                        message: response.message,
+                                        position: "topRight",
+                                        color: response.success ? "green" : "red",
+                                        timeout: 1000
+                                    });
+
+                                    if (response.success) {
+                                        ids.forEach(id => {
+                                            $(`tr:has(input[value='${id}'])`).remove(); // Xóa hàng dựa vào checkbox
+                                        });
+
+                                        toggleDeleteSelectedButton();
+                                        checkAndShowNoReviews();
+                                    }
+                                },
+                                error: function () {
+                                    iziToast.error({
+                                        title: "Lỗi!",
+                                        message: "Đã xảy ra lỗi khi xóa bình luận.",
+                                        position: "topRight"
+                                    });
+                                }
+                            });
+                        },
+                        true
+                    ],
+                    [
+                        '<button><i class="fa fa-times"></i> Hủy</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                        }
+                    ]
+                ]
+            });
+        }
+
+        // Kiểm tra nếu không còn bình luận, hiển thị thông báo
+        function checkAndShowNoReviews() {
+            if ($(".review-checkbox").length === 0) {
+                $(".table").remove();
+                $(".delete-selected-btn").remove();
+                if ($(".no-reviews").length === 0) {
+                    $("h3").after('<div class="no-reviews">Chưa có bình luận nào.</div>');
+                }
+            }
+        }
+    });
+
     $(document).ready(function () {
         $(".delete-review").on("click", function () {
             const id = $(this).data("id");
 
-            Swal.fire({
-                title: "Xác nhận xóa",
-                text: "Bạn có chắc muốn xóa bình luận này?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Xóa",
-                cancelButtonText: "Hủy"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.post("@Url.Action("DeleteReview", "Admin")", { id: id }, function (response) {
-                        if (response.success) {
-                            Swal.fire("Thành công", response.message, "success");
-                            $(`tr:has(button[data-id='${id}'])`).remove(); // Xóa hàng khỏi bảng mà không reload
-                        } else {
-                            Swal.fire("Lỗi", response.message, "error");
+            iziToast.show({
+                class: "iziToast-custom",
+                title: "🔔 Xác nhận xóa",
+                message: "Bạn có chắc muốn xóa bình luận này?",
+                position: "center",
+                timeout: false,
+                close: false,
+                overlay: true,
+                displayMode: "once",
+                drag: false,
+                buttons: [
+                    [
+                        '<button><i class="fa fa-check"></i> Có, xóa</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                            $.post("@Url.Action("DeleteReview", "Admin")", { id: id }, function (response) {
+                                iziToast.show({
+                                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                    message: response.message,
+                                    position: "topRight",
+                                    color: response.success ? "green" : "red",
+                                    timeout: 1000
+                                });
+
+                                if (response.success) {
+                                    $(`tr:has(button[data-id='${id}'])`).remove(); // Xóa hàng khỏi bảng mà không reload
+                                }
+                            }).fail(() => {
+                                iziToast.error({
+                                    title: "Lỗi!",
+                                    message: "Đã xảy ra lỗi khi xóa bình luận.",
+                                    position: "topRight"
+                                });
+                            });
+                        },
+                        true
+                    ],
+                    [
+                        '<button><i class="fa fa-times"></i> Hủy</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
                         }
-                    }).fail(() => {
-                        Swal.fire("Lỗi!", "Đã xảy ra lỗi khi xóa bình luận.", "error");
-                    });
-                }
+                    ]
+                ]
             });
         });
     });
 </script>
-

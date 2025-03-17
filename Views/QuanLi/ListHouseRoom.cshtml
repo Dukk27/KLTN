@@ -1,5 +1,14 @@
 @model KLTN.Models.HomeViewModel
 
+<link rel="stylesheet" href="~/css/iziToast.css">
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Danh Sách Bài Đăng Của @ViewBag.UserName</li>
+    </ol>
+</nav>
+
 <div class="container">
     <h2>Danh sách bài đăng của người dùng @ViewBag.UserName</h2>
 
@@ -32,22 +41,33 @@
                         <td>@house.IdUserNavigation.UserName</td>
                     }
                     <td>
-                        <button class="btn btn-view-detail" onclick="viewDetail(@house.IdHouse, 'house')">Xem chi
-                            tiết</button>
-                        @if(true){ 
-                        <button class="btn btn-warning" onclick="editItem(@house.IdHouse, 'house')">Sửa</button>
-                        <button class="btn btn-danger" onclick="deleteHouse(@house.IdHouse)">Xóa</button>
-                        @if (house.Status == HouseStatus.Active || house.Status == HouseStatus.Approved) 
-                            {
-                                <button class="btn btn-secondary btn-hide" data-id="@house.IdHouse">Ẩn bài</button>
+                        <button class="btn btn-primary btn-view-detail" onclick="viewDetail(@house.IdHouse, 'house')" title="Xem chi tiết bài đăng">
+                            <i class="fas fa-eye"></i>
+                        </button>
+
+                        @if (true) { 
+                            <button class="btn btn-warning" onclick="editItem(@house.IdHouse, 'house')" title="Chỉnh sửa bài đăng">
+                                <i class="fas fa-edit"></i> 
+                            </button>
+                            
+                            <button class="btn btn-danger" onclick="deleteHouse(@house.IdHouse)" title="Xoá bài đăng">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+
+                            @if (house.Status == HouseStatus.Active || house.Status == HouseStatus.Approved) {
+                                <button class="btn btn-secondary btn-hide" data-id="@house.IdHouse" title="Ẩn bài đăng">
+                                    <i class="fas fa-eye-slash"></i> 
+                                </button>
                             }
-                         
-                        @if (house.Status == HouseStatus.Hidden) 
-                            {
-                                <button class="btn btn-success btn-show" data-id="@house.IdHouse">Hiện bài</button>
+
+                            @if (house.Status == HouseStatus.Hidden) {
+                                <button class="btn btn-success btn-show" data-id="@house.IdHouse" title="Hiện bài đăng">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                             }
                         }    
                     </td>
+
                     <td>
                         @if (house.Status == HouseStatus.Pending)
                             {
@@ -69,7 +89,8 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
 
     <script>
         function viewDetail(id, type) {
@@ -79,116 +100,219 @@
                     if (response.ok) {
                         window.location.href = url;
                     } else {
-                        alert('Không thể tải chi tiết. Vui lòng thử lại.');
+                        iziToast.error({
+                            title: "Lỗi!",
+                            message: "Không thể tải chi tiết. Vui lòng thử lại.",
+                            position: "topRight"
+                        });
                     }
                 })
-                .catch(() => alert('Đã xảy ra lỗi khi xử lý yêu cầu.'));
+                .catch(() => {
+                    iziToast.error({
+                        title: "Lỗi!",
+                        message: "Đã xảy ra lỗi khi xử lý yêu cầu.",
+                        position: "topRight"
+                    });
+                });
         }
+
         function editItem(id) {
-            const url = `/QuanLi/EditHouse?id=${id}`
+            const url = `/QuanLi/EditHouse?id=${id}`;
             fetch(url, { method: 'GET' })
                 .then(response => {
                     if (response.ok) {
                         window.location.href = url;
                     } else {
-                        alert('Không thể tải trang chỉnh sửa. Vui lòng thử lại.');
+                        iziToast.error({
+                            title: "Lỗi!",
+                            message: "Không thể tải trang chỉnh sửa. Vui lòng thử lại.",
+                            position: "topRight"
+                        });
                     }
                 })
-                .catch(() => alert('Đã xảy ra lỗi khi xử lý yêu cầu.'));
+                .catch(() => {
+                    iziToast.error({
+                        title: "Lỗi!",
+                        message: "Đã xảy ra lỗi khi xử lý yêu cầu.",
+                        position: "topRight"
+                    });
+                });
         }
-        
-        async function deleteHouse(id) {
-        Swal.fire({
-            title: "Bạn có chắc chắn muốn xóa?",
-            text: "Dữ liệu này sẽ không thể khôi phục!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Xóa ngay!",
-            cancelButtonText: "Hủy"
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    const response = await fetch(`/QuanLi/DeleteHouse?id=${id}`, { method: "DELETE" });
-                    const result = await response.json();
 
-                    if (result.success) {
-                        Swal.fire("Xóa thành công!", result.message, "success").then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire("Lỗi!", result.message, "error");
+        async function deleteHouse(id) {
+        iziToast.show({
+            class: "iziToast-custom",
+            title: "🔔 Xác nhận xóa",
+            message: "Bạn có chắc chắn muốn xóa? Dữ liệu này sẽ không thể khôi phục!",
+            position: "center",
+            timeout: false,
+            close: false,
+            overlay: true,
+            displayMode: "once",
+            drag: false,
+            icon: "fa fa-warning",
+            buttons: [
+                [
+                    '<button><i class="fa fa-check"></i> Xóa ngay</button>',
+                    async function (instance, toast) {
+                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                        try {
+                            const response = await fetch(`/QuanLi/DeleteHouse?id=${id}`, { method: "DELETE" });
+                            const result = await response.json();
+
+                            if (result.success) {
+                                iziToast.success({
+                                    title: "Thành công!",
+                                    message: result.message,
+                                    position: "topRight",
+                                    timeout: 1500
+                                });
+                                setTimeout(() => location.reload(), 1200);
+                            } else {
+                                iziToast.error({
+                                    title: "Lỗi!",
+                                    message: result.message,
+                                    position: "topRight"
+                                });
+                            }
+                        } catch (error) {
+                            iziToast.error({
+                                title: "Lỗi!",
+                                message: "Không thể xóa nhà trọ!",
+                                position: "topRight"
+                            });
+                        }
+                    },
+                    true
+                ],
+                [
+                    '<button><i class="fa fa-times"></i> Hủy</button>',
+                    function (instance, toast) {
+                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
                     }
-                } catch (error) {
-                    Swal.fire("Lỗi!", "Không thể xóa nhà trọ!", "error");
-                }
-            }
+                ]
+            ]
         });
     }
 
-        function showUnauthorizedMessage() {
-            alert('Bạn không đủ thẩm quyền để truy cập chức năng này.');
-        }
-
+    function showUnauthorizedMessage() {
+        iziToast.warning({
+            title: "Cảnh báo!",
+            message: "Bạn không đủ thẩm quyền để truy cập chức năng này.",
+            position: "topRight"
+        });
+    }
         $(document).ready(function () {
             $(".btn-hide").on("click", function () {
                 const houseId = $(this).data("id");
 
-                Swal.fire({
-                    title: "Bạn có chắc muốn ẩn bài này?",
-                    text: "Bài đăng sẽ không hiển thị công khai!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Có, ẩn ngay!",
-                    cancelButtonText: "Hủy"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.post("/QuanLi/HideHouse", { id: houseId }, function (response) {
-                            if (response.success) {
-                                Swal.fire("Thành công!", response.message, "success").then(() => {
-                                    location.reload();
+                iziToast.show({
+                    class: "iziToast-custom",
+                    title: "🔔 Xác nhận",
+                    message: "Bạn có chắc muốn ẩn bài này? Bài đăng sẽ không hiển thị công khai!",
+                    position: "center",
+                    timeout: false,
+                    close: false,
+                    overlay: true,
+                    displayMode: "once",
+                    drag: false,
+                    icon: "fa fa-eye-slash",
+                    buttons: [
+                        [
+                            '<button><i class="fa fa-check"></i> Ẩn ngay</button>',
+                            function (instance, toast) {
+                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                                $.post("/QuanLi/HideHouse", { id: houseId }, function (response) {
+                                    if (response.success) {
+                                        iziToast.success({
+                                            title: "Thành công!",
+                                            message: response.message,
+                                            position: "topRight",
+                                            timeout: 1000
+                                        });
+                                        setTimeout(() => location.reload(), 1000);
+                                    } else {
+                                        iziToast.error({
+                                            title: "Lỗi!",
+                                            message: response.message,
+                                            position: "topRight"
+                                        });
+                                    }
+                                }).fail(function () {
+                                    iziToast.error({
+                                        title: "Lỗi!",
+                                        message: "Không thể thực hiện yêu cầu!",
+                                        position: "topRight"
+                                    });
                                 });
-                            } else {
-                                Swal.fire("Lỗi!", response.message, "error");
+                            },
+                            true
+                        ],
+                        [
+                            '<button><i class="fa fa-times"></i> Hủy</button>',
+                            function (instance, toast) {
+                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
                             }
-                        }).fail(function () {
-                            Swal.fire("Lỗi!", "Không thể thực hiện yêu cầu!", "error");
-                        });
-                    }
+                        ]
+                    ]
                 });
             });
-        });
 
-        $(document).ready(function () {
             $(".btn-show").on("click", function () {
                 const houseId = $(this).data("id");
 
-                Swal.fire({
-                    title: "Bạn có chắc muốn hiện bài này?",
-                    text: "Bài đăng sẽ hiển thị công khai trở lại!",
-                    icon: "info",
-                    showCancelButton: true,
-                    confirmButtonColor: "#28a745",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Có, hiện ngay!",
-                    cancelButtonText: "Hủy"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.post("/QuanLi/ShowHouse", { id: houseId }, function (response) {
-                            if (response.success) {
-                                Swal.fire("Thành công!", response.message, "success").then(() => {
-                                    location.reload();
+                iziToast.show({
+                    class: "iziToast-custom",
+                    title: "🔔 Xác nhận",
+                    message: "Bạn có chắc muốn hiện bài này? Bài đăng sẽ hiển thị công khai trở lại!",
+                    position: "center",
+                    timeout: false,
+                    close: false,
+                    overlay: true,
+                    displayMode: "once",
+                    drag: false,
+                    icon: "fa fa-eye",
+                    buttons: [
+                        [
+                            '<button><i class="fa fa-check"></i> Hiện ngay</button>',
+                            function (instance, toast) {
+                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                                $.post("/QuanLi/ShowHouse", { id: houseId }, function (response) {
+                                    if (response.success) {
+                                        iziToast.success({
+                                            title: "Thành công!",
+                                            message: response.message,
+                                            position: "topRight",
+                                            timeout: 1000
+                                        });
+                                        setTimeout(() => location.reload(), 1000);
+                                    } else {
+                                        iziToast.error({
+                                            title: "Lỗi!",
+                                            message: response.message,
+                                            position: "topRight"
+                                        });
+                                    }
+                                }).fail(function () {
+                                    iziToast.error({
+                                        title: "Lỗi!",
+                                        message: "Không thể thực hiện yêu cầu!",
+                                        position: "topRight"
+                                    });
                                 });
-                            } else {
-                                Swal.fire("Lỗi!", response.message, "error");
+                            },
+                            true
+                        ],
+                        [
+                            '<button><i class="fa fa-times"></i> Hủy</button>',
+                            function (instance, toast) {
+                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
                             }
-                        }).fail(function () {
-                            Swal.fire("Lỗi!", "Không thể thực hiện yêu cầu!", "error");
-                        });
-                    }
+                        ]
+                    ]
                 });
             });
         });
@@ -254,27 +378,7 @@
         margin-right: 2px;
         transition: background-color 0.3s;
     }
-
-    .btn-view-detail {
-        background-color: #4CAF50;
-    }
-
-    .btn-warning {
-        background-color: #FFA500;
-    }
-
-    .btn-danger {
-        background-color: #e74c3c;
-    }
-
-    .btn:hover {
-        opacity: 0.9;
-    }
-
-    .btn-view-detail:hover {
-        background-color: #45a049;
-    }
-
+    
     /* Định dạng khác cho phần container */
     .container {
         width: 90%;

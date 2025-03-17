@@ -175,7 +175,7 @@ namespace KLTN.Controllers
                 ? viewModel.HouseDetail.Status
                 : existingHouseDetail.Status;
 
-            if (imageFile != null)
+            if (imageFile != null) 
             {
                 var fileName = Guid.NewGuid() + Path.GetExtension(imageFile.FileName);
                 var filePath = Path.Combine(
@@ -225,6 +225,7 @@ namespace KLTN.Controllers
                 $"ContactPhone2 trước: {existingHouseDetail.ContactPhone2}, sau: {viewModel.ContactPhone2}"
             );
 
+            existingHouse.Status = HouseStatus.Pending; 
             await _houseRepository.UpdateAsync(existingHouse);
             await _houseDetailRepository.UpdateAsync(existingHouseDetail);
 
@@ -233,7 +234,7 @@ namespace KLTN.Controllers
                 return RedirectToAction("Index", "Admin");
             }
 
-            return Json(new { success = true, message = "Cập nhật thành công!" });
+            return Json(new { success = true, message = "Cập nhật thành công, bài đăng sẽ sớm được Quản trị viên duyệt!" });
             //return Json(new { success = true, message = "Sửa nhà trọ thành công.", updatedHouse = existingHouse });
         }
 

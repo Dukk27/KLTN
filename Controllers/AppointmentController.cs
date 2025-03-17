@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Security.Claims;
+using KLTN.Helpers;
 using KLTN.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace KLTN.Controllers
     public class AppointmentController : Controller
     {
         private readonly KLTNContext _context;
+        private readonly EmailService _emailService;
 
-        public AppointmentController(KLTNContext context)
+        public AppointmentController(KLTNContext context, EmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         [HttpPost]
@@ -64,18 +67,45 @@ namespace KLTN.Controllers
             return View(appointments);
         }
 
-        // Xác nhận lịch hẹn
         [HttpPost]
         [Authorize]
-        public IActionResult Confirm(int id)
+        public async Task<IActionResult> Confirm(int id)
         {
-            var appointment = _context.Appointments.Find(id);
+            var appointment = await _context.Appointments
+                .Include(a => a.User)
+                .Include(a => a.House)
+                .FirstOrDefaultAsync(a => a.AppointmentId == id);
+
             if (appointment == null)
-                return NotFound();
+            {
+                return Json(new { success = false, message = "Lịch hẹn không tồn tại!" });
+            }
+
+            if (appointment.Status != AppointmentStatus.Pending)
+            {
+                return Json(new { success = false, message = "Lịch hẹn này không thể xác nhận!" });
+            }
 
             appointment.Status = AppointmentStatus.Confirmed;
-            _context.SaveChanges();
-            return Json(new { success = true, message = "Lịch hẹn đã được xác nhận." });
+            await _context.SaveChangesAsync();
+
+            // Gửi email thông báo xác nhận lịch hẹn
+            if (appointment.User != null)
+            {
+                string toEmail = appointment.User.Email;
+                string subject = "✅ Lịch hẹn của bạn đã được xác nhận!";
+                string body = $@"
+                    <p>Xin chào <b>{appointment.User.UserName}</b>,</p>
+                    <p>Lịch hẹn xem nhà của bạn vào ngày <b>{appointment.AppointmentDate:dd/MM/yyyy}</b> 
+                    tại nhà trọ <b>{appointment.House?.NameHouse}</b> đã được xác nhận.</p>
+                    <p>Vui lòng đến đúng giờ!</p>
+                    <br>
+                    <p>Trân trọng,<br>Hệ Thống Đặt Lịch Hẹn</p>";
+
+                await _emailService.SendEmailAsync("Appointment", toEmail, subject, body);
+            }
+
+            return Json(new { success = true, message = "Lịch hẹn đã được xác nhận và email đã gửi thành công!" });
         }
 
         // Hủy lịch hẹn
@@ -90,6 +120,45 @@ namespace KLTN.Controllers
             appointment.Status = AppointmentStatus.Cancelled;
             _context.SaveChanges();
             return Json(new { success = true, message = "Lịch hẹn đã bị hủy." });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult DeleteSelected([FromBody] List<int> appointmentIds)
+        {
+            if (appointmentIds == null || !appointmentIds.Any())
+            {
+                return Json(new { success = false, message = "Không có lịch hẹn nào được chọn." });
+            }
+
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Bạn cần đăng nhập để thực hiện thao tác này.",
+                    }
+                );
+            }
+
+            var appointmentsToDelete = _context
+                .Appointments.Include(a => a.House)
+                .Where(a => a.House.IdUser == userId && appointmentIds.Contains(a.AppointmentId))
+                .ToList();
+
+            if (!appointmentsToDelete.Any())
+            {
+                return Json(
+                    new { success = false, message = "Không tìm thấy lịch hẹn hợp lệ để xóa." }
+                );
+            }
+
+            _context.Appointments.RemoveRange(appointmentsToDelete);
+            _context.SaveChanges();
+
+            return Json(new { success = true, message = "Đã xóa các lịch hẹn đã chọn!" });
         }
     }
 }

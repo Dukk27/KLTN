@@ -1,0 +1,35 @@
+@using KLTN.ViewModels
+@model IEnumerable<AccountReportViewModel>
+
+<h3 class="text-center mt-3">Thống kê bài đăng theo tài khoản</h3>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên người dùng</th>
+            <th>Số điện thoại</th>
+            <th>Email</th>
+            <th>Tổng bài đăng</th>
+            <th>Bài đăng đã được duyệt và đang hoạt động</th>
+            <th>Bài đăng bị từ chối</th>
+            <th>Bài đăng đang chờ duyệt</th>
+            <th>Bài đăng bị ẩn</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            <tr>
+                <td>@(i + 1)</td>
+                <td>@Model.ElementAt(i).UserName</td>
+                <td>@Model.ElementAt(i).PhoneNumber</td>
+                <td>@Model.ElementAt(i).Email</td>
+                <td>@Model.ElementAt(i).TotalPosts</td>
+                <td class="text-success">@Model.ElementAt(i).ApprovedPosts</td>
+                <td class="text-danger">@Model.ElementAt(i).RejectedPosts</td>
+                <td class="text-warning">@Model.ElementAt(i).PendingPosts</td>
+                <td class="text-secondary">@Model.ElementAt(i).HiddenPosts</td>
+            </tr>
+        }
+    </tbody>
+</table>

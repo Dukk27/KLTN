@@ -1,0 +1,98 @@
+.iziToast-custom {
+  width: 570px !important;
+  /* Tăng chiều rộng */
+  font-size: 20px !important;
+  /* Tăng kích thước chữ */
+  padding: 25px !important;
+  background-color: #ffffff !important;
+  /* Nền trắng */
+  color: #333 !important;
+  /* Màu chữ tối để dễ đọc */
+  border-radius: 10px !important;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Chỉnh màu tiêu đề */
+.iziToast-custom .iziToast-title {
+  color: #222 !important;
+  /* Màu chữ đậm hơn */
+  font-size: 20px !important;
+  /* Tăng kích thước tiêu đề */
+
+  font-weight: bold;
+  line-height: 1.6 !important;
+  /* Tăng khoảng cách dòng */
+}
+
+/* Chỉnh màu nội dung tin nhắn */
+.iziToast-custom .iziToast-message {
+  color: #555 !important;
+  font-size: 20px !important;
+  /* Tăng kích thước tiêu đề */
+
+  line-height: 1.8 !important;
+  /* Tăng khoảng cách dòng */
+}
+
+/* Điều chỉnh nút bấm */
+.iziToast-custom .iziToast-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.iziToast-custom .iziToast-buttons button {
+  font-size: 16px !important;
+  padding: 10px 20px !important;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+/* Màu nền nút "Có, cập nhật" */
+.iziToast-custom .iziToast-buttons button:first-child {
+  background-color: #28a745 !important;
+  /* Màu xanh lá */
+  color: white !important;
+}
+
+/* Màu nền nút "Hủy" */
+.iziToast-custom .iziToast-buttons button:last-child {
+  background-color: #dc3545 !important;
+  /* Màu đỏ */
+  color: white !important;
+}
+
+/* Hiệu ứng hover */
+.iziToast-custom .iziToast-buttons button:first-child:hover {
+  background-color: #218838 !important;
+}
+
+.iziToast-custom .iziToast-buttons button:last-child:hover {
+  background-color: #c82333 !important;
+}
+
+.breadcrumb {
+  background: none;
+  padding: 10px 0;
+  margin-bottom: 15px;
+  font-size: 16px;
+  margin-left: 10px;
+
+}
+
+.breadcrumb-item a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+  color: #6c757d;
+  font-weight: bold;
+}
+

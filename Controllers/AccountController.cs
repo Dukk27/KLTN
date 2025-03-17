@@ -3,6 +3,7 @@ using System.Net.Mail;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using KLTN.Helpers;
 using KLTN.Models;
 using KLTN.Repositories;
 using Microsoft.AspNetCore.Authentication;
@@ -18,18 +19,21 @@ namespace KLTN.Controllers
         private readonly IAccountRepository _accountRepository;
         private readonly IMemoryCache _memoryCache;
         private readonly IConfiguration _configuration;
+        private readonly EmailService _emailService;
         private const int MaxLoginAtt = 3; // Số lần thử sai tối đa
         private const int Lockout = 5; // Thời gian khóa tài khoản (phút)
 
         public AccountController(
             IAccountRepository accountRepository,
             IMemoryCache memoryCache,
-            IConfiguration configuration
+            IConfiguration configuration,
+            EmailService emailService
         )
         {
             _accountRepository = accountRepository;
             _memoryCache = memoryCache;
             _configuration = configuration;
+            _emailService = emailService;
         }
 
         public IActionResult Login()
@@ -150,18 +154,41 @@ namespace KLTN.Controllers
                 return View(model);
             }
 
+            List<string> errors = new List<string>();
+
+            // Kiểm tra số điện thoại hợp lệ
+            if (!Regex.IsMatch(model.PhoneNumber, @"^0\d{9}$"))
+            {
+                errors.Add(
+                    "Số điện thoại không hợp lệ. Vui lòng nhập đúng 10 chữ số và bắt đầu bằng số 0."
+                );
+            }
+
+            // Kiểm tra mật khẩu xác nhận
             if (model.Password != model.ConfirmPassword)
             {
-                ViewBag.Error = "Mật khẩu xác nhận không khớp.";
+                errors.Add("Mật khẩu xác nhận không khớp.");
+            }
+
+            if (model.ConfirmPassword == model.UserName)
+            {
+                errors.Add("Mật khẩu không được trùng với tên đăng nhập.");
+            }
+
+            // Kiểm tra tên đăng nhập đã tồn tại chưa
+            if (await _accountRepository.IsUserNameExistAsync(model.UserName))
+            {
+                errors.Add("Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác.");
+            }
+
+            // Nếu có bất kỳ lỗi nào, lưu vào ViewBag và quay lại View
+            if (errors.Any())
+            {
+                ViewBag.Errors = errors; // Truyền danh sách lỗi
                 return View(model);
             }
 
-            // Kiểm tra tên đăng nhập
-            if (await _accountRepository.IsUserNameExistAsync(model.UserName))
-            {
-                ViewBag.Error = "Tên đăng nhập đã tồn tại.";
-                return View(model);
-            }
+            // Nếu không có lỗi, tiếp tục đăng ký
             var account = new Account
             {
                 UserName = model.UserName,
@@ -170,47 +197,16 @@ namespace KLTN.Controllers
                 PhoneNumber = model.PhoneNumber,
                 Email = model.Email,
             };
+
             bool isRegistered = await _accountRepository.RegisterAsync(account);
 
             if (isRegistered)
             {
-                // HttpContext.Session.SetString("UserName", model.UserName);
-
-                // string role;
-                // switch (model.Role)
-                // {
-                //     case 1:
-                //         role = "ChuTro";
-                //         break;
-                //     case 2:
-                //         role = "NguoiTimPhong";
-                //         break;
-                //     default:
-                //         throw new InvalidOperationException("Role không hợp lệ");
-                // }
-
-                // var claims = new List<Claim>
-                // {
-                //     new Claim(ClaimTypes.Name, model.UserName),
-                //     new Claim(ClaimTypes.Role, role),
-                // };
-                // var claimsIdentity = new ClaimsIdentity(
-                //     claims,
-                //     CookieAuthenticationDefaults.AuthenticationScheme
-                // );
-                // var authProperties = new AuthenticationProperties { IsPersistent = true };
-
-                // await HttpContext.SignInAsync(
-                //     CookieAuthenticationDefaults.AuthenticationScheme,
-                //     new ClaimsPrincipal(claimsIdentity),
-                //     authProperties
-                // );
                 ViewBag.Success = "Đăng ký thành công! Hãy đăng nhập để tiếp tục.";
-
                 return View(model);
             }
 
-            ViewBag.Error = "Đăng ký thất bại.";
+            ViewBag.Errors = new List<string> { "Đăng ký thất bại. Vui lòng thử lại." };
             return View(model);
         }
 
@@ -248,9 +244,62 @@ namespace KLTN.Controllers
                 return Json(new { success = false, message = "Không tìm thấy tài khoản!" });
             }
 
-            await _accountRepository.UpdateAccountAsync(account);
+            var existingUser = await _accountRepository.GetAccountByIdAsync(id);
+            if (
+                existingUser.UserName != account.UserName
+                && await _accountRepository.IsUserNameExistAsync(account.UserName)
+            )
+            {
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác!",
+                    }
+                );
+            }
 
-            return Json(new { success = true, message = "Cập nhật thông tin thành công!" });
+            var phonePattern = @"^0\d{9}$";
+            if (!Regex.IsMatch(account.PhoneNumber, phonePattern))
+            {
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Số điện thoại không hợp lệ. Vui lòng nhập đúng 10 chữ số và bắt đầu bằng số 0!",
+                    }
+                );
+            }
+
+            // Kiểm tra email hợp lệ
+            var emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            if (!Regex.IsMatch(account.Email, emailPattern))
+            {
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Email không hợp lệ. Vui lòng nhập đúng định dạng!",
+                    }
+                );
+            }
+
+            await _accountRepository.UpdateAccountAsync(account);
+            HttpContext.Session.SetString("UserName", account.UserName);
+
+            return Json(
+                new
+                {
+                    success = true,
+                    message = "Cập nhật thông tin thành công!",
+                    updatedData = new
+                    {
+                        userName = account.UserName,
+                        phoneNumber = account.PhoneNumber,
+                        email = account.Email,
+                    },
+                }
+            );
         }
 
         [Authorize]
@@ -357,10 +406,11 @@ namespace KLTN.Controllers
             // Lưu OTP vào MemoryCache (hết hạn sau 5 phút)
             _memoryCache.Set($"OTP_{email}", otp, TimeSpan.FromMinutes(5));
 
-            // Gửi OTP qua email
+            // Gửi OTP qua email bằng EmailService
             var subject = "Mã OTP đặt lại mật khẩu";
             var body = $"Mã OTP của bạn là: <b>{otp}</b>. Mã này sẽ hết hạn sau 5 phút.";
-            await SendEmailAsync(email, subject, body);
+
+            await _emailService.SendEmailAsync("OTP", email, subject, body);
 
             return Json(
                 new
@@ -460,32 +510,6 @@ namespace KLTN.Controllers
             );
         }
 
-        private async Task SendEmailAsync(string toEmail, string subject, string body)
-        {
-            var smtpServer = _configuration["EmailSettings:SmtpServer"];
-            var smtpPort = int.Parse(_configuration["EmailSettings:SmtpPort"]);
-            var senderEmail = _configuration["EmailSettings:SenderEmail"];
-            var senderPassword = _configuration["EmailSettings:SenderPassword"];
-
-            var client = new SmtpClient(smtpServer)
-            {
-                Port = smtpPort,
-                Credentials = new NetworkCredential(senderEmail, senderPassword),
-                EnableSsl = true,
-            };
-
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(senderEmail),
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = true,
-            };
-            mailMessage.To.Add(toEmail);
-
-            await client.SendMailAsync(mailMessage);
-        }
-
         [Authorize]
         public async Task<IActionResult> Profile()
         {
@@ -502,6 +526,17 @@ namespace KLTN.Controllers
             }
 
             return PartialView("_Profile", account);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserName()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (!userId.HasValue)
+                return Json(new { success = false });
+
+            var user = await _accountRepository.GetAccountByIdAsync(userId.Value);
+            return Json(new { success = true, userName = user?.UserName });
         }
     }
 }

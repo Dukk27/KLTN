@@ -14,5 +14,6 @@ namespace KLTN.ViewModels
         public IEnumerable<SelectListItem> HouseTypes { get; set; } = new List<SelectListItem>();
         public string? ContactName2 { get; set; } 
         public string? ContactPhone2 { get; set; }
+        public int FreePostsRemaining { get; set; }
     }
 }

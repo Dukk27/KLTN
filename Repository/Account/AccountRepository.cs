@@ -48,9 +48,21 @@ namespace KLTN.Repositories
             return await _context.Accounts.FindAsync(id);
         }
 
+        // public async Task UpdateAccountAsync(Account account)
+        // {
+        //     _context.Accounts.Update(account);
+        //     await _context.SaveChangesAsync();
+        // }
+
         public async Task UpdateAccountAsync(Account account)
         {
-            _context.Accounts.Update(account);
+            var existingAccount = await _context.Accounts.FindAsync(account.IdUser);
+            if (existingAccount != null)
+            {
+                _context.Entry(existingAccount).State = EntityState.Detached; // Tách thực thể cũ
+            }
+
+            _context.Entry(account).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 

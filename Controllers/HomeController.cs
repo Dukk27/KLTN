@@ -12,20 +12,22 @@ namespace KLTN.Controllers
     {
         private readonly IHouseRepository _houseRepository;
         private readonly IHouseTypeRepository _houseTypeRepository;
-
         private readonly IAmenityRepository _amenityRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly KLTNContext _context;
 
         public HomeController(
             IHouseRepository houseRepository,
             IHouseTypeRepository houseTypeRepository,
             IAmenityRepository amenityRepository,
+            IAccountRepository accountRepository,
             KLTNContext context
         )
         {
             _houseRepository = houseRepository;
             _houseTypeRepository = houseTypeRepository;
             _amenityRepository = amenityRepository;
+            _accountRepository = accountRepository;
             _context = context;
         }
 
@@ -65,6 +67,7 @@ namespace KLTN.Controllers
 
             houses = houses
                 .Where(h => h.Status == HouseStatus.Active || h.Status == HouseStatus.Approved)
+                .Where(h => h.HouseDetails.Any(d => d.Status == "Chưa cho thuê"))
                 .ToList();
 
             // Truy vấn danh sách house types
@@ -133,6 +136,7 @@ namespace KLTN.Controllers
             }
 
             ViewBag.UserRole = userRole;
+            ViewBag.UserId = User.Identity.Name;
 
             return PartialView("HouseDetails", house);
         }

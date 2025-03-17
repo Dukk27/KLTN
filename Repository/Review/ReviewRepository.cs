@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using KLTN.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class ReviewRepository : IReviewRepository
 {
@@ -60,13 +60,14 @@ public class ReviewRepository : IReviewRepository
         await _context.SaveChangesAsync();
     }
 
-    // Xóa bình luận
-    public async Task DeleteReviewAsync(int id)
+    public async Task DeleteReviewsAsync(List<int> ids)
     {
-        var review = await _context.Reviews.FindAsync(id);
-        if (review != null)
+        var reviewsToDelete = await _context
+            .Reviews.Where(r => ids.Contains(r.IdReview))
+            .ToListAsync();
+        if (reviewsToDelete.Any())
         {
-            _context.Reviews.Remove(review);
+            _context.Reviews.RemoveRange(reviewsToDelete);
             await _context.SaveChangesAsync();
         }
     }

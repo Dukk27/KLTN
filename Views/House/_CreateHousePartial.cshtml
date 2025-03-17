@@ -1,20 +1,15 @@
 @model KLTN.ViewModels.HousePostViewModel
 
 <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/House/create.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/iziToast.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-@if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
-{
-    <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
-}
 
 <form asp-action="Create" method="post" enctype="multipart/form-data" id="createHouseForm" target="_top">
     <div class="section">
         <h4>Thông tin liên hệ</h4>
-        <div class="row">
-
-        </div>
 
         <!-- Trường liên hệ thứ 2 (có thể để trống) -->
         <div class="row">
@@ -173,7 +168,10 @@
             </div>
         </div>
     </div>
-    <div class="section">
+
+    <input type="hidden" name="HouseDetail.Status" value="Chưa cho thuê" />
+
+    <div class="section d-none">
         <h4>Trạng thái</h4>
         <div class="form-check">
             <input type="radio" id="statusAvailable" name="HouseDetail.Status" class="form-check-input"
@@ -217,6 +215,9 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+
 <script>
     $(document).ready(function () {
         const apiBase = "https://provinces.open-api.vn/api/";
@@ -323,350 +324,149 @@
             }
         });
 
-        // Validate form khi submit
-        $("#createHouseForm").submit(function (e) {
-            let isValid = true;
+        $(document).ready(function () {
+            $("#createHouseForm").submit(function (e) {
+                e.preventDefault(); // Ngăn chặn form submit ngay lập tức
 
-            // Kiểm tra tỉnh/thành
-            if (!$("#province").val()) {
-                $("#provinceError").text("Vui lòng chọn Tỉnh/Thành phố");
-                isValid = false;
-            }
+                let isValid = true;
+                $(".text-danger").text(""); // Xóa thông báo lỗi cũ
 
-            // Kiểm tra quận/huyện
-            if (!$("#district").val()) {
-                $("#districtError").text("Vui lòng chọn Quận/Huyện");
-                isValid = false;
-            }
-
-            // Kiểm tra phường/xã
-            if (!$("#ward").val()) {
-                $("#wardError").text("Vui lòng chọn Phường/Xã");
-                isValid = false;
-            }
-
-            // Kiểm tra địa chỉ đầy đủ
-            if (!$("#fullAddress").val().trim()) {
-                $("#fullAddressError").text("Vui lòng nhập địa chỉ cụ thể");
-                isValid = false;
-            }
-
-            // Nếu có lỗi, ngăn form submit và cuộn đến phần lỗi đầu tiên
-            if (!isValid) {
-                e.preventDefault();
-
-                // Cuộn đến thông báo lỗi đầu tiên
-                const firstError = $(".text-danger").filter(function () {
-                    return $(this).text() !== "";
-                }).first();
-
-                if (firstError.length) {
-                    $('html, body').animate({
-                        scrollTop: firstError.offset().top - 100
-                    }, 500);
+                // Kiểm tra dữ liệu
+                if (!$("#province").val()) {
+                    $("#provinceError").text("Vui lòng chọn Tỉnh/Thành phố");
+                    isValid = false;
                 }
-            }
+                if (!$("#district").val()) {
+                    $("#districtError").text("Vui lòng chọn Quận/Huyện");
+                    isValid = false;
+                }
+                if (!$("#ward").val()) {
+                    $("#wardError").text("Vui lòng chọn Phường/Xã");
+                    isValid = false;
+                }
+                if (!$("#fullAddress").val().trim()) {
+                    $("#fullAddressError").text("Vui lòng nhập địa chỉ cụ thể");
+                    isValid = false;
+                }
+                if (!$("#House_NameHouse").val().trim()) {
+                    $("#House_NameHouse").next(".text-danger").text("Vui lòng nhập tiêu đề!");
+                    isValid = false;
+                }
+
+                let dienTich = parseFloat($("#HouseDetail_DienTich").val());
+                if (isNaN(dienTich) || dienTich < 0) {
+                    $("#HouseDetail_DienTich").next(".text-danger").text("Diện tích phải là số dương!");
+                    isValid = false;
+                }
+
+                let price = parseFloat($("#HouseDetail_Price").val().replace(/\D/g, ''));
+                if (isNaN(price) || price < 0) {
+                    $("#HouseDetail_Price").next(".text-danger").text("Giá thuê phải là số dương!");
+                    isValid = false;
+                }
+
+                // Kiểm tra giá điện, giá nước, giá dịch vụ (phải là số dương)
+                let tienDien = parseFloat($("#HouseDetail_TienDien").val());
+                let tienNuoc = parseFloat($("#HouseDetail_TienNuoc").val());
+                let tienDv = parseFloat($("#HouseDetail_TienDv").val());
+
+                if (isNaN(tienDien) || tienDien < 0) {
+                    $("#HouseDetail_TienDien").next(".text-danger").text("Giá điện phải là số dương!");
+                    isValid = false;
+                }
+                if (isNaN(tienNuoc) || tienNuoc < 0) {
+                    $("#HouseDetail_TienNuoc").next(".text-danger").text("Giá nước phải là số dương!");
+                    isValid = false;
+                }
+                if (isNaN(tienDv) || tienDv < 0) {
+                    $("#HouseDetail_TienDv").next(".text-danger").text("Giá dịch vụ phải là số dương!");
+                    isValid = false;
+                }
+
+                // Kiểm tra loại nhà trọ (bắt buộc chọn)
+                if (!$("#SelectedHouseType").val()) {
+                    $("#SelectedHouseType").next(".text-danger").text("Vui lòng chọn loại nhà trọ!");
+                    isValid = false;
+                }
+
+                // Kiểm tra hình ảnh (bắt buộc tải lên ít nhất một ảnh)
+                if (!$("#imageFile").val()) {
+                    $("#imageFile").next(".text-danger").text("Vui lòng chọn ít nhất một hình ảnh!");
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+
+                    // Cuộn đến lỗi đầu tiên
+                    const firstError = $(".text-danger").filter(function () {
+                        return $(this).text() !== "";
+                    }).first();
+
+                    if (firstError.length) {
+                        $('html, body').animate({
+                            scrollTop: firstError.offset().top - 100
+                        }, 500);
+                    }
+                    return;
+                }
+                let freePostsRemaining = @Model.FreePostsRemaining;
+
+                if (freePostsRemaining > 0) {
+                    // Nếu còn lượt miễn phí, hỏi người dùng có muốn dùng không
+                    iziToast.question({
+                        class: 'iziToast-custom',
+                        timeout: 20000,
+                        close: false,
+                        overlay: true,
+                        title: '🔔 Sử dụng bài đăng miễn phí?',
+                        message: `Bạn còn ${freePostsRemaining} bài đăng miễn phí. Bạn có muốn sử dụng không?`,
+                        position: 'center',
+                        icon: "fa fa-question-circle",
+                        buttons: [
+                            ['<button><i class="fa fa-check"></i> Có</button>', function (instance, toast) {
+                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                                $("#createHouseForm")[0].submit();
+
+                                @* iziToast.success({
+                                    title: 'Thành công!',
+                                    message: 'Bài đăng của bạn đã được đăng!',
+                                    position: 'bottomRight',
+                                    timeout: 1500,
+                                });
+
+                                setTimeout(() => {
+                                    $("#createHouseForm")[0].submit(); // Gửi form sau khi thông báo
+                                }, 1600); *@
+                            }, true],
+                            ['<button><i class="fa fa-times"></i> Không</button>', function (instance, toast) {
+                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            }]
+                        ]
+                    });
+                } else {
+                    // Nếu hết lượt miễn phí, thông báo phí 
+                    iziToast.question({
+                        class: 'iziToast-custom',
+                        timeout: 20000,
+                        close: false,
+                        overlay: true,
+                        title: '🔔 Xác nhận thanh toán',
+                        message: 'Bạn đã hết lượt đăng miễn phí. Phí đăng bài là 50.000 VNĐ/bài. Bạn có muốn tiếp tục không?',
+                        position: 'center',
+                        icon: "fa fa-question-circle",
+                        buttons: [
+                            ['<button><i class="fa fa-check"></i> Đồng ý</button>', function (instance, toast) {
+                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                                $("#createHouseForm")[0].submit(); // Gửi form
+                            }, true],
+                            ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
+                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            }]
+                        ]
+                    });
+                }
+            });
         });
     });
 </script>
-
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background-color: #f5f5f5;
-    }
-
-    /* Container chung */
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    /* Tiêu đề chính */
-    h2 {
-        color: rgb(35, 164, 207);
-        text-align: center;
-        padding-top: 80px;
-        margin-bottom: 30px;
-        font-weight: 600;
-    }
-
-    /* Form */
-    form {
-        background-color: #fff;
-        border-radius: 8px;
-        padding: 30px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 50px;
-        max-width: 1200px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    /* Section */
-    .section {
-        margin-bottom: 30px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 20px;
-    }
-
-    .section h4 {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 20px;
-        color: #0069d9;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    /* Layout hàng và cột */
-    .row {
-        display: flex;
-        flex-wrap: wrap;
-        margin-right: -15px;
-        margin-left: -15px;
-        margin-bottom: 15px;
-    }
-
-    .col-md-2,
-    .col-md-3,
-    .col-md-4,
-    .col-md-6,
-    .col-md-12 {
-        position: relative;
-        width: 100%;
-        padding-right: 15px;
-        padding-left: 15px;
-    }
-
-    .col-md-2 {
-        flex: 0 0 16.666667%;
-        max-width: 16.666667%;
-    }
-
-    .col-md-3 {
-        flex: 0 0 25%;
-        max-width: 25%;
-    }
-
-    .col-md-4 {
-        flex: 0 0 33.333333%;
-        max-width: 33.333333%;
-    }
-
-    .col-md-6 {
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
-
-    .col-md-12 {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-
-    /* Form groups */
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-        font-size: 14px;
-    }
-
-    /* Đánh dấu trường bắt buộc */
-    label[for="HouseDetail_DienTich"]::after,
-    label[for="HouseDetail_Price"]::after,
-    label[for="House_NameHouse"]::after,
-    label[for="HouseDetail_TienDien"]::after,
-    label[for="HouseDetail_TienNuoc"]::after,
-    label[for="HouseDetail_Describe"]::after,
-    label:contains("Loại nhà trọ")::after,
-    label[for="province"]::after,
-    label[for="district"]::after,
-    label[for="ward"]::after,
-    label[for="fullAddress"]::after {
-        content: " *";
-        color: #dc3545;
-    }
-
-    /* Form controls */
-    .form-control {
-        display: block;
-        width: 100%;
-        height: calc(1.5em + 0.75rem + 2px);
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #495057;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    }
-
-    .form-control:focus {
-        color: #495057;
-        background-color: #fff;
-        border-color: #80bdff;
-        outline: 0;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
-
-    /* Hiển thị viền đỏ cho trường bắt buộc khi chưa nhập */
-    .form-control.required:invalid {
-        border-color: #dc3545;
-    }
-
-    .form-control.required:invalid:focus {
-        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-    }
-
-    /* Textarea */
-    textarea.form-control {
-        height: auto;
-        min-height: 120px;
-    }
-
-    /* Select */
-    select.form-control {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 0.75rem center;
-        background-size: 8px 10px;
-        padding-right: 1.5rem;
-    }
-
-    /* Checkboxes */
-    .form-check {
-        position: relative;
-        display: block;
-        padding-left: 1.25rem;
-        margin-bottom: 10px;
-    }
-
-    .form-check-input {
-        position: absolute;
-        margin-top: 0.3rem;
-        margin-left: -1.25rem;
-    }
-
-    .form-check-label {
-        margin-bottom: 0;
-    }
-
-    /* Validation errors */
-    .text-danger {
-        color: #dc3545;
-        font-size: 80%;
-        margin-top: 0.25rem;
-    }
-
-    /* Alert */
-    .alert {
-        position: relative;
-        padding: 0.75rem 1.25rem;
-        margin-bottom: 1rem;
-        border: 1px solid transparent;
-        border-radius: 0.25rem;
-    }
-
-    .alert-danger {
-        color: #721c24;
-        background-color: #f8d7da;
-        border-color: #f5c6cb;
-    }
-
-    /* Buttons */
-    .btn {
-        display: inline-block;
-        font-weight: 400;
-        color: #212529;
-        text-align: center;
-        vertical-align: middle;
-        user-select: none;
-        background-color: transparent;
-        border: 1px solid transparent;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        line-height: 1.5;
-        border-radius: 0.25rem;
-        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        cursor: pointer;
-    }
-
-    .btn-primary {
-        color: #fff;
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-
-    .btn-primary:hover {
-        color: #fff;
-        background-color: #0069d9;
-        border-color: #0062cc;
-    }
-
-    .btn-secondary {
-        color: #fff;
-        background-color: #6c757d;
-        border-color: #6c757d;
-    }
-
-    .btn-secondary:hover {
-        color: #fff;
-        background-color: #5a6268;
-        border-color: #545b62;
-    }
-
-    /* Button row */
-    .button-row {
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #eee;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-
-    /* Margin utilities */
-    .mt-2 {
-        margin-top: 0.5rem;
-    }
-
-    /* Image preview */
-    .image-preview {
-        margin-top: 10px;
-        border: 1px solid #ddd;
-        padding: 5px;
-        display: inline-block;
-        background-color: #f9f9f9;
-        min-height: 50px;
-        min-width: 100px;
-    }
-
-    /* Amenities container */
-    .amenities-container {
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 5px;
-        border: 1px solid #e9ecef;
-    }
-</style>

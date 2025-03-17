@@ -1,6 +1,9 @@
 @model IEnumerable<KLTN.Models.House>
 
-<h3>Quản lý bài đăng</h3>
+<link rel="stylesheet" href="~/css/iziToast.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<h3 class="text-center mt-3">Quản lý bài đăng</h3>
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -41,10 +44,11 @@
                         <span class="badge bg-danger">Bị từ chối</span>
                     }
                 </td>
-                <td>
-                    <a href="@Url.Action("EditHouse", "QuanLi", new { id = house.IdHouse })" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                    <button class="btn btn-sm btn-danger delete-house" data-id="@house.IdHouse"><i class="fas fa-trash-alt"></i></button>
-
+                <td>       
+                    <button class="btn btn-sm btn-primary btn-view-detail" onclick="viewDetail(@house.IdHouse, 'house')" title="Xem chi tiết bài đăng"><i class="fas fa-eye"></i></button>          
+   
+                    <button class="btn btn-sm btn-danger delete-house" data-id="@house.IdHouse" title="Xoá bài đăng"><i class="fas fa-trash-alt"></i></button>
+                    
                     @if (house.Status == HouseStatus.Pending || house.Status == HouseStatus.Rejected)
                     {
                         <button class="btn btn-sm btn-success approve-house" data-id="@house.IdHouse"><i class="fas fa-check"></i> Duyệt</button>
@@ -60,122 +64,230 @@
     </tbody>
 </table>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Thêm thư viện iziToast -->
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+
 <script>
-    $(document).ready(function () {
-    // Xóa bài đăng
-    $(document).on("click", ".delete-house", function () {
-        const id = $(this).data("id");
-        Swal.fire({
-            title: "Xác nhận xóa",
-            text: "Bạn có chắc muốn xóa bài đăng này?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Xóa",
-            cancelButtonText: "Hủy"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.post("@Url.Action("DeletePost", "Admin")", { id: id }, function (response) {
-                    if (response.success) {
-                        Swal.fire("Thông báo", response.message, "success");
-                        $(`tr:has(button[data-id='${id}'])`).remove();
+    function viewDetail(id, type) {
+            const url = `/Home/Detail?id=${id}&type=${type}`;
+            fetch(url, { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = url;
                     } else {
-                        Swal.fire("Lỗi!", response.message, "error");
+                        iziToast.error({
+                            title: "Lỗi!",
+                            message: "Không thể tải chi tiết. Vui lòng thử lại.",
+                            position: "topRight"
+                        });
                     }
-                }).fail(() => {
-                    Swal.fire("Lỗi!", "Đã xảy ra lỗi khi xóa bài đăng.", "error");
+                })
+                .catch(() => {
+                    iziToast.error({
+                        title: "Lỗi!",
+                        message: "Đã xảy ra lỗi khi xử lý yêu cầu.",
+                        position: "topRight"
+                    });
                 });
-            }
-        });
-    });
-
-    // Duyệt bài đăng
-    $(document).on("click", ".approve-house", function () {
-        const id = $(this).data("id");
-        Swal.fire({
-            title: "Xác nhận duyệt",
-            text: "Bạn có chắc muốn duyệt bài đăng này?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#28a745",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Duyệt",
-            cancelButtonText: "Hủy"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.post("@Url.Action("ApprovePost", "Admin")", { id: id }, function (response) {
-                    if (response.success) {
-                        updateStatus(id, "Đã duyệt", "bg-success");
-                        toggleButtons(id, "reject"); // Chuyển nút sang "Từ chối"
-                        Swal.fire("Thành công!", "Bài đăng đã được duyệt.", "success");
-                    } else {
-                        Swal.fire("Lỗi!", response.message, "error");
-                    }
-                }).fail(() => {
-                    Swal.fire("Lỗi!", "Đã xảy ra lỗi khi duyệt bài đăng.", "error");
-                });
-            }
-        });
-    });
-
-    // Từ chối bài đăng
-    $(document).on("click", ".reject-house", function () {
-        const id = $(this).data("id");
-        Swal.fire({
-            title: "Xác nhận từ chối",
-            text: "Bạn có chắc muốn từ chối bài đăng này?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#ffc107",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Từ chối",
-            cancelButtonText: "Hủy"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.post("@Url.Action("RejectPost", "Admin")", { id: id }, function (response) {
-                    if (response.success) {
-                        updateStatus(id, "Bị từ chối", "bg-danger");
-                        toggleButtons(id, "approve"); // Chuyển nút sang "Duyệt"
-                        Swal.fire("Thành công!", "Bài đăng đã được từ chối.", "success");
-                    } else {
-                        Swal.fire("Lỗi!", response.message, "error");
-                    }
-                }).fail(() => {
-                    Swal.fire("Lỗi!", "Đã xảy ra lỗi khi từ chối bài đăng.", "error");
-                });
-            }
-        });
-    });
-
-    // Hàm cập nhật trạng thái trên giao diện
-    function updateStatus(id, statusText, statusClass) {
-        const statusCell = $(`tr:has(button[data-id='${id}']) td:nth-child(6)`);
-        statusCell.html(`<span class="badge ${statusClass}">${statusText}</span>`);
-    }
-
-    // Hàm đổi nút duyệt, từ chối
-    function toggleButtons(id, action) {
-        const actionCell = $(`tr:has(button[data-id='${id}']) td:last-child`);
-        if (action === "reject") {
-            actionCell.find(".approve-house").replaceWith(
-                `<button class="btn btn-sm btn-danger reject-house" data-id="${id}">
-                    <i class="fas fa-times"></i> Từ chối
-                </button>`
-            );
-        } else {
-            actionCell.find(".reject-house").replaceWith(
-                `<button class="btn btn-sm btn-success approve-house" data-id="${id}">
-                    <i class="fas fa-check"></i> Duyệt
-                </button>`
-            );
         }
-    }
-});
 
+    $(document).ready(function () {
+        
+        // Xóa bài đăng
+        $(document).on("click", ".delete-house", function () {
+            const id = $(this).data("id");
+
+            iziToast.show({
+                class: "iziToast-custom",
+                title: "🔔 Xác nhận xóa",
+                message: "Bạn có chắc muốn xóa bài đăng này?",
+                position: "center",
+                timeout: false,
+                close: false,
+                overlay: true,
+                buttons: [
+                    [
+                        '<button><i class="fa fa-check"></i> Xóa</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                            $.post("@Url.Action("DeletePost", "Admin")", { id: id }, function (response) {
+                                iziToast.show({
+                                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                    message: response.message,
+                                    position: "topRight",
+                                    color: response.success ? "green" : "red",
+                                    timeout: 1000
+                                });
+
+                                if (response.success) {
+                                    $(`tr:has(button[data-id='${id}'])`).remove();
+                                }
+                            }).fail(() => {
+                                iziToast.error({
+                                    title: "Lỗi!",
+                                    message: "Đã xảy ra lỗi khi xóa bài đăng.",
+                                    position: "topRight"
+                                });
+                            });
+                        },
+                        true
+                    ],
+                    [
+                        '<button><i class="fa fa-times"></i> Hủy</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                        }
+                    ]
+                ]
+            });
+        });
+
+        let isToastVisible = false;
+
+        // Xóa sự kiện cũ trước khi gán mới
+        $(document).off("click", ".approve-house").on("click", ".approve-house", function () {
+            if (isToastVisible) return; // Nếu đang hiển thị thì không mở thêm
+            isToastVisible = true;
+
+            const id = $(this).data("id");
+
+            iziToast.show({
+                class: "iziToast-custom",
+                title: "🔔 Xác nhận duyệt",
+                message: "Bạn có chắc muốn duyệt bài đăng này?",
+                position: "center",
+                timeout: false,
+                close: false,
+                overlay: true,
+                onClosing: function() { // Khi iziToast bị đóng, đặt lại biến
+                    isToastVisible = false;
+                },
+                buttons: [
+                    [
+                        '<button><i class="fa fa-check"></i> Duyệt</button>',
+                        function (instance, toast) {
+                            isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                            $.post("@Url.Action("ApprovePost", "Admin")", { id: id }, function (response) {
+                                iziToast.show({
+                                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                    message: response.message,
+                                    position: "topRight",
+                                    color: response.success ? "green" : "red",
+                                    timeout: 1000
+                                });
+
+                                if (response.success) {
+                                    updateStatus(id, "Đã duyệt", "bg-success");
+                                    toggleButtons(id, "reject");
+                                }
+                            }).fail(() => {
+                                iziToast.error({
+                                    title: "Lỗi!",
+                                    message: "Đã xảy ra lỗi khi duyệt bài đăng.",
+                                    position: "topRight"
+                                });
+                            });
+                        },
+                        true
+                    ],
+                    [
+                        '<button><i class="fa fa-times"></i> Hủy</button>',
+                        function (instance, toast) {
+                            isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                        }
+                    ]
+                ]
+            });
+        });
+
+        $(document).off("click", ".reject-house").on("click", ".reject-house", function () {
+            if (isToastVisible) return; // Nếu đang hiển thị thì không mở thêm
+            isToastVisible = true;
+
+            const id = $(this).data("id");
+
+            iziToast.show({
+                class: "iziToast-custom",
+                title: "🔔 Xác nhận từ chối",
+                message: "Bạn có chắc muốn từ chối bài đăng này?",
+                position: "center",
+                timeout: false,
+                close: false,
+                overlay: true,
+                onClosing: function() { // Khi iziToast bị đóng, đặt lại biến
+                    isToastVisible = false;
+                },
+                buttons: [
+                    [
+                        '<button><i class="fa fa-times"></i> Từ chối</button>',
+                        function (instance, toast) {
+                            isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                            $.post("@Url.Action("RejectPost", "Admin")", { id: id }, function (response) {
+                                iziToast.show({
+                                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                    message: response.message,
+                                    position: "topRight",
+                                    color: response.success ? "green" : "red",
+                                    timeout: 1000
+                                });
+
+                                if (response.success) {
+                                    updateStatus(id, "Bị từ chối", "bg-danger");
+                                    toggleButtons(id, "approve");
+                                }
+                            }).fail(() => {
+                                iziToast.error({
+                                    title: "Lỗi!",
+                                    message: "Đã xảy ra lỗi khi từ chối bài đăng.",
+                                    position: "topRight"
+                                });
+                            });
+                        },
+                        true
+                    ],
+                    [
+                        '<button><i class="fa fa-times"></i> Hủy</button>',
+                        function (instance, toast) {
+                            isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                        }
+                    ]
+                ]
+            });
+        });
+
+        // Hàm cập nhật trạng thái trên giao diện
+        function updateStatus(id, statusText, statusClass) {
+            const statusCell = $(`tr:has(button[data-id='${id}']) td:nth-child(6)`);
+            statusCell.html(`<span class="badge ${statusClass}">${statusText}</span>`);
+        }
+
+        // Hàm đổi nút duyệt, từ chối
+        function toggleButtons(id, action) {
+            const actionCell = $(`tr:has(button[data-id='${id}']) td:last-child`);
+            if (action === "reject") {
+                actionCell.find(".approve-house").replaceWith(
+                    `<button class="btn btn-sm btn-danger reject-house" data-id="${id}">
+                        <i class="fas fa-times"></i> Từ chối
+                    </button>`
+                );
+            } else {
+                actionCell.find(".reject-house").replaceWith(
+                    `<button class="btn btn-sm btn-success approve-house" data-id="${id}">
+                        <i class="fas fa-check"></i> Duyệt
+                    </button>`
+                );
+            }
+        }
+    });
 </script>
-
 
 <style>
     td:last-child {

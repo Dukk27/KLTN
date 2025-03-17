@@ -1,5 +1,14 @@
 @model IEnumerable<KLTN.Models.Appointment>
 
+<link rel="stylesheet" href="~/css/iziToast.css">
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Danh Sách Lịch Hẹn</li>
+    </ol>
+</nav>
+
 <h2>Danh Sách Lịch Hẹn</h2>
 
 @if (!Model.Any())
@@ -9,10 +18,14 @@
 else
 {
     <div class="table-container">
+        <button class="btn btn-danger delete-selected-btn" disabled>🗑 Xóa đã chọn</button><br>
+
         <table class="table">
             <thead>
                 <tr>
+                    <th><input type="checkbox" id="select-all"></th>
                     <th>Người Đặt Hẹn</th>
+                    <th>Thông tin liên hệ</th>
                     <th>Tên Nhà Trọ</th>
                     <th>Ngày Hẹn</th>
                     <th>Trạng Thái</th>
@@ -23,7 +36,12 @@ else
                 @foreach (var appointment in Model)
                 {
                     <tr>
+                        <td><input type="checkbox" class="appointment-checkbox" value="@appointment.AppointmentId"></td>
                         <td>@appointment.User?.UserName</td>
+                        <td><i class="fas fa-phone"></i>&nbsp;@appointment.User?.PhoneNumber
+                            <br />
+                            <i class="fas fa-envelope"></i>&nbsp;@appointment.User?.Email
+                        </td>
                         <td>@appointment.House?.NameHouse</td>
                         <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy")</td>
                         <td>
@@ -59,93 +77,227 @@ else
 }
 
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
 
 <script>
-    document.querySelectorAll('.confirm-btn').forEach(button => {
-        button.addEventListener('click', async function () {
-            const id = this.getAttribute('data-id');
+    $(document).ready(function () {
+        // Xác nhận lịch hẹn
+        $(document).on("click", ".confirm-btn", function () {
+            const id = $(this).data("id");
 
-            Swal.fire({
-                title: "Xác nhận lịch hẹn?",
-                text: "Bạn có chắc chắn muốn xác nhận lịch hẹn này?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#28a745",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Xác nhận",
-                cancelButtonText: "Hủy"
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    const response = await fetch('/Appointment/Confirm?id=' + id, { method: 'POST' });
-                    const result = await response.json();
+            iziToast.show({
+                class: "iziToast-custom",
+                title: "🔔 Xác nhận lịch hẹn",
+                message: "Bạn có chắc muốn xác nhận lịch hẹn này?",
+                position: "center",
+                timeout: false,
+                close: false,
+                overlay: true,
+                buttons: [
+                    [
+                        '<button><i class="fa fa-check"></i> Xác nhận</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
 
-                    if (response.ok) {
-                        Swal.fire({
-                            title: "Thành công!",
-                            text: result.message,
-                            icon: "success",
-                            confirmButtonColor: "#28a745"
-                        });
+                            $.post("/Appointment/Confirm", { id: id }, function (response) {
+                                iziToast.show({
+                                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                    message: response.message,
+                                    position: "topRight",
+                                    color: response.success ? "green" : "red",
+                                    timeout: 1000
+                                });
 
-                        // **Cập nhật giao diện**
-                        const row = button.closest('tr');
-
-                        // Cập nhật trạng thái
-                        const statusCell = row.querySelector('td:nth-child(4)');
-                        statusCell.innerHTML = '<span class="badge badge-success">Đã xác nhận</span>';
-
-                        // Xóa các nút xác nhận và hủy, thay bằng chữ "Không khả dụng"
-                        const actionCell = row.querySelector('td:nth-child(5)');
-                        actionCell.innerHTML = '<span class="text-muted">Không khả dụng</span>';
-                    }
-                }
+                                if (response.success) {
+                                    updateStatus(id, "Đã xác nhận", "badge-success");
+                                    disableActions(id);
+                                }
+                            }).fail(() => {
+                                iziToast.error({
+                                    title: "Lỗi!",
+                                    message: "Đã xảy ra lỗi khi xác nhận lịch hẹn.",
+                                    position: "topRight"
+                                });
+                            });
+                        },
+                        true
+                    ],
+                    [
+                        '<button><i class="fa fa-times"></i> Hủy</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                        }
+                    ]
+                ]
             });
         });
-    });
 
-    document.querySelectorAll('.cancel-btn').forEach(button => {
-        button.addEventListener('click', async function () {
-            const id = this.getAttribute('data-id');
+        // Hủy lịch hẹn
+        $(document).on("click", ".cancel-btn", function () {
+            const id = $(this).data("id");
 
-            Swal.fire({
-                title: "Hủy lịch hẹn?",
-                text: "Bạn có chắc chắn muốn hủy lịch hẹn này?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#dc3545",
-                cancelButtonColor: "#6c757d",
-                confirmButtonText: "Hủy",
-                cancelButtonText: "Quay lại"
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    const response = await fetch('/Appointment/Cancel?id=' + id, { method: 'POST' });
-                    const result = await response.json();
+            iziToast.show({
+                class: "iziToast-custom",
+                title: "🔔 Xác nhận hủy lịch hẹn",
+                message: "Bạn có chắc muốn hủy lịch hẹn này?",
+                position: "center",
+                timeout: false,
+                close: false,
+                overlay: true,
+                buttons: [
+                    [
+                        '<button><i class="fa fa-times"></i> Hủy lịch</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
 
-                    if (response.ok) {
-                        Swal.fire({
-                            title: "Đã hủy!",
-                            text: result.message,
-                            icon: "success",
-                            confirmButtonColor: "#dc3545"
-                        });
+                            $.post("/Appointment/Cancel", { id: id }, function (response) {
+                                iziToast.show({
+                                    title: response.success ? "✅ Đã hủy!" : "❌ Lỗi!",
+                                    message: response.message,
+                                    position: "topRight",
+                                    color: response.success ? "green" : "red",
+                                    timeout: 1000
+                                });
 
-                        // **Cập nhật giao diện**
-                        const row = button.closest('tr');
-
-                        // Cập nhật trạng thái
-                        const statusCell = row.querySelector('td:nth-child(4)');
-                        statusCell.innerHTML = '<span class="badge badge-danger">Đã hủy</span>';
-
-                        // Xóa các nút xác nhận và hủy, thay bằng chữ "Không khả dụng"
-                        const actionCell = row.querySelector('td:nth-child(5)');
-                        actionCell.innerHTML = '<span class="text-muted">Không khả dụng</span>';
-                    }
-                }
+                                if (response.success) {
+                                    updateStatus(id, "Đã hủy", "badge-danger");
+                                    disableActions(id);
+                                }
+                            }).fail(() => {
+                                iziToast.error({
+                                    title: "Lỗi!",
+                                    message: "Đã xảy ra lỗi khi hủy lịch hẹn.",
+                                    position: "topRight"
+                                });
+                            });
+                        },
+                        true
+                    ],
+                    [
+                        '<button><i class="fa fa-times"></i> Quay lại</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                        }
+                    ]
+                ]
             });
         });
-    });
 
+        $("#select-all").change(function () {
+            $(".appointment-checkbox").prop("checked", this.checked);
+            toggleDeleteSelectedButton();
+        });
+
+        // Kiểm tra checkbox từng dòng
+        $(document).on("change", ".appointment-checkbox", function () {
+            if ($(".appointment-checkbox:checked").length === $(".appointment-checkbox").length) {
+                $("#select-all").prop("checked", true);
+            } else {
+                $("#select-all").prop("checked", false);
+            }
+            toggleDeleteSelectedButton();
+        });
+
+        // Hàm bật/tắt nút Xóa đã chọn
+        function toggleDeleteSelectedButton() {
+            if ($(".appointment-checkbox:checked").length > 0) {
+                $(".delete-selected-btn").prop("disabled", false);
+            } else {
+                $(".delete-selected-btn").prop("disabled", true);
+            }
+        }
+        
+        function checkAndShowNoAppointments() {
+            if ($(".appointment-checkbox").length === 0) {
+                $(".table-container").remove(); // Xóa bảng nếu không còn dữ liệu
+                $(".delete-selected-btn").remove(); // Xóa nút "Xóa đã chọn"
+
+                // Kiểm tra nếu thông báo chưa tồn tại thì thêm vào
+                if ($(".no-appointments").length === 0) {
+                    $("h2").after('<div class="no-appointments">Chưa có lịch hẹn nào cho bài đăng của bạn.</div>');
+                }
+            }
+        }
+        // Xóa các lịch hẹn đã chọn
+        $(".delete-selected-btn").click(function () {
+            const selectedIds = $(".appointment-checkbox:checked").map(function () {
+                return $(this).val();
+            }).get();
+
+            if (selectedIds.length === 0) return;
+
+            iziToast.show({
+                class: "iziToast-custom",
+                title: "⚠ Xóa lịch hẹn đã chọn",
+                message: "Bạn có chắc muốn xóa các lịch hẹn đã chọn?",
+                position: "center",
+                timeout: false,
+                close: false,
+                overlay: true,
+                buttons: [
+                    [
+                        '<button><i class="fa fa-trash"></i> Xóa</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                            $.ajax({
+                                url: "/Appointment/DeleteSelected",
+                                type: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify(selectedIds),
+                                success: function (response) {
+                                    iziToast.show({
+                                        title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                        message: response.message,
+                                        position: "topRight",
+                                        color: response.success ? "green" : "red",
+                                        timeout: 1000
+                                    });
+
+                                    if (response.success) {
+                                        $(".appointment-checkbox:checked").each(function () {
+                                            $(this).closest("tr").remove();
+                                        });
+                                        toggleDeleteSelectedButton();
+                                        checkAndShowNoAppointments();
+
+                                    }
+                                },
+                                error: function () {
+                                    iziToast.error({
+                                        title: "Lỗi!",
+                                        message: "Đã xảy ra lỗi khi xóa lịch hẹn.",
+                                        position: "topRight"
+                                    });
+                                }
+                            });
+                        },
+                        true
+                    ],
+                    [
+                        '<button><i class="fa fa-times"></i> Hủy</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                        }
+                    ]
+                ]
+            });
+        });
+
+        // Hàm cập nhật trạng thái trên giao diện
+        function updateStatus(id, statusText, statusClass) {
+            const statusCell = $(`tr:has(button[data-id='${id}']) td:nth-child(6)`);
+            statusCell.html(`<span class="badge ${statusClass}">${statusText}</span>`);
+        }
+
+        // Hàm ẩn nút xác nhận/hủy sau khi xử lý xong
+        function disableActions(id) {
+            const actionCell = $(`tr:has(button[data-id='${id}']) td:nth-child(7)`);
+            actionCell.html('<span class="text-muted">Không khả dụng</span>');
+        }
+    });
 </script>
 
 <style>

@@ -127,3 +127,43 @@
         margin-bottom: 20px !important;
     }
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+
+<script>
+    $(document).ready(function () {
+        $(".account-form").on("submit", function (event) {
+            event.preventDefault(); // Ngăn chặn hành vi submit mặc định
+
+            const form = $(this);
+            const formData = form.serialize();
+
+            $.post(form.attr("action"), formData, function (response) {
+                if (response.success) {
+                    iziToast.success({
+                        title: "Thành công", 
+                        message: response.message,
+                        position: "topRight",
+                        timeout: 1500,
+                        onClosing: function () {
+                            window.location.href = response.previousPage; // Quay về trang trước đó
+                        }
+                    });
+                } else {
+                    iziToast.error({
+                        title: "Lỗi",
+                        message: response.message,
+                        position: "topRight",
+                    });
+                }
+            }).fail(function () {
+                iziToast.error({
+                    title: "Lỗi",
+                    message: "Không thể gửi yêu cầu, vui lòng thử lại!",
+                    position: "topRight",
+                });
+            });
+        });
+    });
+</script>

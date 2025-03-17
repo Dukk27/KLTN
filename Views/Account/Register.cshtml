@@ -4,6 +4,7 @@
 }
 
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/iziToast.css">
 
 <div class="register-container">
     <div class="card shadow-lg register-card">
@@ -64,7 +65,11 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Thêm thư viện iziToast -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const roleRadios = document.querySelectorAll('input[name="Role"]');
@@ -80,24 +85,28 @@
                 });
             });
 
-            // Hiển thị thông báo nếu có lỗi
-            var errorMessage = '@Html.Raw(ViewBag.Error)';
-            if (errorMessage) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Đăng ký thất bại',
-                    text: errorMessage,
+            var errorMessages = @Html.Raw(Json.Serialize(ViewBag.Errors));
+            if (errorMessages && errorMessages.length > 0) {
+                errorMessages.forEach(error => {
+                    iziToast.error({
+                        title: 'Đăng ký thất bại',
+                        message: error,
+                        position: 'topRight',
+                        timeout: 2000
+                    });
                 });
             }
 
             var successMessage = '@Html.Raw(ViewBag.Success)';
             if (successMessage) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Thành công!',
-                    text: successMessage,
-                }).then(() => {
-                    window.location.href = '@Url.Action("Login", "Account")';
+                iziToast.success({
+                    title: 'Đăng ký thành công!',
+                    message: successMessage,
+                    position: 'topRight',
+                    timeout: 1000,
+                    onClosing: function () {
+                        window.location.href = '@Url.Action("Login", "Account")';
+                    }
                 });
             }
         });

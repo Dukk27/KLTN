@@ -3,6 +3,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link rel="stylesheet" href="~/css/iziToast.css">
 <link rel="stylesheet" href="~/css/edit.css" asp-append-version="true" />
 
 <h2 style="color: rgb(35, 164, 207); text-align: center;">Chỉnh sửa thông tin nhà trọ</h2>
@@ -124,7 +125,8 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -133,41 +135,67 @@
             form.addEventListener("submit", function (event) {
                 event.preventDefault(); // Ngăn chặn submit mặc định
 
-                Swal.fire({
-                    title: "Xác nhận?",
-                    text: "Bạn có chắc muốn lưu thay đổi?",
-                    icon: "question",
-                    showCancelButton: true,
-                    confirmButtonText: "Lưu",
-                    cancelButtonText: "Hủy"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch(form.action, {
-                            method: "POST",
-                            body: new FormData(form)
-                        })
-                        .then(response => response.json()) 
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire({
-                                    title: "Thành công!",
-                                    text: data.message,
-                                    icon: "success",
-                                    confirmButtonText: "OK"
-                                }).then(() => {
-                                    @* window.location.href = "/QuanLi/ListHouseRoom"; *@
-                                    window.location.href = "/Home/Index";
-                                });
-                            } else {
-                                Swal.fire("Lỗi!", data.message || "Có lỗi xảy ra!", "error");
+                iziToast.show({
+                    class: "iziToast-custom",
+                    title: "🔔 Xác nhận chỉnh sửa",
+                    message: "Bạn có chắc chắn muốn chỉnh sửa bài đăng này?",
+                    position: "center",
+                    timeout: false,
+                    close: false,
+                    overlay: true,
+                    displayMode: "once",
+                    drag: false,
+                    icon: "fa fa-question-circle",
+                    buttons: [
+                        [
+                            '<button><i class="fa fa-check"></i> Lưu</button>',
+                            function (instance, toast) {
+                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                                fetch(form.action, {
+                                    method: "POST",
+                                    body: new FormData(form)
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            iziToast.success({
+                                                title: "Thành công!",
+                                                message: data.message,
+                                                position: "topRight",
+                                                timeout: 1000,
+                                                onClosing: function () {
+                                                    window.location.href = "/Home/Index";
+                                                }
+                                            });
+                                        } else {
+                                            iziToast.error({
+                                                title: "Lỗi!",
+                                                message: data.message || "Có lỗi xảy ra!",
+                                                position: "topRight"
+                                            });
+                                        }
+                                    })
+                                    .catch(() => {
+                                        iziToast.error({
+                                            title: "Lỗi!",
+                                            message: "Không thể lưu thay đổi!",
+                                            position: "topRight"
+                                        });
+                                    });
+                            },
+                            true
+                        ],
+                        [
+                            '<button><i class="fa fa-times"></i> Hủy</button>',
+                            function (instance, toast) {
+                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
                             }
-                        })
-                        .catch(() => {
-                            Swal.fire("Lỗi!", "Không thể lưu thay đổi!", "error");
-                        });
-                    }
+                        ]
+                    ]
                 });
             });
         });
     </script>
+
 }

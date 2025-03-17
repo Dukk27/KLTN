@@ -181,3 +181,27 @@
   justify-content: center;
   margin-top: 20px;
 }
+
+.breadcrumb {
+    background: none;
+    padding: 10px 0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.breadcrumb-item a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: 500;
+}
+
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+    font-weight: bold;
+}

@@ -1,6 +1,8 @@
 @model IEnumerable<KLTN.Models.Account>
 
-<h3>Quản lý tài khoản</h3>
+<h3 class="text-center mt-3">Quản lý tài khoản</h3>
+
+<link rel="stylesheet" href="~/css/iziToast.css">
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -21,14 +23,28 @@
                 <td>@account.UserName</td>
                 <td>@account.PhoneNumber</td>
                 <td>@account.Email</td>
-                <td>@account.Role</td>
                 <td>
-                    <a href="@Url.Action("Edit", "Admin", new { id = account.IdUser })" class="btn btn-sm btn-primary">
-                        <i class="fas fa-edit"></i> 
+                    @switch (account.Role)
+                    {
+                        case 0:
+                            @:Admin
+                            break;
+                        case 1:
+                            @:Chủ trọ
+                            break;
+                        default:
+                            @:Người tìm phòng
+                            break;
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("Details", "Admin", new { id = account.IdUser })" class="btn btn-sm btn-primary"
+                        title="Xem chi tiết tài khoản">
+                        <i class="fas fa-eye"></i>
                     </a>
 
-                    <button class="btn btn-sm btn-danger delete-account" data-id="@account.IdUser">
-                        <i class="fas fa-trash-alt"></i> 
+                    <button class="btn btn-sm btn-danger delete-account" data-id="@account.IdUser" title="Xoá tài khoản">
+                        <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
             </tr>
@@ -36,36 +52,60 @@
     </tbody>
 </table>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Thêm thư viện iziToast -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+
 <script>
     $(document).ready(function () {
         $(".delete-account").on("click", function () {
             const id = $(this).data("id");
 
-            Swal.fire({
-                title: "Xác nhận xóa",
-                text: "Bạn có chắc muốn xóa tài khoản này?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Xóa",
-                cancelButtonText: "Hủy"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.post("@Url.Action("DeleteAccount", "Admin")", { id: id }, function (response) {
-                        if (response.success) {
-                            Swal.fire("Thành công", response.message, "success");
-                            $(`tr:has(button[data-id='${id}'])`).remove(); // Xóa hàng khỏi bảng mà không reload
-                        } else {
-                            Swal.fire("Lỗi", response.message, "error");
-                        }
-                    }).fail(() => {
-                        Swal.fire("Lỗi!", "Đã xảy ra lỗi khi xóa tài khoản.", "error");
-                    });
-                }
+            iziToast.question({
+                class: 'iziToast-custom',
+                title: "🔔 Xác nhận xoá",
+                message: "Bạn có chắc chắn muốn xoá tài khoản này không?",
+                position: "center",
+                timeout: false,
+                close: false,
+                overlay: true, 
+                icon: "fa fa-question-circle",
+                buttons: [
+                    ['<button><i class="fa fa-check"></i> <b>Có</b></button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                        $.post("@Url.Action("DeleteAccount", "Admin")", { id: id }, function (response) {
+                            if (response.success) {
+                                iziToast.success({
+                                    title: 'Thành công!',
+                                    message: 'Xoá tài khoản thành công.',
+                                    position: 'topRight',
+                                    timeout: 1000,
+                                });
+                                $(`tr:has(button[data-id='${id}'])`).remove(); // Xóa hàng khỏi bảng mà không reload
+                            } else {
+                                iziToast.error({
+                                    title: "Lỗi",
+                                    message: response.message,
+                                    position: "topRight",
+                                    timeout: 2000
+                                });
+                            }
+                        }).fail(() => {
+                            iziToast.error({
+                                title: "Lỗi!",
+                                message: "Đã xảy ra lỗi khi xoá tài khoản (Tài khoản đã thực hiện đăng bài).",
+                                position: "topRight",
+                                timeout: 3000
+                            });
+                        });
+
+                    }, true],
+                    ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }]
+                ]
             });
         });
     });
 </script>
-

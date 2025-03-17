@@ -32,19 +32,26 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Thêm iziToast -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
         $("form").submit(function (event) {
-            event.preventDefault(); // Ngăn form load lại trang
+            event.preventDefault(); // Ngăn chặn load lại trang
 
             var otp = $("#otp").val();
             var email = $("input[name='email']").val();
 
             if (!otp) {
-                Swal.fire("Lỗi!", "Vui lòng nhập mã OTP.", "error");
+                iziToast.error({
+                    title: "Lỗi!",
+                    message: "Vui lòng nhập mã OTP.",
+                    position: "topRight",
+                    timeout: 1000
+                });
                 return;
             }
 
@@ -54,20 +61,31 @@
                 data: { email: email, otp: otp },
                 success: function (response) {
                     if (response.success) {
-                        Swal.fire({
-                            icon: "success",
+                        iziToast.success({
                             title: "Thành công!",
-                            text: response.message,
-                            confirmButtonText: "OK"
-                        }).then(() => {
-                            window.location.href = response.redirectUrl;
+                            message: response.message,
+                            position: "topRight",
+                            timeout: 1000,
+                            onClosing: function() {
+                                window.location.href = response.redirectUrl;
+                            }
                         });
                     } else {
-                        Swal.fire("Lỗi!", response.message, "error");
+                        iziToast.error({
+                            title: "Lỗi!",
+                            message: response.message,
+                            position: "topRight",
+                            timeout: 1000
+                        });
                     }
                 },
                 error: function () {
-                    Swal.fire("Lỗi!", "Có lỗi xảy ra, vui lòng thử lại.", "error");
+                    iziToast.error({
+                        title: "Lỗi hệ thống!",
+                        message: "Có lỗi xảy ra, vui lòng thử lại.",
+                        position: "topRight",
+                        timeout: 1000
+                    });
                 }
             });
         });
