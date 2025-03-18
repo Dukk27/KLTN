@@ -25,9 +25,10 @@
         <span asp-validation-for="SelectedHouseType" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="form-group position-relative">
         <label asp-for="HouseDetail.Address">Địa chỉ</label>
-        <input asp-for="HouseDetail.Address" class="form-control" />
+        <input asp-for="HouseDetail.Address" id="houseAddress" class="form-control" autocomplete="off" />
+        <ul id="addressSuggestions" class="list-group position-absolute w-100"></ul>
         <span asp-validation-for="HouseDetail.Address" class="text-danger"></span>
     </div>
 
@@ -143,7 +144,7 @@
                     timeout: false,
                     close: false,
                     overlay: true,
-                    displayMode: "once",
+                    displayMode: "once", 
                     drag: false,
                     icon: "fa fa-question-circle",
                     buttons: [
@@ -197,5 +198,46 @@
             });
         });
     </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        const goongApiKey = "RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy";
 
+        $(document).ready(function () {
+            $("#houseAddress").on("input", function () {
+                let inputText = $(this).val().trim();
+                if (inputText.length < 3) {
+                    $("#addressSuggestions").empty();
+                    return;
+                }
+
+                let apiUrl = `https://rsapi.goong.io/Place/AutoComplete?api_key=${goongApiKey}&input=${encodeURIComponent(inputText)}`;
+
+                $.getJSON(apiUrl, function (data) {
+                    $("#addressSuggestions").empty();
+                    if (data.predictions) {
+                        data.predictions.forEach(item => {
+                            let listItem = `<li class="list-group-item address-item" data-address="${item.description}">${item.description}</li>`;
+                            $("#addressSuggestions").append(listItem);
+                        });
+                        $("#addressSuggestions").show(); // Hiển thị gợi ý
+                    }
+                });
+            });
+
+            // Khi người dùng chọn một địa chỉ gợi ý
+            $(document).on("click", ".address-item", function () {
+                let selectedAddress = $(this).data("address");
+                $("#houseAddress").val(selectedAddress);
+                $("#addressSuggestions").empty().hide(); // Ẩn danh sách sau khi chọn
+            });
+
+            // Ẩn khung gợi ý khi click ra ngoài
+            $(document).click(function (event) {
+                if (!$(event.target).closest("#houseAddress, #addressSuggestions").length) {
+                    $("#addressSuggestions").empty().hide();
+                }
+            });
+        });
+
+    </script>
 }

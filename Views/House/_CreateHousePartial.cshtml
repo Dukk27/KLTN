@@ -116,16 +116,16 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="province">Tỉnh/Thành phố *</label>
-                    <select id="province" class="form-control required" required>
+                    <label for="province">Tỉnh/Thành phố</label>
+                    <select id="province" class="form-control">
                     </select>
                     <span id="provinceError" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="district">Quận/Huyện *</label>
-                    <select id="district" class="form-control required" required>
+                    <label for="district">Quận/Huyện</label>
+                    <select id="district" class="form-control">
                         <option value="">-- Chọn Quận/Huyện --</option>
                     </select>
                     <span id="districtError" class="text-danger"></span>
@@ -133,8 +133,8 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="ward">Phường/Xã *</label>
-                    <select id="ward" class="form-control required" required>
+                    <label for="ward">Phường/Xã</label>
+                    <select id="ward" class="form-control">
                         <option value="">-- Chọn Phường/Xã --</option>
                     </select>
                     <span id="wardError" class="text-danger"></span>
@@ -145,6 +145,7 @@
             <label for="fullAddress">Địa chỉ đầy đủ *</label>
             <input type="text" id="fullAddress" class="form-control required"
                 placeholder="Địa chỉ cụ thể (VD: 96 Định Công)" required />
+            <ul id="addressSuggestions" class="list-group"></ul>
             <span id="fullAddressError" class="text-danger"></span>
         </div>
         <input type="hidden" id="address" name="HouseDetail.Address" />
@@ -217,8 +218,11 @@
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
 <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
+    const goongApiKey = "RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy";
+
     $(document).ready(function () {
         const apiBase = "https://provinces.open-api.vn/api/";
 
@@ -298,15 +302,25 @@
             let province = $("#province option:selected").text();
             let district = $("#district option:selected").text();
             let ward = $("#ward option:selected").text();
-            let specificAddress = $("#fullAddress").val();
+            let specificAddress = $("#fullAddress").val().trim();
 
             // Kiểm tra nếu là giá trị mặc định thì không thêm vào địa chỉ
             province = province === "-- Chọn Tỉnh/Thành --" ? "" : province;
             district = district === "-- Chọn Quận/Huyện --" ? "" : district;
             ward = ward === "-- Chọn Phường/Xã --" ? "" : ward;
 
-            let addressParts = [specificAddress, ward, district, province].filter(part => part.trim() !== "");
-            let fullAddress = addressParts.join(", ");
+            // Kiểm tra giá trị nhập vào (debugging)
+            console.log("Giá trị địa chỉ nhập tay:", specificAddress);
+
+            let fullAddress = "";
+
+            if (specificAddress.includes(",") && ($("#province").val() || $("#district").val() || $("#ward").val())) {
+                specificAddress = "";
+                $("#fullAddress").val(""); // Xóa input nhập tay
+            }
+
+            let addressParts = [specificAddress, ward, district, province].filter(part => part !== "");
+            fullAddress = addressParts.join(", ");
 
             $("#address").val(fullAddress);
             console.log("Địa chỉ đầy đủ:", fullAddress);
@@ -331,19 +345,6 @@
                 let isValid = true;
                 $(".text-danger").text(""); // Xóa thông báo lỗi cũ
 
-                // Kiểm tra dữ liệu
-                if (!$("#province").val()) {
-                    $("#provinceError").text("Vui lòng chọn Tỉnh/Thành phố");
-                    isValid = false;
-                }
-                if (!$("#district").val()) {
-                    $("#districtError").text("Vui lòng chọn Quận/Huyện");
-                    isValid = false;
-                }
-                if (!$("#ward").val()) {
-                    $("#wardError").text("Vui lòng chọn Phường/Xã");
-                    isValid = false;
-                }
                 if (!$("#fullAddress").val().trim()) {
                     $("#fullAddressError").text("Vui lòng nhập địa chỉ cụ thể");
                     isValid = false;
@@ -427,17 +428,6 @@
                             ['<button><i class="fa fa-check"></i> Có</button>', function (instance, toast) {
                                 instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
                                 $("#createHouseForm")[0].submit();
-
-                                @* iziToast.success({
-                                    title: 'Thành công!',
-                                    message: 'Bài đăng của bạn đã được đăng!',
-                                    position: 'bottomRight',
-                                    timeout: 1500,
-                                });
-
-                                setTimeout(() => {
-                                    $("#createHouseForm")[0].submit(); // Gửi form sau khi thông báo
-                                }, 1600); *@
                             }, true],
                             ['<button><i class="fa fa-times"></i> Không</button>', function (instance, toast) {
                                 instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
@@ -467,6 +457,47 @@
                     });
                 }
             });
+        });
+    });
+
+    // Gợi ý địa chỉ
+    $(document).ready(function () {
+        $("#fullAddress").on("input", function () {
+            let inputText = $(this).val().trim();
+            if (inputText.length < 3) {
+                $("#addressSuggestions").empty();
+                return;
+            }
+
+            let apiUrl = `https://rsapi.goong.io/Place/AutoComplete?api_key=${goongApiKey}&input=${encodeURIComponent(inputText)}`;
+
+            $.getJSON(apiUrl, function (data) {
+                $("#addressSuggestions").empty();
+                if (data.predictions) {
+                    data.predictions.forEach(item => {
+                        let listItem = `<li class="list-group-item address-item" data-address="${item.description}">${item.description}</li>`;
+                        $("#addressSuggestions").append(listItem);
+                    });
+                }
+            });
+        });
+
+        // Khi người dùng chọn một địa chỉ gợi ý
+        $(document).on("click", ".address-item", function () {
+            let selectedAddress = $(this).data("address");
+            $("#fullAddress").val(selectedAddress);
+            $("#addressSuggestions").empty();
+            $("#address").val(selectedAddress); // Lưu vào input ẩn
+
+            $("#province").val("").trigger("change");
+            $("#district").empty().append('<option value="">-- Chọn Quận/Huyện --</option>');
+            $("#ward").empty().append('<option value="">-- Chọn Phường/Xã --</option>');
+        });
+        
+        $(document).on("click", function (event) {
+            if (!$(event.target).closest("#fullAddress, #addressSuggestions").length) {
+                $("#addressSuggestions").empty(); // Ẩn gợi ý khi nhấn ra ngoài
+            }
         });
     });
 </script>
