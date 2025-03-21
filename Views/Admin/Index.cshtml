@@ -22,7 +22,7 @@
                 </li>
                 <li class="nav-item main-nav-item">
                     <a href="#" class="nav-link" id="manageReviewsLink">
-                        <i class="fas fa-comments"></i> Quản Lý Bình Luận
+                        <i class="fas fa-comment"></i> Quản Lý Bình Luận
                     </a>
                 </li>
                 <li class="nav-item main-nav-item">
@@ -38,6 +38,12 @@
                 </li>
 
                 <li class="nav-item main-nav-item">
+                    <a href="#" class="nav-link" id="manageChatLink">
+                        <i class="fas fa-comments"></i> Quản Lý Chat
+                    </a>
+                </li>
+
+                <li class="nav-item main-nav-item">
                     <a href="#" class="nav-link" id="postReportLink">
                         <i class="fas fa-file-alt"></i> Thống Kê Bài Đăng Theo Tài Khoản
                     </a>
@@ -47,7 +53,7 @@
 
         <!-- Nội dung bên phải -->
         <div class="col-md-9" id="content">
-            
+
             <div id="contentPlaceholder">
             </div>
         </div>
@@ -63,13 +69,13 @@
     #sidebar .nav-item {
         margin-bottom: 10px;
     }
-    
+
     #sidebar .main-nav-item a {
         font-size: 18px;
         font-weight: 600;
         padding: 10px 15px;
     }
-    
+
     #sidebar .main-nav-item:hover a {
         background-color: #e9ecef;
     }
@@ -79,13 +85,13 @@
         padding: 20px;
         border-left: 1px solid #ddd;
     }
-    
+
     #sidebar i {
         margin-right: 10px;
         width: 20px;
         text-align: center;
     }
-    
+
     #sidebar h3 i {
         margin-right: 10px;
     }
@@ -133,10 +139,17 @@
                 });
             });
 
+            $('#manageChatLink').on('click', function (e) {
+                e.preventDefault();
+                $.get('@Url.Action("ManageChat", "Admin")', function (data) {
+                    $('#contentPlaceholder').html(data);
+                });
+            });
+
             $('#postReportLink').on('click', function (e) {
                 e.preventDefault();
                 $.get('@Url.Action("PostReport", "Admin")', function (data) {
-                    $('#contentPlaceholder').html(data); 
+                    $('#contentPlaceholder').html(data);
                 });
             });
         });

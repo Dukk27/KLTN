@@ -81,5 +81,15 @@ namespace KLTN.Repositories
         {
             return await _context.Accounts.FirstOrDefaultAsync(a => a.Email == email);
         }
+
+        public async Task<int?> GetUserIdByUsername(string username)
+        {
+            var user = await _context
+                .Accounts.Where(u => u.UserName == username)
+                .Select(u => u.IdUser)
+                .FirstOrDefaultAsync();
+
+            return user != 0 ? user : (int?)null;
+        }
     }
 }

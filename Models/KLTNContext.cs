@@ -18,10 +18,11 @@ namespace KLTN.Models
         public virtual DbSet<HouseDetail> HouseDetails { get; set; } = null!;
         public virtual DbSet<Review> Reviews { get; set; } = null!;
         public virtual DbSet<HouseType> HouseType { get; set; } = null!;
-         public DbSet<Payment> Payments { get; set; } = null!;
+        public DbSet<Payment> Payments { get; set; } = null!;
         public DbSet<UserPost> UserPosts { get; set; } = null!;
 
         public DbSet<Appointment> Appointments { get; set; } = null!;
+        public DbSet<Message> Messages { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

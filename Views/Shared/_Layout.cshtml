@@ -20,7 +20,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-    
+
     <style>
         .navbar {
             background-color: #007bff;
@@ -77,7 +77,6 @@
         .modal-body {
             padding: 20px;
         }
-        
     </style>
 
 </head>
@@ -93,6 +92,10 @@
             <div class="header">
                 <a class="navbar-brand" href="@Url.Action("Index", User.IsInRole("Admin") ? "Admin" : "Home")"> <img
                         src="~/img/image2.png" alt="Logo" height="50"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
                         @if (string.IsNullOrEmpty(userName))
@@ -115,7 +118,8 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="#" id="profileLink">Xin chào, <span id="headerUserName">@userName</span></a>
+                                <a class="nav-link" href="#" id="profileLink">Xin chào, <span
+                                        id="headerUserName">@userName</span></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#" id="logoutLink">Đăng xuất</a>
@@ -190,7 +194,7 @@
                 });
             });
         });
-  
+
         document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("logoutLink").addEventListener("click", function (e) {
                 e.preventDefault(); // Ngăn chặn hành động mặc định

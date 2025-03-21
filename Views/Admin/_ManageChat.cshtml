@@ -1,0 +1,95 @@
+@model List<KLTN.ViewModels.ManageChatViewModel>
+
+<link rel="stylesheet" href="~/css/iziToast.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tên hội thoại</th>
+            <th>Nội dung</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var chat in Model)
+        {
+            <tr>
+                <td>@chat.ConversationName</td>
+
+                <td>
+                    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 5px;">
+                        <ul class="list-unstyled">
+                            @foreach (var msg in chat.Content)
+                            {
+                                <li>
+                                    <strong>@msg.Sender:</strong> @msg.Content
+                                    <span class="text-muted" style="font-size: 12px;">(@msg.Timestamp)</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm delete-chat" data-conversation="@chat.ConversationId">
+                        Xóa hội thoại
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $(".delete-chat").click(function () {
+            var button = $(this); // Lưu button để dùng sau
+            var conversationId = button.data("conversation");
+
+            iziToast.question({
+                class: 'iziToast-custom',
+                timeout: 20000,
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                title: 'Xác nhận',
+                message: 'Bạn có chắc muốn xóa cuộc hội thoại này?',
+                position: 'center',
+                buttons: [
+                    ['<button><b>Đồng ý</b></button>', function (instance, toast) {
+                        $.post("/Admin/DeleteChat", { conversationId: conversationId }, function (data) {
+                            if (data.success) {
+                                // Hiển thị thông báo thành công
+                                iziToast.success({
+                                    title: 'Thành công',
+                                    message: 'Hội thoại đã được xóa!',
+                                    position: 'topRight',
+                                    timeout: 1000
+                                });
+
+                                // Xóa hàng chứa hội thoại ngay lập tức mà không cần reload
+                                button.closest("tr").fadeOut(500, function () {
+                                    $(this).remove();
+                                });
+                            } else {
+                                iziToast.error({
+                                    title: 'Lỗi',
+                                    message: data.message,
+                                    position: 'topRight'
+                                });
+                            }
+                        });
+
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }, true],
+
+                    ['<button>Hủy</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }]
+                ]
+            });
+        });
+    });
+</script>

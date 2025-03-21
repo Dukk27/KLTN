@@ -15,13 +15,15 @@ namespace KLTN.Controllers
         private readonly IReviewRepository _reviewRepository;
         private readonly IHouseTypeRepository _houseTypeRepository;
         private readonly IAmenityRepository _amenityRepository;
+        private readonly KLTNContext _context;
 
         public AdminController(
             IAccountRepository accountRepository,
             IHouseRepository housesRepository,
             IReviewRepository reviewRepository,
             IHouseTypeRepository houseTypeRepository,
-            IAmenityRepository amenityRepository
+            IAmenityRepository amenityRepository,
+            KLTNContext context
         )
         {
             _accountRepository = accountRepository;
@@ -29,6 +31,7 @@ namespace KLTN.Controllers
             _reviewRepository = reviewRepository;
             _houseTypeRepository = houseTypeRepository;
             _amenityRepository = amenityRepository;
+            _context = context;
         }
 
         // Trang Dashboard
@@ -394,8 +397,10 @@ namespace KLTN.Controllers
                         UserName = account.UserName,
                         PhoneNumber = account.PhoneNumber,
                         Email = account.Email,
-                        TotalPosts = userPosts.Count, 
-                        ApprovedPosts = userPosts.Count(h => h.Status == HouseStatus.Approved || h.Status == HouseStatus.Active ),
+                        TotalPosts = userPosts.Count,
+                        ApprovedPosts = userPosts.Count(h =>
+                            h.Status == HouseStatus.Approved || h.Status == HouseStatus.Active
+                        ),
                         RejectedPosts = userPosts.Count(h => h.Status == HouseStatus.Rejected),
                         PendingPosts = userPosts.Count(h => h.Status == HouseStatus.Pending),
                         HiddenPosts = userPosts.Count(h => h.Status == HouseStatus.Hidden),
@@ -404,6 +409,128 @@ namespace KLTN.Controllers
                 .ToList();
 
             return PartialView("_PostReport", accountReports);
+        }
+
+        public IActionResult ManageChat()
+        {
+            var messages = _context
+                .Messages.OrderBy(m => m.Timestamp) // Sắp xếp theo thời gian
+                .Select(m => new
+                {
+                    ConversationId = ChatController.GenerateConversationId(
+                        m.SenderId,
+                        m.ReceiverId
+                    ),
+                    SenderId = m.SenderId,
+                    SenderName = _context
+                        .Accounts.Where(a => a.IdUser == m.SenderId)
+                        .Select(a => a.UserName)
+                        .FirstOrDefault(),
+                    ReceiverId = m.ReceiverId,
+                    ReceiverName = _context
+                        .Accounts.Where(a => a.IdUser == m.ReceiverId)
+                        .Select(a => a.UserName)
+                        .FirstOrDefault(),
+                    Content = m.Content,
+                    Timestamp = m.Timestamp,
+                })
+                .ToList();
+
+            // Nhóm tin nhắn theo cuộc hội thoại
+            var groupedMessages = messages
+                .GroupBy(m => new
+                {
+                    SortedId = m.SenderId < m.ReceiverId
+                        ? $"{m.SenderId}-{m.ReceiverId}"
+                        : $"{m.ReceiverId}-{m.SenderId}",
+                    SortedName = string.Compare(m.SenderName, m.ReceiverName) < 0
+                        ? $"{m.SenderName} - {m.ReceiverName}"
+                        : $"{m.ReceiverName} - {m.SenderName}",
+                })
+                .Select(g => new ManageChatViewModel
+                {
+                    ConversationId = g.Key.SortedId,
+                    SenderName = g.First().SenderName,
+                    ReceiverName = g.First().ReceiverName,
+                    Content = g.OrderBy(m => m.Timestamp)
+                        .Select(m => new ChatMessageViewModel
+                        {
+                            Sender = m.SenderName,
+                            Content = m.Content,
+                            Timestamp = m.Timestamp,
+                        })
+                        .ToList(),
+                })
+                .ToList();
+
+            return PartialView("_ManageChat", groupedMessages);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteChat(string conversationId)
+        {
+            if (string.IsNullOrEmpty(conversationId) || !conversationId.Contains("-"))
+            {
+                return Json(new { success = false, message = "ConversationId không hợp lệ!" });
+            }
+
+            var ids = conversationId.Split('-');
+            if (
+                ids.Length != 2
+                || !int.TryParse(ids[0], out int id1)
+                || !int.TryParse(ids[1], out int id2)
+            )
+            {
+                return Json(new { success = false, message = "Lỗi khi phân tích ConversationId!" });
+            }
+
+            // Lấy tất cả tin nhắn của cuộc hội thoại này
+            var messages = _context
+                .Messages.Where(m =>
+                    (m.SenderId == id1 && m.ReceiverId == id2)
+                    || (m.SenderId == id2 && m.ReceiverId == id1)
+                )
+                .ToList();
+
+            if (!messages.Any())
+            {
+                return Json(new { success = false, message = "Không có tin nhắn để xóa!" });
+            }
+
+            _context.Messages.RemoveRange(messages);
+            _context.SaveChanges();
+
+            return Json(new { success = true, message = "Đã xóa hội thoại thành công!" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LockAccount(int id)
+        {
+            var account = await _accountRepository.GetAccountByIdAsync(id);
+            if (account == null)
+            {
+                return Json(new { success = false, message = "Tài khoản không tồn tại." });
+            }
+
+            account.IsLocked = true;
+            await _accountRepository.UpdateAccountAsync(account);
+
+            return Json(new { success = true, message = "Tài khoản đã bị khóa." });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UnlockAccount(int id)
+        {
+            var account = await _accountRepository.GetAccountByIdAsync(id);
+            if (account == null)
+            {
+                return Json(new { success = false, message = "Tài khoản không tồn tại." });
+            }
+
+            account.IsLocked = false;
+            await _accountRepository.UpdateAccountAsync(account);
+
+            return Json(new { success = true, message = "Tài khoản đã được mở khóa." });
         }
     }
 }

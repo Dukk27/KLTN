@@ -1,6 +1,7 @@
 using System.Net;
 using System.Security.Claims;
 using KLTN.Helpers;
+using KLTN.Hubs;
 using KLTN.Models;
 using KLTN.Repositories;
 using KLTN.Repository.House;
@@ -52,6 +53,21 @@ builder.Services.AddDbContext<KLTNContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "CorsPolicy",
+        builder =>
+        {
+            builder
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .SetIsOriginAllowed(origin => true);
+        }
+    );
+});
+
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IHouseRepository, HouseRepository>();
 builder.Services.AddScoped<IHouseDetailRepository, HouseDetailRepository>();
@@ -60,6 +76,8 @@ builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<HouseService>();
 builder.Services.AddScoped<IHouseTypeRepository, HouseTypeRepository>();
 builder.Services.AddSingleton<EmailService>();
+builder.Services.AddSignalR();
+builder.Services.AddTransient<ChatHub>();
 
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
@@ -73,10 +91,18 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseSession();
+app.UseCors("CorsPolicy"); 
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<KLTN.Hubs.ChatHub>("/chatHub"); // Đăng ký SignalR Hub
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}"
+    );
+});
 
 app.Run();

@@ -11,9 +11,7 @@
     <link rel="stylesheet" href="~/css/review.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="~/css/goong-js.css" asp-append-version="true" />
 </head>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -107,11 +105,17 @@
         </div>
     </div>
 
-    @if (Model.IdUserNavigation?.UserName != ViewBag.UserId)
-    {
-        <div class="appointment-section">
-            <button id="bookAppointmentBtn" class="btn btn-primary">Đặt lịch hẹn</button>
-        </div>
+    <!--Chat và Đặt hẹn-->
+    <div class="action-buttons">
+        @if (ViewBag.CurrentUserId != null && ViewBag.OwnerId != ViewBag.CurrentUserId)
+        {
+            <a href="@Url.Action("Chat", "Chat", new { conversationId = ViewBag.ConversationId })" class="btn btn-primary">
+                <i class="fas fa-comment"></i> Nhắn Tin với Chủ Trọ
+            </a>
+        }
+
+
+        <button id="bookAppointmentBtn" class="btn btn-primary"><i class="fas fa-calendar"></i> Đặt lịch hẹn</button>
 
         <!-- Form đặt lịch hẹn (popup) -->
         <div id="appointmentOverlay" class="appointment-overlay"></div>
@@ -128,7 +132,8 @@
         <input type="hidden" id="userRole" value="@ViewBag.UserRole" />
         <input type="hidden" id="houseOwnerId" value="@Model.IdUserNavigation.IdUser" />
         <input type="hidden" id="currentUserId" value="@ViewBag.currentUserId" />
-    }
+
+    </div>
 
     <h3 class="section-title">Tiện Ích</h3>
     <div class="row">
@@ -149,14 +154,30 @@
     <h3 class="section-title">Bản Đồ Vị Trí</h3>
 
     <div id="map" style="width: 100%; height: 500px; position: relative;">
-        <div id="directions-icon" onclick="getDirections()">
-            <img src="https://cdn-icons-png.freepik.com/256/10001/10001620.png?ga=GA1.1.353268222.1720874636&semt=ais_hybrid"
-                alt="Chỉ dẫn đường" />
+        <div class="map-style-button" onclick="toggleMapStyleMenu()">Map Styles</div>
+
+        <div class="map-style-menu">
+            <button onclick="changeMapStyle('light')">Light</button>
+            <button onclick="changeMapStyle('dark')">Dark</button>
+            <button onclick="changeMapStyle('navigation-day')">Navigation Day</button>
+            <button onclick="changeMapStyle('navigation-night')">Navigation Night</button>
+            <button onclick="changeMapStyle('default')">Default</button>
         </div>
-        <div id="locate-icon" onclick="locateUser()">
-            <img src="https://cdn-icons-png.freepik.com/256/16244/16244240.png?ga=GA1.1.353268222.1720874636&semt=ais_hybrid"
-                alt="Locate Me" />
+        <div id="zoom-in" class="zoom-control" onclick="zoomIn()">
+            <button>+</button>
         </div>
+        <div id="zoom-out" class="zoom-control" onclick="zoomOut()">
+            <button>-</button>
+        </div>
+        <div id="directions-icon" class="map-icon" onclick="getDirections()">
+            <i class="fa fa-directions"></i>
+            <span class="icon-text">Get Directions</span>
+        </div>
+        <div id="locate-icon" class="map-icon" onclick="locateUser()">
+            <i class="fa fa-location-arrow"></i>
+            <span class="icon-text">Locate Me</span>
+        </div>
+
     </div>
 
     <h3 class="section-title">Đánh giá:</h3>
@@ -198,7 +219,366 @@
     </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="~/js/Detail.js" asp-append-version="true"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+<script src="~/js/goong-js.js"></script>
+<script>
+    goongjs.accessToken = "nFXjCGo9PppMz9YGX6S2fLdWnTwQKzCCmCimGy3G"; // MapTiles Key để hiển thị bản đồ
+    var map = new goongjs.Map({
+        container: "map",
+        style: "https://tiles.goong.io/assets/goong_map_web.json",
+        center: [105.83991, 21.028], // Tọa độ mặc định (Hà Nội)
+        zoom: 15,
+    });
+
+    function zoomIn() {
+        var currentZoom = map.getZoom();
+        if (currentZoom < 20) {
+            map.zoomIn();
+        }
+    }
+
+    function zoomOut() {
+        var currentZoom = map.getZoom();
+        if (currentZoom > 3) {
+            map.zoomOut();
+        }
+    }
+
+    // Hàm thay đổi kiểu bản đồ
+    function changeMapStyle(style) {
+        let styleUrl = "";
+
+        // Chọn URL của kiểu bản đồ tương ứng
+        switch (style) {
+            case "light":
+                styleUrl = "https://tiles.goong.io/assets/goong_light_v2.json";
+                break;
+            case "dark":
+                styleUrl = "https://tiles.goong.io/assets/goong_map_dark.json";
+                break;
+            case "navigation-day":
+                styleUrl = "https://tiles.goong.io/assets/navigation_day.json";
+                break;
+            case "navigation-night":
+                styleUrl = "https://tiles.goong.io/assets/navigation_night.json";
+                break;
+            case "default":
+                styleUrl = "https://tiles.goong.io/assets/goong_map_web.json";
+                break;
+        }
+
+        // Cập nhật kiểu bản đồ
+        map.setStyle(styleUrl);
+    }
+
+    // Hàm hiển thị/ẩn menu khi người dùng nhấn nút
+    function toggleMapStyleMenu() {
+        var menu = document.querySelector(".map-style-menu");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    // Sử dụng API key cho các chức năng geocode, autocomplete, v.v.
+    async function setInitialAddress() {
+        var addressFromModel =
+            document.getElementById("house-address").dataset.address;
+        var decodedAddress = new DOMParser().parseFromString(
+            addressFromModel,
+            "text/html"
+        ).body.textContent;
+        console.log("Địa chỉ giải mã:", decodedAddress);
+
+        if (decodedAddress) {
+            try {
+                // Gọi API Geocode với API key
+                const response = await fetch(
+                    `https://rsapi.goong.io/Geocode?address=${encodeURIComponent(
+                        decodedAddress
+                    )}&api_key=RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy`
+                );
+                const data = await response.json();
+                console.log("Kết quả từ API Goong:", data);
+
+                if (data.results.length > 0) {
+                    const { geometry, formatted_address } = data.results[0];
+                    map.setCenter([geometry.location.lng, geometry.location.lat]);
+                    var marker = new goongjs.Marker({ color: "red" })
+                        .setLngLat([geometry.location.lng, geometry.location.lat])
+                        .addTo(map)
+                        .setPopup(
+                            new goongjs.Popup().setHTML(
+                                `<strong>Địa chỉ:</strong> ${formatted_address}`
+                            )
+                        )
+                        .togglePopup();
+                } else {
+                    alert("Không tìm thấy địa chỉ.");
+                }
+            } catch (error) {
+                console.error("Lỗi khi gọi API Geocode:", error);
+            }
+        } else {
+            console.warn("Địa chỉ không hợp lệ.");
+        }
+    }
+
+    setInitialAddress();
+
+    // Chức năng mở Google Maps để chỉ đường
+    function getDirections() {
+        var address = document.getElementById("house-address").dataset.address;
+        var decodedAddress = decodeHtmlEntities(address);
+
+        if (!decodedAddress) {
+            alert("Địa chỉ không hợp lệ.");
+            return;
+        }
+
+        // Mở Google Maps với địa chỉ đã giải mã
+        window.open(
+            `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                decodedAddress
+            )}`,
+            "_blank"
+        );
+    }
+
+    // Giải mã HTML entities
+    function decodeHtmlEntities(input) {
+        var doc = new DOMParser().parseFromString(input, "text/html");
+        return doc.documentElement.textContent;
+    }
+
+    // Định vị vị trí người dùng
+    async function locateUser() {
+        var address = document.getElementById("house-address").dataset.address;
+        var decodedAddress = decodeHtmlEntities(address);
+
+        if (!decodedAddress) {
+            alert("Địa chỉ không hợp lệ.");
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `https://rsapi.goong.io/Geocode?address=${encodeURIComponent(
+                    decodedAddress
+                )}&api_key=RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy`
+            );
+            const data = await response.json();
+
+            if (data.results.length > 0) {
+                const { geometry, formatted_address } = data.results[0];
+                map.setCenter([geometry.location.lng, geometry.location.lat]);
+                var marker = new goongjs.Marker()
+                    .setLngLat([geometry.location.lng, geometry.location.lat])
+                    .addTo(map)
+                    .setPopup(
+                        new goongjs.Popup().setHTML(
+                            `<strong>Địa chỉ:</strong> ${formatted_address}`
+                        )
+                    )
+                    .togglePopup();
+            } else {
+                alert("Không tìm thấy vị trí.");
+            }
+        } catch (error) {
+            console.error("Lỗi khi gọi API Geocode:", error);
+            alert("Không thể lấy vị trí.");
+        }
+    }
+
+    // Gửi đánh giá
+    async function submitReview() {
+        let isAuthenticated = document.getElementById("isAuthenticated").value === "true";
+
+        if (!isAuthenticated) {
+            iziToast.warning({
+                title: "Cảnh báo",
+                message: "Bạn cần đăng nhập để gửi đánh giá.",
+                position: "topRight",
+                timeout: 1000,
+            });
+
+            setTimeout(() => {
+                window.location.href = "/Account/Login";
+            }, 1000);
+            return;
+        }
+        const rating = document.querySelector('input[name="rating"]:checked');
+        const content = document.getElementById("Content").value;
+
+        if (!rating || !content) {
+            iziToast.warning({
+                title: "Cảnh báo",
+                message: "Vui lòng nhập đầy đủ thông tin.",
+                position: "topRight",
+                timeout: 1500,
+            });
+            return;
+        }
+
+        const houseId = document.querySelector(".review-form").dataset.houseId;
+        if (!houseId) {
+            iziToast.error({
+                title: "Lỗi",
+                message: "Không tìm thấy IdHouse. Vui lòng thử lại.",
+                position: "topRight",
+            });
+            return;
+        }
+
+        const reviewData = {
+            Rating: parseInt(rating.value),
+            Content: content,
+        };
+
+        try {
+            const response = await fetch(
+                `/api/Detail/house/detail/${houseId}/addreview`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(reviewData),
+                }
+            );
+
+            const result = await response.json();
+
+            if (response.ok) {
+                iziToast.success({
+                    title: "Thành công",
+                    message: result.message,
+                    position: "topRight",
+                    timeout: 1500,
+                });
+
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                iziToast.error({
+                    title: "Lỗi",
+                    message: result.message || "Đã xảy ra lỗi khi gửi đánh giá.",
+                    position: "topRight",
+                    timeout: 1500,
+                });
+            }
+        } catch (error) {
+            iziToast.error({
+                title: "Lỗi",
+                message: "Đã xảy ra lỗi. Vui lòng thử lại.",
+                position: "topRight",
+                timeout: 1500,
+            });
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let today = new Date().toISOString().split("T")[0];
+        document.getElementById("appointmentDate").setAttribute("min", today);
+
+        let isAuthenticated =
+            document.getElementById("isAuthenticated").value === "true";
+        let houseOwnerId = document.getElementById("houseOwnerId")?.value;
+        let currentUserId = document.getElementById("currentUserId")?.value;
+
+        document.getElementById("bookAppointmentBtn").addEventListener("click", function () {
+            if (!isAuthenticated) {
+                iziToast.warning({
+                    title: "Cảnh báo",
+                    message: "Bạn cần đăng nhập để đặt lịch hẹn.",
+                    position: "topRight",
+                    timeout: 1000,
+                });
+
+                setTimeout(function () {
+                    window.location.href = "/Account/Login";
+                }, 1000);
+
+                return;
+            }
+
+            if (houseOwnerId === currentUserId) {
+                iziToast.error({
+                    title: "Lỗi!",
+                    message: "Bạn không thể đặt lịch hẹn cho bài đăng của chính mình.",
+                    position: "topRight",
+                    timeout: 1500,
+                });
+                return;
+            }
+
+            document.getElementById("appointmentForm").style.display = "block";
+            document.getElementById("appointmentOverlay").style.display = "block";
+        });
+
+        document.getElementById("closeForm").addEventListener("click", function () {
+            document.getElementById("appointmentForm").style.display = "none";
+            document.getElementById("appointmentOverlay").style.display = "none";
+        });
+
+        if (!document.getElementById("submitAppointment").dataset.listenerAdded) {
+            document.getElementById("submitAppointment").dataset.listenerAdded = "true";
+
+            document.getElementById("submitAppointment").addEventListener("click", async function (event) {
+                event.preventDefault();
+
+                const date = document.getElementById("appointmentDate").value;
+                const houseId = document.querySelector(".review-form").dataset.houseId;
+
+                if (!date || date < today) {
+                    iziToast.error({
+                        title: "Lỗi!",
+                        message: "Vui lòng chọn ngày hợp lệ trước khi đặt lịch.",
+                        position: "topRight",
+                        timeout: 1500,
+                    });
+                    return;
+                }
+
+                const appointmentData = { HouseId: houseId, AppointmentDate: date };
+
+                try {
+                    const response = await fetch("/Appointment/Create", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(appointmentData),
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        iziToast.success({
+                            title: "Thành công!",
+                            message: result.message,
+                            position: "topRight",
+                            timeout: 1500,
+                        });
+
+                        document.getElementById("appointmentForm").style.display = "none";
+                        document.getElementById("appointmentOverlay").style.display = "none";
+                    } else {
+                        iziToast.error({
+                            title: "Lỗi!",
+                            message: result.message || "Đã xảy ra lỗi khi đặt lịch.",
+                            position: "topRight",
+                            timeout: 1000,
+                        });
+                    }
+                } catch (error) {
+                    iziToast.warning({
+                        title: "Cảnh báo",
+                        message: "Bạn cần đăng nhập để đặt lịch hẹn.",
+                        position: "topRight",
+                        timeout: 1000,
+                    });
+
+                    setTimeout(function () {
+                        window.location.href = "/Account/Login";
+                    }, 1000);
+                }
+            });
+        }
+    });
+</script>

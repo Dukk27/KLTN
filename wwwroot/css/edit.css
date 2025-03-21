@@ -132,3 +132,27 @@ img {
 button + a {
     margin-left: 10px;
 }
+
+#addressSuggestions {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-height: 250px;
+    overflow-y: auto;
+    width: 100%;
+    z-index: 1000;
+    display: none; /* Ẩn mặc định */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.address-item {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.address-item:hover {
+    background: #f1f1f1;
+}

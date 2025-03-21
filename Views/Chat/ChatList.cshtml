@@ -1,0 +1,28 @@
+@model List<KLTN.Models.ConversationViewModel>
+
+@{
+    ViewBag.Title = "Danh sách cuộc trò chuyện";
+}
+
+<h2>📩 Danh Sách Cuộc Trò Chuyện</h2>
+
+@if (Model.Any())
+{
+    <div class="chat-list">
+        @foreach (var conversation in Model)
+        {
+            <div class="chat-item">
+                <a href="@Url.Action("Chat", "Chat", new { conversationId = conversation.ConversationId })">
+                    <div class="chat-info">
+                        <p class="chat-name">👤 @conversation.UserName</p>
+                        <p class="chat-last-message">@conversation.LastMessage</p>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Không có cuộc trò chuyện nào.</p>
+}

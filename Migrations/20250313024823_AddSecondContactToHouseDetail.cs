@@ -10,19 +10,19 @@ namespace KLTN.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ContactName2",
-                table: "HouseDetails",
-                type: "nvarchar(max)",
-                nullable: true
-            );
+            // migrationBuilder.AddColumn<string>(
+            //     name: "ContactName2",
+            //     table: "HouseDetails",
+            //     type: "nvarchar(max)",
+            //     nullable: true
+            // );
 
-            migrationBuilder.AddColumn<string>(
-                name: "ContactPhone2",
-                table: "HouseDetails",
-                type: "nvarchar(max)",
-                nullable: true
-            );
+            // migrationBuilder.AddColumn<string>(
+            //     name: "ContactPhone2",
+            //     table: "HouseDetails",
+            //     type: "nvarchar(max)",
+            //     nullable: true
+            // );
         }
 
         /// <inheritdoc />

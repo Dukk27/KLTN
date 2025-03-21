@@ -44,6 +44,17 @@ namespace KLTN.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string userName, string password)
         {
+            var userLock = await _accountRepository.GetUserIdByUsername(userName);
+            if (userLock != null)
+            {
+                var account = await _accountRepository.GetAccountByIdAsync(userLock.Value);
+                if (account.IsLocked)
+                {
+                    ViewBag.Error = "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.";
+                    return View();
+                }
+            }
+
             if (_memoryCache.TryGetValue($"Lockout_{userName}", out DateTime lockoutEndTime))
             {
                 if (lockoutEndTime > DateTime.Now)

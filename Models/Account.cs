@@ -39,6 +39,7 @@ namespace KLTN.Models
         public string Email { get; set; }
 
         public int FreePostsUsed { get; set; }
+        public bool IsLocked { get; set; } = false;
 
         // Navigation properties
         public virtual ICollection<House> Houses { get; set; }

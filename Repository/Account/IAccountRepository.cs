@@ -13,6 +13,6 @@ namespace KLTN.Repositories
         Task UpdateAccountAsync(Account account); // Cập nhật tài khoản
         Task DeleteAccountAsync(int id);
         Task<Account?> GetAccountByEmailAsync(string email);
-        
+        Task<int?> GetUserIdByUsername(string username);
     }
 }

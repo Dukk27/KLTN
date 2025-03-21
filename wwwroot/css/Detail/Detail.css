@@ -205,3 +205,149 @@
     color: #6c757d;
     font-weight: bold;
 }
+
+
+
+
+.zoom-control {
+  position: absolute;
+  top: 10px;
+  z-index: 1000;
+  display: inline-block;
+  margin: 5px;
+  background-color: rgba(82, 151, 242, 0.7);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.zoom-control button {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  color: #333;
+  border: none;
+  background-color: transparent;
+  text-align: center;
+  line-height: 40px; /* Để nút có chữ ở giữa */
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#zoom-in {
+  right: 10px;
+}
+
+#zoom-out {
+  right: 10px;
+  top: 60px; /* Nằm dưới nút zoom-in */
+}
+
+#map {
+  position: relative;
+}
+
+.map-style-button {
+  position: absolute;
+  top: 10px;
+  left: 10px; /* Chỉnh vị trí nằm ở góc trái */
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.map-style-menu {
+  display: none;
+  position: absolute;
+  top: 40px; /* Đặt menu nằm dưới nút */
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  width: 160px;
+}
+
+.map-style-menu button {
+  padding: 10px;
+  width: 100%;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.map-style-menu button:hover {
+  background-color: #f0f0f0;
+}
+
+.map-style-menu button:last-child {
+  border-bottom: none;
+}
+
+.map-icon {
+  position: relative;
+  display: inline-block;
+  padding: 15px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 15px;
+  text-align: center;
+  transition: background-color 0.3s;
+}
+
+.map-icon i {
+  font-size: 15px;
+}
+
+.map-icon .icon-text {
+  display: none;
+  position: absolute;
+  bottom: -15px; /* Đặt chữ xuất hiện dưới icon */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.map-icon:hover .icon-text {
+  display: block;
+}
+
+.map-icon:hover {
+  background-color: #0056b3; /* Thay đổi màu nền khi hover */
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center; /* Căn giữa các nút */
+  gap: 10px; /* Khoảng cách giữa hai nút */
+  margin-top: 20px;
+}
+
+.action-btn {
+  flex: 1; /* Cả hai nút có kích thước bằng nhau */
+  text-align: center;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px; /* Đảm bảo nút không quá nhỏ */
+}
+
+.action-btn i {
+  margin-right: 8px;
+}

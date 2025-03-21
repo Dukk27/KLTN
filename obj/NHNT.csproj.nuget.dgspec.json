@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\KLTN_VNPAY\\KLTN\\NHNT.csproj": {}
+    "D:\\KLTN\\KLTN\\NHNT.csproj": {}
   },
   "projects": {
-    "D:\\KLTN_VNPAY\\KLTN\\NHNT.csproj": {
+    "D:\\KLTN\\KLTN\\NHNT.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\KLTN_VNPAY\\KLTN\\NHNT.csproj",
+        "projectUniqueName": "D:\\KLTN\\KLTN\\NHNT.csproj",
         "projectName": "NHNT",
-        "projectPath": "D:\\KLTN_VNPAY\\KLTN\\NHNT.csproj",
+        "projectPath": "D:\\KLTN\\KLTN\\NHNT.csproj",
         "packagesPath": "C:\\Users\\dn596\\.nuget\\packages\\",
-        "outputPath": "D:\\KLTN_VNPAY\\KLTN\\obj\\",
+        "outputPath": "D:\\KLTN\\KLTN\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\dn596\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -50,6 +50,14 @@
             "MailKit": {
               "target": "Package",
               "version": "[4.11.0, )"
+            },
+            "Microsoft.AspNetCore.SignalR": {
+              "target": "Package",
+              "version": "[1.2.0, )"
+            },
+            "Microsoft.AspNetCore.SignalR.Client": {
+              "target": "Package",
+              "version": "[9.0.3, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",

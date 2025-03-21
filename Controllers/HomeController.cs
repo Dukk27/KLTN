@@ -127,16 +127,31 @@ namespace KLTN.Controllers
             }
 
             int userRole = 2; // Mặc định là người tìm phòng
+            int? currentUserId = null;
+
             if (User.Identity.IsAuthenticated)
             {
                 if (User.IsInRole("Admin"))
                     userRole = 0;
                 else if (User.IsInRole("ChuTro"))
                     userRole = 1;
+
+                // Lấy ID người dùng hiện tại từ Database
+                currentUserId = await _accountRepository.GetUserIdByUsername(User.Identity.Name);
             }
 
             ViewBag.UserRole = userRole;
-            ViewBag.UserId = User.Identity.Name;
+            ViewBag.CurrentUserId = currentUserId;
+            ViewBag.OwnerId = house.IdUserNavigation?.IdUser;
+
+            // Tạo conversationId (nếu người dùng đã đăng nhập)
+            if (currentUserId != null && house.IdUserNavigation != null)
+            {
+                ViewBag.ConversationId = ChatController.GenerateConversationId(
+                    currentUserId.Value,
+                    house.IdUserNavigation.IdUser
+                );
+            }
 
             return PartialView("HouseDetails", house);
         }

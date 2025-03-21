@@ -9,147 +9,163 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = NHNT
 build_property.RootNamespace = NHNT
-build_property.ProjectDir = D:\KLTN_VNPAY\KLTN\
+build_property.ProjectDir = D:\KLTN\KLTN\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\KLTN_VNPAY\KLTN
+build_property.MSBuildProjectDirectory = D:\KLTN\KLTN
 build_property._RazorSourceGeneratorDebug = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Account/ChangePassword.cshtml]
+[D:/KLTN/KLTN/Views/Account/ChangePassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxDaGFuZ2VQYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Account/Edit.cshtml]
+[D:/KLTN/KLTN/Views/Account/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Account/ForgotPassword.cshtml]
+[D:/KLTN/KLTN/Views/Account/ForgotPassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Account/Login.cshtml]
+[D:/KLTN/KLTN/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Account/Manage.cshtml]
+[D:/KLTN/KLTN/Views/Account/Manage.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxNYW5hZ2UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Account/Profile.cshtml]
+[D:/KLTN/KLTN/Views/Account/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxQcm9maWxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Account/Register.cshtml]
+[D:/KLTN/KLTN/Views/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Account/ResetPassword.cshtml]
+[D:/KLTN/KLTN/Views/Account/ResetPassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZXNldFBhc3N3b3JkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Account/VerifyOtp.cshtml]
+[D:/KLTN/KLTN/Views/Account/VerifyOtp.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxWZXJpZnlPdHAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Account/_Profile.cshtml]
+[D:/KLTN/KLTN/Views/Account/_Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxfUHJvZmlsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Admin/Details.cshtml]
+[D:/KLTN/KLTN/Views/Admin/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Admin/Edit.cshtml]
+[D:/KLTN/KLTN/Views/Admin/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Admin/Index.cshtml]
+[D:/KLTN/KLTN/Views/Admin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Admin/_ManageAccounts.cshtml]
+[D:/KLTN/KLTN/Views/Admin/_ManageAccounts.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX01hbmFnZUFjY291bnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Admin/_ManageAmenities.cshtml]
+[D:/KLTN/KLTN/Views/Admin/_ManageAmenities.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX01hbmFnZUFtZW5pdGllcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Admin/_ManageHouseTypes.cshtml]
+[D:/KLTN/KLTN/Views/Admin/_ManageChat.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX01hbmFnZUNoYXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/KLTN/KLTN/Views/Admin/_ManageHouseTypes.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX01hbmFnZUhvdXNlVHlwZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Admin/_ManagePosts.cshtml]
+[D:/KLTN/KLTN/Views/Admin/_ManagePosts.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX01hbmFnZVBvc3RzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Admin/_ManageReviews.cshtml]
+[D:/KLTN/KLTN/Views/Admin/_ManageReviews.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX01hbmFnZVJldmlld3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Admin/_PostReport.cshtml]
+[D:/KLTN/KLTN/Views/Admin/_PostReport.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1Bvc3RSZXBvcnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Appointment/Index.cshtml]
+[D:/KLTN/KLTN/Views/Appointment/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwb2ludG1lbnRcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Home/HouseDetails.cshtml]
+[D:/KLTN/KLTN/Views/Chat/Chat.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxDaGF0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/KLTN/KLTN/Views/Chat/ChatList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxDaGF0TGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/KLTN/KLTN/Views/Chat/_ChatList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxfQ2hhdExpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/KLTN/KLTN/Views/Home/HouseDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIb3VzZURldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Home/HousesListPartial.cshtml]
+[D:/KLTN/KLTN/Views/Home/HousesListPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIb3VzZXNMaXN0UGFydGlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Home/Index.cshtml]
+[D:/KLTN/KLTN/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/House/Create.cshtml]
+[D:/KLTN/KLTN/Views/House/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG91c2VcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/House/_CreateHousePartial.cshtml]
+[D:/KLTN/KLTN/Views/House/_CreateHousePartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG91c2VcX0NyZWF0ZUhvdXNlUGFydGlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Payments/Failure.cshtml]
+[D:/KLTN/KLTN/Views/Payments/Failure.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudHNcRmFpbHVyZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Payments/Success.cshtml]
+[D:/KLTN/KLTN/Views/Payments/Success.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudHNcU3VjY2Vzcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/QuanLi/EditHouse.cshtml]
+[D:/KLTN/KLTN/Views/QuanLi/EditHouse.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVhbkxpXEVkaXRIb3VzZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/QuanLi/ListHouseRoom.cshtml]
+[D:/KLTN/KLTN/Views/QuanLi/ListHouseRoom.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVhbkxpXExpc3RIb3VzZVJvb20uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Shared/Error.cshtml]
+[D:/KLTN/KLTN/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/KLTN/KLTN/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/_ViewImports.cshtml]
+[D:/KLTN/KLTN/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/_ViewStart.cshtml]
+[D:/KLTN/KLTN/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN_VNPAY/KLTN/Views/Shared/_Layout.cshtml]
+[D:/KLTN/KLTN/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-mj1ndqr8wd
