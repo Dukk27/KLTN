@@ -1,3 +1,4 @@
+using System.Text.Json;
 using KLTN.Models;
 using KLTN.Repositories;
 using KLTN.Services;
@@ -50,11 +51,14 @@ namespace KLTN.Controllers
 
             return View(model);
         }
-
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create(HousePostViewModel model, IFormFile imageFile)
+        public async Task<IActionResult> Create(
+            HousePostViewModel model,
+            List<IFormFile> imageFiles
+        )
         {
             bool isAjaxRequest = Request.Headers["X-Requested-With"] == "XMLHttpRequest";
             int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
@@ -83,7 +87,7 @@ namespace KLTN.Controllers
             ModelState.Remove("IdHouseNavigation");
             model.HouseDetail.TimePost = DateTime.Now;
 
-            if (imageFile != null && imageFile.Length > 0)
+            if (imageFiles != null && imageFiles.Count > 0)
             {
                 string uploadsFolder = Path.Combine(
                     _webHostEnvironment.WebRootPath,
@@ -96,16 +100,23 @@ namespace KLTN.Controllers
                     Directory.CreateDirectory(uploadsFolder);
                 }
 
-                string uniqueFileName =
-                    Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                List<string> imagePaths = new List<string>();
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                foreach (var file in imageFiles.Take(5)) // Giới hạn 5 ảnh
                 {
-                    await imageFile.CopyToAsync(fileStream);
+                    string uniqueFileName =
+                        Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+
+                    imagePaths.Add("/img/houses/" + uniqueFileName);
                 }
-                model.HouseDetail.Image = Path.Combine("/img", "houses", uniqueFileName)
-                    .Replace("\\", "/");
+
+                model.HouseDetail.Image = string.Join(",", imagePaths);
             }
 
             model.House.IdUser = userId;

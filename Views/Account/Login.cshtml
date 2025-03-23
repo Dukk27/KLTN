@@ -8,13 +8,14 @@
 
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/iziToast.css">
+<script src="~/js/eye.js"></script>
 
 <div class="login-container">
     <div class="card login-card">
         <div class="card-body">
             <h1>Chào mừng quý khách đến với TIMTRODE</h1>
             <h2 class="text-center mb-4">Đăng nhập</h2>
-            
+
             <form method="post" asp-action="Login">
                 <div class="form-group mb-3">
                     <label for="userName">Tên đăng nhập</label>
@@ -23,8 +24,13 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="password">Mật khẩu</label>
-                    <input type="password" class="form-control" id="password" name="password" required
-                        placeholder="Nhập mật khẩu" />
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password" required
+                            placeholder="Nhập mật khẩu" />
+                        <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="text-center mb-3">
                     <button type="submit" class="btn btn-primary">Đăng nhập</button>
@@ -58,7 +64,22 @@
                     timeout: 1500
                 });
             }
+            @* const urlParams = new URLSearchParams(window.location.search);
+            const messageType = urlParams.get('type');  // success / error
+            const messageText = urlParams.get('message'); // Nội dung thông báo
+
+            // Nếu có thông báo từ query string, hiển thị iziToast
+            if (messageType && messageText) {
+                iziToast[messageType]({
+                    title: messageType === 'success' ? 'Thành công' : 'Lỗi',
+                    message: messageText,
+                    position: 'topRight',
+                    timeout: 2000
+                });
+
+                // Xóa query string sau khi hiển thị để tránh lặp lại khi reload trang
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } *@
         });
     </script>
 }
-

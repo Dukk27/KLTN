@@ -95,16 +95,27 @@
 
 
     <div class="form-group">
-        <label for="imageFile">Hình ảnh</label>
-        <input type="file" class="form-control" id="imageFile" name="imageFile" />
+        <label for="imageFiles">Hình ảnh</label>
+        <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple />
 
         @if (!string.IsNullOrEmpty(Model.HouseDetail?.Image))
         {
-            <div class="mt-2">
-                <img src="@Model.HouseDetail.Image" alt="Ảnh nhà trọ" style="max-width: 200px;" />
+            <div class="mt-2" id="currentImages">
+                <label>Ảnh hiện tại:</label>
+                <div class="d-flex flex-wrap">
+                    @foreach (var imgUrl in Model.HouseDetail.Image.Split(','))
+                    {
+                        <div class="position-relative m-2">
+                            <img src="@imgUrl" alt="Ảnh nhà trọ" style="max-width: 100px; height: 100px; object-fit: cover;" />
+                            <button type="button" class="btn btn-danger btn-sm remove-image" data-img="@imgUrl">X</button>
+                        </div>
+                    }
+                </div>
             </div>
+            <input type="hidden" id="deletedImages" name="DeletedImages" value="" />
         }
     </div>
+
     <div class="form-group">
         <label>Tiện ích</label>
         @foreach (var amenity in Model.Amenities)
@@ -128,6 +139,46 @@
 
     <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".remove-image").forEach(button => {
+                button.addEventListener("click", function () {
+                    let imgUrl = this.getAttribute("data-img");
+                    let deletedImagesInput = document.getElementById("deletedImages");
+
+                    // Nếu ảnh chưa được thêm vào danh sách xóa, thì thêm vào
+                    if (!deletedImagesInput.value.includes(imgUrl)) {
+                        deletedImagesInput.value += deletedImagesInput.value ? `,${imgUrl}` : imgUrl;
+                    }
+
+                    this.parentElement.remove(); // Xóa ảnh khỏi giao diện
+                });
+            });
+
+            // Xử lý xem trước ảnh mới khi chọn file
+            document.getElementById("imageFiles").addEventListener("change", function (event) {
+                let previewContainer = document.getElementById("imagePreview");
+                if (!previewContainer) {
+                    previewContainer = document.createElement("div");
+                    previewContainer.id = "imagePreview";
+                    previewContainer.classList.add("mt-2", "d-flex", "flex-wrap");
+                    this.parentElement.appendChild(previewContainer);
+                }
+                previewContainer.innerHTML = ""; // Xóa ảnh xem trước cũ
+
+                Array.from(event.target.files).forEach(file => {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        let imgElement = document.createElement("img");
+                        imgElement.src = e.target.result;
+                        imgElement.style = "max-width: 100px; height: 100px; object-fit: cover; margin: 5px;";
+                        previewContainer.appendChild(imgElement);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        });
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -144,7 +195,7 @@
                     timeout: false,
                     close: false,
                     overlay: true,
-                    displayMode: "once", 
+                    displayMode: "once",
                     drag: false,
                     icon: "fa fa-question-circle",
                     buttons: [

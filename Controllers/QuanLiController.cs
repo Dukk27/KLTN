@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace KLTN.Controllers
 {
@@ -16,18 +17,21 @@ namespace KLTN.Controllers
         private readonly IHouseDetailRepository _houseDetailRepository;
         private readonly IHouseTypeRepository _houseTypeRepository;
         private readonly IAmenityRepository _amenityRepository;
+        private readonly KLTNContext _context;
 
         public QuanLiController(
             IHouseRepository houseRepository,
             IHouseDetailRepository houseDetailRepository,
             IHouseTypeRepository houseTypeRepository,
-            IAmenityRepository amenityRepository
+            IAmenityRepository amenityRepository,
+            KLTNContext context
         )
         {
             _houseRepository = houseRepository;
             _houseDetailRepository = houseDetailRepository;
             _houseTypeRepository = houseTypeRepository;
             _amenityRepository = amenityRepository;
+            _context = context;
         }
 
         [Authorize]
@@ -106,7 +110,7 @@ namespace KLTN.Controllers
         [HttpPost]
         public async Task<IActionResult> EditHouse(
             HousePostViewModel viewModel,
-            IFormFile? imageFile
+            List<IFormFile>? imageFiles
         )
         {
             Console.WriteLine($"ContactName2 nhận từ View: {viewModel.ContactName2}");
@@ -175,21 +179,89 @@ namespace KLTN.Controllers
                 ? viewModel.HouseDetail.Status
                 : existingHouseDetail.Status;
 
-            if (imageFile != null) 
+            // Lấy danh sách ảnh bị xóa từ form
+            var deletedImages = Request
+                .Form["DeletedImages"]
+                .ToString()
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .ToList();
+
+            if (deletedImages.Count > 0)
             {
-                var fileName = Guid.NewGuid() + Path.GetExtension(imageFile.FileName);
-                var filePath = Path.Combine(
-                    Directory.GetCurrentDirectory(),
-                    "wwwroot/img/houses/",
-                    fileName
+                var oldImages =
+                    existingHouseDetail.Image?.Split(',').ToList() ?? new List<string>();
+
+                // Xóa ảnh khỏi danh sách
+                oldImages = oldImages.Except(deletedImages).ToList();
+
+                // Xóa ảnh trong thư mục vật lý
+                foreach (var imgPath in deletedImages)
+                {
+                    var fullPath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot",
+                        imgPath.TrimStart('/')
+                    );
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                    }
+                }
+
+                existingHouseDetail.Image =
+                    oldImages.Count > 0 ? string.Join(",", oldImages) : null;
+            }
+
+            if (imageFiles != null && imageFiles.Count > 0)
+            {
+                List<string> uploadedImages = new List<string>();
+
+                foreach (var image in imageFiles.Take(5)) // Chỉ lấy tối đa 5 ảnh
+                {
+                    var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                    var filePath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot/img/houses/",
+                        fileName
+                    );
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+
+                    uploadedImages.Add("/img/houses/" + fileName);
+                }
+
+                if (uploadedImages.Count > 0)
+                {
+                    if (!string.IsNullOrEmpty(existingHouseDetail.Image))
+                    {
+                        existingHouseDetail.Image += "," + string.Join(",", uploadedImages);
+                    }
+                    else
+                    {
+                        existingHouseDetail.Image = string.Join(",", uploadedImages);
+                    }
+                }
+            }
+            else
+            {
+                // Nếu không có ảnh mới, giữ nguyên ảnh cũ
+                var oldHouseDetail = await _context.HouseDetails.FirstOrDefaultAsync(hd =>
+                    hd.IdHouse == viewModel.House.IdHouse
                 );
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                if (oldHouseDetail != null)
                 {
-                    await imageFile.CopyToAsync(stream);
+                    viewModel.HouseDetail.Image = oldHouseDetail.Image;
                 }
-                existingHouseDetail.Image = "/img/houses/" + fileName;
             }
+
+            // Cập nhật dữ liệu vào DB
+            await _houseRepository.UpdateAsync(existingHouse);
+            await _houseDetailRepository.UpdateAsync(existingHouseDetail);
+
             var selectedAmenities = viewModel.SelectedAmenities ?? new List<int>();
             var currentAmenities = existingHouse.IdAmenities.Select(a => a.IdAmenity).ToList();
 
@@ -225,7 +297,7 @@ namespace KLTN.Controllers
                 $"ContactPhone2 trước: {existingHouseDetail.ContactPhone2}, sau: {viewModel.ContactPhone2}"
             );
 
-            existingHouse.Status = HouseStatus.Pending; 
+            existingHouse.Status = HouseStatus.Pending;
             await _houseRepository.UpdateAsync(existingHouse);
             await _houseDetailRepository.UpdateAsync(existingHouseDetail);
 
@@ -234,7 +306,13 @@ namespace KLTN.Controllers
                 return RedirectToAction("Index", "Admin");
             }
 
-            return Json(new { success = true, message = "Cập nhật thành công, bài đăng sẽ sớm được Quản trị viên duyệt!" });
+            return Json(
+                new
+                {
+                    success = true,
+                    message = "Cập nhật thành công, bài đăng sẽ sớm được Quản trị viên duyệt!",
+                }
+            );
             //return Json(new { success = true, message = "Sửa nhà trọ thành công.", updatedHouse = existingHouse });
         }
 

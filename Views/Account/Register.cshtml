@@ -5,6 +5,7 @@
 
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/iziToast.css">
+<script src="~/js/eye.js"></script>
 
 <div class="register-container">
     <div class="card shadow-lg register-card">
@@ -23,13 +24,22 @@
             </div>
             <div class="form-group mb-3">
                 <label for="password">Mật khẩu</label>
-                <input asp-for="Password" type="password" class="form-control" id="password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <div class="input-group">
+                    <input asp-for="Password" type="password" class="form-control" id="password" />
+                    <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password">
+                        <i class="fa-regular fa-eye"></i>
+                    </button>
+                </div> <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
                 <label for="confirmPassword">Xác nhận mật khẩu</label>
-                <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPassword" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                <div class="input-group">
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPassword" />
+                    <button type="button" class="btn btn-outline-secondary toggle-password"
+                        data-target="confirmPassword">
+                        <i class="fa-regular fa-eye"></i>
+                    </button>
+                </div> <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
                 <label for="phoneNumber">Số điện thoại</label>
@@ -103,7 +113,7 @@
                     title: 'Đăng ký thành công!',
                     message: successMessage,
                     position: 'topRight',
-                    timeout: 1000,
+                    timeout: 1500,
                     onClosing: function () {
                         window.location.href = '@Url.Action("Login", "Account")';
                     }

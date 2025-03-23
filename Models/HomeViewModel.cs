@@ -14,5 +14,7 @@ namespace KLTN.Models
         public bool IsChuTro { get; set; }
         public bool IsAdmin { get; set; }
         public int UserRole { get; set; }
+        public int CurrentPage { get; set; } // Trang hiện tại
+        public int TotalPages { get; set; } // Tổng số trang
     }
 }

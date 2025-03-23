@@ -65,14 +65,12 @@
   color: green;
 }
 
-
 #map {
   position: relative;
   width: 100%;
   height: 500px;
-  z-index: 1; 
+  z-index: 1;
 }
-
 
 /* Layout for review and amenities sections */
 .amenities-list,
@@ -183,31 +181,28 @@
 }
 
 .breadcrumb {
-    background: none;
-    padding: 10px 0;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    font-size: 16px;
-    margin-left: 10px;
+  background: none;
+  padding: 10px 0;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  margin-left: 10px;
 }
 
 .breadcrumb-item a {
-    text-decoration: none;
-    color: #007bff;
-    font-weight: 500;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
 }
 
 .breadcrumb-item a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .breadcrumb-item.active {
-    color: #6c757d;
-    font-weight: bold;
+  color: #6c757d;
+  font-weight: bold;
 }
-
-
-
 
 .zoom-control {
   position: absolute;
@@ -350,4 +345,97 @@
 
 .action-btn i {
   margin-right: 8px;
+}
+
+/* css carousel lướt ảnh */
+.carousel-item img {
+  width: 100%;
+  height: 400px;
+  background-color: #f0f0f0; 
+  margin-bottom: 50px;
+}
+
+.carousel {
+  position: relative;
+  max-width: 100%; /* Giữ cho carousel không vượt quá kích thước của nó */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.carousel-control-prev {
+  left: 10px; /* Giữ khoảng cách với mép carousel */
+}
+
+.carousel-control-next {
+  right: 10px; /* Giữ khoảng cách với mép carousel */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* css hiện ảnh */
+.fullscreen-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(75, 70, 70, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.fullscreen-image img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+/* css card ở phần nhà trọ khác của người đăng */
+.card {
+  height: 100%; /* Đảm bảo chiều cao các card bằng nhau */
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  flex-grow: 1; /* Để phần nội dung tự co giãn */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Căn cách đều nội dung */
+}
+
+.card-img-top {
+  height: 200px; /* Đặt chiều cao cố định cho ảnh */
+  object-fit: cover; /* Giữ tỉ lệ ảnh mà không bị méo */
+}
+
+.no-houses-message {
+  background-color: #f8d7da; 
+  color: #721c24; /* Màu chữ đỏ đậm */
+  padding: 15px; /* Thêm khoảng cách bên trong */
+  border-radius: 5px; /* Bo tròn góc */
+  font-weight: bold; /* Chữ in đậm */
+  font-size: 20px;
+  text-align: center; /* Căn giữa nội dung */
+  margin-top: 15px; /* Khoảng cách phía trên */
 }

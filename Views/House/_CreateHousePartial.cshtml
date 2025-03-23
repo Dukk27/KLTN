@@ -192,15 +192,10 @@
     <div class="section">
         <h4>Hình ảnh</h4>
         <div class="form-group">
-            <label asp-for="HouseDetail.Image">Hình ảnh nhà trọ</label>
-            <input asp-for="HouseDetail.Image" type="file" class="form-control" name="imageFile" id="imageFile" />
-            <div class="image-preview mt-2" id="imagePreview">
-                @if (!string.IsNullOrEmpty(Model.HouseDetail.Image))
-                {
-                    <img src="~/@Model.HouseDetail.Image" alt="Ảnh của nhà trọ" style="max-width: 200px;" />
-                }
-            </div>
-            <span asp-validation-for="HouseDetail.Image" class="text-danger"></span>
+            <label>Hình ảnh nhà trọ (Tối đa 5 ảnh) *</label>
+            <input type="file" class="form-control" name="imageFiles" id="imageFiles" multiple accept="image/*" />
+            <div class="image-preview mt-2 d-flex" id="imagePreview"></div>
+            <span class="text-danger" id="imageError"></span>
         </div>
     </div>
 
@@ -326,18 +321,6 @@
             console.log("Địa chỉ đầy đủ:", fullAddress);
         }
 
-        // Xử lý xem trước hình ảnh
-        $("#imageFile").change(function () {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#imagePreview').html('<img src="' + e.target.result + '" alt="Preview" style="max-width: 200px;" />');
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-
         $(document).ready(function () {
             $("#createHouseForm").submit(function (e) {
                 e.preventDefault(); // Ngăn chặn form submit ngay lập tức
@@ -387,12 +370,6 @@
                 // Kiểm tra loại nhà trọ (bắt buộc chọn)
                 if (!$("#SelectedHouseType").val()) {
                     $("#SelectedHouseType").next(".text-danger").text("Vui lòng chọn loại nhà trọ!");
-                    isValid = false;
-                }
-
-                // Kiểm tra hình ảnh (bắt buộc tải lên ít nhất một ảnh)
-                if (!$("#imageFile").val()) {
-                    $("#imageFile").next(".text-danger").text("Vui lòng chọn ít nhất một hình ảnh!");
                     isValid = false;
                 }
 
@@ -460,6 +437,57 @@
         });
     });
 
+    // Xử lý xem trước hình ảnh
+    $("#imageFile").change(function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imagePreview').html('<img src="' + e.target.result + '" alt="Preview" style="max-width: 200px;" />');
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    $(document).ready(function () {
+        $("#imageFiles").change(function () {
+            const files = this.files;
+            const previewContainer = $("#imagePreview");
+            previewContainer.empty(); // Xóa ảnh cũ
+
+            if (files.length > 5) {
+                $("#imageError").text("Chỉ được tải lên tối đa 5 ảnh.");
+                this.value = ""; // Xóa file đã chọn
+                return;
+            } else {
+                $("#imageError").text("");
+            }
+
+            $.each(files, function (index, file) {
+                if (index < 5) { // Giới hạn 5 ảnh
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewContainer.append(`
+                        <div class="preview-item">
+                            <img src="${e.target.result}" alt="Preview">
+                            <button type="button" class="btn btn-danger btn-sm remove-image">X</button>
+                        </div>
+                    `);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        // Xử lý xóa ảnh
+        $(document).on("click", ".remove-image", function () {
+            $(this).parent().remove();
+            if ($("#imagePreview").children().length === 0) {
+                $("#imageFiles").val("");
+            }
+        });
+    });
+
     // Gợi ý địa chỉ
     $(document).ready(function () {
         $("#fullAddress").on("input", function () {
@@ -493,7 +521,7 @@
             $("#district").empty().append('<option value="">-- Chọn Quận/Huyện --</option>');
             $("#ward").empty().append('<option value="">-- Chọn Phường/Xã --</option>');
         });
-        
+
         $(document).on("click", function (event) {
             if (!$(event.target).closest("#fullAddress, #addressSuggestions").length) {
                 $("#addressSuggestions").empty(); // Ẩn gợi ý khi nhấn ra ngoài

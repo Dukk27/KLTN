@@ -91,7 +91,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseSession();
-app.UseCors("CorsPolicy"); 
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

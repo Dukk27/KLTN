@@ -1,0 +1,94 @@
+/* Căn giữa form và điều chỉnh kích thước */
+.account-form {
+  width: 600px;
+  margin: 40px auto;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề trang */
+.page-title {
+  text-align: center;
+  color: #5d5d5d;
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Kiểu cho các nhóm nhập liệu */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Nhãn (label) */
+.form-label {
+  font-weight: bold;
+  color: #555;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Ô nhập liệu */
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+/* Nút đổi mật khẩu */
+.btn-change-password {
+  background-color: #0d6efd;
+  border: none;
+  color: white;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 8px 12px;
+  display: block;
+  width: fit-content;
+}
+
+/* Nút đổi mật khẩu hover */
+.btn-change-password:hover {
+  background-color: #0056b3;
+}
+
+/* Nút cập nhật và đóng */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 48%;
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  border: none;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background-color: #e2e6ea;
+}

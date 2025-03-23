@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using KLTN.Models;
 using KLTN.Repositories;
+using KLTN.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -36,7 +37,9 @@ namespace KLTN.Controllers
             string priceRange,
             string sortBy,
             string roomType,
-            List<string> amenities
+            List<string> amenities,
+            int pageNumber = 1, // Trang hiện tại (mặc định là 1)
+            int pageSize = 8 // Số lượng phần tử mỗi trang
         )
         {
             // Lấy danh sách Amenities và HouseTypes
@@ -70,17 +73,30 @@ namespace KLTN.Controllers
                 .Where(h => h.HouseDetails.Any(d => d.Status == "Chưa cho thuê"))
                 .ToList();
 
+            int totalHouses = houses.Count();
+            int totalPages =
+                totalHouses > 0 ? (int)Math.Ceiling((double)totalHouses / pageSize) : 1;
+
+            // Đảm bảo trang hợp lệ
+            pageNumber = pageNumber < 1 ? 1 : pageNumber;
+            pageNumber = pageNumber > totalPages ? totalPages : pageNumber;
+
+            // Lấy danh sách theo trang hiện tại
+            var pagedHouses = houses.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
             // Truy vấn danh sách house types
             var houseTypes = await _houseTypeRepository.GetAllHouseTypes();
 
             // Tạo ViewModel để truyền dữ liệu vào View
             var viewModel = new HomeViewModel
             {
-                Houses = houses,
+                Houses = pagedHouses,
                 HouseTypes = houseTypes,
                 Amenities = amenitiesList,
                 IsChuTro = User.IsInRole("ChuTro"),
                 IsAdmin = User.IsInRole("Admin"),
+                CurrentPage = pageNumber,
+                TotalPages = totalPages,
             };
 
             return View(viewModel);
@@ -92,7 +108,7 @@ namespace KLTN.Controllers
 
             if (houses == null || !houses.Any())
             {
-                // Trả về một thông báo cho người dùng khi không có nhà trọ trong danh mục
+                // Trả về thông báo cho người dùng khi không có nhà trọ trong danh mục
                 TempData["Message"] =
                     "Không có nhà trọ nào thuộc danh mục này. Vui lòng chọn danh mục khác.";
             }
@@ -152,6 +168,20 @@ namespace KLTN.Controllers
                     house.IdUserNavigation.IdUser
                 );
             }
+            var otherHouses = _context
+                .Houses.Include(h => h.HouseDetails)
+                .Where(h => h.IdUser == house.IdUser && h.IdHouse != id)
+                .Select(h => new House
+                {
+                    IdHouse = h.IdHouse,
+                    NameHouse = h.NameHouse,
+                    HouseDetails =
+                        h.HouseDetails.ToList() // Chuyển HashSet thành List
+                    ,
+                })
+                .ToList();
+
+            ViewBag.OtherHouses = otherHouses;
 
             return PartialView("HouseDetails", house);
         }

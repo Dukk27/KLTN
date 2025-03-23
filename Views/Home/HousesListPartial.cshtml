@@ -208,8 +208,13 @@ else
         {
             <div class="col-md-3 mb-4">
                 <div class="card">
-                    <img src="@house.HouseDetails.FirstOrDefault()?.Image" class="card-img-top" alt="@house.NameHouse"
-                        style="height: 200px; object-fit: cover;">
+                    @{
+                        var firstImage = house.HouseDetails.FirstOrDefault()?.Image?
+                            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                            .FirstOrDefault();
+                    }
+                    <img src="@firstImage" class="card-img-top" alt="@house.NameHouse"
+                            style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">@house.NameHouse</h5>
                         <p class="card-text"><strong>Địa chỉ:</strong> @house.HouseDetails.FirstOrDefault()?.Address</p>

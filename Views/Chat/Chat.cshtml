@@ -21,9 +21,10 @@
                 @if (isCurrentUser)
                 {
                     <!-- Nếu là tin nhắn của người dùng hiện tại (sent) -->
-                    <span class="message-time">@message.Timestamp.ToString("HH:mm")</span>
-                    <div class="message">@message.Content</div>
                     <span class="sender-name">Bạn</span>
+                    <div class="message">@message.Content</div>
+                    <span class="message-time">@message.Timestamp.ToString("HH:mm")</span>
+
                 }
                 else
                 {
@@ -95,10 +96,10 @@
             var msgContainer = document.createElement("div");
             msgContainer.classList.add("message-container", senderId == currentUserId ? "sent" : "received");
 
-            // Thời gian gửi tin
-            var timeSpan = document.createElement("span");
-            timeSpan.classList.add("message-time");
-            timeSpan.innerText = formattedTime;
+            // Tên người gửi
+            var senderSpan = document.createElement("span");
+            senderSpan.classList.add("sender-name");
+            senderSpan.innerText = senderId == currentUserId ? "Bạn" : senderName;
 
             // Nội dung tin nhắn
             var msgDiv = document.createElement("div");
@@ -106,15 +107,15 @@
             console.log("[DEBUG] Nội dung tin nhắn hiển thị:", message);
             msgDiv.innerText = message; // Chỉ hiển thị nội dung tin nhắn
 
-            // Tên người gửi
-            var senderSpan = document.createElement("span");
-            senderSpan.classList.add("sender-name");
-            senderSpan.innerText = senderId == currentUserId ? "Bạn" : senderName;
+            // Thời gian gửi tin
+            var timeSpan = document.createElement("span");
+            timeSpan.classList.add("message-time");
+            timeSpan.innerText = formattedTime;
 
-            // Gán vào container (thứ tự: thời gian - tin nhắn - tên)
-            msgContainer.appendChild(timeSpan);
-            msgContainer.appendChild(msgDiv);
-            msgContainer.appendChild(senderSpan);
+            // Gán vào container (thứ tự: tên - tin nhắn - thời gian)
+            msgContainer.appendChild(senderSpan);  // Thêm Tên trước
+            msgContainer.appendChild(msgDiv);      // Thêm Nội dung
+            msgContainer.appendChild(timeSpan);    // Thêm Thời gian sau
 
             // Thêm vào giao diện
             messagesDiv.appendChild(msgContainer);
@@ -124,6 +125,7 @@
 
             console.log("[DEBUG] Tin nhắn hiển thị:", senderName, message, formattedTime);
         }
+
 
         // Kết nối SignalR
         connection.start().then(function () {

@@ -33,12 +33,36 @@
 <div class="detail-container">
     <h1 class="section-title">Thông Tin Chi Tiết</h1>
     <div class="detail-content">
-        <div class="image-section">
-            @foreach (var detail in Model.HouseDetails)
-            {
-                <img src="@detail.Image" alt="Hình ảnh" class="detail-image" />
-            }
+        <div id="houseImageCarousel" class="carousel slide" data-bs-interval="false">
+            <div class="carousel-inner">
+                @{
+                    int index = 0;
+                    foreach (var detail in Model.HouseDetails)
+                    {
+                        foreach (var image in detail.Image.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <div class="carousel-item @(index == 0 ? "active" : "")">
+                                <img src="@image" class="d-block w-100 preview-image" alt="Hình ảnh nhà"
+                                    onclick="openFullSizeImage(this)">
+                            </div>
+                            index++;
+                        }
+                    }
+                }
+            </div>
+            <!-- Nút điều hướng -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#houseImageCarousel"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#houseImageCarousel"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
+
 
         <div class="house-info">
             <p><strong>Tên nhà:</strong> @Model.NameHouse</p>
@@ -217,11 +241,51 @@
         <p id="reviewMessage" style="display: none;"></p>
         <button type="button" onclick="submitReview()">Gửi đánh giá</button>
     </div>
+
+    <h3 class="section-title">Các Phòng Trọ Khác Của Chủ Nhà</h3>
+    <div class="row">
+        @if (ViewBag.OtherHouses != null && (ViewBag.OtherHouses as List<KLTN.Models.House>)?.Any() == true)
+        {
+            @foreach (var otherHouse in ViewBag.OtherHouses as List<KLTN.Models.House>)
+            {
+                var houseDetailsList = (otherHouse.HouseDetails as IEnumerable<KLTN.Models.HouseDetail>)?.ToList();
+                var firstDetail = houseDetailsList != null && houseDetailsList.Count > 0 ? houseDetailsList.First() : null;
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        @if (firstDetail != null)
+                        {
+                            <img src="@firstDetail.Image.Split(',')[0]" class="card-img-top" alt="Hình ảnh nhà">
+                            <div class="card-body">
+                                <h5 class="card-title">@otherHouse.NameHouse</h5>
+                                <p class="card-text"><strong>Địa chỉ:</strong> @firstDetail.Address</p>
+                                <p class="card-text"><strong>Giá:</strong> @firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</p>
+                                <a href="@Url.Action("Detail", "Home", new { id = otherHouse.IdHouse })" class="btn btn-primary">Xem Chi Tiết</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="card-body">
+                                <p class="text-muted">Không có thông tin chi tiết phòng.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <p class="no-houses-message">Chủ nhà chưa có phòng trọ khác.</p>
+            </div>
+        }
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
 <script src="~/js/goong-js.js"></script>
+
 <script>
     goongjs.accessToken = "nFXjCGo9PppMz9YGX6S2fLdWnTwQKzCCmCimGy3G"; // MapTiles Key để hiển thị bản đồ
     var map = new goongjs.Map({
@@ -386,6 +450,26 @@
             console.error("Lỗi khi gọi API Geocode:", error);
             alert("Không thể lấy vị trí.");
         }
+    }
+
+    // Hiện chi tiết ảnh
+    function openFullSizeImage(imgElement) {
+        // Tạo div chứa ảnh full màn hình
+        var fullScreenDiv = document.createElement("div");
+        fullScreenDiv.classList.add("fullscreen-image");
+
+        // Tạo ảnh lớn trong div
+        var fullScreenImg = document.createElement("img");
+        fullScreenImg.src = imgElement.src;
+
+        // Khi click vào ảnh lớn thì đóng lại
+        fullScreenDiv.onclick = function () {
+            document.body.removeChild(fullScreenDiv);
+        };
+
+        // Thêm ảnh vào div
+        fullScreenDiv.appendChild(fullScreenImg);
+        document.body.appendChild(fullScreenDiv);
     }
 
     // Gửi đánh giá

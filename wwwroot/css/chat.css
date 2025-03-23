@@ -10,7 +10,7 @@ h2 {
     flex-direction: column;
     border: 1px solid;
     margin-left: 20px;
-    margin-right: 15px
+    margin-right: 20px
 }
 
 .message-container {
@@ -40,6 +40,7 @@ h2 {
     word-wrap: break-word;
     font-size: 16px;
     position: relative;
+    color: rgb(0, 0, 0);
 }
 
 .sent {
@@ -100,8 +101,8 @@ button:hover {
 
 .message-time {
     font-size: 12px;
-    margin-left: 25px;
-    margin-right: 5px;
+    margin-left: 15px;
+    margin-right: 15px;
     white-space: nowrap;
 }
 

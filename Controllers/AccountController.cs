@@ -107,6 +107,9 @@ namespace KLTN.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties
                 );
+
+                TempData["SuccessMessage"] = "Đăng nhập thành công!";
+
                 if (role == "Admin")
                 {
                     return RedirectToAction("Index", "Admin");
@@ -148,6 +151,7 @@ namespace KLTN.Controllers
                 _memoryCache.Remove($"FailedAttempts_{userName}");
                 _memoryCache.Remove($"Lockout_{userName}");
             }
+            TempData["SuccessMessage"] = "Đăng xuất thành công!";
 
             return RedirectToAction("Index", "Home");
         }
@@ -233,6 +237,12 @@ namespace KLTN.Controllers
             if (id == null)
             {
                 return NotFound();
+            }
+
+            var currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (currentUserId != id)
+            {
+                return RedirectToAction("Error", "Home");
             }
 
             var account = await _accountRepository.GetAccountByIdAsync(id.Value);

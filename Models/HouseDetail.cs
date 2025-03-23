@@ -17,23 +17,18 @@ namespace KLTN.Models
         public string Address { get; set; } = null!;
 
         [Required(ErrorMessage = "Tiền thuê là bắt buộc.")]
-        [Range(0, 999999999, ErrorMessage = "Tiền thuê không hợp lệ.")]
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Diện tích là bắt buộc.")]
-        [Range(0, 999999999, ErrorMessage = "Diện tích không hợp lệ.")]
         public double DienTich { get; set; }
 
         [Required(ErrorMessage = "Tiền điện là bắt buộc.")]
-        [StringLength(50, ErrorMessage = "Tiền điện không được quá 50 ký tự.")]
         public string TienDien { get; set; } = null!;
 
         [Required(ErrorMessage = "Tiền nước là bắt buộc.")]
-        [StringLength(50, ErrorMessage = "Tiền nước không được quá 50 ký tự.")]
         public string TienNuoc { get; set; } = null!;
 
         [Required(ErrorMessage = "Tiền dịch vụ là bắt buộc.")]
-        [StringLength(50, ErrorMessage = "Tiền dịch vụ không được quá 50 ký tự.")]
         public string TienDv { get; set; } = null!;
 
         [StringLength(500, ErrorMessage = "Mô tả không được quá 500 ký tự.")]
