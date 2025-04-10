@@ -15,8 +15,8 @@ body {
   overflow: hidden;
   position: relative;
   margin-bottom: 20px;
-  /* max-width: 300px;
-  max-height: 700px; */
+  width: 100%;
+  min-height: 450px;
 }
 
 .card:hover {
@@ -29,6 +29,7 @@ body {
 }
 
 .card-body {
+  min-height: 250px;
   background-color: #f8f9fa;
 }
 
@@ -72,31 +73,6 @@ body {
 .icon {
   margin-right: 5px;
 }
-.navbar {
-  background-color: #007bff;
-  color: white;
-  height: 65px;
-  width: 100%;
-  z-index: 1000;
-  top: 0;
-  position: fixed;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.navbar .navbar-brand {
-  font-weight: bold;
-  color: white;
-  font-size: 24px;
-  margin-left: 20px;
-}
-
-.navbar .nav-link {
-  color: white !important;
-}
-
-.navbar .nav-link:hover {
-  color: #cce7ff !important;
-}
 
 .functional-bar {
   background-color: #e9ecef;
@@ -121,83 +97,6 @@ body {
   padding: 5px 10px;
   border: 1px solid #ced4da;
   border-radius: 4px;
-}
-
-/* Nút "Danh mục" và "Đăng nhà trọ" */
-.functional-bar .btn-category,
-.functional-bar .btn-post {
-  margin: 0;
-  white-space: nowrap;
-}
-
-/* Styling cho dropdown container */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-/* Nút dropdown */
-.dropdown-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-}
-
-.dropdown-button:hover {
-  background-color: #0056b3;
-}
-
-/* Mũi tên chỉ xuống */
-.dropdown-arrow {
-  margin-left: 8px; /* Khoảng cách giữa chữ "Danh mục" và mũi tên */
-  font-size: 11px; /* Kích thước mũi tên */
-  margin-top: 3px;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: white;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 10px 15px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-/* Nút Bộ lọc */
-button.btn-secondary {
-  background-color: #007bff; /* Màu nền */
-  color: white; /* Màu chữ */
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Hiệu ứng hover */
-}
-
-button.btn-secondary:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* CSS cho icon chỉ dẫn đường */
@@ -304,10 +203,21 @@ button.btn-secondary:hover {
   animation: slideUp 0.3s ease-out;
 }
 
+.slider-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.slider-container img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+
 .hero-search-section {
   position: relative; /* Tạo vùng chứa tương đối */
   width: 100%;
-  min-height: 50vh; /* Đảm bảo full màn hình */
+  min-height: 50vh;
   padding: 20px 0;
   background: url("/img/image.png") no-repeat center center;
   background-size: cover;
@@ -323,8 +233,48 @@ button.btn-secondary:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(44, 68, 100, 0.8); /* Màu nền tối mờ */
+  background: rgba(56, 89, 132, 0.8); /* Màu nền tối mờ */
   z-index: 0; /* Nằm dưới nội dung */
+}
+
+.form-control.custom-input {
+  height: 45px;
+  width: 100%;
+  min-width: 400px;
+  border-radius: 8px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+}
+
+/* Nút tìm kiếm */
+.btn-search {
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-search:hover {
+  background-color: #ff4757;
+}
+
+/* Nút bản đồ */
+.map-button {
+  background-color: #1dd1a1;
+  color: white;
+  padding: 10px 20px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.map-button:hover {
+  background-color: #10ac84;
 }
 
 /* Nội dung nổi trên ảnh nền */
@@ -369,18 +319,6 @@ button.btn-secondary:hover {
   margin-right: 8px; /* Khoảng cách giữa icon và chữ */
 }
 
-/* Responsive tối ưu cho màn hình nhỏ */
-@media (max-width: 768px) {
-  .form-group input {
-    width: 100%; /* Input full chiều rộng */
-  }
-
-  .dropdown-button {
-    width: 100%;
-    text-align: left;
-  }
-}
-
 @keyframes slideUp {
   from {
     transform: translateX(-50%) translateY(100%);
@@ -394,20 +332,6 @@ button.btn-secondary:hover {
 
 .modal-xl {
   max-width: 1140px;
-}
-
-/* Đảm bảo modal có z-index cao hơn các phần tử khác */
-.modal {
-  z-index: 1050;
-}
-
-.modal-backdrop {
-  z-index: 1040;
-}
-
-/* Loại bỏ padding của modal body để iframe có thể sử dụng toàn bộ không gian */
-.modal-body.p-0 {
-  padding: 0 !important;
 }
 
 /* CSS cho spinner loading */
@@ -479,71 +403,13 @@ button.btn-secondary:hover {
   z-index: 1060;
 }
 
-/* Chatbox hiển thị ngay dưới nút */
-.chatbox {
-  position: absolute; /* Để chatbox hiển thị ngay dưới nút */
-  right: 0;
-  top: 150px; /* Để cách nút một chút */
-  width: 350px;
-  max-height: 500px;
-  background: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  display: none;
-  z-index: 1000;
-}
-
-/* Header của chatbox */
-.chatbox-header {
-  background: #007bff;
-  color: white;
-  padding: 10px;
-  font-weight: bold;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Nội dung chat */
-.chatbox-body {
-  padding: 10px;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-/* Danh sách tin nhắn */
-.chat-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.chat-item {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-}
-
-.chat-item:hover {
-  background: #f0f0f0;
-}
-
-/* Nút đóng chat */
-.close-chatbox {
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: white;
-  cursor: pointer;
-}
-
 .no-houses-container {
   text-align: center; /* Căn giữa tất cả nội dung */
   display: flex;
   flex-direction: column; /* Hiển thị các phần tử theo chiều dọc */
   align-items: center; /* Căn giữa theo chiều ngang */
   justify-content: center; /* Căn giữa theo chiều dọc */
-  height: 300px; 
+  height: 300px;
 }
 
 .no-houses-container a.btn {
@@ -608,4 +474,196 @@ button.btn-secondary:hover {
   color: #ccc;
   border-color: #ccc;
   pointer-events: none;
+}
+
+.btn {
+  color: rgb(255, 255, 255) !important; /* Chữ màu đen */
+  transition: all 0.3s ease; /* Hiệu ứng mượt mà */
+}
+
+.btn:hover,
+.btn:focus {
+  background-color: #007bff !important; /* Hiện nền xanh khi hover hoặc focus */
+  color: white !important; /* Chữ trắng */
+}
+
+.btn-search {
+  background-color: #007bff !important; /* Hiện nền xanh */
+  color: white !important; /* Chữ trắng */
+  transition: all 0.3s ease; /* Hiệu ứng mượt mà */
+}
+
+.btn-search:hover,
+.btn-search:focus {
+  background-color: #154e8a !important; /* Hiện nền xanh khi hover hoặc focus */
+  color: white !important; /* Chữ trắng */
+}
+
+.text-muted {
+  margin-bottom: 20px;
+}
+
+.filter-container {
+  margin-bottom: 20px;
+  margin-left: 100px;
+  margin-top: 100px;
+}
+
+.feedback-form {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+}
+
+.feedback-form h4 {
+  font-weight: bold;
+  color: #2c4464;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.feedback-form .form-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.feedback-form .form-control {
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.feedback-form .form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25);
+}
+
+.feedback-form .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 10px 20px;
+  border-radius: 6px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin: 0 auto;
+}
+
+.feedback-form .btn-primary:hover {
+  background-color: #0056b3;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.custom-marker {
+  background-image: url("https://cdn-icons-png.flaticon.com/512/684/684908.png"); /* icon location */
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .custom-container {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+
+@media (max-width: 992px) {
+  .custom-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .card {
+    min-height: 400px;
+  }
+
+  .functional-bar {
+    flex-direction: column;
+  }
+
+  .functional-bar .search-bar {
+    margin-bottom: 10px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    min-height: 350px;
+  }
+
+  .hero-search-section {
+    min-height: 40vh;
+  }
+
+  .form-inline.d-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-search {
+    margin-top: 10px;
+    width: 96%;
+  }
+
+  .map-button {
+    width: 100%;
+  }
+
+  .btn-view-detail {
+    padding: 8px 16px;
+  }
+
+  .pagination .page-item .page-link {
+    width: 35px;
+    height: 35px;
+  }
+
+  .no-houses-container h4 {
+    font-size: 16px;
+  }
+
+  .no-houses-container p {
+    font-size: 14px;
+  }
+
+  .no-houses-container a {
+    font-size: 16px;
+  }
+
+  .feedback-form {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    max-width: 400px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .card {
+    min-height: 300px;
+  }
+
+  .appointment-form {
+    width: 90%;
+  }
+
+  .filter-container {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .hero-search-section {
+    min-height: 30vh;
+  }
+
+  .functional-bar .search-bar {
+    max-width: 100%;
+  }
 }

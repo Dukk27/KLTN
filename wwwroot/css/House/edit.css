@@ -1,0 +1,183 @@
+/* ======= Định dạng chung ======= */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+}
+
+h2 {
+  text-align: center;
+  color: rgb(35, 164, 207);
+  margin-bottom: 20px;
+}
+
+form {
+  max-width: 800px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+/* ======= Form Group ======= */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.text-danger {
+  font-size: 14px;
+  color: red;
+}
+
+/* ======= Nút bấm ======= */
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: auto; /* Mặc định giữ kích thước tự động */
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  margin-left: 10px;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* ======= Hình ảnh hiện tại ======= */
+#currentImages {
+  margin-top: 10px;
+}
+
+#currentImages img {
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.remove-image {
+  position: absolute;
+  top: 0px;
+  right: -5px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 60%;
+  padding: 4px 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  z-index: 10;
+}
+
+.remove-image:hover {
+  background: rgba(220, 53, 69, 0.85); /* đỏ nhẹ khi hover */
+}
+
+.remove-image i {
+  pointer-events: none; /* tránh xung đột khi click */
+}
+
+/* ======= Gợi ý địa chỉ ======= */
+#addressSuggestions {
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  z-index: 10;
+}
+
+#addressSuggestions .list-group-item {
+  cursor: pointer;
+  padding: 8px;
+}
+
+#addressSuggestions .list-group-item:hover {
+  background: #f0f0f0;
+}
+
+/* ======= Responsive Design ======= */
+@media (max-width: 768px) {
+  form {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .form-control {
+    padding: 6px;
+  }
+
+  /* Cập nhật cho nút Lưu & Hủy */
+  .btn-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%; /* Nút chiếm toàn bộ chiều ngang */
+    margin-left: 0;
+  }
+
+  .iziToast {
+    width: 80% !important; /* Làm iziToast nhỏ lại trên mobile */
+    font-size: 14px !important; /* Giảm kích thước chữ */
+    padding: 10px !important; /* Thu gọn padding */
+    left: 40% !important; /* Canh giữa màn hình */
+    transform: translateX(-50%) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 20px;
+  }
+
+  .form-group label {
+    font-size: 14px;
+  }
+
+  .form-control {
+    font-size: 14px;
+  }
+
+  .form-check-input {
+    transform: scale(1);
+  }
+}

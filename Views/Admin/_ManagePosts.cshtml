@@ -70,26 +70,26 @@
 
 <script>
     function viewDetail(id, type) {
-            const url = `/Home/Detail?id=${id}&type=${type}`;
-            fetch(url, { method: 'GET' })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.href = url;
-                    } else {
-                        iziToast.error({
-                            title: "Lỗi!",
-                            message: "Không thể tải chi tiết. Vui lòng thử lại.",
-                            position: "topRight"
-                        });
-                    }
-                })
-                .catch(() => {
+        const url = `/Home/Detail?id=${id}&type=${type}`;
+        fetch(url, { method: 'GET' })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = url;
+                } else {
                     iziToast.error({
                         title: "Lỗi!",
-                        message: "Đã xảy ra lỗi khi xử lý yêu cầu.",
+                        message: "Không thể tải chi tiết. Vui lòng thử lại.",
                         position: "topRight"
                     });
+                }
+            })
+            .catch(() => {
+                iziToast.error({
+                    title: "Lỗi!",
+                    message: "Đã xảy ra lỗi khi xử lý yêu cầu.",
+                    position: "topRight"
                 });
+            });
         }
 
     $(document).ready(function () {
@@ -100,7 +100,7 @@
 
             iziToast.show({
                 class: "iziToast-custom",
-                title: "🔔 Xác nhận xóa",
+                title: "Xác nhận xóa",
                 message: "Bạn có chắc muốn xóa bài đăng này?",
                 position: "center",
                 timeout: false,
@@ -114,7 +114,7 @@
 
                             $.post("@Url.Action("DeletePost", "Admin")", { id: id }, function (response) {
                                 iziToast.show({
-                                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                    title: response.success ? "Thành công!" : "Lỗi!",
                                     message: response.message,
                                     position: "topRight",
                                     color: response.success ? "green" : "red",
@@ -155,7 +155,7 @@
 
             iziToast.show({
                 class: "iziToast-custom",
-                title: "🔔 Xác nhận duyệt",
+                title: "Xác nhận duyệt",
                 message: "Bạn có chắc muốn duyệt bài đăng này?",
                 position: "center",
                 timeout: false,
@@ -173,7 +173,7 @@
 
                             $.post("@Url.Action("ApprovePost", "Admin")", { id: id }, function (response) {
                                 iziToast.show({
-                                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                    title: response.success ? "Thành công!" : "Lỗi!",
                                     message: response.message,
                                     position: "topRight",
                                     color: response.success ? "green" : "red",
@@ -213,7 +213,7 @@
 
             iziToast.show({
                 class: "iziToast-custom",
-                title: "🔔 Xác nhận từ chối",
+                title: "Xác nhận từ chối",
                 message: "Bạn có chắc muốn từ chối bài đăng này?",
                 position: "center",
                 timeout: false,
@@ -231,7 +231,7 @@
 
                             $.post("@Url.Action("RejectPost", "Admin")", { id: id }, function (response) {
                                 iziToast.show({
-                                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                    title: response.success ? "Thành công!" : "Lỗi!",
                                     message: response.message,
                                     position: "topRight",
                                     color: response.success ? "green" : "red",

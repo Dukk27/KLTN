@@ -27,10 +27,11 @@
                     <td>@houseType.Name</td>
                     <td>
                         <button class="btn btn-warning btn-sm"
-                            onclick="openEditModal(@houseType.IdHouseType, '@houseType.Name')" title="Chỉnh sửa loại nhà"><i class="fas fa-edit"></i>
+                            onclick="openEditModal(@houseType.IdHouseType, '@houseType.Name')" title="Chỉnh sửa loại nhà"><i
+                                class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteHouseType(@houseType.IdHouseType)" title="Xoá loại nhà"><i
-                                class="fas fa-trash-alt"></i> </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteHouseType(@houseType.IdHouseType)"
+                            title="Xoá loại nhà"><i class="fas fa-trash-alt"></i> </button>
                     </td>
                 </tr>
                 index++;
@@ -66,32 +67,36 @@
 
 <script>
     function openCreateModal() {
-        $("#modalTitle").text("Thêm Loại Nhà");
-        $("#houseTypeId").val('');
-        $("#houseTypeName").val('');
-        $("#houseTypeModal").modal("show");
+        document.getElementById("modalTitle").textContent = "Thêm Loại Nhà";
+        document.getElementById("houseTypeId").value = '';
+        document.getElementById("houseTypeName").value = '';
+        document.getElementById("houseTypeModal").classList.add("show");
+        document.getElementById("houseTypeModal").style.display = "block";
     }
 
     function openEditModal(id, name) {
-        $("#modalTitle").text("Sửa Loại Nhà");
-        $("#houseTypeId").val(id);
-        $("#houseTypeName").val(name);
-        $("#houseTypeModal").modal("show");
+        document.getElementById("modalTitle").textContent = "Sửa Loại Nhà";
+        document.getElementById("houseTypeId").value = id;
+        document.getElementById("houseTypeName").value = name;
+        document.getElementById("houseTypeModal").classList.add("show");
+        document.getElementById("houseTypeModal").style.display = "block";
     }
 
     function closeModal() {
-        $("#houseTypeModal").modal("hide");
+        document.getElementById("houseTypeModal").classList.remove("show");
+        document.getElementById("houseTypeModal").style.display = "none";
     }
 
     function saveHouseType() {
-        let id = $("#houseTypeId").val();
-        let name = $("#houseTypeName").val().trim();
+        let id = document.getElementById("houseTypeId").value;
+        let name = document.getElementById("houseTypeName").value.trim();
 
         if (!name) {
             iziToast.warning({
                 title: "Lỗi!",
                 message: "Tên loại nhà không được để trống.",
-                position: "topRight"
+                position: "topRight",
+                timeout: 3000
             });
             return;
         }
@@ -99,40 +104,40 @@
         let url = id ? "/Admin/EditHouseType" : "/Admin/CreateHouseType";
         let data = JSON.stringify({ IdHouseType: id ? parseInt(id) : 0, Name: name });
 
-        $.ajax({
-            type: "POST",
-            url: url,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: data,
-            success: function (response) {
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: data
+        })
+            .then(response => response.json())
+            .then(response => {
                 iziToast.show({
-                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                    title: response.success ? "Thành công!" : "Lỗi!",
                     message: response.message,
                     position: "topRight",
-                    color: response.success ? "green" : "red",
-                    timeout: 1000
+                    timeout: 1000,
+                    color: response.success ? "green" : "red"
                 });
 
                 if (response.success) {
                     closeModal();
                     updateHouseTypeTable();
                 }
-            },
-            error: function () {
+            })
+            .catch(() => {
                 iziToast.error({
                     title: "Lỗi!",
                     message: "Có lỗi xảy ra, vui lòng thử lại.",
-                    position: "topRight"
+                    position: "topRight",
+                    timeout: 1000
                 });
-            }
-        });
+            });
     }
 
     function deleteHouseType(id) {
         iziToast.show({
             class: "iziToast-custom",
-            title: "🔔 Xác nhận xóa",
+            title: "Xác nhận xóa",
             message: "Bạn có chắc chắn muốn xóa? Hành động này không thể hoàn tác!",
             position: "center",
             timeout: false,
@@ -147,25 +152,27 @@
                     function (instance, toast) {
                         instance.hide({ transitionOut: "fadeOut" }, toast, "button");
 
-                        $.ajax({
-                            type: "POST",
-                            url: "/Admin/DeleteHouseType",
-                            data: { id: id },
-                            success: function (response) {
+                        fetch("/Admin/DeleteHouseType", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: new URLSearchParams({ id: id })
+                        })
+                            .then(response => response.json())
+                            .then(response => {
                                 iziToast.show({
-                                    title: response.success ? "✅ Đã xóa!" : "❌ Lỗi!",
+                                    title: response.success ? "Đã xóa!" : "Lỗi!",
                                     message: response.message,
                                     position: "topRight",
-                                    color: response.success ? "green" : "red",
-                                    timeout: 1000
+                                    timeout: 1000,
+                                    color: response.success ? "green" : "red"
                                 });
 
                                 if (response.success) {
-                                    $("#row_" + id).remove();
+                                    let row = document.getElementById("row_" + id);
+                                    if (row) row.remove();
                                     updateHouseTypeTable();
                                 }
-                            }
-                        });
+                            });
                     },
                     true
                 ],
@@ -180,14 +187,22 @@
     }
 
     function updateHouseTypeTable() {
-        $.get("/Admin/ManageHouseType", function (data) {
-            let newTableBody = $(data).find("#houseTypeTableBody").html();
-            $("#houseTypeTableBody").html(newTableBody);
-            // Cập nhật lại ID để đảm bảo nó tăng từ 1
-            let rows = $("#houseTypeTableBody tr");
-            rows.each(function (index) {
-                $(this).find("td:first").text(index + 1);
+        fetch("/Admin/ManageHouseType")
+            .then(response => response.text())
+            .then(data => {
+                let parser = new DOMParser();
+                let doc = parser.parseFromString(data, "text/html");
+                let newTableBody = doc.querySelector("#houseTypeTableBody").innerHTML;
+                document.getElementById("houseTypeTableBody").innerHTML = newTableBody;
+
+                let rows = document.querySelectorAll("#houseTypeTableBody tr");
+                rows.forEach((row, index) => {
+                    let firstCell = row.querySelector("td:first-child");
+                    if (firstCell) {
+                        firstCell.textContent = index + 1;
+                    }
+                });
             });
-        });
     }
+
 </script>

@@ -60,7 +60,7 @@
     </div>
 
     <div class="button-container">
-        <button type="button" class="btn btn-secondary" onclick="handleClose()">Đóng</button>
+        <button type="button" class="btnclose" onclick="handleClose()">Đóng</button>
         <button type="submit" class="btn btn-primary">Cập nhật</button>
     </div>
 </form>
@@ -84,7 +84,7 @@
                 displayMode: 'once',
                 id: 'question',
                 zindex: 999,
-                title: '🔔 Xác nhận cập nhật',
+                title: 'Xác nhận cập nhật',
                 message: 'Bạn có chắc chắn muốn cập nhật thông tin không?',
                 position: 'center',
                 class: 'iziToast-custom', /* Áp dụng class mới */
@@ -121,13 +121,13 @@
                                     });
                                 }
                             })
-                            .catch(error => {
+                            @* .catch(error => {
                                 iziToast.error({
                                     title: 'Lỗi hệ thống!',
                                     message: 'Không thể gửi yêu cầu, kiểm tra kết nối.',
                                     position: 'topRight'
                                 });
-                            });
+                            }); *@
 
                     }, true],
 

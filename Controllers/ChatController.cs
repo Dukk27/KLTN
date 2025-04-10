@@ -47,6 +47,12 @@ namespace KLTN.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
+            // Kiểm tra xem user hiện tại có thuộc cuộc trò chuyện không
+            if (userId.Value != id1 && userId.Value != id2)
+            {
+                return RedirectToAction("Error", "Home"); // Chặn truy cập
+            }
+
             // Xác định ReceiverId
             int receiverId = (userId.Value == id1) ? id2 : id1;
             if (receiverId == userId.Value)
@@ -63,28 +69,46 @@ namespace KLTN.Controllers
 
             try
             {
-                // Lấy danh sách tin nhắn giữa hai người
                 var messages = _context
                     .Messages.Where(m =>
                         (m.SenderId == userId && m.ReceiverId == receiverId)
                         || (m.SenderId == receiverId && m.ReceiverId == userId)
                     )
                     .OrderBy(m => m.Timestamp)
+                    .ToList(); // Lấy tất cả tin nhắn
+
+                // Cập nhật trạng thái đã đọc
+                var unreadMessages = messages
+                    .Where(m => m.ReceiverId == userId && !m.IsRead)
+                    .ToList();
+                if (unreadMessages.Any())
+                {
+                    foreach (var msg in unreadMessages)
+                    {
+                        msg.IsRead = true;
+                    }
+                    _context.SaveChanges();
+                }
+
+                // Thêm SenderName vào từng tin nhắn
+                var messagesWithSenderName = messages
                     .Select(m => new
                     {
-                        SenderId = m.SenderId,
+                        m.SenderId,
                         SenderName = _context
                             .Accounts.Where(a => a.IdUser == m.SenderId)
                             .Select(a => a.UserName)
                             .FirstOrDefault(),
-                        Content = m.Content,
-                        Timestamp = m.Timestamp,
+                        m.Content,
+                        m.Timestamp,
+                        m.ReceiverId,
+                        m.IsRead,
                     })
                     .ToList();
 
                 ViewBag.CurrentUserId = userId.Value;
                 ViewBag.ReceiverId = receiverId;
-                ViewBag.Messages = messages;
+                ViewBag.Messages = messagesWithSenderName; // Truyền dữ liệu đã có SenderName
                 ViewBag.ConversationId = conversationId;
 
                 return View();
@@ -132,6 +156,10 @@ namespace KLTN.Controllers
 
                 if (otherUser != null && lastMessage != null)
                 {
+                    bool hasUnreadMessages = _context.Messages.Any(m =>
+                        m.ReceiverId == currentUserId && m.SenderId == otherUser.IdUser && !m.IsRead
+                    );
+
                     conversations.Add(
                         new ConversationViewModel
                         {
@@ -148,6 +176,9 @@ namespace KLTN.Controllers
                                     .Accounts.Where(a => a.IdUser == lastMessage.SenderId)
                                     .Select(a => a.UserName)
                                     .FirstOrDefault() ?? "Không rõ",
+                            HasUnreadMessages =
+                                hasUnreadMessages // Gán giá trị kiểm tra tin nhắn chưa đọc
+                            ,
                         }
                     );
                 }
@@ -156,7 +187,7 @@ namespace KLTN.Controllers
             conversations = conversations.OrderByDescending(c => c.LastMessageTime).ToList();
 
             ViewBag.CurrentUserId = currentUserId.Value; // Đảm bảo truyền ID xuống View
-            return PartialView("_ChatList", conversations);
+            return View(conversations);
         }
 
         [HttpPost]
@@ -208,6 +239,21 @@ namespace KLTN.Controllers
             _context.SaveChanges();
 
             return Json(new { success = true, message = "Đã xóa hội thoại thành công!" });
+        }
+
+        // API endpoint để lấy số tin nhắn chưa đọc
+        public IActionResult GetUnreadMessagesCount()
+        {
+            var currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (currentUserId == null)
+            {
+                return Json(new { count = 0 });
+            }
+
+            var unreadCount = _context.Messages.Count(m =>
+                m.ReceiverId == currentUserId.Value && !m.IsRead
+            );
+            return Json(new { count = unreadCount });
         }
     }
 }

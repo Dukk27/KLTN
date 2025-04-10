@@ -36,10 +36,29 @@ namespace KLTN.Controllers
                 return Json(new { success = false, message = "Bạn cần đăng nhập để đặt lịch." });
             }
 
+            var user = _context.Accounts.FirstOrDefault(u => u.IdUser == userId.Value);
+
             appointment.UserId = userId.Value; // Lấy giá trị int từ Session
             appointment.Status = AppointmentStatus.Pending;
             appointment.AppointmentDate = appointment.AppointmentDate.Date;
 
+            // Lấy chủ nhà của bài đăng
+            var house = _context.Houses.Find(appointment.HouseId);
+            if (house != null)
+            {
+                // Tạo thông báo cho chủ nhà khi có người đặt lịch
+                var notification = new Notification
+                {
+                    UserId = house.IdUser,
+                    Message =
+                        $"📅 {user.UserName} đã đặt lịch hẹn vào {appointment.AppointmentDate:dd/MM/yyyy}.",
+                    CreatedAt = DateTime.Now,
+                    IsRead = false,
+                };
+
+                _context.Notifications.Add(notification);
+                _context.SaveChanges();
+            }
             _context.Appointments.Add(appointment);
             _context.SaveChanges();
 
@@ -71,8 +90,8 @@ namespace KLTN.Controllers
         [Authorize]
         public async Task<IActionResult> Confirm(int id)
         {
-            var appointment = await _context.Appointments
-                .Include(a => a.User)
+            var appointment = await _context
+                .Appointments.Include(a => a.User)
                 .Include(a => a.House)
                 .FirstOrDefaultAsync(a => a.AppointmentId == id);
 
@@ -89,12 +108,25 @@ namespace KLTN.Controllers
             appointment.Status = AppointmentStatus.Confirmed;
             await _context.SaveChangesAsync();
 
+            // Tạo thông báo cho người đặt lịch
+            var notification = new Notification
+            {
+                UserId = appointment.UserId, // Người đặt lịch nhận thông báo
+                Message = $"✅ Lịch hẹn vào {appointment.AppointmentDate:dd/MM/yyyy} đã được xác nhận.",
+                CreatedAt = DateTime.Now,
+                IsRead = false,
+            };
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
+
             // Gửi email thông báo xác nhận lịch hẹn
             if (appointment.User != null)
             {
                 string toEmail = appointment.User.Email;
-                string subject = "✅ Lịch hẹn của bạn đã được xác nhận!";
-                string body = $@"
+                string subject = "Lịch hẹn của bạn đã được xác nhận!";
+                string body =
+                    $@"
                     <p>Xin chào <b>{appointment.User.UserName}</b>,</p>
                     <p>Lịch hẹn xem nhà của bạn vào ngày <b>{appointment.AppointmentDate:dd/MM/yyyy}</b> 
                     tại nhà trọ <b>{appointment.House?.NameHouse}</b> đã được xác nhận.</p>
@@ -105,21 +137,49 @@ namespace KLTN.Controllers
                 await _emailService.SendEmailAsync("Appointment", toEmail, subject, body);
             }
 
-            return Json(new { success = true, message = "Lịch hẹn đã được xác nhận và email đã gửi thành công!" });
+            return Json(
+                new
+                {
+                    success = true,
+                    message = "Lịch hẹn đã được xác nhận và email đã gửi thành công!",
+                }
+            );
         }
 
-        // Hủy lịch hẹn
+        // Hủy lịch hẹn và gửi thông báo cho người đặt lịch
         [HttpPost]
         [Authorize]
-        public IActionResult Cancel(int id)
+        public async Task<IActionResult> Cancel(int id)
         {
-            var appointment = _context.Appointments.Find(id);
-            if (appointment == null)
-                return NotFound();
+            var appointment = await _context
+                .Appointments.Include(a => a.User)
+                .Include(a => a.House)
+                .FirstOrDefaultAsync(a => a.AppointmentId == id);
 
+            if (appointment == null)
+            {
+                return Json(new { success = false, message = "Lịch hẹn không tồn tại!" });
+            }
+
+            // Cập nhật trạng thái lịch hẹn
             appointment.Status = AppointmentStatus.Cancelled;
-            _context.SaveChanges();
-            return Json(new { success = true, message = "Lịch hẹn đã bị hủy." });
+            await _context.SaveChangesAsync();
+
+            // Tạo thông báo cho người đặt lịch
+            var notification = new Notification
+            {
+                UserId = appointment.UserId, // Gửi cho người đặt lịch
+                Message = $"❌ Lịch hẹn vào {appointment.AppointmentDate:dd/MM/yyyy} tại {appointment.House?.NameHouse} đã bị hủy.",
+                CreatedAt = DateTime.Now,
+                IsRead = false,
+            };
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
+
+            return Json(
+                new { success = true, message = "Lịch hẹn đã bị hủy và thông báo đã được gửi!" }
+            );
         }
 
         [HttpPost]

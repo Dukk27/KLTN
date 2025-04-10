@@ -1,23 +1,18 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head> 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/_framework/aspnetcore-browser-refresh.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
@@ -26,7 +21,7 @@
             background-color: #007bff;
             color: white;
             height: 65px;
-            width: 100%;
+            width: 100vw;
             z-index: 1000;
             top: 0;
             position: fixed;
@@ -34,8 +29,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 30px;
             margin-bottom: 10px;
+            min-width: 1024px;
         }
 
         .navbar .navbar-brand {
@@ -57,6 +53,7 @@
             align-items: center;
             margin: 0;
             gap: 10px;
+            min-width: 300px;
         }
 
         .navbar .nav-link {
@@ -67,10 +64,19 @@
             transition: background-color 0.3s;
         }
 
+        .navbar .nav-link, .navbar .btn {
+            font-size: 1rem;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            white-space: nowrap; /* Không cho phép xuống dòng */
+        }
+
         body {
-            padding-top: 80px;
+            padding-top: 70px;
             padding-bottom: 40px;
             background-color: rgb(246, 240, 237);
+            font-family: Arial, sans-serif;
         }
 
         /* Modal */
@@ -78,7 +84,6 @@
             padding: 20px;
         }
     </style>
-
 </head>
 
 <body>
@@ -97,32 +102,88 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav ms-auto">
                         @if (string.IsNullOrEmpty(userName))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Home" asp-action="Index">Trang Chủ</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Account" asp-action="Login">Đăng nhập</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Account" asp-action="Register">Đăng ký</a>
-                            </li>
-                        }
-                        else
                         {
                             <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("Index", User.IsInRole("Admin") ? "Admin" : "Home")">Trang
                                     Chủ</a>
                             </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" id="profileLink">Xin chào, <span
-                                        id="headerUserName">@userName</span></a>
+                            <!-- Nếu chưa đăng nhập -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user"></i> Tài khoản
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Login"><i class="fas fa-sign-in-alt"></i>&nbsp; Đăng nhập</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Register"><i class="fas fa-user-plus"></i> Đăng ký</a></li>
+                                </ul>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" id="logoutLink">Đăng xuất</a>
+                            <button id="showCreateHouseForm" class="btn-warning ml-2 btn-responsive" style="height: 45px">
+                                <i class="fas fa-paper-plane"></i> Đăng tin ngay
+                            </button>
+                        }
+                        else
+                        {
+                            @* <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", User.IsInRole("Admin") ? "Admin" : "Home")">Trang
+                                    Chủ</a>
+                            </li> *@
+                            @if (User.Identity.IsAuthenticated) {
+                                <a asp-action="ChatList" asp-controller="Chat" class="btn ml-2 btn-responsive" style="height: 45px">
+                                    <i class="fas fa-comments"></i> Tin nhắn
+                                    <span id="unreadMessagesBadge" class="badge badge-danger" style="display: none;">
+                                        0
+                                    </span>
+                                </a>
+
+                                @if (User.IsInRole("ChuTro")) {
+                                    <a asp-action="Index" asp-controller="Appointment" class="btn ml-2 btn-responsive" style="height: 45px">
+                                        <i class="fas fa-calendar"></i> Lịch hẹn
+                                    </a>
+                                    <a asp-action="ListHouseRoom" asp-controller="QuanLi" id="managePosts" asp-route-userId="@ViewBag.userId"
+                                        class="btn ml-2 btn-responsive" style="height: 45px">
+                                        <i class="fas fa-file-alt"></i> Quản lý tin
+                                    </a>
+                                    <button id="showCreateHouseForm" class="btn-warning ml-2 btn-responsive" style="height: 45px">
+                                        <i class="fas fa-paper-plane"></i> Đăng tin ngay
+                                    </button>
+                                }
+                            }
+
+                            <!-- Dropdown tài khoản -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user"></i> Xin chào, @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <a class="dropdown-item"
+                                        href='@Url.Action("Edit", "Account", new { id = @Context.Session.GetInt32("UserId") })'>
+                                        <i class="fas fa-edit"></i> Chỉnh sửa hồ sơ
+                                    </a>
+                                    <li><a class="dropdown-item" href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-bell"></i>
+                                    <span id="notificationBadge"
+                                        class="badge bg-danger position-absolute top-0 start-100 translate-middle"
+                                        style="display: none;">0</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown"
+                                    id="notificationList">
+                                    <li class="dropdown-item text-center">
+                                        <button id="markAllAsRead" class="btn btn-sm btn-primary">Đánh dấu tất cả đã
+                                            đọc</button>
+                                    </li>
+                                    <li class="dropdown-divider"></li> 
+                                    <li class="dropdown-item text-center">Không có thông báo mới</li>
+                                </ul>
                             </li>
                         }
                     </ul>
@@ -135,24 +196,65 @@
         @RenderBody()
     </div>
 
-    <!-- Profile Modal -->
-    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    @* Render section Scripts only once *@
+    @RenderSection("Scripts", required: false)
+
+    @{
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString()?.ToLower();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString()?.ToLower();
+        var isAdminPage = currentController?.StartsWith("admin") == true;
+        var hideForActions = new[] { "login", "register", "edit", "changepassword", "forgotpassword", "resetpassword", "verifyotp", "chatlist", "chat", "listhouseroom", "edithouse"};
+        var isSpecificHiddenPage = currentController == "appointment" && currentAction == "index";
+    }
+
+    @if (!isAdminPage && !hideForActions.Contains(currentAction) && !isSpecificHiddenPage)
+{
+        <div id="mapControlButtons">
+            <button id="openMapBtn" title="Xem bản đồ">
+                <i class="fas fa-map-marked-alt"></i>
+            </button>
+            <button id="backToTopBtn" title="Lên đầu trang">
+                <i class="fa fa-angle-up" aria-hidden="true"></i>
+            </button>
+        </div>
+    }
+
+    <!-- Footer -->
+    <!-- Modal bản đồ -->
+    <div class="modal fade" id="goongMapModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content" style="display: flex; flex-direction: column; max-height: 90vh;">
+                <div class="modal-header">
+                    <h5 class="modal-title">Bản đồ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+            <div class="modal-body" style="overflow-y: auto; flex: 1 1 auto; padding: 0;">
+                <div id="goongMap" style="width: 100%; height: 100%; min-height: 650px;"></div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal đăng bài -->
+    <div class="modal fade" id="createHouseModal" tabindex="-1" aria-labelledby="createHouseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="profileModalLabel">Thông tin cá nhân</h5>
+                    <h5 class="modal-title" id="createHouseModalLabel">Đăng tin mới</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Nội dung profile sẽ được tải ở đây -->
+                    <div id="loadingSpinner" class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <iframe id="createHouseIframe" src="" style="width: 100%; height: 600px; border: none; display: none;"></iframe>
                 </div>
             </div>
         </div>
     </div>
 
-    @* Render section Scripts only once *@
-    @RenderSection("Scripts", required: false)
-    <!-- Footer -->
     <footer class="footer">
         <div class="container text-center">
             <div class="row">
@@ -177,45 +279,281 @@
         </div>
     </footer>
 
-
+    <script src="~/js/goong-js.js"></script>
+    <link rel="stylesheet" href="~/css/goong-js.css" asp-append-version="true" />
+    
     <script>
-        $(document).ready(function () {
-            $('#profileLink').on('click', function (e) {
-                e.preventDefault();
+        goongjs.accessToken = 'nFXjCGo9PppMz9YGX6S2fLdWnTwQKzCCmCimGy3G';
 
-                // Gửi yêu cầu AJAX để lấy dữ liệu profile
-                $.get('@Url.Action("Profile", "Account")', function (data) {
-                    // Chèn dữ liệu profile vào modal
-                    $('#profileModal .modal-body').html(data);
-                    // Hiển thị modal
-                    $('#profileModal').modal('show');
-                }).fail(function () {
-                    alert('Có lỗi khi tải thông tin profile!');
-                });
+        let mapInitialized = false;
+        let mapmodal;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('openMapBtn').addEventListener('click', function () {
+                const modal = new bootstrap.Modal(document.getElementById('goongMapModal'));
+                modal.show();
+
+                setTimeout(() => {
+                    if (!mapInitialized) {
+                        mapmodal = new goongjs.Map({
+                            container: 'goongMap',
+                            style: 'https://tiles.goong.io/assets/goong_map_web.json',
+                            center: [105.854444, 21.028511],
+                            zoom: 11
+                        });
+
+                        mapmodal.addControl(new goongjs.NavigationControl());
+
+                        $.get('/Home/GetAllHousesForMap', function (houses) {
+                            houses.forEach(house => {
+                                if (house.Lat && house.Lng) {
+                                    const pricePopup = new goongjs.Popup({
+                                        offset: 25,
+                                        closeOnClick: false,
+                                        closeButton: false
+                                    }).setHTML(`
+                                        <div class="price-popup" style="cursor: pointer;" onclick="window.location.href='/Home/Detail?id=${house.Id}'">
+                                            <span style="color:#28a745; font-size:13px;"><b>${house.Price || 'N/A'} VNĐ</b></span>
+                                        </div>
+                                    `).setLngLat([house.Lng, house.Lat]).addTo(mapmodal);
+
+                                    const hoverPopup = new goongjs.Popup({
+                                        closeButton: false,
+                                        closeOnClick: false,
+                                        offset: 25
+                                    }).setHTML(`
+                                        <div><strong>${house.Name}</strong><br>${house.Address}</div>
+                                    `);
+
+                                    const el = document.createElement('div');
+                                    el.className = 'custom-marker';
+
+                                    const marker = new goongjs.Marker(el)
+                                        .setLngLat([house.Lng, house.Lat])
+                                        .addTo(mapmodal);
+
+                                    const markerEl = marker.getElement();
+
+                                    markerEl.addEventListener('mouseenter', () => {
+                                        hoverPopup.setLngLat([house.Lng, house.Lat]).addTo(mapmodal);
+                                    });
+                                    markerEl.addEventListener('mouseleave', () => {
+                                        hoverPopup.remove();
+                                    });
+
+                                    markerEl.addEventListener('click', () => {
+                                        window.location.href = `/Home/Detail?id=${house.Id}`;
+                                    });
+                                }
+                            });
+                        });
+
+                        mapInitialized = true;
+                    }
+                }, 500);
+            });
+
+            // Thêm xử lý nút đóng modal bản đồ
+            document.querySelector('#goongMapModal .btn-close').addEventListener('click', function () {
+                const modalElement = document.getElementById('goongMapModal');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+            });
+
+            const mapButtons = document.getElementById('mapControlButtons');
+            const mapModalEl = document.getElementById('goongMapModal');
+
+            // Khi mở modal bản đồ
+            mapModalEl.addEventListener('show.bs.modal', function () {
+                mapButtons.style.display = 'none';
+            });
+
+            // Khi đóng modal bản đồ
+            mapModalEl.addEventListener('hidden.bs.modal', function () {
+                mapButtons.style.display = 'flex';
             });
         });
+    </script>
+
+    <script>
+        const isLoggedIn = '@(!string.IsNullOrEmpty(userName))'.toLowerCase() === 'true';
 
         document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("logoutLink").addEventListener("click", function (e) {
-                e.preventDefault(); // Ngăn chặn hành động mặc định
+            // ========== 1. Xử lý logout ==========
+            const logoutLink = document.getElementById("logoutLink");
+            if (logoutLink) {
+                logoutLink.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: "Bạn có chắc chắn muốn đăng xuất?",
+                        text: "Hành động này sẽ kết thúc phiên làm việc của bạn.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Có, đăng xuất!",
+                        cancelButtonText: "Hủy"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "@Url.Action("Logout", "Account")";
+                        }
+                    });
+                });
+            }
 
-                Swal.fire({
-                    title: "Bạn có chắc chắn muốn đăng xuất?",
-                    text: "Hành động này sẽ kết thúc phiên làm việc của bạn.",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Có, đăng xuất!",
-                    cancelButtonText: "Hủy"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "@Url.Action("Logout", "Account")";
+            // ========== 2. Load Notification ==========
+            function loadNotifications() {
+                $.get('/Notification/GetUnreadNotificationCount', function (data) {
+                    if (data.count > 0) {
+                        $("#notificationBadge").text(data.count).show();
+                    } else {
+                        $("#notificationBadge").hide();
+                    }
+                });
+
+                $.get('/Notification/GetNotifications', function (notifications) {
+                    var notificationList = $("#notificationList");
+                    notificationList.empty();
+
+                    notificationList.append(`
+                        <li class="dropdown-item text-center">
+                            <button id="markAllAsRead" class="btn btn-sm btn-success">Đánh dấu tất cả đã đọc</button>
+                        </li>
+                        <li class="dropdown-divider"></li>
+                    `);
+
+                    if (notifications.length === 0) {
+                        notificationList.append('<li class="dropdown-item text-center">Không có thông báo mới</li>');
+                    } else {
+                        notifications.forEach(function (notification) {
+                            var statusClass = notification.isRead ? "text-muted" : "text-danger";
+                            var buttonStyle = notification.isRead ? "display:none;" : "";
+                            var readText = notification.isRead ? `<span class="text-success ml-2">Đã đọc</span>` : "";
+
+                            notificationList.append(`
+                                <li class="dropdown-item d-flex justify-content-between align-items-center">
+                                    <span class="notification-text ${statusClass}" data-id="${notification.id}">
+                                        ${notification.message}
+                                    </span>
+                                    <div>
+                                        <button class="btn btn-sm mark-as-read btn-success" data-id="${notification.id}" style="${buttonStyle}">Đánh dấu đã đọc</button>
+                                        ${readText}
+                                    </div>
+                                </li>
+                            `);
+                        });
+
+                        notificationList.append('<li><a href="/Notification" class="dropdown-item text-center">Xem tất cả</a></li>');
+                    }
+                });
+            }
+
+            $(document).on("click", ".mark-as-read", function (event) {
+                event.stopPropagation();
+                var button = $(this);
+                var id = button.data("id");
+
+                $.post('/Notification/MarkAsRead', { id: id }, function (response) {
+                    if (response.success) {
+                        button.hide();
+                        button.siblings(".notification-text").removeClass("text-danger").addClass("text-muted");
+                        button.parent().append(`<span class="text-success ml-2">Đã đọc</span>`);
+                        let current = parseInt($("#notificationBadge").text()) || 0;
+                        let newCount = Math.max(current - 1, 0);
+                        if (newCount > 0) $("#notificationBadge").text(newCount);
+                        else $("#notificationBadge").hide();
+                    }
+                });
+            });
+
+            $(document).on("click", "#markAllAsRead", function () {
+                $.post('/Notification/MarkAllAsRead', function (res) {
+                    if (res.success) {
+                        $(".mark-as-read").hide();
+                        $(".notification-text").removeClass("text-danger").addClass("text-muted");
+                        $("#notificationBadge").hide();
+                    }
+                });
+            });
+
+            setInterval(loadNotifications, 4000);
+            loadNotifications();
+
+            // ========== 3. Load Unread Messages ==========
+            function loadUnreadMessages() {
+                $.get('/Chat/GetUnreadMessagesCount', function (data) {
+                    if (data.count > 0) {
+                        $("#unreadMessagesBadge").text(data.count).show();
+                    } else {
+                        $("#unreadMessagesBadge").hide();
+                    }
+                });
+            }
+            setInterval(loadUnreadMessages, 1000);
+            loadUnreadMessages();
+
+            // ========== 4. Modal đăng tin ==========
+            document.querySelectorAll("#showCreateHouseForm").forEach(button => {
+                button.addEventListener("click", function () {
+                    if (!isLoggedIn) {
+                        // Chuyển sang trang login
+                        window.location.href = "/Account/Login";
+                        return;
+                    }
+                    
+                    const modal = new bootstrap.Modal(document.getElementById("createHouseModal"));
+                    modal.show();
+
+                    const spinner = document.getElementById("loadingSpinner");
+                    const iframe = document.getElementById("createHouseIframe");
+
+                    if (spinner) spinner.style.display = "block";
+                    if (iframe) {
+                        iframe.style.display = "none";
+                        iframe.src = "/House/CreatePartial";
+                        iframe.onload = function () {
+                            spinner.style.display = "none";
+                            iframe.style.display = "block";
+                            setTimeout(function () {
+                                try {
+                                    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 50 + "px";
+                                    iframe.contentWindow.closeModal = function () {
+                                        modal.hide();
+                                    };
+                                } catch (e) {
+                                    console.error("Lỗi iframe:", e);
+                                }
+                            }, 100);
+                        };
                     }
                 });
             });
         });
+
+        const backToTopBtn = document.getElementById("backToTopBtn");
+        const openMapBtn = document.getElementById("openMapBtn");
+        const mapButtons = document.getElementById("mapControlButtons");
+
+        window.onscroll = function () {
+            const scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+
+            if (scrollTop > 350) {
+                backToTopBtn.style.display = "block";
+                openMapBtn.style.display = "block";
+            } else {
+                backToTopBtn.style.display = "none";
+                openMapBtn.style.display = "none";
+            }
+        };
+
+        backToTopBtn.addEventListener("click", function () {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
     </script>
 </body>
-
 </html>

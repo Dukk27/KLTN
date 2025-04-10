@@ -3,6 +3,7 @@
 <h3 class="text-center mt-3">Quản lý tài khoản</h3>
 
 <link rel="stylesheet" href="~/css/iziToast.css">
+<link rel="stylesheet" href="~/css/Admin/account.css">
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -41,11 +42,11 @@
                 <td>
                     @if (account.IsLocked)
                     {
-                        <span class="badge badge-danger">Bị khoá</span>
+                        <span class="badge bg-danger">Bị khoá</span>
                     }
                     else
                     {
-                        <span class="badge badge-success">Hoạt động</span>
+                        <span class="badge bg-success">Hoạt động</span>
                     }
                 </td>
                 <td>
@@ -89,7 +90,7 @@
 
             iziToast.question({
                 class: 'iziToast-custom',
-                title: "🔔 Xác nhận xoá",
+                title: "Xác nhận xoá",
                 message: "Bạn có chắc chắn muốn xoá tài khoản này không?",
                 position: "center",
                 timeout: false,
@@ -143,7 +144,7 @@
 
                     iziToast.question({
                         class: 'iziToast-custom',
-                        title: "🔒 Xác nhận khoá tài khoản",
+                        title: "Xác nhận khoá tài khoản",
                         message: "Bạn có chắc chắn muốn khoá tài khoản này không?",
                         position: "center",
                         timeout: false,
@@ -168,7 +169,7 @@
                                             .attr("title", "Mở khoá tài khoản");
 
                                         // Cập nhật trạng thái hiển thị
-                                        button.closest("tr").find("td:nth-child(6)").html('<span class="badge badge-danger">Bị khoá</span>');
+                                        button.closest("tr").find("td:nth-child(6)").html('<span class="badge bg-danger">Bị khoá</span>');
 
                                         // Gán lại sự kiện
                                         bindEvents();
@@ -189,7 +190,7 @@
 
                     iziToast.question({
                         class: 'iziToast-custom',
-                        title: "🔓 Xác nhận mở khoá",
+                        title: "Xác nhận mở khoá",
                         message: "Bạn có chắc chắn muốn mở khoá tài khoản này không?",
                         position: "center",
                         timeout: false,
@@ -214,7 +215,7 @@
                                             .attr("title", "Khoá tài khoản");
 
                                         // Cập nhật trạng thái hiển thị
-                                        button.closest("tr").find("td:nth-child(6)").html('<span class="badge badge-success">Hoạt động</span>');
+                                        button.closest("tr").find("td:nth-child(6)").html('<span class="badge bg-success">Hoạt động</span>');
 
                                         // Gán lại sự kiện
                                         bindEvents();

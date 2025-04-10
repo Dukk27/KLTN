@@ -306,6 +306,22 @@ namespace KLTN.Controllers
                 return RedirectToAction("Index", "Admin");
             }
 
+            // Tạo thông báo cho Admin khi có bài đăng mới
+            var adminAccounts = _context.Accounts.Where(u => u.Role == 0).ToList();
+            foreach (var admin in adminAccounts)
+            {
+                var notification = new Notification
+                {
+                    UserId = admin.IdUser, // Gửi thông báo cho Admin
+                    Message = $"Người dùng {User.Identity.Name} đã chỉnh sửa bài đăng: {existingHouse.NameHouse}.",
+                    CreatedAt = DateTime.Now,
+                    IsRead = false,
+                };
+                _context.Notifications.Add(notification);
+            }
+
+            await _context.SaveChangesAsync();
+
             return Json(
                 new
                 {

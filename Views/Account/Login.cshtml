@@ -2,10 +2,6 @@
     ViewData["Title"] = "Đăng nhập";
 }
 
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/iziToast.css">
 <script src="~/js/eye.js"></script>
@@ -27,7 +23,7 @@
                     <div class="input-group">
                         <input type="password" class="form-control" id="password" name="password" required
                             placeholder="Nhập mật khẩu" />
-                        <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password">
+                        <button type="button" class="btn-outline-secondary toggle-password" data-target="password">
                             <i class="fa-regular fa-eye"></i>
                         </button>
                     </div>

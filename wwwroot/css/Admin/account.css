@@ -1,0 +1,94 @@
+/* ======= Thiết lập cho bảng ======= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #ddd;
+    word-wrap: break-word; /* Đảm bảo chữ không bị tràn ra ngoài */
+}
+
+thead {
+    background-color: #f4f4f4;
+}
+
+th {
+    font-weight: bold;
+    background-color: #f9f9f9;
+}
+
+button {
+    font-size: 14px;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+}
+
+.badge {
+    font-size: 12px;
+}
+
+/* ======= Responsive cho thiết bị nhỏ (Tablet, Mobile) ======= */
+
+/* Tablet - Màn hình <= 768px */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto; /* Cho phép cuộn ngang */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    th, td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    button {
+        font-size: 12px;
+    }
+
+    .btn-sm {
+        padding: 4px 8px;
+    }
+
+    .badge {
+        font-size: 10px;
+    }
+}
+
+/* Mobile - Màn hình <= 480px */
+@media (max-width: 480px) {
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto; /* Cho phép cuộn ngang */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    th, td {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    button {
+        font-size: 12px;
+    }
+
+    .btn-sm {
+        padding: 4px 8px;
+    }
+
+    .badge {
+        font-size: 9px;
+    }
+
+    h3 {
+        font-size: 18px; /* Giảm kích thước tiêu đề */
+    }
+}

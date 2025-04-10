@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="~/css/iziToast.css">
-<link rel="stylesheet" href="~/css/edit.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/House/edit.css" asp-append-version="true" />
 
 <h2 style="color: rgb(35, 164, 207); text-align: center;">Chỉnh sửa thông tin nhà trọ</h2>
 
@@ -32,12 +32,15 @@
         <span asp-validation-for="HouseDetail.Address" class="text-danger"></span>
     </div>
 
-    <label for="ContactName2">Người liên hệ phụ:</label>
-    <input type="text" id="ContactName2" asp-for="ContactName2" class="form-control" />
+    <div class="form-group">
+        <label for="ContactName2">Người liên hệ phụ:</label>
+        <input type="text" id="ContactName2" asp-for="ContactName2" class="form-control" />
+    </div>
 
-    <label for="ContactPhone2">Số điện thoại phụ:</label>
-    <input type="text" id="ContactPhone2" asp-for="ContactPhone2" class="form-control" />
-
+    <div class="form-group">
+        <label for="ContactPhone2">Số điện thoại phụ:</label>
+        <input type="text" id="ContactPhone2" asp-for="ContactPhone2" class="form-control" />
+    </div>
 
     <div class="form-group">
         <label asp-for="HouseDetail.Price">Giá thuê</label>
@@ -52,14 +55,32 @@
     </div>
 
     <div class="form-group">
+        <label for="electricityBillingMethod">Cách tính tiền điện </label>
+        <select id="electricityBillingMethod" class="form-control">
+            <option value="" disabled selected>Chọn cách tính tiền điện</option>
+            <option value="theo-so">Tính theo số điện (VNĐ/kWh)</option>
+            <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
+            <option value="bao-gom">Bao gồm trong tiền trọ</option>
+        </select>
+    </div>
+    <div class="form-group">
         <label asp-for="HouseDetail.TienDien">Tiền điện</label>
-        <input asp-for="HouseDetail.TienDien" class="form-control" />
+        <input asp-for="HouseDetail.TienDien" class="form-control" id="tienDien" />
         <span asp-validation-for="HouseDetail.TienDien" class="text-danger"></span>
     </div>
 
     <div class="form-group">
+        <label for="waterBillingMethod">Cách tính tiền nước</label>
+        <select id="waterBillingMethod" class="form-control">
+            <option value="" disabled selected>Chọn cách tính tiền nước</option>
+            <option value="theo-so">Tính theo số nước (VNĐ/m³)</option>
+            <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
+            <option value="bao-gom">Bao gồm trong tiền trọ</option>
+        </select>
+    </div>
+    <div class="form-group">
         <label asp-for="HouseDetail.TienNuoc">Tiền nước</label>
-        <input asp-for="HouseDetail.TienNuoc" class="form-control" />
+        <input asp-for="HouseDetail.TienNuoc" class="form-control" id="tienNuoc" />
         <span asp-validation-for="HouseDetail.TienNuoc" class="text-danger"></span>
     </div>
 
@@ -93,7 +114,6 @@
         <span asp-validation-for="HouseDetail.Status" class="text-danger"></span>
     </div>
 
-
     <div class="form-group">
         <label for="imageFiles">Hình ảnh</label>
         <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple />
@@ -107,10 +127,12 @@
                     {
                         <div class="position-relative m-2">
                             <img src="@imgUrl" alt="Ảnh nhà trọ" style="max-width: 100px; height: 100px; object-fit: cover;" />
-                            <button type="button" class="btn btn-danger btn-sm remove-image" data-img="@imgUrl">X</button>
+                            <button type="button" class="remove-image" data-img="@imgUrl" title="Xóa ảnh">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                            </button>
                         </div>
                     }
-                </div>
+                </div> 
             </div>
             <input type="hidden" id="deletedImages" name="DeletedImages" value="" />
         }
@@ -128,167 +150,19 @@
         }
     </div>
 
-    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-    <a asp-action="ListHouseRoom" class="btn btn-secondary">Hủy</a>
+    <div class="btn-container">
+        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+        <a asp-action="ListHouseRoom" class="btn btn-secondary">Hủy</a>
+    </div>
+
 </form>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
     <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".remove-image").forEach(button => {
-                button.addEventListener("click", function () {
-                    let imgUrl = this.getAttribute("data-img");
-                    let deletedImagesInput = document.getElementById("deletedImages");
-
-                    // Nếu ảnh chưa được thêm vào danh sách xóa, thì thêm vào
-                    if (!deletedImagesInput.value.includes(imgUrl)) {
-                        deletedImagesInput.value += deletedImagesInput.value ? `,${imgUrl}` : imgUrl;
-                    }
-
-                    this.parentElement.remove(); // Xóa ảnh khỏi giao diện
-                });
-            });
-
-            // Xử lý xem trước ảnh mới khi chọn file
-            document.getElementById("imageFiles").addEventListener("change", function (event) {
-                let previewContainer = document.getElementById("imagePreview");
-                if (!previewContainer) {
-                    previewContainer = document.createElement("div");
-                    previewContainer.id = "imagePreview";
-                    previewContainer.classList.add("mt-2", "d-flex", "flex-wrap");
-                    this.parentElement.appendChild(previewContainer);
-                }
-                previewContainer.innerHTML = ""; // Xóa ảnh xem trước cũ
-
-                Array.from(event.target.files).forEach(file => {
-                    let reader = new FileReader();
-                    reader.onload = function (e) {
-                        let imgElement = document.createElement("img");
-                        imgElement.src = e.target.result;
-                        imgElement.style = "max-width: 100px; height: 100px; object-fit: cover; margin: 5px;";
-                        previewContainer.appendChild(imgElement);
-                    };
-                    reader.readAsDataURL(file);
-                });
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const form = document.querySelector("form");
-
-            form.addEventListener("submit", function (event) {
-                event.preventDefault(); // Ngăn chặn submit mặc định
-
-                iziToast.show({
-                    class: "iziToast-custom",
-                    title: "🔔 Xác nhận chỉnh sửa",
-                    message: "Bạn có chắc chắn muốn chỉnh sửa bài đăng này?",
-                    position: "center",
-                    timeout: false,
-                    close: false,
-                    overlay: true,
-                    displayMode: "once",
-                    drag: false,
-                    icon: "fa fa-question-circle",
-                    buttons: [
-                        [
-                            '<button><i class="fa fa-check"></i> Lưu</button>',
-                            function (instance, toast) {
-                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-
-                                fetch(form.action, {
-                                    method: "POST",
-                                    body: new FormData(form)
-                                })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            iziToast.success({
-                                                title: "Thành công!",
-                                                message: data.message,
-                                                position: "topRight",
-                                                timeout: 1000,
-                                                onClosing: function () {
-                                                    window.location.href = "/Home/Index";
-                                                }
-                                            });
-                                        } else {
-                                            iziToast.error({
-                                                title: "Lỗi!",
-                                                message: data.message || "Có lỗi xảy ra!",
-                                                position: "topRight"
-                                            });
-                                        }
-                                    })
-                                    .catch(() => {
-                                        iziToast.error({
-                                            title: "Lỗi!",
-                                            message: "Không thể lưu thay đổi!",
-                                            position: "topRight"
-                                        });
-                                    });
-                            },
-                            true
-                        ],
-                        [
-                            '<button><i class="fa fa-times"></i> Hủy</button>',
-                            function (instance, toast) {
-                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                            }
-                        ]
-                    ]
-                });
-            });
-        });
-    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
-        const goongApiKey = "RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy";
-
-        $(document).ready(function () {
-            $("#houseAddress").on("input", function () {
-                let inputText = $(this).val().trim();
-                if (inputText.length < 3) {
-                    $("#addressSuggestions").empty();
-                    return;
-                }
-
-                let apiUrl = `https://rsapi.goong.io/Place/AutoComplete?api_key=${goongApiKey}&input=${encodeURIComponent(inputText)}`;
-
-                $.getJSON(apiUrl, function (data) {
-                    $("#addressSuggestions").empty();
-                    if (data.predictions) {
-                        data.predictions.forEach(item => {
-                            let listItem = `<li class="list-group-item address-item" data-address="${item.description}">${item.description}</li>`;
-                            $("#addressSuggestions").append(listItem);
-                        });
-                        $("#addressSuggestions").show(); // Hiển thị gợi ý
-                    }
-                });
-            });
-
-            // Khi người dùng chọn một địa chỉ gợi ý
-            $(document).on("click", ".address-item", function () {
-                let selectedAddress = $(this).data("address");
-                $("#houseAddress").val(selectedAddress);
-                $("#addressSuggestions").empty().hide(); // Ẩn danh sách sau khi chọn
-            });
-
-            // Ẩn khung gợi ý khi click ra ngoài
-            $(document).click(function (event) {
-                if (!$(event.target).closest("#houseAddress, #addressSuggestions").length) {
-                    $("#addressSuggestions").empty().hide();
-                }
-            });
-        });
-
-    </script>
+    <script src="~/js/House/edit.js"></script>
 }

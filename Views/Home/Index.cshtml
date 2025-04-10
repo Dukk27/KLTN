@@ -22,44 +22,24 @@
 <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <input type="hidden" id="userAuthenticated" value="@User.Identity.IsAuthenticated.ToString().ToLower()" />
 <script src="~/js/ListHouse.js" asp-append-version="true"></script>
-
+<!-- CSS của Slick Carousel -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+<!-- JS của Slick Carousel -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<!-- Thêm trong phần <head> hoặc trước </body> -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
 <div class="container-fluid mt-2">
-    <div class="d-flex align-items-center justify-content-end">
-        @if (Model.IsChuTro || Model.IsAdmin)
-        {
-            <button id="showCreateHouseForm" class="btn btn-primary ml-2" style="height: 45px">
-                <i class="fas fa-home"></i> Cung cấp thông tin nhà trọ
-            </button>
+</div>
 
-            <a asp-action="ListHouseRoom" asp-controller="QuanLi" id="managePosts" asp-route-userId="@ViewBag.userId"
-            class="btn btn-primary ml-2" style="height: 45px">
-                <i class="fas fa-file-alt"></i> Quản lí bài đăng
-            </a>
-
-            <a asp-action="Index" asp-controller="Appointment" class="btn btn-primary ml-2" style="height: 45px">
-                <i class="fas fa-calendar-check"></i> Lịch hẹn
-            </a>
-        }
-        @if (User.Identity.IsAuthenticated) {
-            <button class="btn btn-primary ml-2" style="height: 45px" onclick="toggleChatList()">
-                <i class="fas fa-comments"></i> Tin Nhắn
-            </button>
-
-            <!-- Chat Box -->
-            <div id="chatBoxContainer" class="chatbox">
-                <div class="chatbox-header">
-                    <span>Danh sách tin nhắn</span>
-                    <button class="close-chatbox" onclick="toggleChatList()">✖</button>
-                </div>
-                <div id="chatBoxContent" class="chatbox-body">
-                </div>
-            </div>
-        }
-    </div>
+<div class="slider-container">
+    <div><img src="/img/timtro.jpg" alt="Image 1"></div>
+    <div><img src="/img/tro.jpg" alt="Image 2"></div>
+    <div><img src="/img/tro1.jpg" alt="Image 3"></div>
 </div>
 
 <!-- Hero section with search -->
@@ -67,134 +47,24 @@
     <div class="container">
         <div class="search-content" style="padding: 20px;">
             <h2 class="text-center text-white">Tìm nhà cho thuê</h2>
-            <p class="text-center text-white mb-4">Chào mừng quý khách đến với hệ thống TIMTRODE</p>
+            <p class="text-center text-white mb-4" style="font-size: 20px;">
+                Chào mừng quý khách đến với hệ thống TIMTRODE
+            </p>
 
-            <div class="row">
-                <div class="col-md-6 pr-4">
+            <div class="row align-items-end">
+                <!-- Tìm kiếm -->
+                <div class="col-md-8">
                     <h5 class="text-white mb-3">Tìm nhanh theo từ khóa</h5>
-                    <div class="input-group mb-3">
-                        <div class="d-flex align-items-center">
-                            @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-inline" }))
-                            {
-                                <div class="form-group">
-                                    <input type="text" name="searchString" class="form-control"
-                                        placeholder="Tìm kiếm theo địa chỉ..."
-                                        style="width: 400px; margin-right: 12px;" value="@ViewBag.Keyword" />
-                                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Tìm kiếm</button>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <h5 class="text-white mb-3">Hoặc lọc nhanh theo nhu cầu của bạn</h5>
-                    <div class="d-flex align-items-center">
-                        <div class="dropdown" style="margin-right: 4px;">
-                            <button class="dropdown-button">
-                                <i class="fas fa-list-alt"></i>&nbsp;Danh mục <span class="dropdown-arrow">▼</span>
-                            </button>
-                            <div class="dropdown-content">
-                                @foreach (var houseType in Model.HouseTypes)
-                                {
-                                    <a href="@Url.Action("HousesByType", "Home", new { id = houseType.IdHouseType })">
-                                        @houseType.Name
-                                    </a>
-                                }
-                            </div>
-                        </div>
-
-                    <button class="btn btn-secondary" data-toggle="modal" data-target="#filterModal"
-                        style="margin-left: 10px; background-color: #007bff;">
-                        <i class="fas fa-sliders-h"></i>
-                        Bộ lọc
-                    </button>
+                    @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-inline d-flex" }))
+                    {
+                        <input type="text" name="searchString" class="form-control custom-input"
+                            placeholder="Tìm kiếm theo địa chỉ..." value="@ViewBag.Keyword" />
+                        <button type="submit" class="btn btn-search ml-2" style="margin-left: 10px;">
+                            <i class="fas fa-search"></i> Tìm kiếm
+                        </button>
+                    }
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-</div>
-
-<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="filterModalLabel">Bộ lọc</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="get" action="@Url.Action("Index", "Home")">
-                <div class="modal-body">
-                    <!-- Bộ lọc giá -->
-                    <div class="mb-3">
-                        <label for="priceRange" class="form-label">Giá</label>
-                        <select class="form-control" id="priceRange" name="priceRange">
-                            <!option value="">Tất cả</!option>
-                            <!option value="1000000-3000000" @((ViewBag.PriceRange == "1000000-3000000") ? "selected" :
-                                "")>1-3 triệu</!option>
-                            <!option value="3000000-5000000" @((ViewBag.PriceRange == "3000000-5000000") ? "selected" :
-                                "")>3-5 triệu</!option>
-                            <!option value="5000000-10000000" @((ViewBag.PriceRange == "5000000-10000000") ? "selected"
-                                : "")>5-10 triệu</!option>
-                            <!option value="10000000" @((ViewBag.PriceRange == "10000000") ? "selected" : "")>Trên 10
-                                triệu</!option>
-                        </select>
-                    </div>
-
-                    <!-- Bộ lọc sắp xếp -->
-                    <div class="mb-3">
-                        <label for="sortBy" class="form-label">Sắp xếp theo</label>
-                        <select class="form-control" id="sortBy" name="sortBy">
-                            <!option value="newest" @((ViewBag.SortBy == "newest") ? "selected" : "")>Mới nhất</!option>
-                            <!option value="priceLowHigh" @((ViewBag.SortBy == "priceLowHigh") ? "selected" : "")>Giá:
-                                Thấp đến Cao</!option>
-                            <!option value="priceHighLow" @((ViewBag.SortBy == "priceHighLow") ? "selected" : "")>Giá:
-                                Cao đến Thấp</!option>
-                        </select>
-                    </div>
-
-                    <!-- Bộ lọc loại phòng -->
-                    <div class="mb-3">
-                        <label for="roomType" class="form-label">Loại phòng</label>
-                        <select class="form-control" id="roomType" name="roomType">
-                            <option value="">Tất cả</option>
-                            @foreach (var houseType in Model.HouseTypes)
-                            {
-                                <option>
-                                    <a href="@Url.Action("HousesByType", "Home", new { id = houseType.IdHouseType })">
-                                        @houseType.Name
-                                    </a>
-                                </option>
-                            }
-                            @foreach (var houseType in Model.HouseType)
-                            {
-                                <!option value="@houseType.Value" @((ViewBag.RoomType == houseType.Value) ? "selected" :
-                                "")>@houseType.Text</!option>
-                            } }
-                        </select>
-                    </div>
-
-                    <!-- Bộ lọc tiện nghi -->
-                    <div class="mb-3">
-                        <label for="amenities" class="form-label">Tiện nghi</label>
-                        @foreach (var amenity in Model.Amenities)
-                        {
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="amenities" value="@amenity.Name"
-                                @(ViewBag.SelectedAmenities != null && ViewBag.SelectedAmenities.Contains(amenity.Name)
-                                    ? "checked" : "")>
-                                <label class="form-check-label">@amenity.Name</label>
-                            </div>
-                        }
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary w-100">Áp dụng</button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
@@ -221,7 +91,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 </div>
 
 <!-- Danh sách nhà trọ -->
@@ -230,7 +100,7 @@
     {
         <div class="no-houses-container">
             <h4 class="no-houses-message">Không tìm thấy nhà trọ phù hợp.</h4>
-            <p>Vui lòng thử lại với địa chỉ khác hoặc quay lại trang chủ.</p>
+            <p>Vui lòng thử lại với tìm kiếm khác hoặc quay lại trang chủ.</p>
             <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
                 <i class="fas fa-arrow-left"></i> Quay Lại Trang Chủ
             </a>
@@ -238,57 +108,135 @@
     }
     else
     {
-        <h1 style="color: rgb(35, 164, 207); padding-bottom: 15px;">Danh Sách Nhà Trọ</h1>
-        <div class="row">
-            @foreach (var house in Model.Houses)
-            {
-                <div class="col-md-3 d-flex align-items-stretch">
-                    <div class="card">
-                        @{
-                            var firstImage = house.HouseDetails.FirstOrDefault()?.Image?
-                                .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                .FirstOrDefault();
-                        }
-                        <img src="@firstImage" class="card-img-top" alt="@house.NameHouse"
-                            style="height: 200px; object-fit: cover;">
+        <div class="container mt-4">
+            <div class="row">
+                <!-- Phần bên trái: Danh sách bài đăng -->
+                <div class="col-md-8">
+                    <h1 style="color: rgb(35, 164, 207); padding-bottom: 15px;">Danh Sách Nhà Trọ</h1>
+                    <h5 class="text-muted">Tổng <span style="color: #28a745;">@Model.TotalPosts</span> kết quả.</h5>                 
+                    <div class="row">
+                        @foreach (var house in Model.Houses)
+                        {
+                            <div class="col-md-6 d-flex align-items-stretch" data-aos="fade-up">
+                                <div class="card">
+                                    @{
+                                        var firstImage = house.HouseDetails.FirstOrDefault()?.Image?
+                                            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                            .FirstOrDefault();
+                                    }
+                                    <img src="@firstImage" class="card-img-top" alt="@house.NameHouse"
+                                        style="height: 200px; object-fit: cover;">
 
-                        <div class="card-body">
-                            <h5 class="card-title">@house.NameHouse</h5>
-                            <p class="card-text"><strong>Người đăng:</strong>&nbsp;@house.IdUserNavigation.UserName</p>
-                            <p class="card-text"><strong>Địa chỉ:</strong> @house.HouseDetails.FirstOrDefault()?.Address</p>
-                            <p class="card-text">
-                                <strong>Giá nhà:</strong>
-                                @house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new
-                                        System.Globalization.CultureInfo("vi-VN")) VND
-                            </p>
-                            <p class="card-text">
-                                <strong>Diện tích:</strong> @house.HouseDetails.FirstOrDefault()?.DienTich m²
-                            </p>
-                            <p class="card-text">
-                                <strong>Ngày đăng:</strong>
-                                @house.HouseDetails.FirstOrDefault()?.TimePost.ToString("dd/MM/yyyy")
-                            </p>
-                            <p class="card-text">
-                                <strong>Loại nhà trọ:</strong> @house.HouseType?.Name
-                            </p>
-                            <p class="card-text">
-                                <strong>Trạng thái:</strong>
-                                @if (house.HouseDetails.FirstOrDefault()?.Status == "Chưa cho thuê")
-                                {
-                                    <span class="status-not-rented">Chưa cho thuê</span>
-                                }
-                                else if (house.HouseDetails.FirstOrDefault()?.Status == "Đã cho thuê")
-                                {
-                                    <span class="status-rented">Đã cho thuê</span>
-                                }
-                            </p>
-                            <a href="javascript:void(0)" onclick="goToDetail(@house.IdHouse)" class="btn btn-view-detail">
-                                <i class="fas fa-eye icon"></i> Xem Chi Tiết
-                            </a>
-                        </div>
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">@house.NameHouse</h5>
+                                        <p class="card-text"><strong>Người đăng:</strong>&nbsp;@house.IdUserNavigation.UserName</p>
+                                        <p class="card-text"><strong>Địa chỉ:</strong> @house.HouseDetails.FirstOrDefault()?.Address</p>
+                                        <p class="card-text">
+                                            <strong>Giá nhà:</strong>
+                                            @house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new
+                                                    System.Globalization.CultureInfo("vi-VN")) VND
+                                        </p>
+                                        <p class="card-text">
+                                            <strong>Diện tích:</strong> @house.HouseDetails.FirstOrDefault()?.DienTich m²
+                                        </p>
+                                        <p class="card-text">
+                                            <strong>Ngày đăng:</strong>
+                                            @house.HouseDetails.FirstOrDefault()?.TimePost.ToString("dd/MM/yyyy")
+                                        </p>
+                                        <p class="card-text">
+                                            <strong>Loại nhà trọ:</strong> @house.HouseType?.Name
+                                        </p>
+                                        <p class="card-text">
+                                            <strong>Trạng thái:</strong>
+                                            @if (house.HouseDetails.FirstOrDefault()?.Status == "Chưa cho thuê")
+                                            {
+                                                <span class="status-not-rented">Chưa cho thuê</span>
+                                            }
+                                            else if (house.HouseDetails.FirstOrDefault()?.Status == "Đã cho thuê")
+                                            {
+                                                <span class="status-rented">Đã cho thuê</span>
+                                            }
+                                        </p>
+                                        <a href="javascript:void(0)" onclick="goToDetail(@house.IdHouse)" class="btn btn-view-detail">
+                                            <i class="fas fa-eye icon"></i> Xem Chi Tiết
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
-            }
+
+                <!-- Phần bên phải: Bộ lọc -->
+                <div class="col-md-4">
+                    <div class="filter-container" data-aos="fade-left">
+                        <h5 class="text-center">Bộ Lọc</h5>
+                        <form method="get" action="@Url.Action("Index", "Home")">
+                            <!-- Bộ lọc giá -->
+                            <div class="mb-3">
+                                <label for="priceRange" class="form-label">Giá</label>
+                                <select class="form-control" id="priceRange" name="priceRange">
+                                    <option value="">Tất cả</option>
+                                    <option value="1000000-3000000" selected="@(ViewBag.PriceRange == "1000000-3000000")">1-3 triệu</option>
+                                    <option value="3000000-5000000" selected="@(ViewBag.PriceRange == "3000000-5000000")">3-5 triệu</option>
+                                    <option value="5000000-10000000" selected="@(ViewBag.PriceRange == "5000000-10000000")">5-10 triệu</option>
+                                    <option value="10000000" selected="@(ViewBag.PriceRange == "10000000")">Trên 10 triệu</option>
+                                </select>
+                            </div>
+
+                            <!-- Bộ lọc sắp xếp -->
+                            <div class="mb-3">
+                                <label for="sortBy" class="form-label">Sắp xếp theo</label>
+                                <select class="form-control" id="sortBy" name="sortBy">
+                                    <option value="newest" selected="@(ViewBag.SortBy == "newest")">Mới nhất</option>
+                                    <option value="priceLowHigh" selected="@(ViewBag.SortBy == "priceLowHigh")">Giá: Thấp đến Cao</option>
+                                    <option value="priceHighLow" selected="@(ViewBag.SortBy == "priceHighLow")">Giá: Cao đến Thấp</option>
+                                </select>
+                            </div>
+
+                            <!-- Bộ lọc loại phòng -->
+                            <div class="mb-3">
+                                <label for="roomType" class="form-label">Loại phòng</label>
+                                <select class="form-control" id="roomType" name="roomType">
+                                    <option value="">Tất cả</option>
+                                    @foreach (var houseType in Model.HouseTypes)
+                                    {
+                                        <option>
+                                            <a href="@Url.Action("HousesByType", "Home", new { id = houseType.IdHouseType })">
+                                                @houseType.Name
+                                            </a>
+                                        </option>
+                                    }
+                                    @foreach (var houseType in Model.HouseType)
+                                    {
+                                        <!option value="@houseType.Value" @((ViewBag.RoomType == houseType.Value) ? "selected" :
+                                        "")>@houseType.Text</!option>
+                                    } }
+                                </select>
+                            </div>
+
+                            <!-- Bộ lọc tiện nghi -->
+                            <div class="mb-3">
+                                <label for="amenities" class="form-label">Tiện nghi</label>
+                                @foreach (var amenity in Model.Amenities)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="amenities" value="@amenity.Name"
+                                            @(ViewBag.SelectedAmenities != null && ViewBag.SelectedAmenities.Contains(amenity.Name) ? "checked" : "")>
+                                        <label class="form-check-label">@amenity.Name</label>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Nút áp dụng và xóa bộ lọc -->
+                            <div class="d-flex">
+                                <button type="submit" class="btn btn-search w-50 mr-2" style="margin-right: 10px;">Áp dụng</button>
+                                <a href="@Url.Action("Index", "Home")" class="btn btn-secondary w-50">Xóa bộ lọc</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     }
 </div>
@@ -342,3 +290,133 @@
         </ul>
     </nav>
 }
+
+<div>
+    <section class="feedback-form bg-light p-4 rounded mt-5" data-aos="fade-up">
+        <h4>Gửi góp ý cho chúng tôi</h4>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+        }
+        <form asp-action="SubmitFeedback" method="post">
+            <div class="mb-3">
+                <label for="userName" class="form-label"></label>
+                <input type="text" name="userName" class="form-control" required placeholder="Họ và tên" />
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label"></label>
+                <textarea name="message" class="form-control" rows="4" required placeholder="Nội dung góp ý"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Gửi góp ý</button>
+        </form>
+    </section>
+</div>
+
+<!-- IziToast -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+<!-- SignalR -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+<script src="~/js/goong-js.js"></script>
+<link rel="stylesheet" href="~/css/goong-js.css" asp-append-version="true" />
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var currentUserId = @ViewBag.CurrentUserId;
+
+        if (!currentUserId) {
+            console.log("[DEBUG] Không có user đăng nhập, không kết nối SignalR.");
+            return;
+        }
+
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        connection.start().then(function () {
+            console.log("[DEBUG] SignalR đã kết nối trên trang Home!");
+            updateUnreadMessages(); // Lấy số tin nhắn chưa đọc khi trang load
+        }).catch(function (err) {
+            console.error("[ERROR] Không thể kết nối SignalR:", err.toString());
+        });
+
+        connection.on("ReceiveNotification", function (senderId, senderName, message) {
+            if (senderId != currentUserId) {
+                var conversationId = senderId < currentUserId 
+                    ? senderId + "-" + currentUserId 
+                    : currentUserId + "-" + senderId;
+
+                iziToast.info({
+                    title: `Tin nhắn mới từ ${senderName}`,
+                    position: 'topRight',
+                    timeout: 5000,
+                    transitionIn: 'fadeIn',
+                    transitionOut: 'fadeOut',
+                    buttons: [
+                        ['<button>Xem</button>', function (instance, toast) {
+                            var chatUrl = `/Chat/Chat?conversationId=${conversationId}`;
+                            console.log("[DEBUG] Điều hướng đến:", chatUrl);
+                            window.location.href = chatUrl;
+                        }, true]
+                    ]
+                });
+            }
+        });
+
+        connection.on("UpdateUnreadMessages", function () {
+            updateUnreadMessages();
+        });
+
+        // Hàm cập nhật số tin nhắn chưa đọc
+        function updateUnreadMessages() {
+            fetch("/Home/GetUnreadMessagesCount")
+                .then(response => response.json())
+                .then(data => {
+                    var unreadBadge = document.getElementById("unreadMessagesBadge");
+                    if (unreadBadge) {
+                        if (data.count > 0) {
+                            unreadBadge.textContent = data.count;
+                            unreadBadge.style.display = "inline-block";
+                        } else {
+                            unreadBadge.style.display = "none";
+                        }
+                    }
+                })
+                .catch(error => console.error("[ERROR] Lỗi khi cập nhật số tin nhắn chưa đọc:", error));
+        }
+
+        // Hàm đánh dấu tin nhắn là đã đọc
+        function markMessagesAsRead() {
+            fetch("/Home/MarkMessagesAsRead", { method: "POST" })
+                .then(() => updateUnreadMessages())
+                .catch(error => console.error("[ERROR] Lỗi khi đánh dấu tin nhắn đã đọc:", error));
+        }
+
+        // Khi người dùng mở danh sách tin nhắn, đánh dấu tin nhắn là đã đọc
+        var chatBoxContainer = document.getElementById("chatBoxContainer");
+        if (chatBoxContainer) {
+            chatBoxContainer.addEventListener("click", function () {
+                markMessagesAsRead();
+            });
+        }
+    });
+
+    $(document).ready(function() {
+        // Khởi tạo slick carousel
+        $('.slider-container').slick({
+            infinite: true, // Bật chế độ lặp vô hạn
+            slidesToShow: 1, // Chỉ hiển thị một slide tại một thời điểm
+            slidesToScroll: 1, // Cuộn một slide một lần
+            autoplay: true,  // Tự động chuyển đổi slide
+            autoplaySpeed: 2000, // Tốc độ tự động chuyển đổi
+            dots: true, // Hiển thị dot navigation
+            fade: true // Chuyển đổi fade giữa các slide
+        });
+
+        AOS.init({
+            duration: 1000, // thời gian chạy hiệu ứng (ms)
+            once: true      // chỉ animate 1 lần khi scroll tới
+        });
+    });
+</script>

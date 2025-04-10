@@ -19,6 +19,7 @@ namespace KLTN.Models
         public string Content { get; set; }
 
         public DateTime Timestamp { get; set; } = DateTime.Now;
+        public bool IsRead { get; set; } = false; // Trạng thái đã đọc (mặc định là chưa đọc)
 
         [ForeignKey("SenderId")]
         public virtual Account Sender { get; set; }

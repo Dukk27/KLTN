@@ -114,6 +114,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxfQ2hhdExpc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/KLTN/KLTN/Views/Home/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFcnJvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/KLTN/KLTN/Views/Home/HouseDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIb3VzZURldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -132,6 +136,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/KLTN/KLTN/Views/House/_CreateHousePartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG91c2VcX0NyZWF0ZUhvdXNlUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/KLTN/KLTN/Views/Notification/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTm90aWZpY2F0aW9uXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/KLTN/KLTN/Views/Payments/Failure.cshtml]

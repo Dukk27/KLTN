@@ -26,11 +26,11 @@
                     <td>@index</td>
                     <td>@amenity.Name</td>
                     <td>
-                        <button class="btn btn-warning btn-sm"
-                            onclick="openEditModal(@amenity.IdAmenity, '@amenity.Name')" title="Chỉnh sửa tiện nghi"><i class="fas fa-edit"></i>
+                        <button class="btn btn-warning btn-sm" onclick="openEditModal(@amenity.IdAmenity, '@amenity.Name')"
+                            title="Chỉnh sửa tiện nghi"><i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteAmenity(@amenity.IdAmenity)" title="Xoá tiện nghi"><i
-                                class="fas fa-trash-alt"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAmenity(@amenity.IdAmenity)"
+                            title="Xoá tiện nghi"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
                 index++;
@@ -66,26 +66,29 @@
 
 <script>
     function openCreateModal() {
-        $("#modalTitle").text("Thêm Tiện Nghi");
-        $("#amenityId").val('');
-        $("#amenityName").val('');
-        $("#amenityModal").modal("show");
+        document.getElementById("modalTitle").textContent = "Thêm Tiện Nghi";
+        document.getElementById("amenityId").value = '';
+        document.getElementById("amenityName").value = '';
+        document.getElementById("amenityModal").classList.add("show");
+        document.getElementById("amenityModal").style.display = "block";
     }
 
     function openEditModal(id, name) {
-        $("#modalTitle").text("Sửa Tiện Nghi");
-        $("#amenityId").val(id);
-        $("#amenityName").val(name);
-        $("#amenityModal").modal("show");
+        document.getElementById("modalTitle").textContent = "Sửa Tiện Nghi";
+        document.getElementById("amenityId").value = id;
+        document.getElementById("amenityName").value = name;
+        document.getElementById("amenityModal").classList.add("show");
+        document.getElementById("amenityModal").style.display = "block";
     }
 
     function closeModal() {
-        $("#amenityModal").modal("hide");
+        document.getElementById("amenityModal").classList.remove("show");
+        document.getElementById("amenityModal").style.display = "none";
     }
 
     function saveAmenity() {
-        let id = $("#amenityId").val();
-        let name = $("#amenityName").val().trim();
+        let id = document.getElementById("amenityId").value;
+        let name = document.getElementById("amenityName").value.trim();
 
         if (!name) {
             iziToast.warning({
@@ -100,15 +103,15 @@
         let url = id ? "/Admin/EditAmenity" : "/Admin/CreateAmenity";
         let data = JSON.stringify({ IdAmenity: id ? parseInt(id) : 0, Name: name });
 
-        $.ajax({
-            type: "POST",
-            url: url,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: data,
-            success: function (response) {
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: data
+        })
+            .then(response => response.json())
+            .then(response => {
                 iziToast.show({
-                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                    title: response.success ? "Thành công!" : "Lỗi!",
                     message: response.message,
                     position: "topRight",
                     timeout: 1000,
@@ -119,22 +122,21 @@
                     closeModal();
                     updateAmenityTable();
                 }
-            },
-            error: function () {
+            })
+            .catch(() => {
                 iziToast.error({
                     title: "Lỗi!",
                     message: "Có lỗi xảy ra, vui lòng thử lại.",
                     position: "topRight",
                     timeout: 1000
                 });
-            }
-        });
+            });
     }
 
     function deleteAmenity(id) {
         iziToast.show({
             class: "iziToast-custom",
-            title: "🔔 Xác nhận xóa",
+            title: "Xác nhận xóa",
             message: "Bạn có chắc chắn muốn xóa? Hành động này không thể hoàn tác!",
             position: "center",
             timeout: false,
@@ -149,13 +151,15 @@
                     function (instance, toast) {
                         instance.hide({ transitionOut: "fadeOut" }, toast, "button");
 
-                        $.ajax({
-                            type: "POST",
-                            url: "/Admin/DeleteAmenity",
-                            data: { id: id },
-                            success: function (response) {
+                        fetch("/Admin/DeleteAmenity", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: new URLSearchParams({ id: id })
+                        })
+                            .then(response => response.json())
+                            .then(response => {
                                 iziToast.show({
-                                    title: response.success ? "✅ Đã xóa!" : "❌ Lỗi!",
+                                    title: response.success ? "Đã xóa!" : "Lỗi!",
                                     message: response.message,
                                     position: "topRight",
                                     timeout: 1000,
@@ -163,11 +167,11 @@
                                 });
 
                                 if (response.success) {
-                                    $("#row_" + id).remove();
+                                    let row = document.getElementById("row_" + id);
+                                    if (row) row.remove();
                                     updateAmenityTable();
                                 }
-                            }
-                        });
+                            });
                     },
                     true
                 ],
@@ -182,13 +186,18 @@
     }
 
     function updateAmenityTable() {
-        $.get("/Admin/ManageAmenities", function (data) {
-            let newTableBody = $(data).find("#amenityTableBody").html();
-            $("#amenityTableBody").html(newTableBody);
-            let rows = $("#amenityTableBody tr");
-            rows.each(function (index) {
-                $(this).find("td:first").text(index + 1);
+        fetch("/Admin/ManageAmenities")
+            .then(response => response.text())
+            .then(data => {
+                let parser = new DOMParser();
+                let doc = parser.parseFromString(data, "text/html");
+                let newTableBody = doc.querySelector("#amenityTableBody").innerHTML;
+                document.getElementById("amenityTableBody").innerHTML = newTableBody;
+
+                let rows = document.querySelectorAll("#amenityTableBody tr");
+                rows.forEach((row, index) => {
+                    row.querySelector("td:first-child").textContent = index + 1;
+                });
             });
-        });
     }
 </script>

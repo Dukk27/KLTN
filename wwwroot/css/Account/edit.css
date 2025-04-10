@@ -2,10 +2,12 @@
 .account-form {
   width: 600px;
   margin: 40px auto;
+  margin-top: 20px;
   background-color: #ffffff;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 100%; /* Đảm bảo form không vượt quá chiều rộng màn hình */
 }
 
 /* Tiêu đề trang */
@@ -58,24 +60,34 @@
   background-color: #0056b3;
 }
 
-/* Nút cập nhật và đóng */
 .button-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Căn giữa các nút */
+  gap: 15px; /* Tạo khoảng cách giữa các nút */
   margin-top: 20px;
 }
 
-.btn {
-  padding: 8px 12px;
-  font-size: 14px;
+.btnclose,
+.btn-primary {
+  padding: 10px 20px;
   border-radius: 5px;
+  font-size: 14px;
+  border: none;
   cursor: pointer;
-  width: 48%;
+  transition: background-color 0.3s;
+}
+
+.btnclose {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btnclose:hover {
+  background-color: #5a6368;
 }
 
 .btn-primary {
   background-color: #0d6efd;
-  border: none;
   color: white;
 }
 
@@ -83,12 +95,72 @@
   background-color: #0056b3;
 }
 
-.btn-secondary {
-  background-color: #f8f9fa;
-  border: 1px solid #ccc;
-  color: #333;
+/* Responsive: Điều chỉnh cho các thiết bị nhỏ hơn */
+@media (max-width: 768px) {
+  .account-form {
+    width: 90%; /* Form chiếm 100% chiều rộng trên màn hình nhỏ */
+    margin: 20px; /* Giảm khoảng cách từ các cạnh */
+    padding: 15px; /* Giảm padding để phù hợp với không gian */
+  }
+
+  .page-title {
+    font-size: 20px; /* Giảm kích thước tiêu đề */
+  }
+
+  .form-group {
+    margin-bottom: 10px; /* Giảm khoảng cách giữa các nhóm nhập liệu */
+  }
+
+  .form-label {
+    font-size: 14px; /* Giảm kích thước font của nhãn */
+  }
+
+  .form-control {
+    font-size: 14px; /* Giảm kích thước font của ô nhập liệu */
+    padding: 10px; /* Tăng padding để dễ nhập liệu */
+  }
+
+  .btn-change-password {
+    font-size: 14px; /* Giảm kích thước font của nút */
+    padding: 6px 10px; /* Giảm padding */
+  }
+
+  .button-container {
+    flex-direction: column; /* Xếp các nút theo chiều dọc */
+    gap: 10px; /* Thêm khoảng cách giữa các nút */
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%; /* Các nút chiếm 100% chiều rộng */
+  }
+
+  .btn-close {
+    width: 100%; /* Đảm bảo nút đóng chiếm toàn bộ chiều rộng */
+  }
 }
 
-.btn-secondary:hover {
-  background-color: #e2e6ea;
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 18px; /* Giảm kích thước tiêu đề thêm một lần nữa */
+  }
+
+  .form-control {
+    font-size: 10px; /* Giảm kích thước font cho ô nhập liệu */
+    padding: 8px; /* Giảm padding để tiết kiệm không gian */
+  }
+
+  .btn-change-password {
+    font-size: 10px; /* Giảm kích thước font cho nút */
+    padding: 6px 8px; /* Giảm padding thêm */
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    font-size: 12px; /* Giảm kích thước font cho các nút */
+  }
+
+  .button-container {
+    gap: 8px; /* Giảm khoảng cách giữa các nút */
+  }
 }

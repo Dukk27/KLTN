@@ -22,10 +22,8 @@ namespace KLTN.Models
         [Required(ErrorMessage = "Diện tích là bắt buộc.")]
         public double DienTich { get; set; }
 
-        [Required(ErrorMessage = "Tiền điện là bắt buộc.")]
         public string TienDien { get; set; } = null!;
 
-        [Required(ErrorMessage = "Tiền nước là bắt buộc.")]
         public string TienNuoc { get; set; } = null!;
 
         [Required(ErrorMessage = "Tiền dịch vụ là bắt buộc.")]
@@ -41,8 +39,11 @@ namespace KLTN.Models
         public string? Image { get; set; }
 
         public DateTime TimePost { get; set; }
-        public string? ContactName2 { get; set; } 
+        public string? ContactName2 { get; set; }
         public string? ContactPhone2 { get; set; }
+
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
 
         // Foreign Key for House
         [ForeignKey("IdHouse")]

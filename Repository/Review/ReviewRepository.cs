@@ -71,4 +71,14 @@ public class ReviewRepository : IReviewRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<List<Review>> GetReviewsByIdsAsync(List<int> ids)
+    {
+        var reviews = await _context
+            .Reviews.Where(r => ids.Contains(r.IdReview))
+            .Include(r => r.IdUserNavigation)
+            .Include(r => r.IdHouseNavigation)
+            .ToListAsync();
+        return reviews;
+    }
 }

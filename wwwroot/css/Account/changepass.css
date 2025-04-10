@@ -1,0 +1,135 @@
+/* Thiết lập chung */
+.container {
+    font-family: Arial, sans-serif;
+}
+
+/* Tiêu đề */
+h2 {
+    margin-top: 30px;
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+}
+
+/* Form*/
+form {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+form div {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    color: #555;
+}
+
+/* Input */
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Nút gửi*/
+button {
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/*Nút toggle mật khẩu (mắt) */
+.btn-outline-secondary {
+    background-color: transparent;
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-outline-secondary i {
+    font-size: 18px;
+}
+
+/* Tablet - Màn hình <= 768px */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 20px;
+    }
+
+    form {
+        width: 90%;
+        padding: 15px;
+    }
+
+    input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .btn-outline-secondary {
+        padding: 6px 10px;
+        font-size: 16px;
+    }
+}
+
+/* Mobile - Màn hình <= 480px */
+@media (max-width: 480px) {
+    .container {
+        max-width: 95%;
+    }
+
+    form {
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .btn-outline-secondary {
+        padding: 5px 8px;
+    }
+}

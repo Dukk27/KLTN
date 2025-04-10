@@ -8,5 +8,7 @@ namespace KLTN.Models
         public DateTime? LastMessageTime { get; set; } // Thời gian tin nhắn cuối
         public int LastSenderId { get; set; } 
         public string LastSenderName { get; set; }
+        public bool HasUnreadMessages { get; set; } // Xác định tin nhắn chưa đọc
+
     }
 }

@@ -1,70 +1,97 @@
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", function () {
   // Lưu trữ các hàm giao tiếp giữa iframe và trang chính
   window.closeModalFromIframe = function () {
-    $("#createHouseModal").modal("hide");
+    const modal = document.getElementById("createHouseModal");
+    if (modal) {
+      let modalInstance = bootstrap.Modal.getInstance(modal);
+      if (modalInstance) modalInstance.hide();
+    }
   };
 
   // Xử lý sự kiện khi modal đóng
-  $("#createHouseModal").on("hidden.bs.modal", function () {
-    $("#createHouseIframe").attr("src", "");
-    $("#createHouseIframe").hide();
-    $("#loadingSpinner").show();
-  });
+  const createHouseModal = document.getElementById("createHouseModal");
+  if (createHouseModal) {
+    createHouseModal.addEventListener("hidden.bs.modal", function () {
+      const iframe = document.getElementById("createHouseIframe");
+      const loadingSpinner = document.getElementById("loadingSpinner");
 
-  $("#showCreateHouseForm").click(function () {
-    const isAuthenticated =
-      $("#userAuthenticated").val().toLowerCase() === "true";
-
-    if (!isAuthenticated) {
-      alert(
-        "Bạn chưa đăng nhập. Vui lòng đăng nhập để thực hiện chức năng này."
-      );
-      return;
-    }
-
-    $("#createHouseModal").modal("show");
-    $("#loadingSpinner").show();
-    $("#createHouseIframe").hide();
-
-    var iframeSrc = "/House/CreatePartial";
-    $("#createHouseIframe").attr("src", iframeSrc);
-
-    $("#createHouseIframe").on("load", function () {
-      $("#loadingSpinner").hide();
-      $("#createHouseIframe").show();
-
-      try {
-        var iframeHeight = $("#createHouseIframe")
-          .contents()
-          .find("body")
-          .height();
-        $("#createHouseIframe").height(iframeHeight + 50);
-      } catch (e) {
-        console.error("Không thể điều chỉnh chiều cao iframe:", e);
-        $("#createHouseIframe").height(600);
+      if (iframe) {
+        iframe.src = "";
+        iframe.style.display = "none";
       }
+      if (loadingSpinner) loadingSpinner.style.display = "block";
+    });
+  }
 
-      try {
-        $("#createHouseIframe")[0].contentWindow.closeModal =
-          window.closeModalFromIframe;
-      } catch (e) {
-        console.error("Không thể truyền hàm closeModal vào iframe:", e);
+  const showCreateHouseForm = document.getElementById("showCreateHouseForm");
+  if (showCreateHouseForm) {
+    showCreateHouseForm.addEventListener("click", function () {
+      const userAuth = document.getElementById("userAuthenticated");
+      const isAuthenticated = userAuth && userAuth.value.toLowerCase() === "true";
+
+      // if (!isAuthenticated) {
+      //   alert("Bạn chưa đăng nhập. Vui lòng đăng nhập để thực hiện chức năng này.");
+      //   return;
+      // }
+
+      const modal = new bootstrap.Modal(document.getElementById("createHouseModal"));
+      modal.show();
+
+      const loadingSpinner = document.getElementById("loadingSpinner");
+      const iframe = document.getElementById("createHouseIframe");
+
+      if (loadingSpinner) loadingSpinner.style.display = "block";
+      if (iframe) {
+        iframe.style.display = "none";
+        iframe.src = "/House/CreatePartial";
+
+        iframe.onload = function () {
+          if (loadingSpinner) loadingSpinner.style.display = "none";
+          iframe.style.display = "block";
+
+          try {
+            let iframeHeight = iframe.contentWindow.document.body.scrollHeight;
+            iframe.style.height = iframeHeight + 50 + "px";
+          } catch (e) {
+            console.error("Không thể điều chỉnh chiều cao iframe:", e);
+            iframe.style.height = "600px";
+          }
+
+          try {
+            iframe.contentWindow.closeModal = window.closeModalFromIframe;
+          } catch (e) {
+            console.error("Không thể truyền hàm closeModal vào iframe:", e);
+          }
+        };
       }
+    });
+  }
+
+  // Đóng modal khi nhấn nút
+  document.querySelectorAll("#closeModalBtn, #closeModalFooterBtn").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const modal = bootstrap.Modal.getInstance(document.getElementById("createHouseModal"));
+      if (modal) modal.hide();
     });
   });
 
-  $("#closeModalBtn, #closeModalFooterBtn").click(function () {
-    $("#createHouseModal").modal("hide");
-  });
+  // Đóng modal khi ấn bên ngoài
+  if (createHouseModal) {
+    createHouseModal.addEventListener("click", function (event) {
+      if (event.target === createHouseModal) {
+        const modalInstance = bootstrap.Modal.getInstance(createHouseModal);
+        if (modalInstance) modalInstance.hide();
+      }
+    });
+  }
 });
 
+// Điều hướng đến trang chi tiết
 function goToDetail(houseId) {
   const detailUrl = `/Home/Detail?id=${houseId}`;
   fetch(detailUrl, {
     method: "GET",
-    headers: {
-      "X-Requested-With": "XMLHttpRequest",
-    },
+    headers: { "X-Requested-With": "XMLHttpRequest" },
   })
     .then((response) => {
       if (response.ok) {
@@ -79,14 +106,13 @@ function goToDetail(houseId) {
     });
 }
 
+// Reset form khi mở modal filter
 document.addEventListener("DOMContentLoaded", function () {
   const filterModal = document.getElementById("filterModal");
   if (filterModal) {
     filterModal.addEventListener("show.bs.modal", function () {
       const form = filterModal.querySelector("form");
-      if (form) {
-        form.reset();
-      }
+      if (form) form.reset();
     });
   }
 });

@@ -1,28 +1,38 @@
-/* Container for the entire detail page */
+
 .detail-container {
   padding: 20px;
-  max-width: 1100px;
-  margin: 0 auto;
-  font-size: 16px;
+  background-color: rgb(246, 240, 237);
 }
 
-/* Title styling */
 .section-title {
-  color: #007bff;
+  font-size: 24px;
   font-weight: bold;
-  border-bottom: 2px solid #007bff;
-  padding-bottom: 5px;
-  margin-top: 30px;
-  margin-bottom: 20px;
+  margin: 30px 0 20px;
+  color: #333;
+  text-align: center;
 }
 
-/* Layout for house details and image */
 .detail-content {
   display: flex;
-  flex-direction: column; /* Stack items vertically */
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
+  flex-direction: row;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+#houseImageCarousel {
+  margin-top: 10px;
+  flex: 1 1 500px;
+  max-width: 600px;
+}
+
+.preview-image {
+  height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.house-info {
+  flex: 1 1 400px;
 }
 
 /* Section for the house image */
@@ -38,11 +48,10 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Section for house information */
 .house-info {
   flex: 1;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1100px;
   text-align: left;
   padding: 20px;
   background-color: #f9f9f9;
@@ -72,34 +81,43 @@
   z-index: 1;
 }
 
-/* Layout for review and amenities sections */
-.amenities-list,
-.review-list {
-  padding-left: 20px;
-}
-
-.amenity-item,
-.review-item {
-  margin-bottom: 10px;
-}
-
-.review-form {
-  margin-top: 30px;
-  padding: 20px;
-  background-color: #f9f9f9;
+.amenity-item {
+  background-color: #fff;
+  padding: 10px 15px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
 }
 
-.star-rating input {
-  display: none;
+.review-section, .review-form {
+  margin-top: 20px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
 }
 
-.star-rating label {
-  font-size: 30px;
-  color: gold;
+.review-form textarea {
+  width: 100%;
+  height: 100px;
+  margin-top: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+.star-rating i {
+  font-size: 50px;
+  color: #ccc;
   cursor: pointer;
+  transition: color 0.2s;
 }
+
+.star-rating i.selected {
+  color: #ffc107;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -144,7 +162,7 @@
 }
 
 .house-info p {
-  font-size: 17px;
+  font-size: 20px;
   margin: 5px 0;
   font-family: Arial, sans-serif;
 }
@@ -160,6 +178,7 @@
 
 .review-item {
   background-color: #f1f1f1;
+  max-height: 80px;
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 15px;
@@ -410,23 +429,11 @@
   cursor: pointer;
 }
 
-/* css card ở phần nhà trọ khác của người đăng */
-.card {
-  height: 100%; /* Đảm bảo chiều cao các card bằng nhau */
-  display: flex;
-  flex-direction: column;
-}
-
-.card-body {
-  flex-grow: 1; /* Để phần nội dung tự co giãn */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Căn cách đều nội dung */
-}
-
-.card-img-top {
-  height: 200px; /* Đặt chiều cao cố định cho ảnh */
-  object-fit: cover; /* Giữ tỉ lệ ảnh mà không bị méo */
+.xem-chi-tiet-btn {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .no-houses-message {

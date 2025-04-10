@@ -1,0 +1,129 @@
+h2 {
+    font-family: Arial, sans-serif;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+} 
+/* --- Container chính --- */
+.notification-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Tiêu đề trang --- */
+.notification-container h2 {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* --- Danh sách thông báo --- */
+.notification-list {
+    list-style: none;
+    padding: 0;
+    min-height: 300px;
+}
+
+.notification-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    background: #f8f9fa;
+    transition: background 0.3s;
+}
+
+/* --- Trạng thái chưa đọc (nổi bật hơn) --- */
+.notification-list li.font-weight-bold {
+    background: #e3f2fd;
+    font-weight: bold;
+    color: #0275d8;
+}
+
+/* --- Trạng thái đã đọc (màu nhẹ hơn) --- */
+.notification-list li.text-muted {
+    background: #f1f1f1;
+    color: #6c757d;
+}
+
+/* --- Nút hành động (Đánh dấu đã đọc, Xóa) --- */
+.notification-list button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+/* --- Nút đánh dấu đã đọc --- */
+.notification-list .mark-read {
+    background: #28a745;
+    color: white;
+    margin-right: 10px;
+}
+
+.notification-list .mark-read:hover {
+    background: #218838;
+}
+
+/* --- Nút xóa thông báo --- */
+.notification-list .delete {
+    background: #dc3545;
+    color: white;
+}
+
+.notification-list .delete:hover {
+    background: #c82333;
+}
+
+.notification-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.notification-actions button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.mark-all-read {
+    background: #17a2b8;
+    color: white;
+}
+
+.mark-all-read:hover {
+    background: #138496;
+}
+
+.delete-all {
+    background: #dc3545;
+    color: white;
+}
+
+.delete-all:hover {
+    background: #c82333;
+}
+
+.text-center.text-muted {
+    height: 300px; 
+    line-height: 300px; /* Canh giữa theo chiều dọc */
+    text-align: center; /* Canh giữa theo chiều ngang */
+    font-size: 20px; 
+    color: #6c757d; 
+}
+

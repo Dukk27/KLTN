@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using KLTN.Helpers;
 using KLTN.Models;
 using KLTN.Repositories;
 using KLTN.ViewModels;
@@ -16,13 +17,17 @@ namespace KLTN.Controllers
         private readonly IAmenityRepository _amenityRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly KLTNContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly EmailService _emailService;
 
         public HomeController(
             IHouseRepository houseRepository,
             IHouseTypeRepository houseTypeRepository,
             IAmenityRepository amenityRepository,
             IAccountRepository accountRepository,
-            KLTNContext context
+            KLTNContext context,
+            IConfiguration configuration,
+            EmailService emailService
         )
         {
             _houseRepository = houseRepository;
@@ -30,6 +35,8 @@ namespace KLTN.Controllers
             _amenityRepository = amenityRepository;
             _accountRepository = accountRepository;
             _context = context;
+            _configuration = configuration;
+            _emailService = emailService;
         }
 
         public async Task<IActionResult> Index(
@@ -97,7 +104,24 @@ namespace KLTN.Controllers
                 IsAdmin = User.IsInRole("Admin"),
                 CurrentPage = pageNumber,
                 TotalPages = totalPages,
+                TotalPosts = totalHouses,
             };
+
+            int? currentUserId = null;
+            int unreadMessages = 0;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                currentUserId = await _accountRepository.GetUserIdByUsername(User.Identity.Name);
+                if (currentUserId.HasValue)
+                {
+                    unreadMessages = await _context
+                        .Messages.Where(m => m.ReceiverId == currentUserId.Value && !m.IsRead)
+                        .CountAsync();
+                }
+            }
+            ViewBag.CurrentUserId = currentUserId ?? 0;
+            ViewBag.UnreadMessages = unreadMessages; // Truyền số tin nhắn chưa đọc vào ViewBag
 
             return View(viewModel);
         }
@@ -181,9 +205,97 @@ namespace KLTN.Controllers
                 })
                 .ToList();
 
+            var otherHousesUser = _context
+                .Houses.Include(h => h.HouseDetails)
+                .Where(h => h.IdUser != house.IdUser && h.IdHouse != id)
+                .Take(3) // Lấy 3 nhà trọ khác
+                .Select(h => new House
+                {
+                    IdHouse = h.IdHouse,
+                    NameHouse = h.NameHouse,
+                    HouseDetails =
+                        h.HouseDetails.ToList() // Chuyển HashSet thành List
+                    ,
+                })
+                .ToList();
+
+            ViewBag.OtherHousesUser = otherHousesUser;
             ViewBag.OtherHouses = otherHouses;
 
             return PartialView("HouseDetails", house);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUnreadMessagesCount()
+        {
+            if (!User.Identity.IsAuthenticated)
+                return Json(new { count = 0 });
+
+            int? userId = await _accountRepository.GetUserIdByUsername(User.Identity.Name);
+            if (userId == null)
+                return Json(new { count = 0 });
+
+            int unreadCount = await _context
+                .Messages.Where(m => m.ReceiverId == userId && !m.IsRead)
+                .CountAsync();
+
+            return Json(new { count = unreadCount });
+        }
+
+        public IActionResult Error()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitFeedback(string userName, string message)
+        {
+            string subject = $"Góp ý từ người dùng: {userName}";
+            string body =
+                $@"
+                    <p><strong>Tên người gửi:</strong> {userName}</p>
+                    <p><strong>Nội dung góp ý:</strong> {message}</p>
+                ";
+            try
+            {
+                await _emailService.SendEmailAsync(
+                    emailType: "Appointment",
+                    toEmail: "dn596209@gmail.com",
+                    subject: subject,
+                    body: body
+                );
+
+                TempData["SuccessMessage"] = "Cảm ơn bạn đã gửi góp ý!";
+            }
+            catch (Exception ex)
+            {
+                TempData["SuccessMessage"] = "Đã xảy ra lỗi khi gửi góp ý. Vui lòng thử lại sau.";
+                Console.WriteLine($"Lỗi gửi góp ý: {ex.Message}");
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult GetAllHousesForMap()
+        {
+            var allHouses = _context
+                .Houses.Include(h => h.HouseDetails)
+                .Where(h => h.Status == HouseStatus.Active || h.Status == HouseStatus.Approved && h.HouseDetails.Any(d => d.Status == "Chưa cho thuê")) 
+                .Select(h => new
+                {
+                    Id = h.IdHouse,
+                    Name = h.NameHouse,
+                    Lat = h.HouseDetails.FirstOrDefault().Latitude,
+                    Lng = h.HouseDetails.FirstOrDefault().Longitude,
+                    Address = h.HouseDetails.FirstOrDefault().Address,
+                    Price = h
+                        .HouseDetails.FirstOrDefault()
+                        .Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")),
+                })
+                .ToList();
+
+            return Json(allHouses);
         }
     }
 }

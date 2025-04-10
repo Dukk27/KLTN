@@ -41,7 +41,7 @@ builder
     {
         options.LoginPath = "/Account/Login";
         options.LogoutPath = "/Account/Logout";
-        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.AccessDeniedPath = "/Home/Error";
     });
 
 builder.Services.AddAuthorization(options =>
@@ -50,7 +50,10 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddDbContext<KLTNContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+    ) // cải thiện hiệu suất khi truy vấn nhiều collection navigation
 );
 
 builder.Services.AddCors(options =>

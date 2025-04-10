@@ -81,7 +81,7 @@
         function confirmDelete(ids) {
             iziToast.show({
                 class: "iziToast-custom",
-                title: "🔔 Xác nhận xóa",
+                title: "Xác nhận xóa",
                 message: `Bạn có chắc muốn xóa ${ids.length > 1 ? "các bình luận" : "bình luận"} đã chọn?`,
                 position: "center",
                 timeout: false,
@@ -100,7 +100,7 @@
                                 data: JSON.stringify(ids),
                                 success: function (response) {
                                     iziToast.show({
-                                        title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                        title: response.success ? "Thành công!" : "Lỗi!",
                                         message: response.message,
                                         position: "topRight",
                                         color: response.success ? "green" : "red",
@@ -155,7 +155,7 @@
 
             iziToast.show({
                 class: "iziToast-custom",
-                title: "🔔 Xác nhận xóa",
+                title: "Xác nhận xóa",
                 message: "Bạn có chắc muốn xóa bình luận này?",
                 position: "center",
                 timeout: false,
@@ -171,7 +171,7 @@
 
                             $.post("@Url.Action("DeleteReview", "Admin")", { id: id }, function (response) {
                                 iziToast.show({
-                                    title: response.success ? "✅ Thành công!" : "❌ Lỗi!",
+                                    title: response.success ? "Thành công!" : "Lỗi!",
                                     message: response.message,
                                     position: "topRight",
                                     color: response.success ? "green" : "red",

@@ -92,7 +92,7 @@
 
         <!-- Thêm các phần khác của form tại đây -->
         
-        <div class="section">
+        @* <div class="section">
             <h4>Địa chỉ</h4>
             <div class="row">
                <div class="col-md-4">
@@ -121,7 +121,7 @@
                         <span id="wardError" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
+            </div> *@
             <div class="mt-2">
                 <label for="fullAddress">Địa chỉ đầy đủ *</label>
                 <input type="text" id="fullAddress" class="form-control required" placeholder="Nhập địa chỉ đầy đủ" required />
@@ -194,7 +194,7 @@
 }
 <script>
     $(document).ready(function () {
-        const apiBase = "https://provinces.open-api.vn/api/";
+        /*const apiBase = "https://provinces.open-api.vn/api/";
 
         // Kiểm tra API có phản hồi đúng không
         $.get(apiBase + "?depth=1", function (data) {
@@ -284,7 +284,7 @@
             
             $("#address").val(fullAddress);
             console.log("Địa chỉ đầy đủ:", fullAddress);
-        }
+        }*/
 
         // Xử lý xem trước hình ảnh
         $("#imageFile").change(function() {
@@ -302,7 +302,7 @@
         $("#createHouseForm").submit(function(e) {
             let isValid = true;
             
-            // Kiểm tra tỉnh/thành
+            /* // Kiểm tra tỉnh/thành
             if (!$("#province").val()) {
                 $("#provinceError").text("Vui lòng chọn Tỉnh/Thành phố");
                 isValid = false;
@@ -318,7 +318,7 @@
             if (!$("#ward").val()) {
                 $("#wardError").text("Vui lòng chọn Phường/Xã");
                 isValid = false;
-            }
+            }*/
             
             // Kiểm tra địa chỉ đầy đủ
             if (!$("#fullAddress").val().trim()) {

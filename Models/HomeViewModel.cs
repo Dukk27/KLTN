@@ -16,5 +16,6 @@ namespace KLTN.Models
         public int UserRole { get; set; }
         public int CurrentPage { get; set; } // Trang hiện tại
         public int TotalPages { get; set; } // Tổng số trang
+        public int TotalPosts { get; set; } // Tổng số bài đăng tìm thấy
     }
 }

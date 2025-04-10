@@ -20,33 +20,6 @@
     font-weight: bold;
 }
 
-.star-rating {
-    direction: rtl;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.star-rating input[type="radio"] {
-    display: none;
-}
-
-.star-rating label {
-    width: 70px; /* Kích thước cố định của ngôi sao */
-    height: 70px;
-    background-image: url("/img/star.png"); /* Hình ngôi sao mặc định */
-    background-size: cover;
-    cursor: pointer;
-    transition: background-image 0.2s ease; /* Chuyển đổi ảnh ngôi sao khi hover */
-}
-
-/* Khi hover hoặc chọn, đổi ngôi sao thành ngôi sao được chọn */
-.star-rating label:hover,
-.star-rating label:hover ~ label,
-.star-rating input:checked ~ label {
-    background-image: url("https://sharecode.vn/FilesUpload/News/images/Sang%20tao%20icons%20co%20do%20sao%20vang%20bang%20CSS3%201.jpg"); /* Ngôi sao màu vàng */
-}
-
 .review-form textarea {
     width: 100%;
     padding: 10px;

@@ -51,7 +51,7 @@ namespace KLTN.Controllers
 
             return View(model);
         }
- 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -123,7 +123,7 @@ namespace KLTN.Controllers
             model.House.HouseTypeId = model.SelectedHouseType;
 
             // Xử lý trạng thái bài đăng dựa vào số lượt miễn phí còn lại
-            if (user.FreePostsUsed < 3)
+            if (user.FreePostsUsed < 5)
             {
                 user.FreePostsUsed++;
                 model.House.Status = HouseStatus.Pending; // Nếu còn miễn phí, duyệt bài ngay
@@ -149,6 +149,21 @@ namespace KLTN.Controllers
                     _context.Add(userPost);
                     await _context.SaveChangesAsync();
 
+                    // Tạo thông báo cho Admin khi có bài đăng mới
+                    var adminAccounts = _context.Accounts.Where(u => u.Role == 0).ToList();
+                    foreach (var admin in adminAccounts)
+                    {
+                        var notification = new Notification
+                        {
+                            UserId = admin.IdUser, // Gửi thông báo cho Admin
+                            Message = $"📢 Bài đăng mới: '{model.House.NameHouse}' cần được duyệt.",
+                            CreatedAt = DateTime.Now,
+                            IsRead = false,
+                        };
+                        _context.Notifications.Add(notification);
+                    }
+
+                    await _context.SaveChangesAsync();
                     if (isAjaxRequest)
                     {
                         return Json(
@@ -172,7 +187,7 @@ namespace KLTN.Controllers
                             new
                             {
                                 success = true,
-                                message = "Bạn đã sử dụng hết 3 bài đăng miễn phí. Vui lòng thanh toán để tiếp tục.",
+                                message = "Bạn đã sử dụng hết 5 bài đăng miễn phí. Vui lòng thanh toán để tiếp tục.",
                                 redirectUrl = Url.Action(
                                     "Payment",
                                     "Payments",
@@ -216,7 +231,7 @@ namespace KLTN.Controllers
                 return Json(new { success = false, message = "Người dùng không tồn tại." });
             }
 
-            int freePostsRemaining = Math.Max(3 - user.FreePostsUsed, 0);
+            int freePostsRemaining = Math.Max(5 - user.FreePostsUsed, 0);
 
             return Json(new { success = true, freePostsRemaining });
         }
@@ -227,7 +242,7 @@ namespace KLTN.Controllers
         {
             int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
             var user = await _context.Accounts.FindAsync(userId);
-            int freePostsRemaining = Math.Max(3 - (user?.FreePostsUsed ?? 0), 0);
+            int freePostsRemaining = Math.Max(5 - (user?.FreePostsUsed ?? 0), 0);
 
             var model = new HousePostViewModel
             {
@@ -239,6 +254,28 @@ namespace KLTN.Controllers
             };
 
             return PartialView("_CreateHousePartial", model);
+        }
+
+        [HttpPost]
+        public IActionResult SaveLatLng([FromBody] LatLngDto dto)
+        {
+            var houseDetail = _context.HouseDetails.FirstOrDefault(h => h.IdHouse == dto.HouseId);
+            if (houseDetail != null)
+            {
+                houseDetail.Latitude = dto.Lat;
+                houseDetail.Longitude = dto.Lng;
+                _context.SaveChanges();
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false, message = "Không tìm thấy bản ghi HouseDetail." });
+        }
+
+        public class LatLngDto
+        {
+            public int HouseId { get; set; }
+            public double Lat { get; set; }
+            public double Lng { get; set; }
         }
     }
 }

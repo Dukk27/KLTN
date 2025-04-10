@@ -143,6 +143,18 @@ namespace KLTN.Controllers
 
                 await _housesRepository.DeleteAsync(id);
 
+                // Gửi thông báo cho chủ bài đăng
+                var notification = new Notification
+                {
+                    UserId = house.IdUser,
+                    Message = $"❌ Bài đăng '{house.NameHouse}' của bạn đã bị xóa.",
+                    CreatedAt = DateTime.Now,
+                    IsRead = false,
+                };
+
+                _context.Notifications.Add(notification);
+                await _context.SaveChangesAsync();
+
                 return Json(new { success = true, message = "Xóa bài đăng thành công." });
             }
             catch
@@ -170,11 +182,64 @@ namespace KLTN.Controllers
 
             try
             {
+                var reviews = await _reviewRepository.GetReviewsByIdsAsync(ids);
+
+                if (reviews == null || !reviews.Any())
+                {
+                    return Json(
+                        new { success = false, message = "Không tìm thấy bình luận nào để xóa." }
+                    );
+                }
+
+                Console.WriteLine($"Tìm thấy {reviews.Count} bình luận để xóa.");
+
                 await _reviewRepository.DeleteReviewsAsync(ids);
-                return Json(new { success = true, message = "Đã xóa bình luận thành công!" });
+
+                // Kiểm tra nếu có bình luận hợp lệ để tạo thông báo
+                List<Notification> notifications = new List<Notification>();
+
+                foreach (var review in reviews)
+                {
+                    Console.WriteLine(
+                        $"Xử lý bình luận ID {review.IdReview} của User {review.IdUser}"
+                    );
+
+                    if (review.IdUser != null) // Kiểm tra UserId hợp lệ
+                    {
+                        notifications.Add(
+                            new Notification
+                            {
+                                UserId = review.IdUser,
+                                Message =
+                                    $"❌ Bình luận của bạn trên bài đăng '{review.IdHouseNavigation?.NameHouse}' đã bị xóa bởi Admin.",
+                                CreatedAt = DateTime.Now,
+                                IsRead = false,
+                            }
+                        );
+                    }
+                }
+
+                if (notifications.Any())
+                {
+                    _context.Notifications.AddRange(notifications);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    Console.WriteLine("Không có thông báo nào được thêm.");
+                }
+
+                return Json(
+                    new
+                    {
+                        success = true,
+                        message = "Đã xóa bình luận thành công và gửi thông báo!",
+                    }
+                );
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Lỗi: " + ex.Message);
                 return Json(
                     new { success = false, message = "Lỗi khi xóa bình luận: " + ex.Message }
                 );
@@ -193,6 +258,18 @@ namespace KLTN.Controllers
             house.Status = HouseStatus.Approved;
             await _housesRepository.UpdateAsync(house);
 
+            // Gửi thông báo cho chủ bài đăng
+            var notification = new Notification
+            {
+                UserId = house.IdUser,
+                Message = $"✅ Bài đăng '{house.NameHouse}' của bạn đã được duyệt!",
+                CreatedAt = DateTime.Now,
+                IsRead = false,
+            };
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
+
             return Json(new { success = true, message = "Bài đăng đã được duyệt." });
         }
 
@@ -207,6 +284,18 @@ namespace KLTN.Controllers
 
             house.Status = HouseStatus.Rejected;
             await _housesRepository.UpdateAsync(house);
+
+            // Gửi thông báo cho chủ bài đăng
+            var notification = new Notification
+            {
+                UserId = house.IdUser,
+                Message = $"❌ Bài đăng '{house.NameHouse}' của bạn đã bị từ chối.",
+                CreatedAt = DateTime.Now,
+                IsRead = false,
+            };
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
 
             return Json(new { success = true, message = "Bài đăng đã bị từ chối." });
         }

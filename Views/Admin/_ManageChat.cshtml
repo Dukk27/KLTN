@@ -42,54 +42,61 @@
 </table>
 
 <script>
-    $(document).ready(function () {
-        $(".delete-chat").click(function () {
-            var button = $(this); // Lưu button để dùng sau
-            var conversationId = button.data("conversation");
+    document.addEventListener("click", function (event) {
+        if (event.target.classList.contains("delete-chat")) {
+            let button = event.target;
+            let conversationId = button.getAttribute("data-conversation");
 
             iziToast.question({
-                class: 'iziToast-custom',
+                class: "iziToast-custom",
                 timeout: 20000,
                 close: false,
                 overlay: true,
-                displayMode: 'once',
-                id: 'question',
-                title: 'Xác nhận',
-                message: 'Bạn có chắc muốn xóa cuộc hội thoại này?',
-                position: 'center',
+                displayMode: "once",
+                id: "question",
+                title: "Xác nhận",
+                message: "Bạn có chắc muốn xóa cuộc hội thoại này?",
+                position: "center",
                 buttons: [
-                    ['<button><b>Đồng ý</b></button>', function (instance, toast) {
-                        $.post("/Admin/DeleteChat", { conversationId: conversationId }, function (data) {
-                            if (data.success) {
-                                // Hiển thị thông báo thành công
-                                iziToast.success({
-                                    title: 'Thành công',
-                                    message: 'Hội thoại đã được xóa!',
-                                    position: 'topRight',
-                                    timeout: 1000
-                                });
+                    ["<button><b>Đồng ý</b></button>", function (instance, toast) {
+                        fetch("/Admin/DeleteChat", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: new URLSearchParams({ conversationId: conversationId })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    iziToast.success({
+                                        title: "Thành công",
+                                        message: "Hội thoại đã được xóa!",
+                                        position: "topRight",
+                                        timeout: 1000
+                                    });
 
-                                // Xóa hàng chứa hội thoại ngay lập tức mà không cần reload
-                                button.closest("tr").fadeOut(500, function () {
-                                    $(this).remove();
-                                });
-                            } else {
-                                iziToast.error({
-                                    title: 'Lỗi',
-                                    message: data.message,
-                                    position: 'topRight'
-                                });
-                            }
-                        });
+                                    let row = button.closest("tr");
+                                    if (row) {
+                                        row.style.transition = "opacity 0.5s";
+                                        row.style.opacity = "0";
+                                        setTimeout(() => row.remove(), 500);
+                                    }
+                                } else {
+                                    iziToast.error({
+                                        title: "Lỗi",
+                                        message: data.message,
+                                        position: "topRight"
+                                    });
+                                }
+                            });
 
-                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
                     }, true],
 
-                    ['<button>Hủy</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    ["<button>Hủy</button>", function (instance, toast) {
+                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
                     }]
                 ]
             });
-        });
+        }
     });
 </script>

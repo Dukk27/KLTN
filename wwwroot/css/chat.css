@@ -83,7 +83,7 @@ h2 {
     margin-right: 15px;
 }
 
-button {
+#chat {
     padding: 8px 12px;
     background-color: #007bff;
     color: white;
@@ -95,7 +95,7 @@ button {
     margin-right: 15px;
 }
 
-button:hover {
+#chat:hover {
     background-color: #0056b3;
 }
 

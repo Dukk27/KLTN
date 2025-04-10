@@ -107,7 +107,7 @@ namespace KLTN.Controllers
                     {
                         UserId = userId,
                         HouseId = houseId,
-                        Amount = 100000,
+                        Amount = 50000,
                         PaymentStatus = "Success",
                         TransactionId = vnp_TransactionNo,
                         PaymentDate = DateTime.Now,
@@ -123,6 +123,21 @@ namespace KLTN.Controllers
                         IsFree = false,
                         PostDate = DateTime.Now,
                     };
+
+                    // Thêm thông báo cho admin khi bài đăng được duyệt sau thanh toán
+                    var adminAccounts = _context.Accounts.Where(u => u.Role == 0).ToList();
+                    foreach (var admin in adminAccounts)
+                    {
+                        var notification = new Notification
+                        {
+                            UserId = admin.IdUser, // Gửi thông báo cho Admin
+                            Message =
+                                $"💰 Bài đăng '{house.NameHouse}' đã được thanh toán và chờ duyệt.",
+                            CreatedAt = DateTime.Now,
+                            IsRead = false,
+                        };
+                        _context.Notifications.Add(notification);
+                    }
 
                     _context.UserPosts.Add(userPost);
                     await _context.SaveChangesAsync();

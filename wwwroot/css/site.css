@@ -18,7 +18,8 @@ body {
 }
 
 /* Đảm bảo trang có đủ chiều cao để footer nằm dưới đáy */
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -62,7 +63,6 @@ html, body {
   border-color: rgba(255, 255, 255, 0.5);
 }
 
-
 .login-container {
   display: flex;
   justify-content: center;
@@ -80,11 +80,6 @@ html, body {
   border-radius: 10px;
   background: #fff;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-body {
-padding-top: 70px; /* Giảm khoảng cách với header */
-padding-bottom: 50px; /* Giảm khoảng cách với footer */
 }
 
 /* Tiêu đề */
@@ -146,62 +141,213 @@ padding-bottom: 50px; /* Giảm khoảng cách với footer */
   opacity: 0;
 }
 
+/* Định dạng chung cho trang đăng ký */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  /* Điều chỉnh khoảng cách so với header/footer */
+  padding: 20px 0;
+}
 
-    /* Định dạng chung cho trang đăng ký */
-    .register-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: calc(100vh - 120px);
-      /* Điều chỉnh khoảng cách so với header/footer */
-      padding: 20px 0;
-  }
+/* Card chứa form đăng ký */
+.register-card {
+  max-width: 450px;
+  width: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
 
-  /* Card chứa form đăng ký */
-  .register-card {
-      max-width: 450px;
-      width: 100%;
-      padding: 20px;
-      border-radius: 10px;
-      background: #fff;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
+/* Điều chỉnh khoảng cách của body để header và footer không bị chồng chéo */
+body {
+  padding-top: 70px;
+  /* Giảm khoảng cách với header */
+  padding-bottom: 50px;
+  /* Giảm khoảng cách với footer */
+}
 
-  /* Điều chỉnh khoảng cách của body để header và footer không bị chồng chéo */
-  body {
-      padding-top: 70px;
-      /* Giảm khoảng cách với header */
-      padding-bottom: 50px;
-      /* Giảm khoảng cách với footer */
-  }
+/* Nút đăng ký */
+.register-card .btn-primary {
+  width: 100%;
+  background-color: #007bff;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
+}
 
-  /* Nút đăng ký */
-  .register-card .btn-primary {
-      width: 100%;
-      background-color: #007bff;
-      border: none;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      transition: 0.3s;
-  }
+.register-card .btn-primary:hover {
+  background-color: #0056b3;
+}
 
-  .register-card .btn-primary:hover {
-      background-color: #0056b3;
-  }
+/* Radio button */
+.register-card .form-check-input {
+  margin-right: 5px;
+}
 
-  /* Radio button */
-  .register-card .form-check-input {
-      margin-right: 5px;
-  }
+.register-card .form-check-label {
+  font-weight: normal;
+}
 
-  .register-card .form-check-label {
-      font-weight: normal;
-  }
+/* Căn giữa phần đăng nhập */
+.register-card p {
+  text-align: center;
+}
 
-  /* Căn giữa phần đăng nhập */
-  .register-card p {
-      text-align: center;
-  }
+/* Chatbox hiển thị ngay dưới nút */
+.chatbox {
+  position: absolute; /* Để chatbox hiển thị ngay dưới nút */
+  right: 0;
+  top: 150px; /* Để cách nút một chút */
+  width: 350px;
+  max-height: 500px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  display: none;
+  z-index: 1000;
+}
 
-  
+/* Header của chatbox */
+.chatbox-header {
+  background: #007bff;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Nội dung chat */
+.chatbox-body {
+  padding: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Danh sách tin nhắn */
+.chat-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.chat-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.chat-item:hover {
+  background: #f0f0f0;
+}
+
+/* Nút đóng chat */
+.close-chatbox {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+}
+
+.btn {
+  color: rgb(255, 255, 255) !important; 
+  transition: all 0.3s ease; /* Hiệu ứng mượt mà */
+}
+
+/* Nút Đăng tin ngay */
+#showCreateHouseForm {
+  background-color: #ff9f00; /* Màu nền vàng */
+  color: white; /* Màu chữ trắng */
+  border: none; /* Không có viền */
+  padding: 10px 20px; /* Khoảng cách trong nút */
+  font-size: 16px; /* Kích thước chữ */
+  border-radius: 5px; /* Bo tròn các góc */
+  display: flex;
+  align-items: center; /* Căn giữa nội dung theo chiều dọc */
+  justify-content: center; /* Căn giữa nội dung theo chiều ngang */
+  cursor: pointer; /* Hiển thị con trỏ khi hover */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Hiệu ứng khi hover */
+}
+
+/* Thêm hiệu ứng hover */
+#showCreateHouseForm:hover {
+  background-color: #e68900; /* Màu nền khi hover */
+  transform: scale(1.05); /* Phóng to nhẹ khi hover */
+}
+
+/* Thêm hiệu ứng focus */
+#showCreateHouseForm:focus {
+  outline: none; /* Xóa outline khi nhấn vào nút */
+}
+
+/* Icon bên trong nút */
+#showCreateHouseForm i {
+  margin-right: 10px; /* Khoảng cách giữa icon và chữ */
+  font-size: 18px; /* Kích thước icon */
+}
+
+/* Căn chỉnh nút mắt */
+.toggle-password {
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.btn-outline-secondary {
+  background-color: transparent;
+  border: 1px solid #ddd;
+  color: #333;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-outline-secondary i {
+  font-size: 18px;
+}
+
+#mapControlButtons {
+  position: fixed;
+  right: 20px;
+  top: 300px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* khoảng cách nhỏ hơn giữa 2 nút */
+}
+
+#mapControlButtons button {
+  display: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 18px;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+  background-color: white;
+  color: #007bff;
+  transition: all 0.3s ease;
+}
+
+#mapControlButtons button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.custom-marker {
+  background-image: url("https://cdn-icons-png.flaticon.com/512/684/684908.png"); /* icon location */
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}

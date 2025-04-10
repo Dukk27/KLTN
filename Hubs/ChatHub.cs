@@ -50,6 +50,12 @@ namespace KLTN.Hubs
                 await Clients
                     .Group(receiverId.ToString())
                     .SendAsync("ReceiveMessage", senderId, senderName, message, formattedTimestamp);
+
+                await Clients
+                    .Group(receiverId.ToString())
+                    .SendAsync("ReceiveNotification", senderId, senderName, message);
+                    
+                await Clients.Group(receiverId.ToString()).SendAsync("UpdateUnreadMessages");
             }
             catch (Exception ex)
             {

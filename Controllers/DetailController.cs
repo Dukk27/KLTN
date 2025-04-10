@@ -2,73 +2,120 @@ using System;
 using System.Threading.Tasks;
 using KLTN.Models;
 using KLTN.Repositories;
+using KLTN.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-[Route("api/[controller]")]
-[ApiController]
-public class DetailController : ControllerBase
+namespace KLTN.Controllers
 {
-    private readonly IHouseRepository _houseRepository;
-    private readonly IReviewRepository _reviewRepository;
-    private readonly IHouseTypeRepository _houseTypeRepository;
-    private readonly IAmenityRepository _amenityRepository;
-
-    public DetailController(
-        IHouseRepository houseRepository,
-        IReviewRepository reviewRepository,
-        IHouseTypeRepository houseTypeRepository,
-        IAmenityRepository amenityRepository
-    )
+    public class DetailController : Controller
     {
-        _houseRepository = houseRepository;
-        _reviewRepository = reviewRepository;
-        _houseTypeRepository = houseTypeRepository;
-        _amenityRepository = amenityRepository;
-    }
+        private readonly IHouseRepository _houseRepository;
+        private readonly IReviewRepository _reviewRepository;
+        private readonly KLTNContext _context;
 
-    [HttpGet("House/Detail/{id}")]
-    public async Task<IActionResult> GetHouseDetail(int id)
-    {
-        var house = await _houseRepository.GetHouseWithDetailsAsync(id);
-        //var houseType = _houseTypeRepository.GetHouseTypeName(house.IdHouseType);
-        if (house == null)
-            return NotFound(new { message = "Không tìm thấy nhà trọ." });
-
-        var reviews = await _reviewRepository.GetReviewsByHouseIdAsync(id);
-        return Ok(new { House = house, Reviews = reviews });
-    }
-
-    [HttpPost("house/detail/{id}/addreview")]
-    public async Task<IActionResult> AddHouseReview(int id, [FromBody] Review review)
-    {
-        var userId = HttpContext.Session.GetInt32("UserId");
-        if (userId == null)
-            return Unauthorized(new { message = "Hãy đăng nhập để được đánh giá." });
-        
-
-        ModelState.Remove("IdUserNavigation");
-
-        if (!ModelState.IsValid)
+        public DetailController(
+            IHouseRepository houseRepository,
+            IReviewRepository reviewRepository,
+            KLTNContext context
+        )
         {
-            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-            return BadRequest(new { message = "Dữ liệu đánh giá không hợp lệ.", errors = errors });
+            _houseRepository = houseRepository;
+            _reviewRepository = reviewRepository;
+            _context = context;
         }
 
-        review.IdHouse = id;
-        review.IdUser = userId.Value;
-        review.ReviewDate = DateTime.Now;
-        try
+        // Hiển thị chi tiết nhà
+        public async Task<IActionResult> Detail(int id)
         {
-            await _reviewRepository.AddReviewAsync(review);
-            return Ok(new { message = "Đánh giá đã được thêm thành công." });
+            var house = await _houseRepository.GetHouseWithDetailsAsync(id);
+            if (house == null)
+                return NotFound("Không tìm thấy nhà trọ.");
+
+            var reviews = await _reviewRepository.GetReviewsByHouseIdAsync(id);
+
+            var viewModel = new HouseDetailViewModel { House = house, Reviews = reviews };
+
+            return View(viewModel); // Trả về View với dữ liệu
         }
-        catch (Exception ex)
+
+        [HttpPost]
+        public async Task<IActionResult> AddReview(int id, [FromBody] Review review)
         {
-            return StatusCode(
-                500,
-                new { message = "Lỗi máy chủ khi thêm đánh giá.", details = ex.Message }
-            );
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return Json(new { success = false, message = "Hãy đăng nhập để đánh giá!" });
+            }
+
+            review.IdHouse = id;
+            review.IdUser = userId.Value;
+            review.ReviewDate = DateTime.Now;
+
+            try
+            {
+                // Thêm đánh giá vào database
+                await _reviewRepository.AddReviewAsync(review);
+
+                // Lấy lại đánh giá vừa thêm với thông tin người dùng
+                var newReview = await _reviewRepository.GetReviewByIdAsync(review.IdReview);
+                if (newReview == null)
+                {
+                    return Json(
+                        new { success = false, message = "Không tìm thấy đánh giá sau khi thêm!" }
+                    );
+                }
+
+                // Kiểm tra xem có thông tin người dùng không
+                string userName = newReview.IdUserNavigation?.UserName ?? "Người dùng ẩn danh";
+
+                // Lấy thông tin nhà để xác định chủ bài đăng
+                var house = await _houseRepository.GetHouseWithDetailsAsync(id);
+                if (house == null || house.IdUser == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy bài đăng!" });
+                }
+
+                // Tạo thông báo cho chủ bài đăng
+                var notification = new Notification
+                {
+                    UserId = house.IdUser, // Chủ nhà trọ nhận thông báo
+                    Message = $"Bài đăng '{house.NameHouse}' vừa nhận đánh giá từ {userName}.",
+                    CreatedAt = DateTime.Now,
+                    IsRead = false,
+                };
+
+                _context.Notifications.Add(notification);
+                await _context.SaveChangesAsync(); // Lưu thông báo vào DB
+
+                return Json(
+                    new
+                    {
+                        success = true,
+                        message = "Đánh giá thành công!",
+                        review = new
+                        {
+                            IdReview = newReview.IdReview,
+                            Content = newReview.Content,
+                            Rating = newReview.Rating,
+                            ReviewDate = newReview.ReviewDate?.ToString("dd/MM/yyyy"),
+                            UserName = userName,
+                        },
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi khi thêm đánh giá: " + ex.ToString()); // Log lỗi chi tiết
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Lỗi khi thêm đánh giá!",
+                        error = ex.Message,
+                    }
+                );
+            }
         }
     }
 }

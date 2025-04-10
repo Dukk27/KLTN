@@ -1,0 +1,79 @@
+h2,
+h3 {
+  font-family: Arial, sans-serif;
+  color: #333;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+/* .btn {
+  padding: 8px 8px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: white;
+  margin-right: 2px;
+  transition: background-color 0.3s;
+} */
+
+.card {
+  border-radius: 15px;
+  transition: transform 0.2s ease-in-out;
+  min-height: 240px;
+}
+.card:hover {
+  transform: scale(1.02);
+}
+.badge {
+  font-size: 0.85rem;
+  padding: 5px 10px;
+  border-radius: 12px;
+}
+
+/* Định dạng khác cho phần container */
+.container {
+  width: 90%;
+  margin: auto;
+  font-family: Arial, sans-serif;
+}
+
+@media (max-width: 992px) {
+  user-houses-page .action-buttons {
+    justify-content: center;
+  }
+
+  .user-houses-page .action-buttons .btn {
+    flex: 1 0 45%;
+    max-width: 48%;
+  }
+
+  button {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  user-houses-page .action-buttons {
+    justify-content: center;
+  }
+
+  .user-houses-page .action-buttons .btn {
+    flex: 1 0 45%;
+    max-width: 48%;
+  }
+  
+  .btn {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .iziToast {
+    width: 80% !important; /* Làm iziToast nhỏ lại trên mobile */
+    font-size: 14px !important; /* Giảm kích thước chữ */
+    padding: 10px !important; /* Thu gọn padding */
+    left: 40% !important; /* Canh giữa màn hình */
+    transform: translateX(-50%) !important;
+  }
+}

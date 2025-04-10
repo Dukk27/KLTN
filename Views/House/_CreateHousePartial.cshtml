@@ -13,7 +13,7 @@
 
         <!-- Trường liên hệ thứ 2 (có thể để trống) -->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6"> 
                 <div class="form-group">
                     <label asp-for="HouseDetail.ContactName2">Người liên hệ 2</label>
                     <input asp-for="HouseDetail.ContactName2" class="form-control"
@@ -60,15 +60,33 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label asp-for="HouseDetail.TienDien">Giá điện (vnđ/kwh) *</label>
-                    <input asp-for="HouseDetail.TienDien" class="form-control" placeholder="Giá điện (VD: 3.500)" />
+                    <label for="electricityBillingMethod">Cách tính tiền điện</label>
+                    <select id="electricityBillingMethod" class="form-control">
+                        <option value="theo-so">Tính theo số điện (VNĐ/kWh)</option>
+                        <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
+                        <option value="bao-gom">Bao gồm trong tiền trọ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HouseDetail.TienDien">Giá điện *</label>
+                    <input asp-for="HouseDetail.TienDien" class="form-control" id="tienDien"
+                        placeholder="Giá điện (VD: 3.500)" />
                     <span asp-validation-for="HouseDetail.TienDien" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label asp-for="HouseDetail.TienNuoc">Giá nước (vnđ/m³) *</label>
-                    <input asp-for="HouseDetail.TienNuoc" class="form-control" placeholder="Giá nước (VD: 10.000)" />
+                    <label for="waterBillingMethod">Cách tính tiền nước</label>
+                    <select id="waterBillingMethod" class="form-control">
+                        <option value="theo-so">Tính theo số nước (VNĐ/m³)</option>
+                        <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
+                        <option value="bao-gom">Bao gồm trong tiền trọ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HouseDetail.TienNuoc">Giá nước *</label>
+                    <input asp-for="HouseDetail.TienNuoc" class="form-control" id="tienNuoc"
+                        placeholder="Giá nước (VD: 10.000)" />
                     <span asp-validation-for="HouseDetail.TienNuoc" class="text-danger"></span>
                 </div>
             </div>
@@ -113,34 +131,6 @@
 
     <div class="section">
         <h4>Địa chỉ</h4>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="province">Tỉnh/Thành phố</label>
-                    <select id="province" class="form-control">
-                    </select>
-                    <span id="provinceError" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="district">Quận/Huyện</label>
-                    <select id="district" class="form-control">
-                        <option value="">-- Chọn Quận/Huyện --</option>
-                    </select>
-                    <span id="districtError" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="ward">Phường/Xã</label>
-                    <select id="ward" class="form-control">
-                        <option value="">-- Chọn Phường/Xã --</option>
-                    </select>
-                    <span id="wardError" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
         <div class="mt-2">
             <label for="fullAddress">Địa chỉ đầy đủ *</label>
             <input type="text" id="fullAddress" class="form-control required"
@@ -214,113 +204,10 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
 <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="~/js/House/create.js"></script>
 
 <script>
-    const goongApiKey = "RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy";
-
     $(document).ready(function () {
-        const apiBase = "https://provinces.open-api.vn/api/";
-
-        // Kiểm tra API có phản hồi đúng không
-        $.get(apiBase + "?depth=1", function (data) {
-            console.log("Danh sách tỉnh/thành phố:", data); // Log dữ liệu ra Console
-            if (data.length > 0) {
-                $("#province").append('<option value="">-- Chọn Tỉnh/Thành --</option>');
-                data.forEach(province => {
-                    $("#province").append(new Option(province.name, province.code));
-                });
-            } else {
-                console.error("API không trả về dữ liệu!");
-            }
-        }).fail(function () {
-            console.error("Không thể tải danh sách tỉnh/thành! Lỗi API.");
-        });
-
-        // Khi chọn tỉnh, load danh sách quận/huyện
-        $("#province").change(function () {
-            let provinceId = $(this).val();
-            $("#district").empty().append('<option value="">-- Chọn Quận/Huyện --</option>');
-            $("#ward").empty().append('<option value="">-- Chọn Phường/Xã --</option>');
-            $("#provinceError").text('');
-
-            if (provinceId) {
-                $.get(apiBase + "p/" + provinceId + "?depth=2", function (data) {
-                    console.log("Danh sách quận/huyện:", data.districts);
-                    if (data.districts.length > 0) {
-                        data.districts.forEach(district => {
-                            $("#district").append(new Option(district.name, district.code));
-                        });
-                    } else {
-                        console.warn("Không có quận/huyện nào cho tỉnh này!");
-                    }
-                }).fail(function () {
-                    console.error("Không thể tải danh sách quận/huyện! Lỗi API.");
-                });
-            }
-        });
-
-        // Khi chọn quận/huyện, load danh sách phường/xã
-        $("#district").change(function () {
-            let districtId = $(this).val();
-            $("#ward").empty().append('<option value="">-- Chọn Phường/Xã --</option>');
-            $("#districtError").text('');
-
-            if (districtId) {
-                $.get(apiBase + "d/" + districtId + "?depth=2", function (data) {
-                    console.log("Danh sách phường/xã:", data.wards);
-                    if (data.wards.length > 0) {
-                        data.wards.forEach(ward => {
-                            $("#ward").append(new Option(ward.name, ward.code));
-                        });
-                    } else {
-                        console.warn("Không có phường/xã nào cho quận này!");
-                    }
-                }).fail(function () {
-                    console.error("Không thể tải danh sách phường/xã! Lỗi API.");
-                });
-            }
-        });
-
-        // Khi chọn xong, cập nhật địa chỉ vào input ẩn
-        $("#ward").change(function () {
-            $("#wardError").text('');
-            updateAddress();
-        });
-
-        // Khi người dùng nhập địa chỉ cụ thể, cập nhật địa chỉ đầy đủ
-        $("#fullAddress").keyup(function () {
-            $("#fullAddressError").text('');
-            updateAddress();
-        });
-
-        function updateAddress() {
-            let province = $("#province option:selected").text();
-            let district = $("#district option:selected").text();
-            let ward = $("#ward option:selected").text();
-            let specificAddress = $("#fullAddress").val().trim();
-
-            // Kiểm tra nếu là giá trị mặc định thì không thêm vào địa chỉ
-            province = province === "-- Chọn Tỉnh/Thành --" ? "" : province;
-            district = district === "-- Chọn Quận/Huyện --" ? "" : district;
-            ward = ward === "-- Chọn Phường/Xã --" ? "" : ward;
-
-            // Kiểm tra giá trị nhập vào (debugging)
-            console.log("Giá trị địa chỉ nhập tay:", specificAddress);
-
-            let fullAddress = "";
-
-            if (specificAddress.includes(",") && ($("#province").val() || $("#district").val() || $("#ward").val())) {
-                specificAddress = "";
-                $("#fullAddress").val(""); // Xóa input nhập tay
-            }
-
-            let addressParts = [specificAddress, ward, district, province].filter(part => part !== "");
-            fullAddress = addressParts.join(", ");
-
-            $("#address").val(fullAddress);
-            console.log("Địa chỉ đầy đủ:", fullAddress);
-        }
-
         $(document).ready(function () {
             $("#createHouseForm").submit(function (e) {
                 e.preventDefault(); // Ngăn chặn form submit ngay lập tức
@@ -349,19 +236,9 @@
                     isValid = false;
                 }
 
-                // Kiểm tra giá điện, giá nước, giá dịch vụ (phải là số dương)
-                let tienDien = parseFloat($("#HouseDetail_TienDien").val());
-                let tienNuoc = parseFloat($("#HouseDetail_TienNuoc").val());
+                // Kiểm tra giá dịch vụ (phải là số dương)
                 let tienDv = parseFloat($("#HouseDetail_TienDv").val());
 
-                if (isNaN(tienDien) || tienDien < 0) {
-                    $("#HouseDetail_TienDien").next(".text-danger").text("Giá điện phải là số dương!");
-                    isValid = false;
-                }
-                if (isNaN(tienNuoc) || tienNuoc < 0) {
-                    $("#HouseDetail_TienNuoc").next(".text-danger").text("Giá nước phải là số dương!");
-                    isValid = false;
-                }
                 if (isNaN(tienDv) || tienDv < 0) {
                     $("#HouseDetail_TienDv").next(".text-danger").text("Giá dịch vụ phải là số dương!");
                     isValid = false;
@@ -383,7 +260,7 @@
 
                     if (firstError.length) {
                         $('html, body').animate({
-                            scrollTop: firstError.offset().top - 100
+                            scrollTop: firstError.offset().top - 300
                         }, 500);
                     }
                     return;
@@ -397,7 +274,7 @@
                         timeout: 20000,
                         close: false,
                         overlay: true,
-                        title: '🔔 Sử dụng bài đăng miễn phí?',
+                        title: 'Sử dụng bài đăng miễn phí?',
                         message: `Bạn còn ${freePostsRemaining} bài đăng miễn phí. Bạn có muốn sử dụng không?`,
                         position: 'center',
                         icon: "fa fa-question-circle",
@@ -418,7 +295,7 @@
                         timeout: 20000,
                         close: false,
                         overlay: true,
-                        title: '🔔 Xác nhận thanh toán',
+                        title: 'Xác nhận thanh toán',
                         message: 'Bạn đã hết lượt đăng miễn phí. Phí đăng bài là 50.000 VNĐ/bài. Bạn có muốn tiếp tục không?',
                         position: 'center',
                         icon: "fa fa-question-circle",
@@ -435,97 +312,51 @@
                 }
             });
         });
-    });
 
-    // Xử lý xem trước hình ảnh
-    $("#imageFile").change(function () {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                $('#imagePreview').html('<img src="' + e.target.result + '" alt="Preview" style="max-width: 200px;" />');
-            }
-            reader.readAsDataURL(file);
-        }
-    });
+        function updateElectricityPrice() {
+            let method = document.getElementById("electricityBillingMethod")?.value;
+            let input = document.getElementById("tienDien");
 
-    $(document).ready(function () {
-        $("#imageFiles").change(function () {
-            const files = this.files;
-            const previewContainer = $("#imagePreview");
-            previewContainer.empty(); // Xóa ảnh cũ
-
-            if (files.length > 5) {
-                $("#imageError").text("Chỉ được tải lên tối đa 5 ảnh.");
-                this.value = ""; // Xóa file đã chọn
-                return;
+            if (method === "bao-gom") {
+                input.value = "Bao gồm trong tiền trọ";
+                input.readOnly = true;
             } else {
-                $("#imageError").text("");
-            }
-
-            $.each(files, function (index, file) {
-                if (index < 5) { // Giới hạn 5 ảnh
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        previewContainer.append(`
-                        <div class="preview-item">
-                            <img src="${e.target.result}" alt="Preview">
-                            <button type="button" class="btn btn-danger btn-sm remove-image">X</button>
-                        </div>
-                    `);
-                    };
-                    reader.readAsDataURL(file);
+                if (input.readOnly) {
+                    input.value = "";
                 }
-            });
-        });
+                input.readOnly = false;
 
-        // Xử lý xóa ảnh
-        $(document).on("click", ".remove-image", function () {
-            $(this).parent().remove();
-            if ($("#imagePreview").children().length === 0) {
-                $("#imageFiles").val("");
-            }
-        });
-    });
-
-    // Gợi ý địa chỉ
-    $(document).ready(function () {
-        $("#fullAddress").on("input", function () {
-            let inputText = $(this).val().trim();
-            if (inputText.length < 3) {
-                $("#addressSuggestions").empty();
-                return;
-            }
-
-            let apiUrl = `https://rsapi.goong.io/Place/AutoComplete?api_key=${goongApiKey}&input=${encodeURIComponent(inputText)}`;
-
-            $.getJSON(apiUrl, function (data) {
-                $("#addressSuggestions").empty();
-                if (data.predictions) {
-                    data.predictions.forEach(item => {
-                        let listItem = `<li class="list-group-item address-item" data-address="${item.description}">${item.description}</li>`;
-                        $("#addressSuggestions").append(listItem);
-                    });
+                let value = input.value.replace(/\D/g, "");
+                if (value) {
+                    input.value = method === "theo-so" ? value + " VND/kWh" : value + " VND/Tháng";
                 }
-            });
-        });
-
-        // Khi người dùng chọn một địa chỉ gợi ý
-        $(document).on("click", ".address-item", function () {
-            let selectedAddress = $(this).data("address");
-            $("#fullAddress").val(selectedAddress);
-            $("#addressSuggestions").empty();
-            $("#address").val(selectedAddress); // Lưu vào input ẩn
-
-            $("#province").val("").trigger("change");
-            $("#district").empty().append('<option value="">-- Chọn Quận/Huyện --</option>');
-            $("#ward").empty().append('<option value="">-- Chọn Phường/Xã --</option>');
-        });
-
-        $(document).on("click", function (event) {
-            if (!$(event.target).closest("#fullAddress, #addressSuggestions").length) {
-                $("#addressSuggestions").empty(); // Ẩn gợi ý khi nhấn ra ngoài
             }
-        });
+        }
+
+        function updateWaterPrice() {
+            let method = document.getElementById("waterBillingMethod")?.value;
+            let input = document.getElementById("tienNuoc");
+
+            if (method === "bao-gom") {
+                input.value = "Bao gồm trong tiền trọ";
+                input.readOnly = true;
+            } else {
+                if (input.readOnly) {
+                    input.value = "";
+                }
+                input.readOnly = false;
+
+                let value = input.value.replace(/\D/g, "");
+                if (value) {
+                    input.value = method === "theo-so" ? value + " VND/m³" : value + " VND/Tháng";
+                }
+            }
+        }
+
+        document.getElementById("electricityBillingMethod")?.addEventListener("change", updateElectricityPrice);
+        document.getElementById("tienDien")?.addEventListener("input", updateElectricityPrice);
+
+        document.getElementById("waterBillingMethod")?.addEventListener("change", updateWaterPrice);
+        document.getElementById("tienNuoc")?.addEventListener("input", updateWaterPrice);
     });
 </script>

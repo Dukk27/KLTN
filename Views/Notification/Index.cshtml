@@ -1,0 +1,38 @@
+@model IEnumerable<KLTN.Models.Notification>
+
+<link rel="stylesheet" href="~/css/Notification/index.css" asp-append-version="true" />
+<script src="~/js/Notification/index.js"></script>
+
+<h2>Thông báo</h2>
+
+<div class="notification-container">
+    @if (!Model.Any())
+    {
+        <p class="text-center text-muted">Không có thông báo nào.</p>
+    }
+    else
+    {
+        <div class="notification-actions">
+            <button class="mark-all-read" onclick="markAllAsRead()">Đánh dấu tất cả là đã đọc</button>
+            <button class="delete-all" onclick="deleteAllNotifications()">Xóa tất cả</button>
+        </div>
+
+        <ul class="notification-list">
+            @foreach (var notification in Model)
+            {
+                <li class="@(notification.IsRead ? "text-muted" : "font-weight-bold")">
+                    <span>@notification.Message - @notification.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                    <div>
+                        @if (!notification.IsRead)
+                        {
+                            <button class="mark-read" data-id="@notification.Id" onclick="markAsRead(@notification.Id)">Đánh dấu là
+                                đã đọc</button>
+                        }
+                        <button class="delete" data-id="@notification.Id"
+                            onclick="deleteNotification(@notification.Id)">Xóa</button>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+</div>
