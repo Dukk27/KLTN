@@ -206,6 +206,8 @@ body {
 .slider-container {
   width: 100%;
   margin: 0 auto;
+  visibility: hidden;
+
 }
 
 .slider-container img {
@@ -614,6 +616,10 @@ h5 {
     width: 96%;
   }
 
+  .btn-secondary {
+    margin-top: 10px;
+    width: 96%;
+  }
   .map-button {
     width: 100%;
   }

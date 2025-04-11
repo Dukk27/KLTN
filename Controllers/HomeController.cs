@@ -147,11 +147,51 @@ namespace KLTN.Controllers
                         .CountAsync();
                 }
             }
+
+            // Truyền các giá trị vào ViewBag để sử dụng trong View
             ViewBag.CurrentUserId = currentUserId ?? 0;
             ViewBag.UnreadMessages = unreadMessages; // Truyền số tin nhắn chưa đọc vào ViewBag
+            ViewBag.RoomType = roomType;
             ViewBag.SelectedProvince = province;
             ViewBag.SelectedDistrict = district;
             ViewBag.SelectedWard = ward;
+
+
+            // Tạo mô tả danh sách nhà trọ + bộ lọc cho người dùng  
+            string filterDescription = "";
+
+            if (!string.IsNullOrEmpty(roomType))
+            {
+                filterDescription += $"Loại phòng: {roomType}, ";
+            }
+            if (!string.IsNullOrEmpty(priceRange))
+            {
+                filterDescription += $"Giá: {priceRange.Replace("-", " - ")} VND, ";
+            }
+            if (amenities != null && amenities.Any())
+            {
+                filterDescription += $"Tiện nghi: {string.Join(", ", amenities)}, ";
+            }
+            if (!string.IsNullOrEmpty(province))
+            {
+                filterDescription += $"Tỉnh/TP: {province}, ";
+            }
+            if (!string.IsNullOrEmpty(district))
+            {
+                filterDescription += $"Quận/Huyện: {district}, ";
+            }
+            if (!string.IsNullOrEmpty(ward))
+            {
+                filterDescription += $"Phường/Xã: {ward}, ";
+            }
+
+            // Xóa dấu phẩy cuối cùng nếu có
+            if (!string.IsNullOrEmpty(filterDescription))
+            {
+                filterDescription = filterDescription.Trim().TrimEnd(',');
+            }
+
+            ViewBag.FilterDescription = filterDescription;
 
             return View(viewModel);
         }

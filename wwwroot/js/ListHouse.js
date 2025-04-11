@@ -129,23 +129,26 @@ function toggleChatList() {
   }
 }
 
-// Slide hiệu ứng
-$(document).ready(function() {
-  // Khởi tạo slick carousel
+$(document).ready(function () {
+  $('.slider-container').on('init', function (event, slick) {
+      $(this).css('visibility', 'visible');
+  });
+
   $('.slider-container').slick({
-      infinite: true, // Bật chế độ lặp vô hạn
-      slidesToShow: 1, // Chỉ hiển thị một slide tại một thời điểm
-      slidesToScroll: 1, // Cuộn một slide một lần
-      autoplay: true,  // Tự động chuyển đổi slide
-      autoplaySpeed: 2000, // Tốc độ tự động chuyển đổi
-      dots: true, // Hiển thị dot navigation
-      fade: true // Chuyển đổi fade giữa các slide
+      infinite: true,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      autoplay: true,
+      autoplaySpeed: 2000,
+      dots: true,
+      fade: true
   });
 
   AOS.init({
-      duration: 1000, // thời gian chạy hiệu ứng (ms)
-      once: true      // chỉ animate 1 lần khi scroll tới
+      duration: 1000,
+      once: true
   });
 });
+
 
 

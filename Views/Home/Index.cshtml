@@ -80,9 +80,6 @@
                                 <select id="ward" name="ward" class="form-control" data-selected="@ViewBag.SelectedWard" disabled></select>
                             </div>
                             <div>
-                                @* <button id="apply-location-filter" class="btn btn-primary">
-                                    <i class="fas fa-filter"></i> Áp dụng
-                                </button> *@
                                 <div class="d-flex">
                                     <button id="apply-location-filter" type="submit" class="btn btn-search w-20" style="margin-right: 10px;"><i class="fas fa-filter"></i>Áp dụng</button>
                                     <a href="@Url.Action("Index", "Home")" class="btn btn-secondary w-20 d-flex justify-content-center align-items-center">Xóa bộ lọc</a>
@@ -139,7 +136,13 @@
             <div class="row">
                 <!-- Phần bên trái: Danh sách bài đăng -->
                 <div class="col-md-8">
-                    <h1 style="color: rgb(35, 164, 207); padding-bottom: 15px;">Danh Sách Nhà Trọ</h1>
+                    <h1 style="color: rgb(35, 164, 207); padding-bottom: 15px;">
+                        Danh Sách Nhà Trọ
+                        @if (!string.IsNullOrEmpty(ViewBag.FilterDescription))
+                        {
+                            <small style="font-size: 18px; color:rgb(33, 106, 223);"><br />@ViewBag.FilterDescription</small>
+                        }
+                    </h1>
                     <h5 class="text-muted">Tổng <span style="color: #28a745;">@Model.TotalPosts</span> kết quả.</h5>                 
                     <div class="row">
                         @foreach (var house in Model.Houses)
@@ -150,7 +153,7 @@
                                         var firstImage = house.HouseDetails.FirstOrDefault()?.Image?
                                             .Split(',', StringSplitOptions.RemoveEmptyEntries)
                                             .FirstOrDefault();
-                                    }
+                                    } 
                                     <img src="@firstImage" class="card-img-top" alt="@house.NameHouse"
                                         style="height: 200px; object-fit: cover;">
 
@@ -228,17 +231,11 @@
                                     <option value="">Tất cả</option>
                                     @foreach (var houseType in Model.HouseTypes)
                                     {
-                                        <option>
-                                            <a href="@Url.Action("HousesByType", "Home", new { id = houseType.IdHouseType })">
-                                                @houseType.Name
-                                            </a>
+                                        var name = houseType.Name;
+                                        <option value="@name" @(ViewBag.RoomType == name ? "selected" : "")>
+                                            @name
                                         </option>
                                     }
-                                    @foreach (var houseType in Model.HouseType)
-                                    {
-                                        <!option value="@houseType.Value" @((ViewBag.RoomType == houseType.Value) ? "selected" :
-                                        "")>@houseType.Text</!option>
-                                    } }
                                 </select>
                             </div>
 

@@ -125,11 +125,11 @@
                         }
                         else
                         {
-                            @* <li class="nav-item">
+                            <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("Index", User.IsInRole("Admin") ? "Admin" : "Home")">Trang
                                     Chủ</a>
-                            </li> *@
-                            @if (User.Identity.IsAuthenticated) {
+                            </li>
+                            @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin")) {
                                 <a asp-action="ChatList" asp-controller="Chat" class="btn ml-2 btn-responsive" style="height: 45px">
                                     <i class="fas fa-comments"></i> Tin nhắn
                                     <span id="unreadMessagesBadge" class="badge bg-danger" style="display: none;">
