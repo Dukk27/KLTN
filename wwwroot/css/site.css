@@ -27,10 +27,7 @@ body {
   flex-direction: column;
 }
 
-/* Nội dung chính sẽ đẩy footer xuống nếu cần */
-.header {
-  flex: 1;
-}
+
 
 /* Footer cố định dưới đáy, không để khoảng trống thừa */
 .footer {
@@ -350,4 +347,17 @@ body {
   width: 32px;
   height: 32px;
   cursor: pointer;
+}
+
+/* Responsive chỉnh cho đẹp */
+@media (max-width: 991.98px) {
+  .navbar .navbar-collapse {
+      background-color: #007bff;
+      padding: 10px 15px;
+  }
+
+  .navbar-nav {
+      flex-direction: column;
+      gap: 10px;
+  }
 }

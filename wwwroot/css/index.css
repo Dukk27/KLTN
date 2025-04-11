@@ -214,6 +214,10 @@ body {
   object-fit: cover;
 }
 
+h5 {
+  font-size: 18px;
+}
+
 .hero-search-section {
   position: relative; /* Tạo vùng chứa tương đối */
   width: 100%;

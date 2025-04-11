@@ -13,7 +13,16 @@
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
+        <li class="breadcrumb-item">
+            @if (User.IsInRole("Admin"))
+            {
+                <a href="@Url.Action("Index", "Admin")">Trang Chủ</a>
+            }
+            else
+            {
+                <a href="@Url.Action("Index", "Home")">Trang Chủ</a>
+            }
+        </li>
         <li class="breadcrumb-item active" aria-current="page">Danh Sách Tin Nhắn</li>
     </ol>
 </nav>

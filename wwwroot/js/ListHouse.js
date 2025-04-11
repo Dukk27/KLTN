@@ -128,3 +128,24 @@ function toggleChatList() {
     });
   }
 }
+
+// Slide hiệu ứng
+$(document).ready(function() {
+  // Khởi tạo slick carousel
+  $('.slider-container').slick({
+      infinite: true, // Bật chế độ lặp vô hạn
+      slidesToShow: 1, // Chỉ hiển thị một slide tại một thời điểm
+      slidesToScroll: 1, // Cuộn một slide một lần
+      autoplay: true,  // Tự động chuyển đổi slide
+      autoplaySpeed: 2000, // Tốc độ tự động chuyển đổi
+      dots: true, // Hiển thị dot navigation
+      fade: true // Chuyển đổi fade giữa các slide
+  });
+
+  AOS.init({
+      duration: 1000, // thời gian chạy hiệu ứng (ms)
+      once: true      // chỉ animate 1 lần khi scroll tới
+  });
+});
+
+

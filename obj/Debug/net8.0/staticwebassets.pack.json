@@ -1,8 +1,8 @@
 {
   "Files": [
     {
-      "Id": "D:\\KLTN\\KLTN\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\NHNT.bundle.scp.css",
-      "PackagePath": "staticwebassets\\NHNT.bundle.scp.css"
+      "Id": "D:\\KLTN\\KLTN\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\KLTN.bundle.scp.css",
+      "PackagePath": "staticwebassets\\KLTN.bundle.scp.css"
     },
     {
       "Id": "D:\\KLTN\\KLTN\\wwwroot\\css\\Account\\changepass.css",
@@ -17,8 +17,20 @@
       "PackagePath": "staticwebassets\\css\\Admin\\account.css"
     },
     {
+      "Id": "D:\\KLTN\\KLTN\\wwwroot\\css\\Admin\\index.css",
+      "PackagePath": "staticwebassets\\css\\Admin\\index.css"
+    },
+    {
       "Id": "D:\\KLTN\\KLTN\\wwwroot\\css\\Admin\\postreport.css",
       "PackagePath": "staticwebassets\\css\\Admin\\postreport.css"
+    },
+    {
+      "Id": "D:\\KLTN\\KLTN\\wwwroot\\css\\Admin\\reportbyday.css",
+      "PackagePath": "staticwebassets\\css\\Admin\\reportbyday.css"
+    },
+    {
+      "Id": "D:\\KLTN\\KLTN\\wwwroot\\css\\Admin\\responsive.css",
+      "PackagePath": "staticwebassets\\css\\Admin\\responsive.css"
     },
     {
       "Id": "D:\\KLTN\\KLTN\\wwwroot\\css\\Chat\\chatlist.css",
@@ -905,20 +917,20 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
-      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.NHNT.Microsoft.AspNetCore.StaticWebAssets.props",
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.KLTN.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
     {
-      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.NHNT.props",
-      "PackagePath": "build\\NHNT.props"
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.KLTN.props",
+      "PackagePath": "build\\KLTN.props"
     },
     {
-      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.NHNT.props",
-      "PackagePath": "buildMultiTargeting\\NHNT.props"
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.KLTN.props",
+      "PackagePath": "buildMultiTargeting\\KLTN.props"
     },
     {
-      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.NHNT.props",
-      "PackagePath": "buildTransitive\\NHNT.props"
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.KLTN.props",
+      "PackagePath": "buildTransitive\\KLTN.props"
     }
   ],
   "ElementsToRemove": []

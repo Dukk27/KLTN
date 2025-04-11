@@ -165,13 +165,15 @@ namespace KLTN.Controllers
             }
         }
 
-        // // Quản lý bình luận
+        // Quản lý bình luận
         public async Task<IActionResult> ManageReviews()
         {
             var reviews = await _reviewRepository.GetAllReviewsAsync();
             return PartialView("_ManageReviews", reviews); // Trả về PartialView
         }
 
+
+        // Xóa bình luận
         [HttpPost]
         public async Task<IActionResult> DeleteSelectedReviews([FromBody] List<int> ids)
         {
@@ -300,6 +302,7 @@ namespace KLTN.Controllers
             return Json(new { success = true, message = "Bài đăng đã bị từ chối." });
         }
 
+        // Quản lý loại nhà
         public async Task<IActionResult> ManageHouseTypes()
         {
             var houseTypes = await _houseTypeRepository.GetAllHouseTypes();
@@ -358,6 +361,8 @@ namespace KLTN.Controllers
             }
         }
 
+
+        // Quản lý tiện nghi
         public async Task<IActionResult> ManageAmenities()
         {
             var amenities = await _amenityRepository.GetAllAmenitiesAsync();
@@ -416,6 +421,8 @@ namespace KLTN.Controllers
             }
         }
 
+
+        // Quản lý nhà trọ
         [Authorize]
         public async Task<IActionResult> ListHouseRoom()
         {
@@ -457,6 +464,8 @@ namespace KLTN.Controllers
             }
         }
 
+
+        // Quản lý báo cáo bài đăng
         [HttpGet]
         public async Task<IActionResult> PostReport()
         {
@@ -500,6 +509,8 @@ namespace KLTN.Controllers
             return PartialView("_PostReport", accountReports);
         }
 
+
+        // Quản lý chat
         public IActionResult ManageChat()
         {
             var messages = _context
@@ -620,6 +631,50 @@ namespace KLTN.Controllers
             await _accountRepository.UpdateAccountAsync(account);
 
             return Json(new { success = true, message = "Tài khoản đã được mở khóa." });
+        }
+
+
+        // Quản lý báo cáo bài đăng theo ngày
+        [HttpGet]
+        public IActionResult PostReportByDay()
+        {
+            var postsByDay = _context
+                .HouseDetails.Where(h => h.TimePost.Date == DateTime.Today)
+                .OrderByDescending(h => h.TimePost)
+                .Select(h => new PostByDayReportViewModel
+                {
+                    IdHouse = h.IdHouse,
+                    Address = h.Address,
+                    Price = h.Price,
+                    Status = h.Status.ToString(),
+                    TimePost = h.TimePost.Date,
+                })
+                .ToList();
+
+            return PartialView("_PostReportByDay", postsByDay);
+        }
+
+
+        // Quản lý báo cáo bài đăng theo khoảng thời gian
+        [HttpGet]
+        public IActionResult PostReportByDayFilter(DateTime startDate, DateTime endDate)
+        {
+            var report = _context
+                .HouseDetails.Where(h =>
+                    h.TimePost.Date >= startDate.Date && h.TimePost.Date <= endDate.Date
+                )
+                .Select(h => new
+                {
+                    timePost = h.TimePost,
+                    idHouse = h.IdHouse,
+                    address = h.Address,
+                    price = h.Price,
+                    status = h.Status,
+                })
+                .OrderByDescending(h => h.timePost)
+                .ToList();
+
+            return Json(report);
         }
     }
 }

@@ -29,7 +29,6 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
 <!-- JS của Slick Carousel -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-<!-- Thêm trong phần <head> hoặc trước </body> -->
 <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
@@ -63,6 +62,34 @@
                             <i class="fas fa-search"></i> Tìm kiếm
                         </button>
                     }
+                </div>
+
+                <div class="col-12">
+                    <div class="location-filter" style="margin-top: 20px;">
+                        <div class="d-flex gap-3 flex-wrap align-items-end">
+                            <div class="flex-grow-1">
+                                <h5 for="province">Tỉnh/Thành phố</h5>
+                                <select id="province" name="province" class="form-control" data-selected="@ViewBag.SelectedProvince"></select>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 for="district">Quận/Huyện</h5>
+                                <select id="district" name="district" class="form-control" data-selected="@ViewBag.SelectedDistrict" disabled></select>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 for="ward">Phường/Xã</h5>
+                                <select id="ward" name="ward" class="form-control" data-selected="@ViewBag.SelectedWard" disabled></select>
+                            </div>
+                            <div>
+                                @* <button id="apply-location-filter" class="btn btn-primary">
+                                    <i class="fas fa-filter"></i> Áp dụng
+                                </button> *@
+                                <div class="d-flex">
+                                    <button id="apply-location-filter" type="submit" class="btn btn-search w-20" style="margin-right: 10px;"><i class="fas fa-filter"></i>Áp dụng</button>
+                                    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary w-20 d-flex justify-content-center align-items-center">Xóa bộ lọc</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -226,6 +253,20 @@
                                         <label class="form-check-label">@amenity.Name</label>
                                     </div>
                                 }
+                            </div>
+
+                            <!-- Bộ lọc vị trí -->
+                            <div class="mb-3">
+                                <label for="provinceFilter">Tỉnh/Thành phố</label>
+                                <select id="provinceFilter" name="province" class="form-control"></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="districtFilter">Quận/Huyện</label>
+                                <select id="districtFilter" name="district" class="form-control" disabled></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="wardFilter">Phường/Xã</label>
+                                <select id="wardFilter" name="ward" class="form-control" disabled></select>
                             </div>
 
                             <!-- Nút áp dụng và xóa bộ lọc -->
@@ -400,23 +441,154 @@
                 markMessagesAsRead();
             });
         }
+
+        // Lọc nhà trọ theo tỉnh, huyện, xã
+        document.getElementById("apply-location-filter").addEventListener("click", function () {
+            const province = document.getElementById("province").value;
+            const district = document.getElementById("district").value;
+            const ward = document.getElementById("ward").value;
+
+            // Tạo query string
+            const params = new URLSearchParams();
+
+            if (province) params.append("province", province);
+            if (district) params.append("district", district);
+            if (ward) params.append("ward", ward);
+
+            // Redirect đến trang Index với các tham số lọc
+            window.location.href = "/Home/Index?" + params.toString();
+        });
     });
 
-    $(document).ready(function() {
-        // Khởi tạo slick carousel
-        $('.slider-container').slick({
-            infinite: true, // Bật chế độ lặp vô hạn
-            slidesToShow: 1, // Chỉ hiển thị một slide tại một thời điểm
-            slidesToScroll: 1, // Cuộn một slide một lần
-            autoplay: true,  // Tự động chuyển đổi slide
-            autoplaySpeed: 2000, // Tốc độ tự động chuyển đổi
-            dots: true, // Hiển thị dot navigation
-            fade: true // Chuyển đổi fade giữa các slide
+    // Load tỉnh, huyện, xã cho bộ lọc herosection
+    const provinceSelect = document.getElementById("province");
+    const districtSelect = document.getElementById("district");
+    const wardSelect = document.getElementById("ward");
+
+    async function loadProvinces() {
+        const res = await fetch("https://provinces.open-api.vn/api/p/");
+        const data = await res.json();
+        provinceSelect.innerHTML = '<option value="">Tất cả</option>';
+        data.forEach(p => {
+            const selected = p.name === provinceSelect.dataset.selected ? "selected" : "";
+            provinceSelect.innerHTML += `<option value="${p.name}" data-code="${p.code}" ${selected}>${p.name}</option>`;
         });
 
-        AOS.init({
-            duration: 1000, // thời gian chạy hiệu ứng (ms)
-            once: true      // chỉ animate 1 lần khi scroll tới
+        // Nếu đã chọn sẵn => load quận huyện
+        if (provinceSelect.dataset.selected) {
+            const selected = data.find(p => p.name === provinceSelect.dataset.selected);
+            if (selected) await loadDistricts(selected.code);
+        }
+    }
+
+    async function loadDistricts(code) {
+        const res = await fetch(`https://provinces.open-api.vn/api/p/${code}?depth=2`);
+        const data = await res.json();
+
+        districtSelect.innerHTML = '<option value="">Tất cả</option>';
+        data.districts.forEach(d => {
+            const selected = d.name === districtSelect.dataset.selected ? "selected" : "";
+            districtSelect.innerHTML += `<option value="${d.name}" data-code="${d.code}" ${selected}>${d.name}</option>`;
         });
+
+        districtSelect.disabled = false;
+
+        if (districtSelect.dataset.selected) {
+            const selectedDistrict = data.districts.find(d => d.name === districtSelect.dataset.selected);
+            if (selectedDistrict) await loadWards(selectedDistrict.code);
+        }
+    }
+
+    async function loadWards(code) {
+        const res = await fetch(`https://provinces.open-api.vn/api/d/${code}?depth=2`);
+        const data = await res.json();
+
+        wardSelect.innerHTML = '<option value="">Tất cả</option>';
+        data.wards.forEach(w => {
+            const selected = w.name === wardSelect.dataset.selected ? "selected" : "";
+            wardSelect.innerHTML += `<option value="${w.name}" ${selected}>${w.name}</option>`;
+        });
+
+        wardSelect.disabled = false;
+    }
+
+    provinceSelect.addEventListener("change", async function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const code = selectedOption.getAttribute("data-code") || selectedOption.value;
+
+        if (this.selectedIndex > 0) {
+            const res = await fetch(`https://provinces.open-api.vn/api/p`);
+            const provinces = await res.json();
+            const selected = provinces.find(p => p.name === provinceSelect.value);
+            if (selected) await loadDistricts(selected.code);
+        } else {
+            districtSelect.disabled = true;
+            wardSelect.disabled = true;
+            districtSelect.innerHTML = '<option value="">Tất cả</option>';
+            wardSelect.innerHTML = '<option value="">Tất cả</option>';
+        }
     });
+
+    districtSelect.addEventListener("change", async function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const code = selectedOption.getAttribute("data-code");
+        if (code) await loadWards(code);
+    });
+
+    document.addEventListener("DOMContentLoaded", loadProvinces);
+
+    // Lọc tỉnh huyện xã cho bộ lọc bên phải
+    const provinceFilter = document.getElementById("provinceFilter");
+    const districtFilter = document.getElementById("districtFilter");
+    const wardFilter = document.getElementById("wardFilter");
+
+    async function loadProvincesFilter() {
+        const res = await fetch("https://provinces.open-api.vn/api/p/");
+        const data = await res.json();
+        provinceFilter.innerHTML = '<option value="">Tất cả</option>';
+        data.forEach(p => {
+            provinceFilter.innerHTML += `<option value="${p.name}">${p.name}</option>`;
+        });
+    }
+
+    async function loadDistrictsFilter(code) {
+        districtFilter.innerHTML = '<option value="">Tất cả</option>';
+        wardFilter.innerHTML = '<option value="">Tất cả</option>';
+        wardFilter.disabled = true;
+
+        const res = await fetch(`https://provinces.open-api.vn/api/p/${code}?depth=2`);
+        const data = await res.json();
+        data.districts.forEach(d => {
+            districtFilter.innerHTML += `<option value="${d.name}" data-code="${d.code}">${d.name}</option>`;
+        });
+        districtFilter.disabled = false;
+    }
+
+    async function loadWardsFilter(code) {
+        wardFilter.innerHTML = '<option value="">Tất cả</option>';
+        const res = await fetch(`https://provinces.open-api.vn/api/d/${code}?depth=2`);
+        const data = await res.json();
+        data.wards.forEach(w => {
+            wardFilter.innerHTML += `<option value="${w.name}">${w.name}</option>`;
+        });
+        wardFilter.disabled = false;
+    }
+
+    provinceFilter.addEventListener("change", async function () {
+        const res = await fetch("https://provinces.open-api.vn/api/p");
+        const provinces = await res.json();
+        const selected = provinces.find(p => p.name === provinceFilter.value);
+        if (selected) await loadDistrictsFilter(selected.code);
+        else {
+            districtFilter.disabled = true;
+            wardFilter.disabled = true;
+        }
+    });
+
+    districtFilter.addEventListener("change", async function () {
+        const code = this.options[this.selectedIndex].getAttribute("data-code");
+        if (code) await loadWardsFilter(code);
+    });
+
+    document.addEventListener("DOMContentLoaded", loadProvincesFilter);
 </script>

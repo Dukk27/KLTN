@@ -2,68 +2,71 @@
 
 <link rel="stylesheet" href="~/css/iziToast.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="~/css/Admin/account.css">
 
 <h3 class="text-center mt-3">Quản lý bài đăng</h3>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tên nhà trọ</th>
-            <th>Địa chỉ</th>
-            <th>Giá</th>
-            <th>Người đăng</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var house in Model)
-        {
-            @if (house.Status == HouseStatus.Unpaid)
-        {
-            continue; // Bỏ qua bài chưa thanh toán
-        }
+<div class="table-responsive">
+
+    <table class="table table-bordered table-striped">
+        <thead>
             <tr>
-                <td>@house.IdHouse</td>
-                <td>@house.NameHouse</td>
-                <td>@house.HouseDetails.FirstOrDefault()?.Address</td>
-                <td>@house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</td>
-                <td>@house.IdUserNavigation.UserName</td>
-                <td>
-                    @if (house.Status == HouseStatus.Pending)
-                    {
-                        <span class="badge bg-warning text-dark">Chờ duyệt</span>
-                    }
-                    else if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden )
-                    {
-                        <span class="badge bg-success">Đã duyệt</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">Bị từ chối</span>
-                    }
-                </td>
-                <td>       
-                    <button class="btn btn-sm btn-primary btn-view-detail" onclick="viewDetail(@house.IdHouse, 'house')" title="Xem chi tiết bài đăng"><i class="fas fa-eye"></i></button>          
-   
-                    <button class="btn btn-sm btn-danger delete-house" data-id="@house.IdHouse" title="Xoá bài đăng"><i class="fas fa-trash-alt"></i></button>
-                    
-                    @if (house.Status == HouseStatus.Pending || house.Status == HouseStatus.Rejected)
-                    {
-                        <button class="btn btn-sm btn-success approve-house" data-id="@house.IdHouse"><i class="fas fa-check"></i> Duyệt</button>
-                    }
-
-                    @if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden)
-                    {
-                        <button class="btn btn-sm btn-danger reject-house" data-id="@house.IdHouse"><i class="fas fa-times"></i> Từ chối</button>
-                    }
-                </td>
+                <th>ID</th>
+                <th>Tên nhà trọ</th>
+                <th>Địa chỉ</th>
+                <th>Giá</th>
+                <th>Người đăng</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var house in Model)
+            {
+                @if (house.Status == HouseStatus.Unpaid)
+            {
+                continue; // Bỏ qua bài chưa thanh toán
+            }
+                <tr>
+                    <td>@house.IdHouse</td>
+                    <td>@house.NameHouse</td>
+                    <td>@house.HouseDetails.FirstOrDefault()?.Address</td>
+                    <td>@house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</td>
+                    <td>@house.IdUserNavigation.UserName</td>
+                    <td>
+                        @if (house.Status == HouseStatus.Pending)
+                        {
+                            <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                        }
+                        else if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden )
+                        {
+                            <span class="badge bg-success">Đã duyệt</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Bị từ chối</span>
+                        }
+                    </td>
+                    <td>       
+                        <button class="btn btn-sm btn-primary btn-view-detail" onclick="viewDetail(@house.IdHouse, 'house')" title="Xem chi tiết bài đăng"><i class="fas fa-eye"></i></button>          
+    
+                        <button class="btn btn-sm btn-danger delete-house" data-id="@house.IdHouse" title="Xoá bài đăng"><i class="fas fa-trash-alt"></i></button>
+                        
+                        @if (house.Status == HouseStatus.Pending || house.Status == HouseStatus.Rejected)
+                        {
+                            <button class="btn btn-sm btn-success approve-house" data-id="@house.IdHouse"><i class="fas fa-check"></i> Duyệt</button>
+                        }
 
+                        @if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden)
+                        {
+                            <button class="btn btn-sm btn-danger reject-house" data-id="@house.IdHouse"><i class="fas fa-times"></i> Từ chối</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 <!-- Thêm thư viện iziToast -->
 <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">

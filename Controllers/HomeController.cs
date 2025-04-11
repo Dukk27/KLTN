@@ -45,6 +45,9 @@ namespace KLTN.Controllers
             string sortBy,
             string roomType,
             List<string> amenities,
+            string province,
+            string district,
+            string ward,
             int pageNumber = 1, // Trang hiện tại (mặc định là 1)
             int pageSize = 8 // Số lượng phần tử mỗi trang
         )
@@ -74,6 +77,30 @@ namespace KLTN.Controllers
                 roomType,
                 amenities
             );
+
+            if (!string.IsNullOrEmpty(province))
+            {
+                string normProvince = NormalizeAddress(province);
+                houses = houses.Where(h =>
+                    h.HouseDetails.Any(d => NormalizeAddress(d.Address).Contains(normProvince))
+                );
+            }
+
+            if (!string.IsNullOrEmpty(district))
+            {
+                string normDistrict = NormalizeAddress(district);
+                houses = houses.Where(h =>
+                    h.HouseDetails.Any(d => NormalizeAddress(d.Address).Contains(normDistrict))
+                );
+            }
+
+            if (!string.IsNullOrEmpty(ward))
+            {
+                string normWard = NormalizeAddress(ward);
+                houses = houses.Where(h =>
+                    h.HouseDetails.Any(d => NormalizeAddress(d.Address).Contains(normWard))
+                );
+            }
 
             houses = houses
                 .Where(h => h.Status == HouseStatus.Active || h.Status == HouseStatus.Approved)
@@ -122,6 +149,9 @@ namespace KLTN.Controllers
             }
             ViewBag.CurrentUserId = currentUserId ?? 0;
             ViewBag.UnreadMessages = unreadMessages; // Truyền số tin nhắn chưa đọc vào ViewBag
+            ViewBag.SelectedProvince = province;
+            ViewBag.SelectedDistrict = district;
+            ViewBag.SelectedWard = ward;
 
             return View(viewModel);
         }
@@ -281,7 +311,11 @@ namespace KLTN.Controllers
         {
             var allHouses = _context
                 .Houses.Include(h => h.HouseDetails)
-                .Where(h => h.Status == HouseStatus.Active || h.Status == HouseStatus.Approved && h.HouseDetails.Any(d => d.Status == "Chưa cho thuê")) 
+                .Where(h =>
+                    h.Status == HouseStatus.Active
+                    || h.Status == HouseStatus.Approved
+                        && h.HouseDetails.Any(d => d.Status == "Chưa cho thuê")
+                )
                 .Select(h => new
                 {
                     Id = h.IdHouse,
@@ -296,6 +330,40 @@ namespace KLTN.Controllers
                 .ToList();
 
             return Json(allHouses);
+        }
+
+        private string NormalizeAddress(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return "";
+
+            input = input.ToLowerInvariant().Trim();
+
+            // Loại bỏ tiền tố hành chính (tỉnh, thành phố, quận, huyện, phường, xã, thị trấn, ...)
+            string[] prefixes = new[]
+            {
+                "tỉnh",
+                "thành phố",
+                "tp.",
+                "tp",
+                "t.p",
+                "quận",
+                "huyện",
+                "thị xã",
+                "phường",
+                "xã",
+                "thị trấn",
+            };
+
+            foreach (var prefix in prefixes)
+            {
+                input = input.Replace(prefix, "");
+            }
+
+            // Loại ký tự thừa
+            input = input.Replace("-", "").Replace(",", "").Replace(".", "").Trim();
+
+            return input;
         }
     }
 }

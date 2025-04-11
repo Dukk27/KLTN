@@ -5,79 +5,80 @@
 <link rel="stylesheet" href="~/css/iziToast.css">
 <link rel="stylesheet" href="~/css/Admin/account.css">
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tên người dùng</th>
-            <th>Số điện thoại</th>
-            <th>Email</th>
-            <th>Vai trò</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var account in Model)
-        {
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
             <tr>
-                <td>@account.IdUser</td>
-                <td>@account.UserName</td>
-                <td>@account.PhoneNumber</td>
-                <td>@account.Email</td>
-                <td>
-                    @switch (account.Role)
-                    {
-                        case 0:
-                            @:Admin
-                            break;
-                        case 1:
-                            @:Chủ trọ
-                            break;
-                        default:
-                            @:Người tìm phòng
-                            break;
-                    }
-                </td>
-                <td>
-                    @if (account.IsLocked)
-                    {
-                        <span class="badge bg-danger">Bị khoá</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-success">Hoạt động</span>
-                    }
-                </td>
-                <td>
-                    <a href="@Url.Action("Details", "Admin", new { id = account.IdUser })" class="btn btn-sm btn-primary"
-                        title="Xem chi tiết tài khoản">
-                        <i class="fas fa-eye"></i>
-                    </a>
-
-                    <button class="btn btn-sm btn-danger delete-account" data-id="@account.IdUser" title="Xoá tài khoản">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-
-                    @if (account.IsLocked)
-                    {
-                        <button class="btn btn-sm btn-success unlock-account" data-id="@account.IdUser"
-                            title="Mở khoá tài khoản">
-                            <i class="fas fa-unlock"></i>
-                        </button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-sm btn-warning lock-account" data-id="@account.IdUser" title="Khoá tài khoản">
-                            <i class="fas fa-lock"></i>
-                        </button>
-                    }
-                </td>
+                <th>ID</th>
+                <th>Tên người dùng</th>
+                <th>Số điện thoại</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var account in Model)
+            {
+                <tr>
+                    <td>@account.IdUser</td>
+                    <td>@account.UserName</td>
+                    <td>@account.PhoneNumber</td>
+                    <td>@account.Email</td>
+                    <td>
+                        @switch (account.Role)
+                        {
+                            case 0:
+                                @:Admin
+                                break;
+                            case 1:
+                                @:Chủ trọ
+                                break;
+                            default:
+                                @:Người tìm phòng
+                                break;
+                        }
+                    </td>
+                    <td>
+                        @if (account.IsLocked)
+                        {
+                            <span class="badge bg-danger">Bị khoá</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Hoạt động</span>
+                        }
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Details", "Admin", new { id = account.IdUser })" class="btn btn-sm btn-primary"
+                            title="Xem chi tiết tài khoản">
+                            <i class="fas fa-eye"></i>
+                        </a>
 
+                        <button class="btn btn-sm btn-danger delete-account" data-id="@account.IdUser" title="Xoá tài khoản">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+
+                        @if (account.IsLocked)
+                        {
+                            <button class="btn btn-sm btn-success unlock-account" data-id="@account.IdUser"
+                                title="Mở khoá tài khoản">
+                                <i class="fas fa-unlock"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm btn-warning lock-account" data-id="@account.IdUser" title="Khoá tài khoản">
+                                <i class="fas fa-lock"></i>
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 <!-- Thêm thư viện iziToast -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />

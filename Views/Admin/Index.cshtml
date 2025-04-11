@@ -16,12 +16,17 @@
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="~/css/Admin/index.css">
 
-<div class="container-fluid">
+<div class="container-fluid-menu">
+    <!-- Nút menu cho mobile -->
+    <button class="btn btn-primary d-md-none" id="toggleSidebarBtn" style="margin: 15px;">
+        <i class="fas fa-bars"></i> Menu
+    </button>
+
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3" id="sidebar">
-            <h3><i class="fas fa-cogs"></i> Quản Lý Hệ Thống</h3>
             <ul class="nav flex-column">
                 <li class="nav-item main-nav-item">
                     <a href="#" class="nav-link" id="manageAccountsLink">
@@ -58,7 +63,13 @@
 
                 <li class="nav-item main-nav-item">
                     <a href="#" class="nav-link" id="postReportLink">
-                        <i class="fas fa-file-alt"></i> Thống Kê Bài Đăng Theo Tài Khoản
+                        <i class="fas fa-file"></i> Thống Kê Bài Đăng Theo Tài Khoản
+                    </a>
+                </li>
+
+                <li class="nav-item main-nav-item">
+                    <a href="#" class="nav-link" id="postReportByDayLink">
+                        <i class="fas fa-file"></i> Thống Kê Bài Đăng Theo Ngày
                     </a>
                 </li>
             </ul>
@@ -72,43 +83,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    #sidebar {
-        background-color: #f8f9fa;
-        padding-top: 20px;
-    }
-
-    #sidebar .nav-item {
-        margin-bottom: 10px;
-    }
-
-    #sidebar .main-nav-item a {
-        font-size: 18px;
-        font-weight: 600;
-        padding: 10px 15px;
-    }
-
-    #sidebar .main-nav-item:hover a {
-        background-color: #e9ecef;
-    }
-
-    #content {
-        background-color: #fff;
-        padding: 20px;
-        border-left: 1px solid #ddd;
-    }
-
-    #sidebar i {
-        margin-right: 10px;
-        width: 20px;
-        text-align: center;
-    }
-
-    #sidebar h3 i {
-        margin-right: 10px;
-    }
-</style>
 
 @section Scripts {
     <script>
@@ -165,6 +139,27 @@
                     $('#contentPlaceholder').html(data);
                 });
             });
+
+            $('#postReportByDayLink').on('click', function (e) {
+                e.preventDefault();
+                $.get('@Url.Action("PostReportByDay", "Admin")', function (data) {
+                    $('#contentPlaceholder').html(data);
+                });
+            });
         });
     </script>
+
+    <script>
+        $('#toggleSidebarBtn').on('click', function () {
+            $('#sidebar').toggleClass('show');
+        });
+
+        // Đóng sidebar sau khi chọn menu (chỉ trên mobile)
+        $('#sidebar .nav-link').on('click', function () {
+            if (window.innerWidth < 768) {
+                $('#sidebar').removeClass('show');
+            }
+        });
+    </script>
+
 }

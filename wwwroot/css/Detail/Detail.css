@@ -446,3 +446,96 @@
   text-align: center; /* Căn giữa nội dung */
   margin-top: 15px; /* Khoảng cách phía trên */
 }
+
+.other-houses-list ul,
+.suggested-houses-list ul {
+    padding-left: 0;
+}
+
+.other-houses-list .list-group-item,
+.suggested-houses-list .list-group-item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.other-houses-list img,
+.suggested-houses-list img {
+    width: 150px;
+    height: 120px;
+    object-fit: cover;
+    margin-right: 15px;
+    border-radius: 8px;
+}
+
+.house-info-preview {
+    flex: 1;
+    min-width: 200px;
+}
+
+.xem-chi-tiet-btn {
+    margin-top: 10px;
+    white-space: nowrap;
+}
+
+/* Responsive behavior for small screens */
+@media (max-width: 768px) {
+    .appointment-form {
+        width: 90vw;
+        padding: 20px;
+    }
+
+    .appointment-form h3 {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    #appointmentDate {
+      font-size: 16px;
+      padding: 12px 12px;
+    }
+
+    .appointment-form label,
+    .appointment-form input,
+    .appointment-form textarea {
+        font-size: 14px;
+    }
+
+    .appointment-buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .appointment-buttons .btn {
+        width: 50%;
+    }
+    .other-houses-list .list-group-item,
+    .suggested-houses-list .list-group-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .other-houses-list img,
+    .suggested-houses-list img {
+        margin: 0 auto 10px auto;
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+    }
+
+    .house-info-preview {
+        width: 100%;
+    }
+
+    .xem-chi-tiet-btn {
+        margin-top: 70px;
+        margin-right: 265px;
+    }
+}
