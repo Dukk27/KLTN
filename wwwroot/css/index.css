@@ -243,6 +243,60 @@ h5 {
   z-index: 0; /* Nằm dưới nội dung */
 }
 
+/* Đảm bảo chiều cao của container select2 */
+.select2-selection {
+  height: 40px !important; /* Chiều cao chính xác */
+  padding: 8px 12px !important; /* Khoảng đệm cho phần tử */
+  font-size: 16px !important; /* Điều chỉnh kích thước chữ */
+  border-radius: 5px !important; /* Viền bo tròn */
+  border: 1px solid #ccc !important; /* Màu viền */
+}
+
+.select2-selection__arrow {
+  height: 41px !important; /* Chiều cao của mũi tên */
+}
+
+/* Chỉnh sửa khi dropdown mở rộng (hiển thị danh sách lựa chọn) */
+.select2-results {
+  max-height: 250px !important; /* Chiều cao tối đa của danh sách các lựa chọn */
+  overflow-y: auto !important; /* Cuộn dọc khi danh sách dài */
+  padding: 5px 0 !important; /* Padding dọc cho kết quả tìm kiếm */
+}
+
+/* Chỉnh sửa khi hover vào một mục trong dropdown */
+.select2-results__option--highlighted {
+  background-color: #f1f1f1 !important; /* Màu nền khi hover */
+  color: #007bff !important; /* Màu chữ khi hover */
+}
+
+/* Điều chỉnh khi select2 bị disabled */
+.select2-selection--single[aria-disabled="true"] {
+  background-color: #e9ecef !important; /* Màu nền khi disabled */
+  color: #6c757d !important; /* Màu chữ khi disabled */
+  border: 1px solid #ddd !important; /* Viền khi disabled */
+}
+
+/* Thêm khoảng cách giữa các dropdown */
+.location-filter .d-flex > div {
+  margin-bottom: 15px; /* Khoảng cách dưới mỗi dropdown */
+}
+
+/* Điều chỉnh chiều cao cho các dropdown trong form */
+.select2-container .select2-selection--single {
+  min-height: 42px !important; /* Đảm bảo chiều cao tối thiểu */
+}
+
+/* Chỉnh sửa các ô nhập liệu cho Select2 (tìm kiếm) */
+.select2-search {
+  padding: 5px 10px !important;
+}
+
+/* Cải thiện kiểu chữ cho các label */
+.location-filter h5 {
+  font-size: 16px;
+  margin-bottom: 8px; /* Khoảng cách giữa label và select */
+}
+
 .form-control.custom-input {
   height: 45px;
   width: 100%;

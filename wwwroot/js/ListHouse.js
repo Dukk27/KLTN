@@ -150,5 +150,185 @@ $(document).ready(function () {
   });
 });
 
+$(document).ready(function () {
+  // Khởi tạo Select2 cho các trường
+  $('#province, #district, #ward').select2({
+      width: '100%',
+      theme: 'classic',
+      placeholder: 'Chọn một tùy chọn',
+      allowClear: true
+  });
 
+  // Load tỉnh từ API và giữ lại giá trị đã chọn
+  async function loadProvinces() {
+      const res = await fetch("https://provinces.open-api.vn/api/p/");
+      const data = await res.json();
+      const provinceSelect = $('#province');
+      const selectedProvince = provinceSelect.data('selected');
 
+      provinceSelect.empty().append('<option value="">Tất cả</option>');
+      data.forEach(p => {
+          provinceSelect.append(`<option value="${p.name}" data-code="${p.code}" ${p.name === selectedProvince ? 'selected' : ''}>${p.name}</option>`);
+      });
+
+      // Nếu có tỉnh đã chọn thì load tiếp quận/huyện
+      if (selectedProvince) {
+          const selected = data.find(p => p.name === selectedProvince);
+          if (selected) await loadDistricts(selected.code);
+      }
+  }
+
+  // Load quận/huyện theo tỉnh và giữ lại giá trị đã chọn
+  async function loadDistricts(code) {
+      const res = await fetch(`https://provinces.open-api.vn/api/p/${code}?depth=2`);
+      const data = await res.json();
+      const districtSelect = $('#district');
+      const selectedDistrict = districtSelect.data('selected');
+
+      districtSelect.empty().append('<option value="">Tất cả</option>');
+      data.districts.forEach(d => {
+          districtSelect.append(`<option value="${d.name}" data-code="${d.code}" ${d.name === selectedDistrict ? 'selected' : ''}>${d.name}</option>`);
+      });
+
+      districtSelect.prop('disabled', false);
+
+      // Nếu có quận/huyện đã chọn thì load tiếp phường/xã
+      if (selectedDistrict) {
+          const selected = data.districts.find(d => d.name === selectedDistrict);
+          if (selected) await loadWards(selected.code);
+      }
+  }
+
+  // Load phường/xã theo quận/huyện và giữ lại giá trị đã chọn
+  async function loadWards(code) {
+      const res = await fetch(`https://provinces.open-api.vn/api/d/${code}?depth=2`);
+      const data = await res.json();
+      const wardSelect = $('#ward');
+      const selectedWard = wardSelect.data('selected');
+
+      wardSelect.empty().append('<option value="">Tất cả</option>');
+      data.wards.forEach(w => {
+          wardSelect.append(`<option value="${w.name}" ${w.name === selectedWard ? 'selected' : ''}>${w.name}</option>`);
+      });
+
+      wardSelect.prop('disabled', false);
+  }
+
+  // Khi chọn tỉnh
+  $('#province').on('change', async function () {
+      const provinceCode = $(this).find(':selected').data('code');
+      
+      // Reset quận/huyện và phường/xã khi thay đổi tỉnh
+      $('#district').prop('disabled', true).empty().append('<option value="">Tất cả</option>');
+      $('#ward').prop('disabled', true).empty().append('<option value="">Tất cả</option>');
+      
+      if (provinceCode) {
+          await loadDistricts(provinceCode);  // Load quận/huyện sau khi chọn tỉnh
+      }
+  });
+
+  // Khi chọn quận/huyện
+  $('#district').on('change', async function () {
+      const districtCode = $(this).find(':selected').data('code');
+      if (districtCode) {
+          await loadWards(districtCode);  // Load phường/xã sau khi chọn quận/huyện
+      } else {
+          $('#ward').prop('disabled', true).empty().append('<option value="">Tất cả</option>');
+      }
+  });
+
+  // Khởi tạo các tỉnh lúc load trang
+  loadProvinces();
+});
+
+// Lọc tỉnh, huyện, xã cho phần bên phải dùng select2
+$(document).ready(function () {
+  // Khởi tạo Select2 cho các trường
+  $('#provinceFilter, #districtFilter, #wardFilter').select2({
+      width: '100%',
+      theme: 'classic',
+      placeholder: 'Chọn một tùy chọn',
+      allowClear: true
+  });
+
+  // Load tỉnh từ API và giữ lại giá trị đã chọn
+  async function loadProvincesFilter() {
+      const res = await fetch("https://provinces.open-api.vn/api/p/");
+      const data = await res.json();
+      const provinceSelect = $('#provinceFilter');
+      const selectedProvince = provinceSelect.data('selected');
+
+      provinceSelect.empty().append('<option value="">Tất cả</option>');
+      data.forEach(p => {
+          provinceSelect.append(`<option value="${p.name}" data-code="${p.code}" ${p.name === selectedProvince ? 'selected' : ''}>${p.name}</option>`);
+      });
+
+      // Nếu có tỉnh đã chọn thì load tiếp quận/huyện
+      if (selectedProvince) {
+          const selected = data.find(p => p.name === selectedProvince);
+          if (selected) await loadDistrictsFilter(selected.code);
+      }
+  }
+
+  // Load quận/huyện theo tỉnh và giữ lại giá trị đã chọn
+  async function loadDistrictsFilter(code) {
+      const res = await fetch(`https://provinces.open-api.vn/api/p/${code}?depth=2`);
+      const data = await res.json();
+      const districtSelect = $('#districtFilter');
+      const selectedDistrict = districtSelect.data('selected');
+
+      districtSelect.empty().append('<option value="">Tất cả</option>');
+      data.districts.forEach(d => {
+          districtSelect.append(`<option value="${d.name}" data-code="${d.code}" ${d.name === selectedDistrict ? 'selected' : ''}>${d.name}</option>`);
+      });
+
+      districtSelect.prop('disabled', false);
+
+      // Nếu có quận/huyện đã chọn thì load tiếp phường/xã
+      if (selectedDistrict) {
+          const selected = data.districts.find(d => d.name === selectedDistrict);
+          if (selected) await loadWardsFilter(selected.code);
+      }
+  }
+
+  // Load phường/xã theo quận/huyện và giữ lại giá trị đã chọn
+  async function loadWardsFilter(code) {
+      const res = await fetch(`https://provinces.open-api.vn/api/d/${code}?depth=2`);
+      const data = await res.json();
+      const wardSelect = $('#wardFilter');
+      const selectedWard = wardSelect.data('selected');
+
+      wardSelect.empty().append('<option value="">Tất cả</option>');
+      data.wards.forEach(w => {
+          wardSelect.append(`<option value="${w.name}" ${w.name === selectedWard ? 'selected' : ''}>${w.name}</option>`);
+      });
+
+      wardSelect.prop('disabled', false);
+  }
+
+  // Khi chọn tỉnh
+  $('#provinceFilter').on('change', async function () {
+      const provinceCode = $(this).find(':selected').data('code');
+      
+      // Reset quận/huyện và phường/xã khi thay đổi tỉnh
+      $('#districtFilter').prop('disabled', true).empty().append('<option value="">Tất cả</option>');
+      $('#wardFilter').prop('disabled', true).empty().append('<option value="">Tất cả</option>');
+      
+      if (provinceCode) {
+          await loadDistrictsFilter(provinceCode);  // Load quận/huyện sau khi chọn tỉnh
+      }
+  });
+
+  // Khi chọn quận/huyện
+  $('#districtFilter').on('change', async function () {
+      const districtCode = $(this).find(':selected').data('code');
+      if (districtCode) {
+          await loadWardsFilter(districtCode);  // Load phường/xã sau khi chọn quận/huyện
+      } else {
+          $('#wardFilter').prop('disabled', true).empty().append('<option value="">Tất cả</option>');
+      }
+  });
+
+  // Gọi hàm khởi tạo
+  loadProvincesFilter();
+});
