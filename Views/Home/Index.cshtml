@@ -231,11 +231,17 @@
                                     <option value="">Tất cả</option>
                                     @foreach (var houseType in Model.HouseTypes)
                                     {
-                                        var name = houseType.Name;
-                                        <option value="@name" @(ViewBag.RoomType == name ? "selected" : "")>
-                                            @name
+                                        <option>
+                                            <a href="@Url.Action("HousesByType", "Home", new { id = houseType.IdHouseType })">
+                                                @houseType.Name
+                                            </a>
                                         </option>
                                     }
+                                    @foreach (var houseType in Model.HouseType)
+                                    {
+                                        <!option value="@houseType.Value" @((ViewBag.RoomType == houseType.Value) ? "selected" :
+                                        "")>@houseType.Text</!option>
+                                    } }
                                 </select>
                             </div>
 
@@ -255,15 +261,15 @@
                             <!-- Bộ lọc vị trí -->
                             <div class="mb-3">
                                 <label for="provinceFilter">Tỉnh/Thành phố</label>
-                                <select id="provinceFilter" name="province" class="form-control"></select>
+                                <select id="provinceFilter" name="province" class="form-control" data-selected="@ViewBag.SelectedProvince"></select>
                             </div>
                             <div class="mb-3">
                                 <label for="districtFilter">Quận/Huyện</label>
-                                <select id="districtFilter" name="district" class="form-control" disabled></select>
+                                <select id="districtFilter" name="district" class="form-control" data-selected="@ViewBag.SelectedDistrict" disabled></select>
                             </div>
                             <div class="mb-3">
                                 <label for="wardFilter">Phường/Xã</label>
-                                <select id="wardFilter" name="ward" class="form-control" disabled></select>
+                                <select id="wardFilter" name="ward" class="form-control" data-selected="@ViewBag.SelectedWard" disabled></select>
                             </div>
 
                             <!-- Nút áp dụng và xóa bộ lọc -->
@@ -544,8 +550,14 @@
         const data = await res.json();
         provinceFilter.innerHTML = '<option value="">Tất cả</option>';
         data.forEach(p => {
-            provinceFilter.innerHTML += `<option value="${p.name}">${p.name}</option>`;
+            const selected = p.name === provinceFilter.dataset.selected ? "selected" : "";
+            provinceFilter.innerHTML += `<option value="${p.name}" data-code="${p.code}" ${selected}>${p.name}</option>`;
         });
+
+        if (provinceFilter.dataset.selected) {
+            const selected = data.find(p => p.name === provinceFilter.dataset.selected);
+            if (selected) await loadDistrictsFilter(selected.code);
+        }
     }
 
     async function loadDistrictsFilter(code) {
@@ -556,8 +568,15 @@
         const res = await fetch(`https://provinces.open-api.vn/api/p/${code}?depth=2`);
         const data = await res.json();
         data.districts.forEach(d => {
-            districtFilter.innerHTML += `<option value="${d.name}" data-code="${d.code}">${d.name}</option>`;
+            const selected = d.name === districtFilter.dataset.selected ? "selected" : "";
+            districtFilter.innerHTML += `<option value="${d.name}" data-code="${d.code}" ${selected}>${d.name}</option>`;
         });
+
+        if (districtFilter.dataset.selected) {
+            const selected = data.districts.find(d => d.name === districtFilter.dataset.selected);
+            if (selected) await loadWardsFilter(selected.code);
+        }
+
         districtFilter.disabled = false;
     }
 
@@ -566,8 +585,10 @@
         const res = await fetch(`https://provinces.open-api.vn/api/d/${code}?depth=2`);
         const data = await res.json();
         data.wards.forEach(w => {
-            wardFilter.innerHTML += `<option value="${w.name}">${w.name}</option>`;
+            const selected = w.name === wardFilter.dataset.selected ? "selected" : "";
+            wardFilter.innerHTML += `<option value="${w.name}" ${selected}>${w.name}</option>`;
         });
+
         wardFilter.disabled = false;
     }
 
