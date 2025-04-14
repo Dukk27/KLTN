@@ -332,3 +332,43 @@ $(document).ready(function () {
   // Gọi hàm khởi tạo
   loadProvincesFilter();
 });
+
+// Cuộn xuống phần danh sách nhà trọ khi nhấn nút "Áp dụng" trong localion filter
+$(document).ready(function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const shouldScroll = urlParams.get("scroll") === "true";
+
+  if (shouldScroll && $("#scroll-target").length) {
+    $('html, body').animate({
+        scrollTop: $("#scroll-target").offset().top - 100
+    }, 200);
+  }
+});
+
+// Cuộn xuống phần danh sách nhà trọ khi nhấn nút "Áp dụng" trong bộ lọc bên phải
+$(document).ready(function () {
+  // Khi nhấn nút "Áp dụng"
+  $('.btn-search').click(function (e) {
+      // Trước khi submit form, thêm tham số scroll=true nếu chưa có
+      const form = $(this).closest('form');
+
+      // Nếu chưa có input scroll, thì thêm vào
+      if (form.find('input[name="scroll"]').length === 0) {
+          $('<input>').attr({
+              type: 'hidden',
+              name: 'scroll',
+              value: 'true'
+          }).appendTo(form);
+      }
+  });
+
+  // Khi trang load lại, nếu có scroll=true thì cuộn xuống
+  const urlParams = new URLSearchParams(window.location.search);
+  const shouldScroll = urlParams.get("scroll") === "true";
+
+  if (shouldScroll && $("#scroll-target").length) {
+    $('html, body').animate({
+        scrollTop: $("#scroll-target").offset().top - 100
+    }, 200);
+  }
+});

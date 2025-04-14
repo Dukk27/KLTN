@@ -11,6 +11,7 @@ html {
 html {
   position: relative;
   min-height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -26,8 +27,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-
-
 
 /* Footer cố định dưới đáy, không để khoảng trống thừa */
 .footer {
