@@ -224,10 +224,37 @@
     <div class="modal fade" id="goongMapModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content" style="display: flex; flex-direction: column; max-height: 90vh;">
-                <div class="modal-header">
+                <div class="modal-header position-relative">
                     <h5 class="modal-title">Bản đồ vị trí các nhà trọ</h5>
+
+                    <!-- Thanh tìm kiếm -->
+                    <div id="searchContainer" class="position-absolute"
+                        style="top: 80px; left: 30px; z-index: 1001; min-width: 350px; border-radius: 6px; border: 1px solid black;">
+                        <input id="searchAddressInput" type="text" class="form-control" placeholder="Nhập địa chỉ nhà trọ..." />
+                    </div>
+
+                    <!-- Kết quả hiển thị chính giữa header -->
+                    <div id="searchResultsCount"
+                        class="position-absolute"
+                        style="left: 50%; transform: translateX(-50%); font-weight: bold; z-index: 1001;">
+                    </div>
+
+                    <!-- Nút chuyển kết quả -->
+                    <div class="position-absolute d-flex gap-2" style="right: 80px; z-index: 1001;">
+                        <div id="prevResultBtn" class="d-flex align-items-center justify-content-center"
+                            style="width: 36px; height: 36px; border: 1px solid #333; border-radius: 6px; cursor: pointer;">
+                            <i class="fas fa-chevron-left"></i>
+                        </div>
+
+                        <div id="nextResultBtn" class="d-flex align-items-center justify-content-center"
+                            style="width: 36px; height: 36px; border: 1px solid #333; border-radius: 6px; cursor: pointer;">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal" style="margin-right: 20px"></button>
                 </div>
+
                 <div class="modal-body" style="overflow-y: auto; flex: 1 1 auto; padding: 0;">
                     <div id="goongMap" style="width: 98%; height: 100%; min-height: 650px;"></div>
                 </div>
@@ -289,6 +316,119 @@
         let mapInitialized = false;
         let mapmodal;
 
+        let allMarkers = [];
+        let allPopups = [];
+        let allHouseData = [];
+        let currentSearchResults = [];
+        let currentResultIndex = 0;
+
+        function renderMarkers(houses) {
+            // Xóa các marker cũ
+            allMarkers.forEach(marker => marker.remove());
+            allPopups.forEach(popup => popup.remove());
+            allMarkers = [];
+            allPopups = [];
+
+            // Hiển thị số lượng kết quả
+            const resultsCount = houses.length;
+            document.getElementById('searchResultsCount').textContent = `${resultsCount} phòng trọ`;
+
+            if (resultsCount === 0) return;
+
+            // Nếu có kết quả, di chuyển bản đồ tới vị trí đầu tiên
+            const firstHouse = houses[0];
+            if (firstHouse.Lat && firstHouse.Lng) {
+                mapmodal.flyTo({
+                    center: [firstHouse.Lng, firstHouse.Lat],
+                    zoom: 13,
+                    speed: 1.2,
+                    curve: 1,
+                    easing: t => t
+                });
+            }
+
+            // Tạo marker cho từng nhà
+            houses.forEach(house => {
+                if (house.Lat && house.Lng) {
+                    const el = document.createElement('div');
+                    el.className = 'custom-marker';
+
+                    const marker = new goongjs.Marker(el)
+                        .setLngLat([house.Lng, house.Lat])
+                        .addTo(mapmodal);
+                    allMarkers.push(marker);
+
+                    const pricePopup = new goongjs.Popup({
+                        offset: 25,
+                        closeOnClick: false,
+                        closeButton: false
+                    }).setHTML(`
+                        <div class="price-popup" style="cursor: pointer;" onclick="window.location.href='/Home/Detail?id=${house.Id}'">
+                            <span style="color:#28a745; font-size:13px;"><b>${house.Price || 'N/A'} VNĐ</b></span>
+                        </div>
+                    `).setLngLat([house.Lng, house.Lat]).addTo(mapmodal);
+
+                    allPopups.push(pricePopup);
+
+                    const hoverPopup = new goongjs.Popup({
+                        closeButton: false,
+                        closeOnClick: false,
+                        offset: 25
+                    }).setHTML(`<div><strong>${house.Name}</strong><br>${house.Address}</div>`);
+
+                    el.addEventListener('mouseenter', () => {
+                        hoverPopup.setLngLat([house.Lng, house.Lat]).addTo(mapmodal);
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        hoverPopup.remove();
+                    });
+                    el.addEventListener('click', () => {
+                        window.location.href = `/Home/Detail?id=${house.Id}`;
+                    });
+                }
+            });
+        }
+        
+        // Hàm hiển thị kết quả tiếp theo 
+        function showNextResult() {
+            // Kiểm tra nếu có kết quả và nếu index chưa vượt quá giới hạn
+            const results = currentSearchResults.length > 0 ? currentSearchResults : allHouseData;
+            if (results.length > 0 && currentResultIndex < results.length - 1) {
+                currentResultIndex++;
+                const nextHouse = results[currentResultIndex];
+                mapmodal.flyTo({
+                    center: [nextHouse.Lng, nextHouse.Lat],
+                    zoom: 14,
+                    speed: 1.2,
+                    curve: 1,
+                    easing: t => t
+                });
+            }
+        }
+
+        // Hàm hiển thị kết quả trước đó
+        function showPreviousResult() {
+            const results = currentSearchResults.length > 0 ? currentSearchResults : allHouseData;
+            if (results.length > 0) {
+                // Nếu ở marker đầu tiên, chuyển đến marker cuối cùng
+                if (currentResultIndex === 0) {
+                    currentResultIndex = results.length - 1;
+                } else {
+                    currentResultIndex--;
+                }
+
+                const prevHouse = results[currentResultIndex];
+                mapmodal.flyTo({
+                    center: [prevHouse.Lng, prevHouse.Lat],
+                    zoom: 13,
+                    speed: 1.2,
+                    curve: 1,
+                    easing: t => t
+                });
+            }
+        }
+
+        // Load map khi nhấn nút mở bản đồ
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('openMapBtn').addEventListener('click', function () {
                 const modal = new bootstrap.Modal(document.getElementById('goongMapModal'));
@@ -309,47 +449,8 @@
                         mapmodal.addControl(new goongjs.NavigationControl());
 
                         $.get('/Home/GetAllHousesForMap', function (houses) {
-                            houses.forEach(house => {
-                                if (house.Lat && house.Lng) {
-                                    const pricePopup = new goongjs.Popup({
-                                        offset: 25,
-                                        closeOnClick: false,
-                                        closeButton: false
-                                    }).setHTML(`
-                                        <div class="price-popup" style="cursor: pointer;" onclick="window.location.href='/Home/Detail?id=${house.Id}'">
-                                            <span style="color:#28a745; font-size:13px;"><b>${house.Price || 'N/A'} VNĐ</b></span>
-                                        </div>
-                                    `).setLngLat([house.Lng, house.Lat]).addTo(mapmodal);
-
-                                    const hoverPopup = new goongjs.Popup({
-                                        closeButton: false,
-                                        closeOnClick: false,
-                                        offset: 25
-                                    }).setHTML(`
-                                        <div><strong>${house.Name}</strong><br>${house.Address}</div>
-                                    `);
-
-                                    const el = document.createElement('div');
-                                    el.className = 'custom-marker';
-
-                                    const marker = new goongjs.Marker(el)
-                                        .setLngLat([house.Lng, house.Lat])
-                                        .addTo(mapmodal);
-
-                                    const markerEl = marker.getElement();
-
-                                    markerEl.addEventListener('mouseenter', () => {
-                                        hoverPopup.setLngLat([house.Lng, house.Lat]).addTo(mapmodal);
-                                    });
-                                    markerEl.addEventListener('mouseleave', () => {
-                                        hoverPopup.remove();
-                                    });
-
-                                    markerEl.addEventListener('click', () => {
-                                        window.location.href = `/Home/Detail?id=${house.Id}`;
-                                    });
-                                }
-                            });
+                            allHouseData = houses;
+                            renderMarkers(allHouseData);
                         });
 
                         mapInitialized = true;
@@ -357,7 +458,21 @@
                 }, 500);
             });
 
-            // Thêm xử lý nút đóng modal bản đồ
+            // Tìm kiếm khi nhấn Enter
+            $(document).on('keydown', '#searchAddressInput', function (e) {
+                if (e.key === 'Enter') {
+                    const keyword = $(this).val().toLowerCase().trim();
+
+                    currentSearchResults = allHouseData.filter(h =>
+                        h.Address && h.Address.toLowerCase().includes(keyword)
+                    );
+
+                    currentResultIndex = 0; // Reset index when performing a new search
+                    renderMarkers(currentSearchResults);
+                }
+            });
+
+            // Xử lý nút đóng modal bản đồ
             document.querySelector('#goongMapModal .btn-close').addEventListener('click', function () {
                 const modalElement = document.getElementById('goongMapModal');
                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
@@ -378,6 +493,12 @@
             mapModalEl.addEventListener('hidden.bs.modal', function () {
                 mapButtons.style.display = 'flex';
             });
+
+            // Khi nhấn nút Next
+            document.getElementById('nextResultBtn').addEventListener('click', showNextResult);
+
+            // Khi nhấn nút Previous
+            document.getElementById('prevResultBtn').addEventListener('click', showPreviousResult);
         });
     </script>
 
