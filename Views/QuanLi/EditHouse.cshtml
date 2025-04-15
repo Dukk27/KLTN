@@ -185,9 +185,16 @@
                 zoom: 14
             });
 
-            marker = new goongjs.Marker()
+            marker = new goongjs.Marker({ draggable: true })
                 .setLngLat([105.8544441, 21.028511])
                 .addTo(map);
+
+            // Lắng nghe sự kiện kéo thả marker
+            marker.on('dragend', function () {
+                const lngLat = marker.getLngLat();
+                map.flyTo({ center: [lngLat.lng, lngLat.lat], zoom: 14 });
+                reverseGeocode(lngLat.lng, lngLat.lat);
+            });
         }
 
         function geocodeAddress(address, isInit = false) {
@@ -216,7 +223,7 @@
             });
         }
 
-
+        // Hàm gợi ý địa chỉ
         function showSuggestions(results) {
             const suggestionBox = $('#addressSuggestions');
             suggestionBox.empty();
@@ -241,6 +248,26 @@
 
                 suggestionBox.append(listItem);
             });
+        }
+
+        // Hàm này sẽ được gọi khi người dùng kéo thả marker trên bản đồ, để lấy địa chỉ từ vị trí mới
+        function reverseGeocode(lng, lat) {
+            $.get(`https://rsapi.goong.io/Geocode?latlng=${lat},${lng}&api_key=RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy`)
+                .done(function (response) {
+                    if (response.results && response.results.length > 0) {
+                        const address = response.results[0].formatted_address;
+                        $('#fullAddress').val(address);
+                        $('#address').val(address);
+
+                        const popup = new goongjs.Popup({ offset: 25 }).setText(address);
+                        marker.setPopup(popup).togglePopup();
+                    } else {
+                        console.warn("Không tìm thấy địa chỉ.");
+                    }
+                })
+                .fail(function () {
+                    console.error("Lỗi khi reverse geocode.");
+                });
         }
 
         $(document).ready(function () {
