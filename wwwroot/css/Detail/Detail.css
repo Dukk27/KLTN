@@ -1,3 +1,10 @@
+h1 {
+  font-size: 34px;
+  font-weight: bold;
+  margin: 0px 0 20px;
+  color: #333;  
+  text-align: center;
+}
 
 .detail-container {
   padding: 20px;
@@ -372,6 +379,13 @@
   height: 400px;
   background-color: #f0f0f0; 
   margin-bottom: 50px;
+}
+
+.carousel-indicators [data-bs-target] {
+  background-color: #54585c;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
 }
 
 .carousel {

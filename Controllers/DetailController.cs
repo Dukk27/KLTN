@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using KLTN.Models;
 using KLTN.Repositories;
 using KLTN.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -40,6 +41,7 @@ namespace KLTN.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddReview(int id, [FromBody] Review review)
         {
             var userId = HttpContext.Session.GetInt32("UserId");

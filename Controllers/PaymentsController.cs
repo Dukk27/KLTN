@@ -39,7 +39,7 @@ namespace KLTN.Controllers
 
                 string orderInfo = $"Thanh toán cho bài đăng {houseId}";
                 string orderType = "billpayment";
-                decimal amount = 50000; // Số tiền thanh toán
+                decimal amount = 10000; // Số tiền thanh toán
 
                 var vnpay = new VnPayLibrary();
                 vnpay.AddRequestData("vnp_Version", "2.1.0");
@@ -107,7 +107,7 @@ namespace KLTN.Controllers
                     {
                         UserId = userId,
                         HouseId = houseId,
-                        Amount = 50000,
+                        Amount = 10000,
                         PaymentStatus = "Success",
                         TransactionId = vnp_TransactionNo,
                         PaymentDate = DateTime.Now,

@@ -1,209 +1,213 @@
 @model IEnumerable<KLTN.Models.HouseType>
 
-<link rel="stylesheet" href="~/css/iziToast.css">
-<link rel="stylesheet" href="~/css/Admin/responsive.css">
+<head>
+    <link rel="stylesheet" href="~/css/iziToast.css">
+    <link rel="stylesheet" href="~/css/Admin/responsive.css">
+</head>
 
-<div class="container">
-    <h3 class="text-center mt-3">Quản lý loại nhà</h3>
-    <button class="btn btn-primary mb-2" onclick="openCreateModal()">
-        <i class="fa fa-plus-circle"></i> Thêm mới
-    </button>
+<body>
+    <div class="container">
+        <h3 class="text-center mt-3">Quản lý loại nhà</h3>
+        <button class="btn btn-primary mb-2" onclick="openCreateModal()">
+            <i class="fa fa-plus-circle"></i> Thêm mới
+        </button>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Tên Loại Nhà</th>
-                <th>Hành Động</th>
-            </tr>
-        </thead>
-        <tbody id="houseTypeTableBody">
-            @{
-                int index = 1;
-            }
-            @foreach (var houseType in Model)
-            {
-                <tr id="row_@houseType.IdHouseType">
-                    <td>@index</td>
-                    <td>@houseType.Name</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm"
-                            onclick="openEditModal(@houseType.IdHouseType, '@houseType.Name')" title="Chỉnh sửa loại nhà"><i
-                                class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteHouseType(@houseType.IdHouseType)"
-                            title="Xoá loại nhà"><i class="fas fa-trash-alt"></i> </button>
-                    </td>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Loại Nhà</th>
+                    <th>Hành Động</th>
                 </tr>
-                index++;
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody id="houseTypeTableBody">
+                @{
+                    int index = 1;
+                }
+                @foreach (var houseType in Model)
+                {
+                    <tr id="row_@houseType.IdHouseType">
+                        <td>@index</td>
+                        <td>@houseType.Name</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm"
+                                onclick="openEditModal(@houseType.IdHouseType, '@houseType.Name')" title="Chỉnh sửa loại nhà"><i
+                                    class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteHouseType(@houseType.IdHouseType)"
+                                title="Xoá loại nhà"><i class="fas fa-trash-alt"></i> </button>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            </tbody>
+        </table>
+    </div>
 
-<!-- Modal để thêm/sửa loại nhà -->
-<div id="houseTypeModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 id="modalTitle">Thêm Loại Nhà</h5>
-                <button type="button" class="close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="houseTypeId">
-                <label>Tên loại nhà:</label>
-                <input type="text" id="houseTypeName" class="form-control">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="saveHouseType()">Lưu</button>
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+    <!-- Modal để thêm/sửa loại nhà -->
+    <div id="houseTypeModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="modalTitle">Thêm Loại Nhà</h5>
+                    <button type="button" class="close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="houseTypeId">
+                    <label>Tên loại nhà:</label>
+                    <input type="text" id="houseTypeName" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="saveHouseType()">Lưu</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Thêm thư viện iziToast -->
-<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+    <!-- Thêm thư viện iziToast -->
+    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
 
-<script>
-    function openCreateModal() {
-        document.getElementById("modalTitle").textContent = "Thêm Loại Nhà";
-        document.getElementById("houseTypeId").value = '';
-        document.getElementById("houseTypeName").value = '';
-        document.getElementById("houseTypeModal").classList.add("show");
-        document.getElementById("houseTypeModal").style.display = "block";
-    }
-
-    function openEditModal(id, name) {
-        document.getElementById("modalTitle").textContent = "Sửa Loại Nhà";
-        document.getElementById("houseTypeId").value = id;
-        document.getElementById("houseTypeName").value = name;
-        document.getElementById("houseTypeModal").classList.add("show");
-        document.getElementById("houseTypeModal").style.display = "block";
-    }
-
-    function closeModal() {
-        document.getElementById("houseTypeModal").classList.remove("show");
-        document.getElementById("houseTypeModal").style.display = "none";
-    }
-
-    function saveHouseType() {
-        let id = document.getElementById("houseTypeId").value;
-        let name = document.getElementById("houseTypeName").value.trim();
-
-        if (!name) {
-            iziToast.warning({
-                title: "Lỗi!",
-                message: "Tên loại nhà không được để trống.",
-                position: "topRight",
-                timeout: 3000
-            });
-            return;
+    <script>
+        function openCreateModal() {
+            document.getElementById("modalTitle").textContent = "Thêm Loại Nhà";
+            document.getElementById("houseTypeId").value = '';
+            document.getElementById("houseTypeName").value = '';
+            document.getElementById("houseTypeModal").classList.add("show");
+            document.getElementById("houseTypeModal").style.display = "block";
         }
 
-        let url = id ? "/Admin/EditHouseType" : "/Admin/CreateHouseType";
-        let data = JSON.stringify({ IdHouseType: id ? parseInt(id) : 0, Name: name });
+        function openEditModal(id, name) {
+            document.getElementById("modalTitle").textContent = "Sửa Loại Nhà";
+            document.getElementById("houseTypeId").value = id;
+            document.getElementById("houseTypeName").value = name;
+            document.getElementById("houseTypeModal").classList.add("show");
+            document.getElementById("houseTypeModal").style.display = "block";
+        }
 
-        fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: data
-        })
-            .then(response => response.json())
-            .then(response => {
-                iziToast.show({
-                    title: response.success ? "Thành công!" : "Lỗi!",
-                    message: response.message,
-                    position: "topRight",
-                    timeout: 1000,
-                    color: response.success ? "green" : "red"
-                });
+        function closeModal() {
+            document.getElementById("houseTypeModal").classList.remove("show");
+            document.getElementById("houseTypeModal").style.display = "none";
+        }
 
-                if (response.success) {
-                    closeModal();
-                    updateHouseTypeTable();
-                }
-            })
-            .catch(() => {
-                iziToast.error({
+        function saveHouseType() {
+            let id = document.getElementById("houseTypeId").value;
+            let name = document.getElementById("houseTypeName").value.trim();
+
+            if (!name) {
+                iziToast.warning({
                     title: "Lỗi!",
-                    message: "Có lỗi xảy ra, vui lòng thử lại.",
+                    message: "Tên loại nhà không được để trống.",
                     position: "topRight",
-                    timeout: 1000
+                    timeout: 3000
                 });
-            });
-    }
+                return;
+            }
 
-    function deleteHouseType(id) {
-        iziToast.show({
-            class: "iziToast-custom",
-            title: "Xác nhận xóa",
-            message: "Bạn có chắc chắn muốn xóa? Hành động này không thể hoàn tác!",
-            position: "center",
-            timeout: false,
-            close: false,
-            overlay: true,
-            displayMode: "once",
-            drag: false,
-            icon: "fa fa-question-circle",
-            buttons: [
-                [
-                    '<button><i class="fa fa-check"></i> Có, xóa</button>',
-                    function (instance, toast) {
-                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+            let url = id ? "/Admin/EditHouseType" : "/Admin/CreateHouseType";
+            let data = JSON.stringify({ IdHouseType: id ? parseInt(id) : 0, Name: name });
 
-                        fetch("/Admin/DeleteHouseType", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                            body: new URLSearchParams({ id: id })
-                        })
-                            .then(response => response.json())
-                            .then(response => {
-                                iziToast.show({
-                                    title: response.success ? "Đã xóa!" : "Lỗi!",
-                                    message: response.message,
-                                    position: "topRight",
-                                    timeout: 1000,
-                                    color: response.success ? "green" : "red"
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: data
+            })
+                .then(response => response.json())
+                .then(response => {
+                    iziToast.show({
+                        title: response.success ? "Thành công!" : "Lỗi!",
+                        message: response.message,
+                        position: "topRight",
+                        timeout: 1000,
+                        color: response.success ? "green" : "red"
+                    });
+
+                    if (response.success) {
+                        closeModal();
+                        updateHouseTypeTable();
+                    }
+                })
+                .catch(() => {
+                    iziToast.error({
+                        title: "Lỗi!",
+                        message: "Có lỗi xảy ra, vui lòng thử lại.",
+                        position: "topRight",
+                        timeout: 1000
+                    });
+                });
+        }
+
+        function deleteHouseType(id) {
+            iziToast.show({
+                class: "iziToast-custom",
+                title: "Xác nhận xóa",
+                message: "Bạn có chắc chắn muốn xóa? Hành động này không thể hoàn tác!",
+                position: "center",
+                timeout: false,
+                close: false,
+                overlay: true,
+                displayMode: "once",
+                drag: false,
+                icon: "fa fa-question-circle",
+                buttons: [
+                    [
+                        '<button><i class="fa fa-check"></i> Có, xóa</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                            fetch("/Admin/DeleteHouseType", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                body: new URLSearchParams({ id: id })
+                            })
+                                .then(response => response.json())
+                                .then(response => {
+                                    iziToast.show({
+                                        title: response.success ? "Đã xóa!" : "Lỗi!",
+                                        message: response.message,
+                                        position: "topRight",
+                                        timeout: 1000,
+                                        color: response.success ? "green" : "red"
+                                    });
+
+                                    if (response.success) {
+                                        let row = document.getElementById("row_" + id);
+                                        if (row) row.remove();
+                                        updateHouseTypeTable();
+                                    }
                                 });
-
-                                if (response.success) {
-                                    let row = document.getElementById("row_" + id);
-                                    if (row) row.remove();
-                                    updateHouseTypeTable();
-                                }
-                            });
-                    },
-                    true
-                ],
-                [
-                    '<button><i class="fa fa-times"></i> Hủy</button>',
-                    function (instance, toast) {
-                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                    }
+                        },
+                        true
+                    ],
+                    [
+                        '<button><i class="fa fa-times"></i> Hủy</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                        }
+                    ]
                 ]
-            ]
-        });
-    }
-
-    function updateHouseTypeTable() {
-        fetch("/Admin/ManageHouseType")
-            .then(response => response.text())
-            .then(data => {
-                let parser = new DOMParser();
-                let doc = parser.parseFromString(data, "text/html");
-                let newTableBody = doc.querySelector("#houseTypeTableBody").innerHTML;
-                document.getElementById("houseTypeTableBody").innerHTML = newTableBody;
-
-                let rows = document.querySelectorAll("#houseTypeTableBody tr");
-                rows.forEach((row, index) => {
-                    let firstCell = row.querySelector("td:first-child");
-                    if (firstCell) {
-                        firstCell.textContent = index + 1;
-                    }
-                });
             });
-    }
+        }
 
-</script>
+        function updateHouseTypeTable() {
+            fetch("/Admin/ManageHouseType")
+                .then(response => response.text())
+                .then(data => {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(data, "text/html");
+                    let newTableBody = doc.querySelector("#houseTypeTableBody").innerHTML;
+                    document.getElementById("houseTypeTableBody").innerHTML = newTableBody;
+
+                    let rows = document.querySelectorAll("#houseTypeTableBody tr");
+                    rows.forEach((row, index) => {
+                        let firstCell = row.querySelector("td:first-child");
+                        if (firstCell) {
+                            firstCell.textContent = index + 1;
+                        }
+                    });
+                }
+            );
+        }
+    </script>
+</body>

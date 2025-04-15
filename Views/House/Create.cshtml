@@ -89,39 +89,9 @@
                 </div>
             </div>
         </div>
-
-        <!-- Thêm các phần khác của form tại đây -->
         
-        @* <div class="section">
+        <div class="section">
             <h4>Địa chỉ</h4>
-            <div class="row">
-               <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="province">Tỉnh/Thành phố *</label>
-                        <select id="province" class="form-control required" required>
-                        </select>
-                        <span id="provinceError" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="district">Quận/Huyện *</label>
-                        <select id="district" class="form-control required" required>
-                            <option value="">-- Chọn Quận/Huyện --</option>
-                        </select>
-                        <span id="districtError" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="ward">Phường/Xã *</label>
-                        <select id="ward" class="form-control required" required>
-                            <option value="">-- Chọn Phường/Xã --</option>
-                        </select>
-                        <span id="wardError" class="text-danger"></span>
-                    </div>
-                </div>
-            </div> *@
             <div class="mt-2">
                 <label for="fullAddress">Địa chỉ đầy đủ *</label>
                 <input type="text" id="fullAddress" class="form-control required" placeholder="Nhập địa chỉ đầy đủ" required />
@@ -194,98 +164,6 @@
 }
 <script>
     $(document).ready(function () {
-        /*const apiBase = "https://provinces.open-api.vn/api/";
-
-        // Kiểm tra API có phản hồi đúng không
-        $.get(apiBase + "?depth=1", function (data) {
-            console.log("Danh sách tỉnh/thành phố:", data); // Log dữ liệu ra Console
-            if (data.length > 0) {
-                $("#province").append('<option value="">-- Chọn Tỉnh/Thành --</option>');
-                data.forEach(province => {
-                    $("#province").append(new Option(province.name, province.code));
-                });
-            } else {
-                console.error("API không trả về dữ liệu!");
-            }
-        }).fail(function () {
-            console.error("Không thể tải danh sách tỉnh/thành! Lỗi API.");
-        });
-
-        // Khi chọn tỉnh, load danh sách quận/huyện
-        $("#province").change(function () {
-            let provinceId = $(this).val();
-            $("#district").empty().append('<option value="">-- Chọn Quận/Huyện --</option>');
-            $("#ward").empty().append('<option value="">-- Chọn Phường/Xã --</option>');
-            $("#provinceError").text('');
-
-            if (provinceId) {
-                $.get(apiBase + "p/" + provinceId + "?depth=2", function (data) {
-                    console.log("Danh sách quận/huyện:", data.districts);
-                    if (data.districts.length > 0) {
-                        data.districts.forEach(district => {
-                            $("#district").append(new Option(district.name, district.code));
-                        });
-                    } else {
-                        console.warn("Không có quận/huyện nào cho tỉnh này!");
-                    }
-                }).fail(function () {
-                    console.error("Không thể tải danh sách quận/huyện! Lỗi API.");
-                });
-            }
-        });
-
-        // Khi chọn quận/huyện, load danh sách phường/xã
-        $("#district").change(function () {
-            let districtId = $(this).val();
-            $("#ward").empty().append('<option value="">-- Chọn Phường/Xã --</option>');
-            $("#districtError").text('');
-
-            if (districtId) {
-                $.get(apiBase + "d/" + districtId + "?depth=2", function (data) {
-                    console.log("Danh sách phường/xã:", data.wards);
-                    if (data.wards.length > 0) {
-                        data.wards.forEach(ward => {
-                            $("#ward").append(new Option(ward.name, ward.code));
-                        });
-                    } else {
-                        console.warn("Không có phường/xã nào cho quận này!");
-                    }
-                }).fail(function () {
-                    console.error("Không thể tải danh sách phường/xã! Lỗi API.");
-                });
-            }
-        });
-
-        // Khi chọn xong, cập nhật địa chỉ vào input ẩn
-        $("#ward").change(function () {
-            $("#wardError").text('');
-            updateAddress();
-        });
-
-        // Khi người dùng nhập địa chỉ cụ thể, cập nhật địa chỉ đầy đủ
-        $("#fullAddress").keyup(function () {
-            $("#fullAddressError").text('');
-            updateAddress();
-        });
-
-        function updateAddress() {
-            let province = $("#province option:selected").text();
-            let district = $("#district option:selected").text();
-            let ward = $("#ward option:selected").text();
-            let specificAddress = $("#fullAddress").val();
-
-            // Kiểm tra nếu là giá trị mặc định thì không thêm vào địa chỉ
-            province = province === "-- Chọn Tỉnh/Thành --" ? "" : province;
-            district = district === "-- Chọn Quận/Huyện --" ? "" : district;
-            ward = ward === "-- Chọn Phường/Xã --" ? "" : ward;
-
-            let addressParts = [specificAddress, ward, district, province].filter(part => part.trim() !== "");
-            let fullAddress = addressParts.join(", ");
-            
-            $("#address").val(fullAddress);
-            console.log("Địa chỉ đầy đủ:", fullAddress);
-        }*/
-
         // Xử lý xem trước hình ảnh
         $("#imageFile").change(function() {
             const file = this.files[0];

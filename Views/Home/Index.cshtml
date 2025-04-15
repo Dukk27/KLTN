@@ -136,12 +136,14 @@
     <div id="house-list-section" class="container-body" style="padding-left: 60px; padding-right: 60px;">
         @if (Model.Houses == null || !Model.Houses.Any()) 
         {
-            <div class="no-houses-container">
-                <h4 class="no-houses-message">Không tìm thấy nhà trọ phù hợp.</h4>
-                <p>Vui lòng thử lại với tìm kiếm khác hoặc quay lại trang chủ.</p>
-                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
-                    <i class="fas fa-arrow-left"></i> Quay Lại Trang Chủ
-                </a>
+            <div id="scroll-target">
+                <div class="no-houses-container">
+                    <h4 class="no-houses-message">Không tìm thấy nhà trọ phù hợp.</h4>
+                    <p>Vui lòng thử lại với tìm kiếm khác hoặc quay lại trang chủ.</p>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> Quay Lại Trang Chủ
+                    </a>
+                </div>
             </div>
         }
         else
@@ -302,56 +304,60 @@
     </div>
 
     <!-- Thanh phân trang -->
-    @if (Model.TotalPages > 1)
-    {
-        <nav aria-label="Page navigation">
-            <ul class="pagination">
-                @if (Model.CurrentPage > 1)
-                {
-                    <li class="page-item">
-                        <a class="page-link" href="@Url.Action("Index", new { 
-                            searchString = ViewBag.Keyword,
-                            priceRange = ViewBag.PriceRange,
-                            sortBy = ViewBag.SortBy,
-                            roomType = ViewBag.RoomType,
-                            amenities = ViewBag.SelectedAmenities,
-                            pageNumber = Model.CurrentPage - 1 
-                        })">«</a>
-                    </li>
-                }
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @if (Model.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { 
+                        searchString = ViewBag.Keyword,
+                        priceRange = ViewBag.PriceRange,
+                        sortBy = ViewBag.SortBy,
+                        roomType = ViewBag.RoomType,
+                        amenities = ViewBag.SelectedAmenities,
+                        pageNumber = Model.CurrentPage - 1,
+                        scroll = "true"
+                    })">«</a>
+                </li>
+            }
 
-                @for (int i = 1; i <= Model.TotalPages; i++)
-                {
-                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                        <a class="page-link" href="@Url.Action("Index", new { 
-                            searchString = ViewBag.Keyword,
-                            priceRange = ViewBag.PriceRange,
-                            sortBy = ViewBag.SortBy,
-                            roomType = ViewBag.RoomType,
-                            amenities = ViewBag.SelectedAmenities,
-                            pageNumber = i 
-                        })">@i</a>
-                    </li>
-                }
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { 
+                        searchString = ViewBag.Keyword,
+                        priceRange = ViewBag.PriceRange,
+                        sortBy = ViewBag.SortBy,
+                        roomType = ViewBag.RoomType,
+                        amenities = ViewBag.SelectedAmenities,
+                        pageNumber = i,
+                        scroll = "true"
+                    })">@i</a>
+                </li>
+            }
 
-                @if (Model.CurrentPage < Model.TotalPages)
-                {
-                    <li class="page-item">
-                        <a class="page-link" href="@Url.Action("Index", new { 
-                            searchString = ViewBag.Keyword,
-                            priceRange = ViewBag.PriceRange,
-                            sortBy = ViewBag.SortBy,
-                            roomType = ViewBag.RoomType,
-                            amenities = ViewBag.SelectedAmenities,
-                            pageNumber = Model.CurrentPage + 1 
-                        })">»</a>
-                    </li>
-                }
-            </ul>
-        </nav>
-    }
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { 
+                        searchString = ViewBag.Keyword,
+                        priceRange = ViewBag.PriceRange,
+                        sortBy = ViewBag.SortBy,
+                        roomType = ViewBag.RoomType,
+                        amenities = ViewBag.SelectedAmenities,
+                        pageNumber = Model.CurrentPage + 1,
+                        scroll = "true"
+                    })">»</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
 
-    <div>
+
+    @* <div>
         <section class="feedback-form bg-light p-4 rounded mt-5" data-aos="fade-up">
             <h4>Gửi góp ý cho chúng tôi</h4>
             @if (TempData["SuccessMessage"] != null)
@@ -370,7 +376,7 @@
                 <button type="submit" class="btn btn-primary">Gửi góp ý</button>
             </form>
         </section>
-    </div>
+    </div> *@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

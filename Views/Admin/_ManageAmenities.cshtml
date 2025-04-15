@@ -1,204 +1,208 @@
 @model IEnumerable<KLTN.Models.Amenity>
 
-<link rel="stylesheet" href="~/css/iziToast.css">
-<link rel="stylesheet" href="~/css/Admin/responsive.css">
+<head>
+    <link rel="stylesheet" href="~/css/iziToast.css">
+    <link rel="stylesheet" href="~/css/Admin/responsive.css">
+</head>
 
-<div class="container">
-    <h3 class="text-center mt-3">Quản lý tiện nghi</h3>
-    <button class="btn btn-primary mb-2" onclick="openCreateModal()">
-        <i class="fa fa-plus-circle"></i> Thêm mới
-    </button>
+<body>
+    <div class="container">
+        <h3 class="text-center mt-3">Quản lý tiện nghi</h3>
+        <button class="btn btn-primary mb-2" onclick="openCreateModal()">
+            <i class="fa fa-plus-circle"></i> Thêm mới
+        </button>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Tên Tiện Nghi</th>
-                <th>Hành Động</th>
-            </tr>
-        </thead>
-        <tbody id="amenityTableBody">
-            @{
-                int index = 1;
-            }
-            @foreach (var amenity in Model)
-            {
-                <tr id="row_@amenity.IdAmenity">
-                    <td>@index</td>
-                    <td>@amenity.Name</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" onclick="openEditModal(@amenity.IdAmenity, '@amenity.Name')"
-                            title="Chỉnh sửa tiện nghi"><i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteAmenity(@amenity.IdAmenity)"
-                            title="Xoá tiện nghi"><i class="fas fa-trash-alt"></i></button>
-                    </td>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Tiện Nghi</th>
+                    <th>Hành Động</th>
                 </tr>
-                index++;
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody id="amenityTableBody">
+                @{
+                    int index = 1;
+                }
+                @foreach (var amenity in Model)
+                {
+                    <tr id="row_@amenity.IdAmenity">
+                        <td>@index</td>
+                        <td>@amenity.Name</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="openEditModal(@amenity.IdAmenity, '@amenity.Name')"
+                                title="Chỉnh sửa tiện nghi"><i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteAmenity(@amenity.IdAmenity)"
+                                title="Xoá tiện nghi"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            </tbody>
+        </table>
+    </div>
 
-<!-- Modal để thêm/sửa tiện nghi -->
-<div id="amenityModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 id="modalTitle">Thêm Tiện Nghi</h5>
-                <button type="button" class="close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="amenityId">
-                <label>Tên Tiện Nghi:</label>
-                <input type="text" id="amenityName" class="form-control">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="saveAmenity()">Lưu</button>
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+    <!-- Modal để thêm/sửa tiện nghi -->
+    <div id="amenityModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="modalTitle">Thêm Tiện Nghi</h5>
+                    <button type="button" class="close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="amenityId">
+                    <label>Tên Tiện Nghi:</label>
+                    <input type="text" id="amenityName" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="saveAmenity()">Lưu</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Thêm thư viện iziToast -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+    <!-- Thêm thư viện iziToast -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
 
-<script>
-    function openCreateModal() {
-        document.getElementById("modalTitle").textContent = "Thêm Tiện Nghi";
-        document.getElementById("amenityId").value = '';
-        document.getElementById("amenityName").value = '';
-        document.getElementById("amenityModal").classList.add("show");
-        document.getElementById("amenityModal").style.display = "block";
-    }
-
-    function openEditModal(id, name) {
-        document.getElementById("modalTitle").textContent = "Sửa Tiện Nghi";
-        document.getElementById("amenityId").value = id;
-        document.getElementById("amenityName").value = name;
-        document.getElementById("amenityModal").classList.add("show");
-        document.getElementById("amenityModal").style.display = "block";
-    }
-
-    function closeModal() {
-        document.getElementById("amenityModal").classList.remove("show");
-        document.getElementById("amenityModal").style.display = "none";
-    }
-
-    function saveAmenity() {
-        let id = document.getElementById("amenityId").value;
-        let name = document.getElementById("amenityName").value.trim();
-
-        if (!name) {
-            iziToast.warning({
-                title: "Lỗi!",
-                message: "Tên tiện nghi không được để trống.",
-                position: "topRight",
-                timeout: 3000
-            });
-            return;
+    <script>
+        function openCreateModal() {
+            document.getElementById("modalTitle").textContent = "Thêm Tiện Nghi";
+            document.getElementById("amenityId").value = '';
+            document.getElementById("amenityName").value = '';
+            document.getElementById("amenityModal").classList.add("show");
+            document.getElementById("amenityModal").style.display = "block";
         }
 
-        let url = id ? "/Admin/EditAmenity" : "/Admin/CreateAmenity";
-        let data = JSON.stringify({ IdAmenity: id ? parseInt(id) : 0, Name: name });
+        function openEditModal(id, name) {
+            document.getElementById("modalTitle").textContent = "Sửa Tiện Nghi";
+            document.getElementById("amenityId").value = id;
+            document.getElementById("amenityName").value = name;
+            document.getElementById("amenityModal").classList.add("show");
+            document.getElementById("amenityModal").style.display = "block";
+        }
 
-        fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: data
-        })
-            .then(response => response.json())
-            .then(response => {
-                iziToast.show({
-                    title: response.success ? "Thành công!" : "Lỗi!",
-                    message: response.message,
-                    position: "topRight",
-                    timeout: 1000,
-                    color: response.success ? "green" : "red"
-                });
+        function closeModal() {
+            document.getElementById("amenityModal").classList.remove("show");
+            document.getElementById("amenityModal").style.display = "none";
+        }
 
-                if (response.success) {
-                    closeModal();
-                    updateAmenityTable();
-                }
-            })
-            .catch(() => {
-                iziToast.error({
+        function saveAmenity() {
+            let id = document.getElementById("amenityId").value;
+            let name = document.getElementById("amenityName").value.trim();
+
+            if (!name) {
+                iziToast.warning({
                     title: "Lỗi!",
-                    message: "Có lỗi xảy ra, vui lòng thử lại.",
+                    message: "Tên tiện nghi không được để trống.",
                     position: "topRight",
-                    timeout: 1000
+                    timeout: 3000
                 });
-            });
-    }
+                return;
+            }
 
-    function deleteAmenity(id) {
-        iziToast.show({
-            class: "iziToast-custom",
-            title: "Xác nhận xóa",
-            message: "Bạn có chắc chắn muốn xóa? Hành động này không thể hoàn tác!",
-            position: "center",
-            timeout: false,
-            close: false,
-            overlay: true,
-            displayMode: "once",
-            drag: false,
-            icon: "fa fa-question-circle",
-            buttons: [
-                [
-                    '<button><i class="fa fa-check"></i> Có, xóa</button>',
-                    function (instance, toast) {
-                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+            let url = id ? "/Admin/EditAmenity" : "/Admin/CreateAmenity";
+            let data = JSON.stringify({ IdAmenity: id ? parseInt(id) : 0, Name: name });
 
-                        fetch("/Admin/DeleteAmenity", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                            body: new URLSearchParams({ id: id })
-                        })
-                            .then(response => response.json())
-                            .then(response => {
-                                iziToast.show({
-                                    title: response.success ? "Đã xóa!" : "Lỗi!",
-                                    message: response.message,
-                                    position: "topRight",
-                                    timeout: 1000,
-                                    color: response.success ? "green" : "red"
-                                });
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: data
+            })
+                .then(response => response.json())
+                .then(response => {
+                    iziToast.show({
+                        title: response.success ? "Thành công!" : "Lỗi!",
+                        message: response.message,
+                        position: "topRight",
+                        timeout: 1000,
+                        color: response.success ? "green" : "red"
+                    });
 
-                                if (response.success) {
-                                    let row = document.getElementById("row_" + id);
-                                    if (row) row.remove();
-                                    updateAmenityTable();
-                                }
-                            });
-                    },
-                    true
-                ],
-                [
-                    '<button><i class="fa fa-times"></i> Hủy</button>',
-                    function (instance, toast) {
-                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                    if (response.success) {
+                        closeModal();
+                        updateAmenityTable();
                     }
-                ]
-            ]
-        });
-    }
-
-    function updateAmenityTable() {
-        fetch("/Admin/ManageAmenities")
-            .then(response => response.text())
-            .then(data => {
-                let parser = new DOMParser();
-                let doc = parser.parseFromString(data, "text/html");
-                let newTableBody = doc.querySelector("#amenityTableBody").innerHTML;
-                document.getElementById("amenityTableBody").innerHTML = newTableBody;
-
-                let rows = document.querySelectorAll("#amenityTableBody tr");
-                rows.forEach((row, index) => {
-                    row.querySelector("td:first-child").textContent = index + 1;
+                })
+                .catch(() => {
+                    iziToast.error({
+                        title: "Lỗi!",
+                        message: "Có lỗi xảy ra, vui lòng thử lại.",
+                        position: "topRight",
+                        timeout: 1000
+                    });
                 });
+        }
+
+        function deleteAmenity(id) {
+            iziToast.show({
+                class: "iziToast-custom",
+                title: "Xác nhận xóa",
+                message: "Bạn có chắc chắn muốn xóa? Hành động này không thể hoàn tác!",
+                position: "center",
+                timeout: false,
+                close: false,
+                overlay: true,
+                displayMode: "once",
+                drag: false,
+                icon: "fa fa-question-circle",
+                buttons: [
+                    [
+                        '<button><i class="fa fa-check"></i> Có, xóa</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                            fetch("/Admin/DeleteAmenity", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                body: new URLSearchParams({ id: id })
+                            })
+                                .then(response => response.json())
+                                .then(response => {
+                                    iziToast.show({
+                                        title: response.success ? "Đã xóa!" : "Lỗi!",
+                                        message: response.message,
+                                        position: "topRight",
+                                        timeout: 1000,
+                                        color: response.success ? "green" : "red"
+                                    });
+
+                                    if (response.success) {
+                                        let row = document.getElementById("row_" + id);
+                                        if (row) row.remove();
+                                        updateAmenityTable();
+                                    }
+                                });
+                        },
+                        true
+                    ],
+                    [
+                        '<button><i class="fa fa-times"></i> Hủy</button>',
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                        }
+                    ]
+                ]
             });
-    }
-</script>
+        }
+
+        function updateAmenityTable() {
+            fetch("/Admin/ManageAmenities")
+                .then(response => response.text())
+                .then(data => {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(data, "text/html");
+                    let newTableBody = doc.querySelector("#amenityTableBody").innerHTML;
+                    document.getElementById("amenityTableBody").innerHTML = newTableBody;
+
+                    let rows = document.querySelectorAll("#amenityTableBody tr");
+                    rows.forEach((row, index) => {
+                        row.querySelector("td:first-child").textContent = index + 1;
+                    });
+                });
+        }
+    </script>
+</body>

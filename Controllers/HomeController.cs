@@ -264,7 +264,7 @@ namespace KLTN.Controllers
             }
             var otherHouses = _context
                 .Houses.Include(h => h.HouseDetails)
-                .Where(h => h.IdUser == house.IdUser && h.IdHouse != id)
+                .Where(h => h.IdUser == house.IdUser && h.IdHouse != id && h.Status != HouseStatus.Pending)
                 .Select(h => new House
                 {
                     IdHouse = h.IdHouse,
@@ -277,7 +277,7 @@ namespace KLTN.Controllers
 
             var otherHousesUser = _context
                 .Houses.Include(h => h.HouseDetails)
-                .Where(h => h.IdUser != house.IdUser && h.IdHouse != id)
+                .Where(h => h.IdUser != house.IdUser && h.IdHouse != id && h.Status != HouseStatus.Pending)
                 .Take(3) // Lấy 3 nhà trọ khác
                 .Select(h => new House
                 {

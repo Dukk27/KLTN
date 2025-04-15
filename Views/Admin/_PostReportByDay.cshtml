@@ -1,82 +1,88 @@
 @using KLTN.ViewModels
 @model List<PostByDayReportViewModel>
 
-<link rel="stylesheet" href="~/css/Admin/reportbyday.css">
-<link rel="stylesheet" href="~/css/Admin/index.css">
+<head>
+    <link rel="stylesheet" href="~/css/Admin/reportbyday.css">
+    <link rel="stylesheet" href="~/css/Admin/index.css">
+</head>
 
-<h3 class="text-center mt-3">Thống kê bài đăng theo ngày</h3>
+<body>
+    <h3 class="text-center mt-3">Thống kê bài đăng theo ngày</h3>
 
-<div class="mb-3">
-    <label>Từ ngày:</label>
-    <input type="date" id="startDate" class="form-control" style="display:inline-block; width: 200px;" />
+    <div class="mb-3">
+        <label>Từ ngày:</label>
+        <input type="date" id="startDate" class="form-control" style="display:inline-block; width: 200px;" />
 
-    <label class="ms-3">Đến ngày:</label>
-    <input type="date" id="endDate" class="form-control" style="display:inline-block; width: 200px;" />
+        <label class="ms-3">Đến ngày:</label>
+        <input type="date" id="endDate" class="form-control" style="display:inline-block; width: 200px;" />
 
-    <button class="btn btn-primary ms-3" onclick="loadReportByDate()">Lọc</button>
-</div>
+        <button class="btn btn-primary ms-3" onclick="loadReportByDate()">Lọc</button>
+    </div>
 
-<table class="table">
-    <thead id="reportHeader" style="display: none;">
-        <tr>
-            <th>Ngày đăng</th>
-            <th>ID</th>
-            <th>Địa chỉ</th>
-            <th>Giá</th>
-            <th>Trạng thái</th>
-        </tr>
-    </thead>
-    <tbody id="reportBody">
-        
-    </tbody>
-</table>
+    <table class="table">
+        <thead id="reportHeader" style="display: none;">
+            <tr>
+                <th>Ngày đăng</th>
+                <th>ID</th>
+                <th>Địa chỉ</th>
+                <th>Giá</th>
+                <th>Trạng thái</th>
+                <th>Người đăng</th>
+            </tr>
+        </thead>
+        <tbody id="reportBody">
+            
+        </tbody>
+    </table>
 
-<script>
-    function initDateDefaults() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById("startDate").value = today;
-        document.getElementById("endDate").value = today;
-    }
-
-    function loadReportByDate() {
-        const start = document.getElementById("startDate").value;
-        const end = document.getElementById("endDate").value;
-
-        if (!start || !end) {
-            alert("Vui lòng chọn đầy đủ khoảng thời gian!");
-            return;
+    <script>
+        function initDateDefaults() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById("startDate").value = today;
+            document.getElementById("endDate").value = today;
         }
 
-        fetch(`/Admin/PostReportByDayFilter?startDate=${start}&endDate=${end}`)
-            .then(res => res.json())
-            .then(data => {
-                const tbody = document.getElementById("reportBody");
-                tbody.innerHTML = "";
-                const thead = document.getElementById("reportHeader");
+        function loadReportByDate() {
+            const start = document.getElementById("startDate").value;
+            const end = document.getElementById("endDate").value;
 
-                if (data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5">Không có dữ liệu.</td></tr>`;
-                    thead.style.display = "none"; // Ẩn tiêu đề nếu không có dữ liệu
-                } else {
-                    thead.style.display = "table-header-group"; // Hiện tiêu đề khi có dữ liệu
-                    data.forEach(post => {
-                        const date = new Date(post.timePost).toLocaleDateString('vi-VN');
-                        const html = `
-                            <tr>
-                                <td>${date}</td>
-                                <td>${post.idHouse}</td>
-                                <td>${post.address}</td>
-                                <td>${post.price?.toLocaleString('vi-VN')} VND</td>
-                                <td>${post.status}</td>
-                            </tr>
-                        `;
-                        tbody.innerHTML += html;
-                    });
-                }
-            })
-            .catch(err => console.error("Lỗi khi tải dữ liệu:", err));
-    }
+            if (!start || !end) {
+                alert("Vui lòng chọn đầy đủ khoảng thời gian!");
+                return;
+            }
 
-    initDateDefaults();
-    loadReportByDate();
-</script>
+            fetch(`/Admin/PostReportByDayFilter?startDate=${start}&endDate=${end}`)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById("reportBody");
+                    tbody.innerHTML = "";
+                    const thead = document.getElementById("reportHeader");
+
+                    if (data.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5">Không có dữ liệu.</td></tr>`;
+                        thead.style.display = "none"; // Ẩn tiêu đề nếu không có dữ liệu
+                    } else {
+                        thead.style.display = "table-header-group"; // Hiện tiêu đề khi có dữ liệu
+                        data.forEach(post => {
+                            const date = new Date(post.timePost).toLocaleDateString('vi-VN');
+                            const html = `
+                                <tr>
+                                    <td>${date}</td>
+                                    <td>${post.idHouse}</td>
+                                    <td>${post.address}</td>
+                                    <td>${post.price?.toLocaleString('vi-VN')} VND</td>
+                                    <td>${post.status}</td>
+                                    <td>${post.userName}</td>
+                                </tr>
+                            `;
+                            tbody.innerHTML += html;
+                        });
+                    } 
+                })
+                .catch(err => console.error("Lỗi khi tải dữ liệu:", err));
+        }
+
+        initDateDefaults();
+        loadReportByDate();
+    </script>
+</body>

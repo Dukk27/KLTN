@@ -333,6 +333,7 @@ namespace KLTN.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         public async Task<IActionResult> DeleteHouse(int id)
         {
             try
@@ -361,6 +362,7 @@ namespace KLTN.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> HideHouse(int id)
         {
             var house = await _houseRepository.GetHouseWithDetailsAsync(id);
@@ -377,6 +379,7 @@ namespace KLTN.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> ShowHouse(int id)
         {
             var house = await _houseRepository.GetHouseWithDetailsAsync(id);

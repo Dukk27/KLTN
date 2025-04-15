@@ -5,7 +5,7 @@ var map = new goongjs.Map({
   center: [105.83991, 21.028], // Tọa độ mặc định (Hà Nội)
   zoom: 15,
 });
-
+ 
 function zoomIn() {
   var currentZoom = map.getZoom();
   if (currentZoom < 20) {
@@ -150,19 +150,9 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("bookAppointmentBtn")
     .addEventListener("click", function () {
       if (!isAuthenticated) {
-        iziToast.warning({
-          title: "Cảnh báo",
-          message: "Bạn cần đăng nhập để đặt lịch hẹn.",
-          position: "topRight",
-          timeout: 1000,
-        });
-
-        setTimeout(function () {
-          window.location.href = "/Account/Login";
-        }, 1000);
-
-        return;
-      }
+        const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.href = `/Account/Login?returnUrl=${returnUrl}`;
+    }
 
       if (houseOwnerId === currentUserId) {
         iziToast.error({
@@ -235,17 +225,9 @@ document.addEventListener("DOMContentLoaded", function () {
             });
           }
         } catch (error) {
-          iziToast.warning({
-            title: "Cảnh báo",
-            message: "Bạn cần đăng nhập để đặt lịch hẹn.",
-            position: "topRight",
-            timeout: 1000,
-          });
-
-          setTimeout(function () {
-            window.location.href = "/Account/Login";
-          }, 1000);
-        }
+            const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
+            window.location.href = `/Account/Login?returnUrl=${returnUrl}`;
+        }      
       });
   }
 });

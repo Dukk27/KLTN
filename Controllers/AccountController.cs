@@ -36,13 +36,18 @@ namespace KLTN.Controllers
             _emailService = emailService;
         }
 
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string userName, string password)
+        public async Task<IActionResult> Login(
+            string userName,
+            string password,
+            string returnUrl = null
+        )
         {
             var userLock = await _accountRepository.GetUserIdByUsername(userName);
             if (userLock != null)
@@ -110,6 +115,11 @@ namespace KLTN.Controllers
 
                 TempData["SuccessMessage"] = "Đăng nhập thành công!";
 
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl); // chuyển hướng đến trang trước đó
+                }
+
                 if (role == "Admin")
                 {
                     return RedirectToAction("Index", "Admin");
@@ -137,10 +147,11 @@ namespace KLTN.Controllers
                 ViewBag.Error = "Tên đăng nhập hoặc mật khẩu không đúng!";
             }
 
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout(string returnUrl = null)
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Remove("UserName");
@@ -151,8 +162,13 @@ namespace KLTN.Controllers
                 _memoryCache.Remove($"FailedAttempts_{userName}");
                 _memoryCache.Remove($"Lockout_{userName}");
             }
+
             TempData["SuccessMessage"] = "Đăng xuất thành công!";
 
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
             return RedirectToAction("Index", "Home");
         }
 

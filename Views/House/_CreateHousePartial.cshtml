@@ -1,11 +1,12 @@
 @model KLTN.ViewModels.HousePostViewModel
 
-<link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/House/create.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/iziToast.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<head>
+    <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/House/create.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/iziToast.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
 
 <form asp-action="Create" method="post" enctype="multipart/form-data" id="createHouseForm" target="_top">
     <div class="section">
@@ -60,7 +61,7 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="electricityBillingMethod">Cách tính tiền điện</label>
+                    <label for="electricityBillingMethod">Cách tính tiền điện *</label>
                     <select id="electricityBillingMethod" class="form-control">
                         <option value="theo-so">Tính theo số điện (VNĐ/kWh)</option>
                         <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
@@ -76,7 +77,7 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="waterBillingMethod">Cách tính tiền nước</label>
+                    <label for="waterBillingMethod">Cách tính tiền nước *</label>
                     <select id="waterBillingMethod" class="form-control">
                         <option value="theo-so">Tính theo số nước (VNĐ/m³)</option>
                         <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
@@ -92,7 +93,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label asp-for="HouseDetail.Describe">Mô tả *</label>
+                    <label asp-for="HouseDetail.Describe">Mô tả</label>
                     <textarea asp-for="HouseDetail.Describe" class="form-control" rows="5"
                         placeholder="Mô tả chi tiết về nhà trọ (VD: Phòng rộng rãi, có ban công...)"></textarea>
                     <span asp-validation-for="HouseDetail.Describe" class="text-danger"></span>
@@ -121,7 +122,7 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label asp-for="HouseDetail.TienDv">Giá dịch vụ khác</label>
+                    <label asp-for="HouseDetail.TienDv">Giá dịch vụ khác *</label>
                     <input asp-for="HouseDetail.TienDv" class="form-control" placeholder="Giá dịch vụ (VD: 100.000)" />
                     <span asp-validation-for="HouseDetail.TienDv" class="text-danger"></span>
                 </div>
@@ -134,12 +135,14 @@
         <div class="mt-2">
             <label for="fullAddress">Địa chỉ đầy đủ *</label>
             <input type="text" id="fullAddress" class="form-control required"
-                placeholder="Địa chỉ cụ thể (VD: 96 Định Công)" required />
+                placeholder="Địa chỉ cụ thể (VD: 96 Định Công, Phương Liệt, Thanh Xuân, Hà Nội)" required />
             <ul id="addressSuggestions" class="list-group"></ul>
             <span id="fullAddressError" class="text-danger"></span>
         </div>
         <input type="hidden" id="address" name="HouseDetail.Address" />
     </div>
+    
+    <div id="map" style="width: 100%; height: 400px; margin-top: 15px; margin-bottom: 20px"></div>
 
     <div class="section">
         <h4>Tiện ích</h4>
@@ -205,6 +208,8 @@
 <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="~/js/House/create.js"></script>
+<script src="~/js/goong-js.js"></script>
+<link rel="stylesheet" href="~/css/goong-js.css" asp-append-version="true" />
 
 <script>
     $(document).ready(function () {
@@ -219,6 +224,13 @@
                     $("#fullAddressError").text("Vui lòng nhập địa chỉ cụ thể");
                     isValid = false;
                 }
+
+                // Kiểm tra nếu địa chỉ không được chọn từ gợi ý
+                if (!$('#address').val().trim()) {
+                    $('#fullAddressError').text("Vui lòng chọn địa chỉ từ danh sách gợi ý");
+                    isValid = false;
+                }
+
                 if (!$("#House_NameHouse").val().trim()) {
                     $("#House_NameHouse").next(".text-danger").text("Vui lòng nhập tiêu đề!");
                     isValid = false;
@@ -236,6 +248,22 @@
                     isValid = false;
                 }
 
+                let tienDienVal = $("#tienDien").val().replace(/\D/g, '');
+                if ($("#electricityBillingMethod").val() !== "bao-gom") {
+                    if (!tienDienVal || isNaN(tienDienVal) || parseFloat(tienDienVal) <= 0) {
+                        $("span[data-valmsg-for='HouseDetail.TienDien']").text("Vui lòng nhập giá điện hợp lệ!");
+                        isValid = false;
+                    }
+                }
+
+                let tienNuocVal = $("#tienNuoc").val().replace(/\D/g, '');
+                if ($("#waterBillingMethod").val() !== "bao-gom") {
+                    if (!tienNuocVal || isNaN(tienNuocVal) || parseFloat(tienNuocVal) <= 0) {
+                        $("span[data-valmsg-for='HouseDetail.TienNuoc']").text("Vui lòng nhập giá nước hợp lệ!");
+                        isValid = false;
+                    }
+                }
+
                 // Kiểm tra giá dịch vụ (phải là số dương)
                 let tienDv = parseFloat($("#HouseDetail_TienDv").val());
 
@@ -248,6 +276,18 @@
                 if (!$("#SelectedHouseType").val()) {
                     $("#SelectedHouseType").next(".text-danger").text("Vui lòng chọn loại nhà trọ!");
                     isValid = false;
+                }
+
+                // Kiểm tra tiện ích (ít nhất 1 tiện ích được chọn)
+                if ($("input[name='SelectedAmenities']:checked").length === 0) {
+                    isValid = false;
+                    $(".amenities-container").append('<span id="amenitiesError" class="text-danger d-block mt-2">Vui lòng chọn ít nhất một tiện ích!</span>');
+                }
+
+                // Kiểm tra tải ảnh
+                if ($("#imageFiles")[0].files.length === 0) {
+                    isValid = false;
+                    $("#imageError").text("Vui lòng tải lên ít nhất một hình ảnh!");
                 }
 
                 if (!isValid) {
@@ -296,7 +336,7 @@
                         close: false,
                         overlay: true,
                         title: 'Xác nhận thanh toán',
-                        message: 'Bạn đã hết lượt đăng miễn phí. Phí đăng bài là 50.000 VNĐ/bài. Bạn có muốn tiếp tục không?',
+                        message: 'Bạn đã hết lượt đăng miễn phí. Phí đăng bài là 10.000 VNĐ/bài. Bạn có muốn tiếp tục không?',
                         position: 'center',
                         icon: "fa fa-question-circle",
                         buttons: [
@@ -358,5 +398,92 @@
 
         document.getElementById("waterBillingMethod")?.addEventListener("change", updateWaterPrice);
         document.getElementById("tienNuoc")?.addEventListener("input", updateWaterPrice);
+    });
+
+    goongjs.accessToken = 'nFXjCGo9PppMz9YGX6S2fLdWnTwQKzCCmCimGy3G';
+
+    let map, marker;
+
+    function initGoongMap() {
+        map = new goongjs.Map({
+            container: 'map',
+            style: 'https://tiles.goong.io/assets/goong_map_web.json',
+            center: [105.8544441, 21.028511], // Hà Nội mặc định
+            zoom: 14
+        });
+
+        marker = new goongjs.Marker()
+            .setLngLat([105.8544441, 21.028511])
+            .addTo(map);
+    }
+
+    function geocodeAddress(address) {
+        // Thực hiện gọi API Geocode để lấy kết quả địa chỉ
+        $.get(`https://rsapi.goong.io/Geocode?address=${encodeURIComponent(address)}&api_key=RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy`)
+            .done(function (response) {
+                if (response.results && response.results.length > 0) {
+                    showSuggestions(response.results);
+                } else {
+                    $('#addressSuggestions').empty().append(`<li class="list-group-item text-danger">Không tìm thấy địa chỉ</li>`);
+                }
+            })
+            .fail(function () {
+                $('#addressSuggestions').empty().append(`<li class="list-group-item text-danger">Lỗi khi tìm kiếm địa chỉ</li>`);
+            });
+    }
+
+    function showSuggestions(results) {
+        const suggestionBox = $('#addressSuggestions');
+        suggestionBox.empty();
+
+        results.forEach((result) => {
+            const address = result.formatted_address;
+            const location = result.geometry.location;
+
+            const listItem = $(`<li class="list-group-item list-group-item-action">${address}</li>`);
+            listItem.on('click', function () {
+                // Cập nhật ô nhập liệu và ẩn các gợi ý
+                $('#fullAddress').val(address);
+                $('#address').val(address); // Cập nhật input ẩn với địa chỉ chính xác
+                suggestionBox.empty();
+
+                // Di chuyển bản đồ đến vị trí được chọn
+                const lngLat = [location.lng, location.lat];
+                map.setCenter(lngLat);
+                marker.setLngLat(lngLat);
+
+                // Hiển thị popup chứa địa chỉ
+                const popup = new goongjs.Popup({ offset: 25 }).setText(address);
+                marker.setPopup(popup).togglePopup();
+            });
+
+            suggestionBox.append(listItem); // Thêm gợi ý vào danh sách
+        });
+    }
+
+    $(document).ready(function () {
+        // Khởi tạo bản đồ Goong khi trang đã sẵn sàng
+        initGoongMap();
+
+        // Lắng nghe sự kiện input để gọi geocodeAddress khi người dùng nhập địa chỉ
+        $('#fullAddress').on('input', function () {
+            const value = $(this).val().trim();
+            if (value.length >= 4) {
+                geocodeAddress(value); // Gọi hàm geocodeAddress khi độ dài địa chỉ >= 4
+            } else {
+                $('#addressSuggestions').empty(); // Xóa gợi ý nếu độ dài địa chỉ < 4
+            }
+        });
+
+        // Lắng nghe sự kiện nhấn Enter khi người dùng nhập địa chỉ
+        $('#fullAddress').on('keypress', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                const val = $(this).val().trim();
+                if (val) {
+                    geocodeAddress(val); // Gọi geocodeAddress khi nhấn Enter
+                }
+            }
+        });
     });
 </script>

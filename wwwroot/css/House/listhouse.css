@@ -2,7 +2,7 @@ h2,
 h3 {
   font-family: Arial, sans-serif;
   color: #333;
-  margin-top: 20px;
+  margin-top: 7px;
   margin-bottom: 20px;
   font-weight: bold;
   text-align: center;
@@ -16,7 +16,31 @@ h3 {
   transition: background-color 0.3s;
 } */
 
+.user-houses-page {
+  min-height: 55vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Styling cho thông báo không có bài đăng */
+.no-posts-message {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  max-width: 500px;
+  margin-bottom: 250px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .card {
+  margin-top: 20px;
   border-radius: 15px;
   transition: transform 0.2s ease-in-out;
   min-height: 240px;
@@ -35,6 +59,7 @@ h3 {
   width: 90%;
   margin: auto;
   font-family: Arial, sans-serif;
+  margin-bottom: 20px;
 }
 
 @media (max-width: 992px) {

@@ -4,62 +4,63 @@
     var currentUserId = ViewBag.CurrentUserId;
 }
 
-<link rel="stylesheet" href="~/css/iziToast.css">
-<link rel="stylesheet" href="~/css/Chat/chatlist.css">
+<head>
+    <link rel="stylesheet" href="~/css/iziToast.css">
+    <link rel="stylesheet" href="~/css/Chat/chatlist.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+    <script src="~/js/Chat/chatList.js"></script>
+</head>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
-<script src="~/js/Chat/chatList.js"></script>
+<body>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a href="@Url.Action("Index", "Admin")">Trang Chủ</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Index", "Home")">Trang Chủ</a>
+                }
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Danh Sách Tin Nhắn</li>
+        </ol>
+    </nav>
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            @if (User.IsInRole("Admin"))
-            {
-                <a href="@Url.Action("Index", "Admin")">Trang Chủ</a>
-            }
-            else
-            {
-                <a href="@Url.Action("Index", "Home")">Trang Chủ</a>
-            }
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">Danh Sách Tin Nhắn</li>
-    </ol>
-</nav>
+    <h2 style="font-family: Arial, sans-serif; font-weight: bold; color: #333; text-align: center; margin-bottom: 15px; margin-top: 20px">Danh Sách Tin Nhắn</h2>
+    <div class="chatbox-body">
+        @if (Model.Any())
+        {
+            <ul class="chat-list">
+                @foreach (var conversation in Model)
+                {
+                    var lastSenderName = conversation.LastSenderId == currentUserId ? "Bạn" : conversation.LastSenderName;
 
-<h2 style="font-family: Arial, sans-serif; font-weight: bold; color: #333; text-align: center; margin-bottom: 15px; margin-top: 20px">Danh Sách Tin Nhắn</h2>
-<div class="chatbox-body">
-    @if (Model.Any())
-    {
-        <ul class="chat-list">
-            @foreach (var conversation in Model)
-            {
-                var lastSenderName = conversation.LastSenderId == currentUserId ? "Bạn" : conversation.LastSenderName;
-
-                <li class="chat-item @(conversation.HasUnreadMessages ? "unread" : "")" onclick="openChat('@conversation.ConversationId')">
-                    <div class="chat-user">
-                        <strong>@conversation.UserName</strong> (@(conversation.HasUnreadMessages ? "Có tin chưa đọc" : "Đã đọc"))
-                        <br />
-                        <small class="last-message @(conversation.HasUnreadMessages ? "unread" : "")">
-                            <b>@lastSenderName:</b> @conversation.LastMessage
-                        </small>
-                    </div>
-                    <div class="chat-meta">
-                        <small class="chat-time">
-                            @(conversation.LastMessageTime?.ToString("HH:mm dd/MM") ?? "")
-                        </small>
-                        <button class="delete-btn" onclick="deleteConversation(event, '@conversation.ConversationId')">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div> 
-                </li>
-            }
-        </ul>
-    }
-    else
-    {
-        <p class="no-messages">Bạn chưa có cuộc trò chuyện nào!.</p>
-    }
-</div>
-
- 
+                    <li class="chat-item @(conversation.HasUnreadMessages ? "unread" : "")" onclick="openChat('@conversation.ConversationId')">
+                        <div class="chat-user">
+                            <strong>@conversation.UserName</strong> (@(conversation.HasUnreadMessages ? "Có tin chưa đọc" : "Đã đọc"))
+                            <br />
+                            <small class="last-message @(conversation.HasUnreadMessages ? "unread" : "")">
+                                <b>@lastSenderName:</b> @conversation.LastMessage
+                            </small>
+                        </div>
+                        <div class="chat-meta">
+                            <small class="chat-time">
+                                @(conversation.LastMessageTime?.ToString("HH:mm dd/MM") ?? "")
+                            </small>
+                            <button class="delete-btn" onclick="deleteConversation(event, '@conversation.ConversationId')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div> 
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="no-messages">Bạn chưa có cuộc trò chuyện nào!.</p>
+        }
+    </div>
+</body>

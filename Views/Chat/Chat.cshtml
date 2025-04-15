@@ -4,59 +4,61 @@
 }
 <link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
 
-<div id="chat-box" class="chat-messages">
-    <h2>Chat</h2>
+<body>
+    <div id="chat-box" class="chat-messages">
+        <h2>Chat</h2>
 
-    <input type="hidden" id="currentUserId" value="@currentUserId" />
-    <input type="hidden" id="receiverId" value="@receiverId" />
+        <input type="hidden" id="currentUserId" value="@currentUserId" />
+        <input type="hidden" id="receiverId" value="@receiverId" />
 
-    <div id="messages">
-        @foreach (var message in ViewBag.Messages)
-        {
-            var isCurrentUser = message.SenderId == currentUserId;
+        <div id="messages">
+            @foreach (var message in ViewBag.Messages)
+            {
+                var isCurrentUser = message.SenderId == currentUserId;
 
-            <div class="message-container @(isCurrentUser ? "sent" : "received")">
-                @if (isCurrentUser)
-                {
-                    <!-- Nếu là tin nhắn của người dùng hiện tại (sent) -->
-                    <span class="sender-name">Bạn</span>
-                    <div class="message">@message.Content</div>
-                    <span class="message-time">@message.Timestamp.ToString("HH:mm")</span>
-                }
-                else
-                {
-                    <!-- Nếu là tin nhắn của người khác (received) -->
-                    <span class="sender-name">@message.SenderName</span>
-                    <div class="message">@message.Content</div>
-                    <span class="message-time">@message.Timestamp.ToString("HH:mm")</span>
-                }
-            </div>
-        }
+                <div class="message-container @(isCurrentUser ? "sent" : "received")">
+                    @if (isCurrentUser)
+                    {
+                        <!-- Nếu là tin nhắn của người dùng hiện tại (sent) -->
+                        <span class="sender-name">Bạn</span>
+                        <div class="message">@message.Content</div>
+                        <span class="message-time">@message.Timestamp.ToString("HH:mm")</span>
+                    }
+                    else
+                    {
+                        <!-- Nếu là tin nhắn của người khác (received) -->
+                        <span class="sender-name">@message.SenderName</span>
+                        <div class="message">@message.Content</div>
+                        <span class="message-time">@message.Timestamp.ToString("HH:mm")</span>
+                    }
+                </div>
+            }
 
+        </div>
+
+        <div style="display: flex; margin-top: 10px;">
+            <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
+            <button id="chat" onclick="sendMessage()">Gửi</button>
+        </div>
     </div>
 
-    <div style="display: flex; margin-top: 10px;">
-        <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
-        <button id="chat" onclick="sendMessage()">Gửi</button>
-    </div>
-</div>
-
-<!-- IziToast -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-<!-- SignalR -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
-<script src="~/js/Chat/chat.js"></script>
-<script>
-    function scrollToBottom() {
-        var messagesContainer = document.getElementById("messages");
-        if (messagesContainer) {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    <!-- IziToast -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <!-- SignalR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script src="~/js/Chat/chat.js"></script>
+    <script>
+        function scrollToBottom() {
+            var messagesContainer = document.getElementById("messages");
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
         }
-    }
 
-    // Gọi hàm khi trang tải xong
-    document.addEventListener("DOMContentLoaded", function () {
-        scrollToBottom();
-    });
-</script>
+        // Gọi hàm khi trang tải xong
+        document.addEventListener("DOMContentLoaded", function () {
+            scrollToBottom();
+        });
+    </script>
+</body>

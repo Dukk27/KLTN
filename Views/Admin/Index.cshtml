@@ -2,87 +2,91 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
-    <script>
-        iziToast.success({
-            title: 'Thành công!',
-            message: '@TempData["SuccessMessage"]',
-            position: 'topRight',
-            timeout: 2000,
-        });
-    </script>
-}
+<head>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+        <script>
+            iziToast.success({
+                title: 'Thành công!',
+                message: '@TempData["SuccessMessage"]',
+                position: 'topRight',
+                timeout: 2000,
+            });
+        </script>
+    }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<link rel="stylesheet" href="~/css/Admin/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="~/css/Admin/index.css">
+</head>
 
-<div class="container-fluid-menu">
-    <!-- Nút menu cho mobile -->
-    <button class="btn btn-primary d-md-none" id="toggleSidebarBtn" style="margin: 15px;">
-        <i class="fas fa-bars"></i> Menu
-    </button>
+<body>
+    <div class="container-fluid-menu">
+        <!-- Nút menu cho mobile -->
+        <button class="btn btn-primary d-md-none" id="toggleSidebarBtn" style="margin: 15px;">
+            <i class="fas fa-bars"></i> Menu
+        </button>
 
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3" id="sidebar">
-            <ul class="nav flex-column">
-                <li class="nav-item main-nav-item">
-                    <a href="#" class="nav-link" id="manageAccountsLink">
-                        <i class="fas fa-user"></i> Quản Lý Tài Khoản
-                    </a>
-                </li>
-                <li class="nav-item main-nav-item">
-                    <a href="#" class="nav-link" id="managePostsLink">
-                        <i class="fas fa-file-alt"></i> Quản Lý Bài Đăng
-                    </a>
-                </li>
-                <li class="nav-item main-nav-item">
-                    <a href="#" class="nav-link" id="manageReviewsLink">
-                        <i class="fas fa-comment"></i> Quản Lý Bình Luận
-                    </a>
-                </li>
-                <li class="nav-item main-nav-item">
-                    <a href="#" class="nav-link" id="manageHouseTypesLink">
-                        <i class="fas fa-house"></i> Quản Lý Danh Mục Loại Nhà
-                    </a>
-                </li>
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3" id="sidebar">
+                <ul class="nav flex-column">
+                    <li class="nav-item main-nav-item">
+                        <a href="#" class="nav-link" id="manageAccountsLink">
+                            <i class="fas fa-user"></i> Quản Lý Tài Khoản
+                        </a>
+                    </li>
+                    <li class="nav-item main-nav-item">
+                        <a href="#" class="nav-link" id="managePostsLink">
+                            <i class="fas fa-file-alt"></i> Quản Lý Bài Đăng
+                        </a>
+                    </li>
+                    <li class="nav-item main-nav-item">
+                        <a href="#" class="nav-link" id="manageReviewsLink">
+                            <i class="fas fa-comment"></i> Quản Lý Bình Luận
+                        </a>
+                    </li>
+                    <li class="nav-item main-nav-item">
+                        <a href="#" class="nav-link" id="manageHouseTypesLink">
+                            <i class="fas fa-house"></i> Quản Lý Danh Mục Loại Nhà
+                        </a>
+                    </li>
 
-                <li class="nav-item main-nav-item">
-                    <a href="#" class="nav-link" id="manageAmenitiesLink">
-                        <i class="fas fa-tools"></i> Quản Lý Danh Mục Tiện Nghi
-                    </a>
-                </li>
+                    <li class="nav-item main-nav-item">
+                        <a href="#" class="nav-link" id="manageAmenitiesLink">
+                            <i class="fas fa-tools"></i> Quản Lý Danh Mục Tiện Nghi
+                        </a>
+                    </li>
 
-                <li class="nav-item main-nav-item">
-                    <a href="#" class="nav-link" id="manageChatLink">
-                        <i class="fas fa-comments"></i> Quản Lý Chat
-                    </a>
-                </li>
+                    <li class="nav-item main-nav-item">
+                        <a href="#" class="nav-link" id="manageChatLink">
+                            <i class="fas fa-comments"></i> Quản Lý Chat
+                        </a>
+                    </li>
 
-                <li class="nav-item main-nav-item">
-                    <a href="#" class="nav-link" id="postReportLink">
-                        <i class="fas fa-file"></i> Thống Kê Bài Đăng Theo Tài Khoản
-                    </a>
-                </li>
+                    <li class="nav-item main-nav-item">
+                        <a href="#" class="nav-link" id="postReportLink">
+                            <i class="fas fa-file"></i> Thống Kê Bài Đăng Theo Tài Khoản
+                        </a>
+                    </li>
 
-                <li class="nav-item main-nav-item">
-                    <a href="#" class="nav-link" id="postReportByDayLink">
-                        <i class="fas fa-file"></i> Thống Kê Bài Đăng Theo Ngày
-                    </a>
-                </li>
-            </ul>
-        </div>
+                    <li class="nav-item main-nav-item">
+                        <a href="#" class="nav-link" id="postReportByDayLink">
+                            <i class="fas fa-file"></i> Thống Kê Bài Đăng Theo Ngày
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-        <!-- Nội dung bên phải -->
-        <div class="col-md-9" id="content">
+            <!-- Nội dung bên phải -->
+            <div class="col-md-9" id="content">
 
-            <div id="contentPlaceholder">
+                <div id="contentPlaceholder">
+                </div>
             </div>
         </div>
     </div>
-</div>
+</body>
 
 @section Scripts {
     <script>
@@ -161,5 +165,4 @@
             }
         });
     </script>
-
 }

@@ -29,7 +29,7 @@
 
 .chat-item:hover {
     background-color: #f1f1f1;
-}
+} 
 
 .chat-item.unread {
     background-color: #e9f7ef;

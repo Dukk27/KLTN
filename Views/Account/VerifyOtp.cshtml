@@ -1,99 +1,104 @@
 @{
     ViewData["Title"] = "Xác minh OTP";
 }
-<div class="container mt-5">
-    <div class="card shadow-lg mx-auto" style="max-width: 450px; padding: 20px;">
-        <div class="card-body">
-            <h2 class="text-center mb-4">Xác minh OTP</h2>
 
-            @if (ViewBag.Message != null)
-            {
-                <div class="alert alert-info">@ViewBag.Message</div>
-            }
+<head>
+    <style>
+        .container {
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
 
-            <form method="post" asp-action="VerifyOtp">
-                <input type="hidden" name="email" value="@ViewBag.Email" />
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-lg mx-auto" style="max-width: 450px; padding: 20px;">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Xác minh OTP</h2>
 
-                <div class="form-group mb-3">
-                    <label for="otp">Nhập mã OTP</label>
-                    <input type="text" class="form-control" id="otp" name="otp" required
-                        placeholder="Nhập mã OTP gồm 6 chữ số" />
-                </div>
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-info">@ViewBag.Message</div>
+                }
 
-                <div class="text-center mb-3">
-                    <button type="submit" class="btn btn-primary" style="width: 250px;">Xác nhận</button>
-                </div>
-            </form>
+                <form method="post" asp-action="VerifyOtp">
+                    <input type="hidden" name="email" value="@ViewBag.Email" />
 
-            <p class="text-center mt-3">
-                <a asp-action="ForgotPassword">Gửi lại mã OTP?</a>
-            </p>
+                    <div class="form-group mb-3">
+                        <label for="otp">Nhập mã OTP</label>
+                        <input type="text" class="form-control" id="otp" name="otp" required
+                            placeholder="Nhập mã OTP gồm 6 chữ số" />
+                    </div>
+
+                    <div class="text-center mb-3">
+                        <button type="submit" class="btn btn-primary" style="width: 250px;">Xác nhận</button>
+                    </div>
+                </form>
+
+                <p class="text-center mt-3">
+                    <a asp-action="ForgotPassword">Gửi lại mã OTP?</a>
+                </p>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Thêm iziToast -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Thêm iziToast -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-    $(document).ready(function () {
-        $("form").submit(function (event) {
-            event.preventDefault(); // Ngăn chặn load lại trang
+    <script>
+        $(document).ready(function () {
+            $("form").submit(function (event) {
+                event.preventDefault(); // Ngăn chặn load lại trang
 
-            var otp = $("#otp").val();
-            var email = $("input[name='email']").val();
+                var otp = $("#otp").val();
+                var email = $("input[name='email']").val();
 
-            if (!otp) {
-                iziToast.error({
-                    title: "Lỗi!",
-                    message: "Vui lòng nhập mã OTP.",
-                    position: "topRight",
-                    timeout: 1000
-                });
-                return;
-            }
+                if (!otp) {
+                    iziToast.error({
+                        title: "Lỗi!",
+                        message: "Vui lòng nhập mã OTP.",
+                        position: "topRight",
+                        timeout: 1000
+                    });
+                    return;
+                }
 
-            $.ajax({
-                url: "@Url.Action("VerifyOtp", "Account")",
-                type: "POST",
-                data: { email: email, otp: otp },
-                success: function (response) {
-                    if (response.success) {
-                        iziToast.success({
-                            title: "Thành công!",
-                            message: response.message,
-                            position: "topRight",
-                            timeout: 1000,
-                            onClosing: function() {
-                                window.location.href = response.redirectUrl;
-                            }
-                        });
-                    } else {
+                $.ajax({
+                    url: "@Url.Action("VerifyOtp", "Account")",
+                    type: "POST",
+                    data: { email: email, otp: otp },
+                    success: function (response) {
+                        if (response.success) {
+                            iziToast.success({
+                                title: "Thành công!",
+                                message: response.message,
+                                position: "topRight",
+                                timeout: 1000,
+                                onClosing: function() {
+                                    window.location.href = response.redirectUrl;
+                                }
+                            });
+                        } else {
+                            iziToast.error({
+                                title: "Lỗi!",
+                                message: response.message,
+                                position: "topRight",
+                                timeout: 1000
+                            });
+                        }
+                    },
+                    error: function () {
                         iziToast.error({
-                            title: "Lỗi!",
-                            message: response.message,
+                            title: "Lỗi hệ thống!",
+                            message: "Có lỗi xảy ra, vui lòng thử lại.",
                             position: "topRight",
                             timeout: 1000
                         });
                     }
-                },
-                error: function () {
-                    iziToast.error({
-                        title: "Lỗi hệ thống!",
-                        message: "Có lỗi xảy ra, vui lòng thử lại.",
-                        position: "topRight",
-                        timeout: 1000
-                    });
-                }
+                });
             });
         });
-    });
-</script>
-
-<style>
-    .container {
-        margin-bottom: 50px;
-    }
-</style>
+    </script>
+</body>

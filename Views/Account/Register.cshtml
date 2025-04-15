@@ -3,75 +3,79 @@
     ViewData["Title"] = "Đăng ký";
 }
 
-<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/iziToast.css">
-<script src="~/js/eye.js"></script>
+<head>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/iziToast.css">
+    <script src="~/js/eye.js"></script>
+</head>
 
-<div class="register-container">
-    <div class="card shadow-lg register-card">
-        <h2 class="text-center mb-4">Đăng ký</h2>
+<body>
+    <div class="register-container">
+        <div class="card shadow-lg register-card">
+            <h2 class="text-center mb-4">Đăng ký</h2>
 
-        @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
-        {
-            <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
-        }
+            @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+            {
+                <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
+            }
 
-        <form id="registerForm" method="post" asp-action="Register">
-            <div class="form-group mb-3">
-                <label for="userName">Tên đăng nhập</label>
-                <input asp-for="UserName" class="form-control" id="userName" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label for="password">Mật khẩu</label>
-                <div class="input-group">
-                    <input asp-for="Password" type="password" class="form-control" id="password" />
-                    <button type="button" class="btn-outline-secondary toggle-password" data-target="password">
-                        <i class="fa-regular fa-eye"></i>
-                    </button>
-                </div> <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label for="confirmPassword">Xác nhận mật khẩu</label>
-                <div class="input-group">
-                    <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPassword" />
-                    <button type="button" class="btn-outline-secondary toggle-password"
-                        data-target="confirmPassword">
-                        <i class="fa-regular fa-eye"></i>
-                    </button>
-                </div> <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label for="phoneNumber">Số điện thoại</label>
-                <input asp-for="PhoneNumber" class="form-control" id="phoneNumber" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label for="email">Email</label>
-                <input asp-for="Email" class="form-control" id="email" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-                <div class="form-group mb-4">
-                    <label>Vai trò</label><br />
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="role1" name="Role" value="1" required />
-                        <label class="form-check-label" for="role1">Chủ trọ</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="role2" name="Role" value="2" required />
-                        <label class="form-check-label" for="role2">Người tìm phòng</label>
-                    </div>
+            <form id="registerForm" method="post" asp-action="Register">
+                <div class="form-group mb-3">
+                    <label for="userName">Tên đăng nhập</label>
+                    <input asp-for="UserName" class="form-control" id="userName" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
-                <div class="text-center mb-3">
-                    <button type="submit" class="btn btn-primary" style="width: 250px;">Đăng ký</button>
+                <div class="form-group mb-3">
+                    <label for="password">Mật khẩu</label>
+                    <div class="input-group">
+                        <input asp-for="Password" type="password" class="form-control" id="password" />
+                        <button type="button" class="btn-outline-secondary toggle-password" data-target="password">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div> <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-        </form>
+                <div class="form-group mb-3">
+                    <label for="confirmPassword">Xác nhận mật khẩu</label>
+                    <div class="input-group">
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPassword" />
+                        <button type="button" class="btn-outline-secondary toggle-password"
+                            data-target="confirmPassword">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div> <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="phoneNumber">Số điện thoại</label>
+                    <input asp-for="PhoneNumber" class="form-control" id="phoneNumber" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="email">Email</label>
+                    <input asp-for="Email" class="form-control" id="email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <div class="form-group mb-4">
+                        <label>Vai trò</label><br />
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="role1" name="Role" value="1" required />
+                            <label class="form-check-label" for="role1">Chủ trọ</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="role2" name="Role" value="2" required />
+                            <label class="form-check-label" for="role2">Người tìm phòng</label>
+                        </div>
+                    </div>
+                    <div class="text-center mb-3">
+                        <button type="submit" class="btn btn-primary" style="width: 250px;">Đăng ký</button>
+                    </div>
+            </form>
 
-        <p class="text-center mt-3">
-            <a>Bạn đã có tài khoản</a>
-            <a asp-action="Login"> Đăng nhập</a>
-        </p>
+            <p class="text-center mt-3">
+                <a>Bạn đã có tài khoản</a>
+                <a asp-action="Login"> Đăng nhập</a>
+            </p>
+        </div>
     </div>
-</div>
+</body>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

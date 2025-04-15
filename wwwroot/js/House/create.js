@@ -1,4 +1,4 @@
-const goongApiKey = "RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy";
+// const goongApiKey = "RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy";
 
 // Xử lý xem trước hình ảnh
 document.addEventListener("DOMContentLoaded", function () {
@@ -62,57 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
         };
         reader.readAsDataURL(file);
       });
-    });
-  }
-
-  // Gợi ý địa chỉ
-  if (addressInput) {
-    addressInput.addEventListener("input", function () {
-      const inputText = addressInput.value.trim();
-      if (inputText.length < 3) {
-        addressSuggestions.innerHTML = "";
-        return;
-      }
-
-      const apiUrl = `https://rsapi.goong.io/Place/AutoComplete?api_key=${goongApiKey}&input=${encodeURIComponent(
-        inputText
-      )}`;
-
-      fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          addressSuggestions.innerHTML = "";
-          if (data.predictions) {
-            data.predictions.forEach((item) => {
-              const listItem = document.createElement("li");
-              listItem.classList.add("list-group-item", "address-item");
-              listItem.dataset.address = item.description;
-              listItem.textContent = item.description;
-
-              listItem.addEventListener("click", function () {
-                addressInput.value = item.description;
-                document.getElementById("address").value = item.description; // Lưu vào input ẩn
-
-                addressSuggestions.innerHTML = "";
-                document.getElementById("province").value = "";
-                document.getElementById("district").innerHTML =
-                  '<option value="">-- Chọn Quận/Huyện --</option>';
-                document.getElementById("ward").innerHTML =
-                  '<option value="">-- Chọn Phường/Xã --</option>';
-              });
-
-              addressSuggestions.appendChild(listItem);
-            });
-          }
-        })
-        .catch((error) => console.error("Lỗi khi lấy gợi ý địa chỉ:", error));
-    });
-
-    // Ẩn gợi ý khi nhấn ra ngoài
-    document.addEventListener("click", function (event) {
-      if (!addressInput.contains(event.target) && !addressSuggestions.contains(event.target)) {
-        addressSuggestions.innerHTML = "";
-      }
     });
   }
 });

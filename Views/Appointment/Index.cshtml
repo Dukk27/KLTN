@@ -1,82 +1,85 @@
 @model IEnumerable<KLTN.Models.Appointment>
 
-<link rel="stylesheet" href="~/css/iziToast.css">
-<link rel="stylesheet" href="~/css/appointment.css">
+<head>
+    <link rel="stylesheet" href="~/css/iziToast.css">
+    <link rel="stylesheet" href="~/css/appointment.css">
+</head>
 
-<div class="appointment-page">
+<body>
+    <div class="appointment-page">
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Danh Sách Lịch Hẹn</li>
-    </ol>
-</nav>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Danh Sách Lịch Hẹn</li>
+        </ol>
+    </nav>
 
-<h2>Danh Sách Lịch Hẹn</h2>
+    <h2>Danh Sách Lịch Hẹn</h2>
 
-@if (!Model.Any())
-{
-    <div class="no-appointments">Chưa có lịch hẹn nào cho bài đăng của bạn.</div>
-}
-else
-{
-    <div class="table-container"> 
-        <button class="btn btn-danger delete-selected-btn mb-3" disabled><i class="fas fa-trash-alt"></i> Xóa đã chọn</button>
+    @if (!Model.Any())
+    {
+        <div class="no-appointments">Chưa có lịch hẹn nào cho bài đăng của bạn.</div>
+    }
+    else
+    {
+        <div class="table-container"> 
+            <button class="btn btn-danger delete-selected-btn mb-3" disabled><i class="fas fa-trash-alt"></i> Xóa đã chọn</button>
 
-        <div class="accordion" id="appointmentAccordion">
-            <div class="form-check ms-2 mb-3">
-                <input class="form-check-input" type="checkbox" id="select-all">
-                <label class="form-check-label" for="select-all">Chọn tất cả</label>
-            </div>
+            <div class="accordion" id="appointmentAccordion">
+                <div class="form-check ms-2 mb-3">
+                    <input class="form-check-input" type="checkbox" id="select-all">
+                    <label class="form-check-label" for="select-all">Chọn tất cả</label>
+                </div>
 
-            @foreach (var appt in Model)
-            {
-                <div class="accordion-item mb-2" data-id="@appt.AppointmentId">
-                    <h2 class="accordion-header" id="heading-@appt.AppointmentId">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@appt.AppointmentId" aria-expanded="false">
-                            <input type="checkbox" class="form-check-input me-2 appointment-checkbox" value="@appt.AppointmentId" />
-                            <strong>@appt.User?.UserName</strong> - Ngày hẹn @appt.AppointmentDate.ToString("dd/MM/yyyy")
-                        </button>
-                    </h2>
-                    <div id="collapse-@appt.AppointmentId" class="accordion-collapse collapse" data-bs-parent="#appointmentAccordion">
-                        <div class="accordion-body">
-                            <p><strong>Số điện thoại</strong> @appt.User?.PhoneNumber</p>
-                            <p><strong>Email</strong> @appt.User?.Email</p>
-                            <p><strong>Tên bài đăng</strong> @appt.House?.NameHouse</p>
-                            <p><strong>Trạng thái:</strong>
+                @foreach (var appt in Model)
+                {
+                    <div class="accordion-item mb-2" data-id="@appt.AppointmentId">
+                        <h2 class="accordion-header" id="heading-@appt.AppointmentId">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@appt.AppointmentId" aria-expanded="false">
+                                <input type="checkbox" class="form-check-input me-2 appointment-checkbox" value="@appt.AppointmentId" />
+                                <strong>@appt.User?.UserName</strong> - Ngày hẹn @appt.AppointmentDate.ToString("dd/MM/yyyy")
+                            </button>
+                        </h2>
+                        <div id="collapse-@appt.AppointmentId" class="accordion-collapse collapse" data-bs-parent="#appointmentAccordion">
+                            <div class="accordion-body">
+                                <p><strong>Số điện thoại</strong> @appt.User?.PhoneNumber</p>
+                                <p><strong>Email</strong> @appt.User?.Email</p>
+                                <p><strong>Tên bài đăng</strong> @appt.House?.NameHouse</p>
+                                <p><strong>Trạng thái</strong>
+                                    @if (appt.Status == AppointmentStatus.Pending)
+                                    {
+                                        <span class="badge bg-warning text-dark">Chờ xác nhận</span>
+                                    }
+                                    else if (appt.Status == AppointmentStatus.Confirmed)
+                                    {
+                                        <span class="badge bg-success">Đã xác nhận</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Đã hủy</span>
+                                    }
+                                </p>
+
                                 @if (appt.Status == AppointmentStatus.Pending)
                                 {
-                                    <span class="badge bg-warning text-dark">Chờ xác nhận</span>
-                                }
-                                else if (appt.Status == AppointmentStatus.Confirmed)
-                                {
-                                    <span class="badge bg-success">Đã xác nhận</span>
+                                    <button class="btn btn-sm btn-success confirm-btn" data-id="@appt.AppointmentId">Xác nhận</button>
+                                    <button class="btn btn-sm btn-danger cancel-btn" data-id="@appt.AppointmentId">Hủy</button>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-danger">Đã hủy</span>
+                                    <span class="text-muted">Không khả dụng</span>
                                 }
-                            </p>
-
-                            @if (appt.Status == AppointmentStatus.Pending)
-                            {
-                                <button class="btn btn-sm btn-success confirm-btn" data-id="@appt.AppointmentId">Xác nhận</button>
-                                <button class="btn btn-sm btn-danger cancel-btn" data-id="@appt.AppointmentId">Hủy</button>
-                            }
-                            else
-                            {
-                                <span class="text-muted">Không khả dụng</span>
-                            }
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
+    }
     </div>
-}
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
-<script src="~/js/Appointment/index.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+    <script src="~/js/Appointment/index.js"></script>
+</body>

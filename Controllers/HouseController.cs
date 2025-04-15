@@ -68,20 +68,19 @@ namespace KLTN.Controllers
             {
                 model.Amenities = (await _amenityRepository.GetAllAmenitiesAsync()).ToList();
                 model.SelectedAmenities ??= new List<int>();
+                model.HouseTypes = (await _houseTypeRepository.GetAllHouseTypes()).Select(
+                    ht => new SelectListItem { Value = ht.IdHouseType.ToString(), Text = ht.Name }
+                );
                 ModelState.AddModelError("", "Vui lòng điền đầy đủ thông tin các trường bắt buộc.");
 
                 if (isAjaxRequest)
                 {
-                    var errors = ModelState
-                        .Where(ms => ms.Value.Errors.Any())
-                        .ToDictionary(
-                            kvp => kvp.Key,
-                            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                        );
-                    return Json(new { success = false, errors });
+                    // Trả về partial chứa form kèm lỗi, để client render lại trong modal
+                    return PartialView("_CreateHousePartial", model);
                 }
 
-                return View(model);
+                // Trả về partial để giữ consistency, tránh full page reload
+                return PartialView("_CreateHousePartial", model);
             }
 
             ModelState.Remove("IdHouseNavigation");

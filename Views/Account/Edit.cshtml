@@ -4,161 +4,165 @@
     ViewData["Title"] = "Chỉnh sửa thông tin tài khoản";
 }
 
-<link rel="stylesheet" href="~/css/iziToast.css">
-<link rel="stylesheet" href="~/css/Account/edit.css" asp-append-version="true" />
+<head>
+    <link rel="stylesheet" href="~/css/iziToast.css">
+    <link rel="stylesheet" href="~/css/Account/edit.css" asp-append-version="true" />
+</head>
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            @if (User.IsInRole("Admin"))
-                {
-                    <a href="@Url.Action("Index", "Admin")">Trang Chủ</a>
-                }
-                else
-                {
-                    <a href="@Url.Action("Index", "Home")">Trang Chủ</a>
-                }
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">Chỉnh Sửa Thông Tin Tài Khoản @Model.UserName</li>
-    </ol>
-</nav>
+<body>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                @if (User.IsInRole("Admin"))
+                    {
+                        <a href="@Url.Action("Index", "Admin")">Trang Chủ</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Index", "Home")">Trang Chủ</a>
+                    }
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Chỉnh Sửa Thông Tin Tài Khoản @Model.UserName</li>
+        </ol>
+    </nav>
 
-<h2 class="page-title">Chỉnh sửa thông tin tài khoản</h2>
+    <h2 class="page-title">Chỉnh sửa thông tin tài khoản</h2>
 
-<form asp-action="Edit" method="post" class="account-form">
-    <input type="hidden" asp-for="IdUser" />
+    <form asp-action="Edit" method="post" class="account-form">
+        <input type="hidden" asp-for="IdUser" /> 
 
-    <div class="form-group">
-        <label for="UserName" class="form-label">Tên đăng nhập</label>
-        <input type="text" class="form-control" id="UserName" name="UserName" value="@Model.UserName" required />
-    </div>
+        <div class="form-group">
+            <label for="UserName" class="form-label">Tên đăng nhập</label>
+            <input type="text" class="form-control" id="UserName" name="UserName" value="@Model.UserName" required />
+        </div>
 
-    <div class="form-group">
-        <label for="PhoneNumber" class="form-label">Số điện thoại</label>
-        <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" />
-    </div>
+        <div class="form-group">
+            <label for="PhoneNumber" class="form-label">Số điện thoại</label>
+            <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" />
+        </div>
 
-    <div class="form-group">
-        <label for="Email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" />
-    </div>
+        <div class="form-group">
+            <label for="Email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" />
+        </div>
 
-    <div class="form-group">
-        <label for="Password" class="form-label">Mật khẩu</label>
-        <input type="password" class="form-control" id="Password" name="Password" value="@Model.Password" hidden />
+        <div class="form-group">
+            <label for="Password" class="form-label">Mật khẩu</label>
+            <input type="password" class="form-control" id="Password" name="Password" value="@Model.Password" hidden />
 
-        <button type="button" class="btn btn-warning btn-change-password"
-            onclick="window.location.href='@Url.Action("ChangePassword", "Account")'">
-            Đổi mật khẩu
-        </button>
-    </div>
+            <button type="button" class="btn btn-warning btn-change-password"
+                onclick="window.location.href='@Url.Action("ChangePassword", "Account")'">
+                Đổi mật khẩu
+            </button>
+        </div>
 
-    <div class="form-group">
-        <label for="Role" class="form-label">Vai trò</label>
-        <input type="text" class="form-control" id="RoleDisplay"
-            value="@(Model.Role == 0 ? "Admin" : Model.Role == 1 ? "Chủ trọ" : "Người tìm thuê")" readonly />
+        <div class="form-group">
+            <label for="Role" class="form-label">Vai trò</label>
+            <input type="text" class="form-control" id="RoleDisplay"
+                value="@(Model.Role == 0 ? "Admin" : Model.Role == 1 ? "Chủ trọ" : "Người tìm thuê")" readonly />
 
-        <!-- Input ẩn để giữ giá trị thực của Role khi gửi form -->
-        <input type="hidden" id="Role" name="Role" value="@Model.Role" />
-    </div>
+            <!-- Input ẩn để giữ giá trị thực của Role khi gửi form -->
+            <input type="hidden" id="Role" name="Role" value="@Model.Role" />
+        </div>
 
-    <div class="form-group" hidden>
-        <label for="FreePostUsed" class="form-label">Số bài đăng free đã dùng</label>
-        <input type="text" class="form-control" id="FreePostsUsed" name="FreePostsUsed" value="@Model.FreePostsUsed"
-            readonly />
-    </div>
+        <div class="form-group" hidden>
+            <label for="FreePostUsed" class="form-label">Số bài đăng free đã dùng</label>
+            <input type="text" class="form-control" id="FreePostsUsed" name="FreePostsUsed" value="@Model.FreePostsUsed"
+                readonly />
+        </div>
 
-    <div class="button-container">
-        <button type="button" class="btnclose" onclick="handleClose()">Đóng</button>
-        <button type="submit" class="btn btn-primary">Cập nhật</button>
-    </div>
-</form>
+        <div class="button-container">
+            <button type="button" class="btnclose" onclick="handleClose()">Đóng</button>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+        </div>
+    </form>
 
-<!-- Thêm iziToast -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <!-- Thêm iziToast -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelector(".account-form").addEventListener("submit", function (event) {
-            event.preventDefault();
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector(".account-form").addEventListener("submit", function (event) {
+                event.preventDefault();
 
-            let form = this;
-            let formData = new FormData(form);
+                let form = this;
+                let formData = new FormData(form);
 
-            iziToast.question({
-                timeout: 20000,
-                close: false,
-                overlay: true,
-                displayMode: 'once',
-                id: 'question',
-                zindex: 999,
-                title: 'Xác nhận cập nhật',
-                message: 'Bạn có chắc chắn muốn cập nhật thông tin không?',
-                position: 'center',
-                class: 'iziToast-custom', /* Áp dụng class mới */
-                buttons: [
-                    ['<button><i class="fa fa-check"></i>Có, cập nhật</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                iziToast.question({
+                    timeout: 20000,
+                    close: false,
+                    overlay: true,
+                    displayMode: 'once',
+                    id: 'question',
+                    zindex: 999,
+                    title: 'Xác nhận cập nhật',
+                    message: 'Bạn có chắc chắn muốn cập nhật thông tin không?',
+                    position: 'center',
+                    class: 'iziToast-custom', /* Áp dụng class mới */
+                    buttons: [
+                        ['<button><i class="fa fa-check"></i>Có, cập nhật</button>', function (instance, toast) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
 
-                        fetch(form.action, {
-                            method: "POST",
-                            body: formData
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    iziToast.success({
-                                        title: 'Thành công!',
-                                        message: 'Thông tin tài khoản đã được cập nhật.',
-                                        position: 'topRight',
-                                        timeout: 1500,
-                                    });
+                            fetch(form.action, {
+                                method: "POST",
+                                body: formData
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        iziToast.success({
+                                            title: 'Thành công!',
+                                            message: 'Thông tin tài khoản đã được cập nhật.',
+                                            position: 'topRight',
+                                            timeout: 1500,
+                                        });
 
-                                    document.querySelector(".breadcrumb-item.active").innerHTML =
-                                        `Chỉnh Sửa Thông Tin Tài Khoản ${data.updatedData.userName}`;
-                                    document.querySelector("#UserName").value = data.updatedData.userName;
-                                    document.querySelector("#PhoneNumber").value = data.updatedData.phoneNumber;
-                                    document.querySelector("#Email").value = data.updatedData.email;
-                                    document.getElementById("headerUserName").innerText = data.updatedData.userName;
+                                        document.querySelector(".breadcrumb-item.active").innerHTML =
+                                            `Chỉnh Sửa Thông Tin Tài Khoản ${data.updatedData.userName}`;
+                                        document.querySelector("#UserName").value = data.updatedData.userName;
+                                        document.querySelector("#PhoneNumber").value = data.updatedData.phoneNumber;
+                                        document.querySelector("#Email").value = data.updatedData.email;
+                                        document.getElementById("headerUserName").innerText = data.updatedData.userName;
 
-                                } else {
+                                    } else {
+                                        iziToast.error({
+                                            title: 'Thất bại!',
+                                            message: data.message,
+                                            position: 'topRight'
+                                        });
+                                    }
+                                })
+                                @* .catch(error => {
                                     iziToast.error({
-                                        title: 'Thất bại!',
-                                        message: data.message,
+                                        title: 'Lỗi hệ thống!',
+                                        message: 'Không thể gửi yêu cầu, kiểm tra kết nối.',
                                         position: 'topRight'
                                     });
-                                }
-                            })
-                            @* .catch(error => {
-                                iziToast.error({
-                                    title: 'Lỗi hệ thống!',
-                                    message: 'Không thể gửi yêu cầu, kiểm tra kết nối.',
-                                    position: 'topRight'
-                                });
-                            }); *@
+                                }); *@
 
-                    }, true],
+                        }, true],
 
-                    ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-                        iziToast.info({
-                            title: 'Thông báo',
-                            message: 'Bạn đã hủy cập nhật.',
-                            position: 'topRight'
-                        });
-                    }]
-                ]
+                        ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            iziToast.info({
+                                title: 'Thông báo',
+                                message: 'Bạn đã hủy cập nhật.',
+                                position: 'topRight'
+                            });
+                        }]
+                    ]
+                });
             });
         });
-    });
 
-    function handleClose() {
-        let role = @Model.Role; // Lấy vai trò của người dùng từ Model
-        if (role === 0) {
-            window.location.href = '@Url.Action("Index", "Admin")'; // Chuyển hướng về trang Admin
-        } else {
-            window.location.href = '@Url.Action("Index", "Home")'; // Chuyển hướng về trang chủ
+        function handleClose() {
+            let role = @Model.Role; // Lấy vai trò của người dùng từ Model
+            if (role === 0) {
+                window.location.href = '@Url.Action("Index", "Admin")'; // Chuyển hướng về trang Admin
+            } else {
+                window.location.href = '@Url.Action("Index", "Home")'; // Chuyển hướng về trang chủ
+            }
         }
-    }
-</script>
+    </script>
+</body>

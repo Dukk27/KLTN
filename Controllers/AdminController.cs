@@ -4,6 +4,7 @@ using KLTN.Repositories;
 using KLTN.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace KLTN.Controllers
 {
@@ -171,7 +172,6 @@ namespace KLTN.Controllers
             var reviews = await _reviewRepository.GetAllReviewsAsync();
             return PartialView("_ManageReviews", reviews); // Trả về PartialView
         }
-
 
         // Xóa bình luận
         [HttpPost]
@@ -361,7 +361,6 @@ namespace KLTN.Controllers
             }
         }
 
-
         // Quản lý tiện nghi
         public async Task<IActionResult> ManageAmenities()
         {
@@ -421,7 +420,6 @@ namespace KLTN.Controllers
             }
         }
 
-
         // Quản lý nhà trọ
         [Authorize]
         public async Task<IActionResult> ListHouseRoom()
@@ -464,7 +462,6 @@ namespace KLTN.Controllers
             }
         }
 
-
         // Quản lý báo cáo bài đăng
         [HttpGet]
         public async Task<IActionResult> PostReport()
@@ -495,7 +492,7 @@ namespace KLTN.Controllers
                         UserName = account.UserName,
                         PhoneNumber = account.PhoneNumber,
                         Email = account.Email,
-                        TotalPosts = userPosts.Count,
+                        TotalPosts = userPosts.Count(h => h.Status != HouseStatus.Unpaid),
                         ApprovedPosts = userPosts.Count(h =>
                             h.Status == HouseStatus.Approved || h.Status == HouseStatus.Active
                         ),
@@ -508,7 +505,6 @@ namespace KLTN.Controllers
 
             return PartialView("_PostReport", accountReports);
         }
-
 
         // Quản lý chat
         public IActionResult ManageChat()
@@ -633,48 +629,86 @@ namespace KLTN.Controllers
             return Json(new { success = true, message = "Tài khoản đã được mở khóa." });
         }
 
-
         // Quản lý báo cáo bài đăng theo ngày
         [HttpGet]
         public IActionResult PostReportByDay()
         {
-            var postsByDay = _context
-                .HouseDetails.Where(h => h.TimePost.Date == DateTime.Today)
+            // Lấy dữ liệu từ database
+            var houseDetails = _context
+                .HouseDetails.Include(h => h.IdHouseNavigation)
+                .Where(h =>
+                    h.TimePost.Date == DateTime.Today
+                    && h.IdHouseNavigation != null
+                    && h.IdHouseNavigation.Status != HouseStatus.Unpaid
+                )
                 .OrderByDescending(h => h.TimePost)
+                .ToList();
+
+            // Sau khi có dữ liệu, xử lý hiện
+            var postsByDay = houseDetails
                 .Select(h => new PostByDayReportViewModel
                 {
                     IdHouse = h.IdHouse,
                     Address = h.Address,
                     Price = h.Price,
-                    Status = h.Status.ToString(),
+                    Status = TranslateStatus(h.IdHouseNavigation!.Status),
                     TimePost = h.TimePost.Date,
+                    UserName = _context
+                        .Accounts.Where(a => a.IdUser == h.IdHouseNavigation!.IdUser)
+                        .Select(a => a.UserName)
+                        .FirstOrDefault(),
                 })
                 .ToList();
 
             return PartialView("_PostReportByDay", postsByDay);
         }
 
-
-        // Quản lý báo cáo bài đăng theo khoảng thời gian
+        // Lọc báo cáo theo ngày
         [HttpGet]
         public IActionResult PostReportByDayFilter(DateTime startDate, DateTime endDate)
         {
-            var report = _context
-                .HouseDetails.Where(h =>
-                    h.TimePost.Date >= startDate.Date && h.TimePost.Date <= endDate.Date
+            // Lấy dữ liệu từ database
+            var houseDetails = _context
+                .HouseDetails.Include(h => h.IdHouseNavigation)
+                .Where(h =>
+                    h.TimePost.Date >= startDate.Date
+                    && h.TimePost.Date <= endDate.Date
+                    && h.IdHouseNavigation != null
+                    && h.IdHouseNavigation.Status != HouseStatus.Unpaid
                 )
+                .OrderByDescending(h => h.TimePost)
+                .ToList();
+
+            // Sau khi có dữ liệu, chuyển thành ViewModel
+            var report = houseDetails
                 .Select(h => new
                 {
                     timePost = h.TimePost,
                     idHouse = h.IdHouse,
                     address = h.Address,
                     price = h.Price,
-                    status = h.Status,
+                    status = TranslateStatus(h.IdHouseNavigation!.Status),
+                    userName = _context
+                        .Accounts.Where(a => a.IdUser == h.IdHouseNavigation!.IdUser)
+                        .Select(a => a.UserName)
+                        .FirstOrDefault(),
                 })
-                .OrderByDescending(h => h.timePost)
-                .ToList();
+                .ToList(); // Lấy dữ liệu đã xử lý
 
-            return Json(report);
+            return Json(report); // Trả về dữ liệu đã xử lý
+        }
+
+        private string TranslateStatus(HouseStatus status)
+        {
+            return status switch
+            {
+                HouseStatus.Pending => "Chờ duyệt",
+                HouseStatus.Approved => "Đã duyệt",
+                HouseStatus.Hidden => "Đã ẩn",
+                HouseStatus.Active => "Đang hiển thị",
+                HouseStatus.Rejected => "Từ chối",
+                _ => "Không xác định",
+            };
         }
     }
 }

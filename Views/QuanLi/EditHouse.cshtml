@@ -1,168 +1,301 @@
 @model KLTN.ViewModels.HousePostViewModel
 
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-<link rel="stylesheet" href="~/css/iziToast.css">
-<link rel="stylesheet" href="~/css/House/edit.css" asp-append-version="true" />
+<head>
+    <link rel="stylesheet" href="~/css/iziToast.css">
+    <link rel="stylesheet" href="~/css/House/edit.css" asp-append-version="true" />
+</head>
 
-<h2 style="color: rgb(35, 164, 207); text-align: center;">Chỉnh sửa thông tin nhà trọ</h2>
+<body>
+    <h2 style="color: rgb(35, 164, 207); text-align: center; margin: 20px 0;">Chỉnh sửa thông tin nhà trọ</h2>
 
-<form asp-action="EditHouse" method="post" enctype="multipart/form-data">
-    <input type="hidden" asp-for="House.IdHouse" />
+    <form asp-action="EditHouse" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="House.IdHouse" />
 
-    <div class="form-group">
-        <label asp-for="House.NameHouse">Tên nhà trọ</label>
-        <input asp-for="House.NameHouse" class="form-control" />
-        <span asp-validation-for="House.NameHouse" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Loại nhà trọ</label>
-        <select asp-for="SelectedHouseType" asp-items="Model.HouseTypes" class="form-control">
-            <option value="">-- Chọn loại nhà trọ --</option>
-        </select>
-        <span asp-validation-for="SelectedHouseType" class="text-danger"></span>
-    </div>
-
-    <div class="form-group position-relative">
-        <label asp-for="HouseDetail.Address">Địa chỉ</label>
-        <input asp-for="HouseDetail.Address" id="houseAddress" class="form-control" autocomplete="off" />
-        <ul id="addressSuggestions" class="list-group position-absolute w-100"></ul>
-        <span asp-validation-for="HouseDetail.Address" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label for="ContactName2">Người liên hệ phụ:</label>
-        <input type="text" id="ContactName2" asp-for="ContactName2" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label for="ContactPhone2">Số điện thoại phụ:</label>
-        <input type="text" id="ContactPhone2" asp-for="ContactPhone2" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label asp-for="HouseDetail.Price">Giá thuê</label>
-        <input asp-for="HouseDetail.Price" class="form-control" />
-        <span asp-validation-for="HouseDetail.Price" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="HouseDetail.DienTich">Diện tích (m²)</label>
-        <input asp-for="HouseDetail.DienTich" class="form-control" />
-        <span asp-validation-for="HouseDetail.DienTich" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label for="electricityBillingMethod">Cách tính tiền điện </label>
-        <select id="electricityBillingMethod" class="form-control">
-            <option value="" disabled selected>Chọn cách tính tiền điện</option>
-            <option value="theo-so">Tính theo số điện (VNĐ/kWh)</option>
-            <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
-            <option value="bao-gom">Bao gồm trong tiền trọ</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label asp-for="HouseDetail.TienDien">Tiền điện</label>
-        <input asp-for="HouseDetail.TienDien" class="form-control" id="tienDien" />
-        <span asp-validation-for="HouseDetail.TienDien" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label for="waterBillingMethod">Cách tính tiền nước</label>
-        <select id="waterBillingMethod" class="form-control">
-            <option value="" disabled selected>Chọn cách tính tiền nước</option>
-            <option value="theo-so">Tính theo số nước (VNĐ/m³)</option>
-            <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
-            <option value="bao-gom">Bao gồm trong tiền trọ</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label asp-for="HouseDetail.TienNuoc">Tiền nước</label>
-        <input asp-for="HouseDetail.TienNuoc" class="form-control" id="tienNuoc" />
-        <span asp-validation-for="HouseDetail.TienNuoc" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="HouseDetail.TienDv">Tiền dịch vụ</label>
-        <input asp-for="HouseDetail.TienDv" class="form-control" />
-        <span asp-validation-for="HouseDetail.TienDv" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="HouseDetail.Describe">Mô tả</label>
-        <textarea asp-for="HouseDetail.Describe" class="form-control"></textarea>
-        <span asp-validation-for="HouseDetail.Describe" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Trạng thái</label>
-
-        <div class="form-check">
-            <input type="radio" id="statusAvailable" name="HouseDetail.Status" class="form-check-input"
-                value="Chưa cho thuê" @(Model.HouseDetail.Status == "Chưa cho thuê" ? "checked" : "") />
-            <label class="form-check-label" for="statusAvailable">Chưa cho thuê</label>
+        <div class="form-group">
+            <label asp-for="House.NameHouse">Tên nhà trọ *</label>
+            <input asp-for="House.NameHouse" class="form-control" />
+            <span asp-validation-for="House.NameHouse" class="text-danger"></span>
         </div>
 
-        <div class="form-check">
-            <input type="radio" id="statusRented" name="HouseDetail.Status" class="form-check-input" value="Đã cho thuê"
-                @(Model.HouseDetail.Status == "Đã cho thuê" ? "checked" : "") />
-            <label class="form-check-label" for="statusRented">Đã cho thuê</label>
+        <div class="form-group">
+            <label>Loại nhà trọ *</label>
+            <select asp-for="SelectedHouseType" asp-items="Model.HouseTypes" class="form-control">
+                <option value="">-- Chọn loại nhà trọ --</option>
+            </select>
+            <span asp-validation-for="SelectedHouseType" class="text-danger"></span>
         </div>
 
-        <span asp-validation-for="HouseDetail.Status" class="text-danger"></span>
-    </div>
+        <div class="form-group position-relative">
+            <label for="fullAddress">Địa chỉ *</label>
+            <input type="text" id="fullAddress" class="form-control" value="@Model.HouseDetail.Address" autocomplete="off" />
+            <input type="hidden" id="address" name="HouseDetail.Address" value="@Model.HouseDetail.Address" />
+            <ul id="addressSuggestions" class="list-group position-absolute w-100" style="z-index:1000;"></ul>
+            <span asp-validation-for="HouseDetail.Address" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label for="imageFiles">Hình ảnh</label>
-        <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple />
+        <div class="form-group">
+            <label>Bản đồ</label>
+            <div id="map" style="height: 400px; border: 1px solid #ccc;"></div>
+        </div>
 
-        @if (!string.IsNullOrEmpty(Model.HouseDetail?.Image))
-        {
-            <div class="mt-2" id="currentImages">
-                <label>Ảnh hiện tại:</label>
-                <div class="d-flex flex-wrap">
-                    @foreach (var imgUrl in Model.HouseDetail.Image.Split(','))
-                    {
-                        <div class="position-relative m-2">
-                            <img src="@imgUrl" alt="Ảnh nhà trọ" style="max-width: 100px; height: 100px; object-fit: cover;" />
-                            <button type="button" class="remove-image" data-img="@imgUrl" title="Xóa ảnh">
-                                <i class="fa-solid fa-circle-xmark"></i>
-                            </button>
-                        </div>
-                    }
-                </div> 
-            </div>
-            <input type="hidden" id="deletedImages" name="DeletedImages" value="" />
-        }
-    </div>
+        <div class="form-group">
+            <label for="ContactName2">Người liên hệ phụ:</label>
+            <input type="text" id="ContactName2" asp-for="ContactName2" class="form-control" />
+        </div>
 
-    <div class="form-group">
-        <label>Tiện ích</label>
-        @foreach (var amenity in Model.Amenities)
-        {
+        <div class="form-group">
+            <label for="ContactPhone2">Số điện thoại phụ:</label>
+            <input type="text" id="ContactPhone2" asp-for="ContactPhone2" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="HouseDetail.Price">Giá thuê *</label>
+<input type="text" class="form-control currency-price" id="formattedPrice" value="@Model.HouseDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN"))" />
+<input type="hidden" name="HouseDetail.Price" id="HouseDetail_Price" value="@Model.HouseDetail.Price" />
+            <span asp-validation-for="HouseDetail.Price" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="HouseDetail.DienTich">Diện tích (m²) *</label>
+            <input asp-for="HouseDetail.DienTich" class="form-control" />
+            <span asp-validation-for="HouseDetail.DienTich" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="electricityBillingMethod">Cách tính tiền điện *</label>
+            <select id="electricityBillingMethod" class="form-control">
+                <option value="" disabled selected>Chọn cách tính tiền điện</option>
+                <option value="theo-so">Tính theo số điện (VNĐ/kWh)</option>
+                <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
+                <option value="bao-gom">Bao gồm trong tiền trọ</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="HouseDetail.TienDien">Tiền điện *</label>
+            <input asp-for="HouseDetail.TienDien" class="form-control" id="tienDien" />
+            <span asp-validation-for="HouseDetail.TienDien" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="waterBillingMethod">Cách tính tiền nước *</label>
+            <select id="waterBillingMethod" class="form-control">
+                <option value="" disabled selected>Chọn cách tính tiền nước</option>
+                <option value="theo-so">Tính theo số nước (VNĐ/m³)</option>
+                <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
+                <option value="bao-gom">Bao gồm trong tiền trọ</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="HouseDetail.TienNuoc">Tiền nước *</label>
+            <input asp-for="HouseDetail.TienNuoc" class="form-control" id="tienNuoc" />
+            <span asp-validation-for="HouseDetail.TienNuoc" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="HouseDetail.TienDv">Tiền dịch vụ *</label>
+            <input asp-for="HouseDetail.TienDv" class="form-control" />
+            <span asp-validation-for="HouseDetail.TienDv" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="HouseDetail.Describe">Mô tả</label>
+            <textarea asp-for="HouseDetail.Describe" class="form-control"></textarea>
+            <span asp-validation-for="HouseDetail.Describe" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Trạng thái</label>
+
             <div class="form-check">
-                <input type="checkbox" name="SelectedAmenities" value="@amenity.IdAmenity" class="form-check-input"
-                    @(Model.SelectedAmenities.Contains(amenity.IdAmenity) ? "checked" : "") />
-                <label class="form-check-label">@amenity.Name</label>
+                <input type="radio" id="statusAvailable" name="HouseDetail.Status" class="form-check-input"
+                    value="Chưa cho thuê" @(Model.HouseDetail.Status == "Chưa cho thuê" ? "checked" : "") />
+                <label class="form-check-label" for="statusAvailable">Chưa cho thuê</label>
             </div>
-        }
-    </div>
 
-    <div class="btn-container">
-        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-        <a asp-action="ListHouseRoom" class="btn btn-secondary">Hủy</a>
-    </div>
+            <div class="form-check">
+                <input type="radio" id="statusRented" name="HouseDetail.Status" class="form-check-input" value="Đã cho thuê"
+                    @(Model.HouseDetail.Status == "Đã cho thuê" ? "checked" : "") />
+                <label class="form-check-label" for="statusRented">Đã cho thuê</label>
+            </div>
 
-</form>
+            <span asp-validation-for="HouseDetail.Status" class="text-danger"></span>
+        </div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+        <div class="form-group">
+            <label for="imageFiles">Hình ảnh *</label>
+            <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple />
+
+            @if (!string.IsNullOrEmpty(Model.HouseDetail?.Image))
+            {
+                <div class="mt-2" id="currentImages">
+                    <label>Ảnh hiện tại:</label>
+                    <div class="d-flex flex-wrap">
+                        @foreach (var imgUrl in Model.HouseDetail.Image.Split(','))
+                        {
+                            <div class="position-relative m-2">
+                                <img src="@imgUrl" alt="Ảnh nhà trọ" style="max-width: 100px; height: 100px; object-fit: cover;" />
+                                <button type="button" class="remove-image" data-img="@imgUrl" title="Xóa ảnh">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
+                            </div>
+                        }
+                    </div> 
+                    <span id="imageError" class="text-danger d-block mt-2"></span>
+                </div>
+                <input type="hidden" id="deletedImages" name="DeletedImages" value="" />
+            }
+        </div>
+
+        <div class="form-group">
+            <label>Tiện ích *</label>
+            @foreach (var amenity in Model.Amenities)
+            {
+                <div class="form-check">
+                    <input type="checkbox" name="SelectedAmenities" value="@amenity.IdAmenity" class="form-check-input"
+                        @(Model.SelectedAmenities.Contains(amenity.IdAmenity) ? "checked" : "") />
+                    <label class="form-check-label">@amenity.Name</label>
+                </div>
+            }
+        </div>
+        <span id="amenitiesError" class="text-danger d-block mt-2"></span>
+
+        <div class="btn-container">
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <a asp-action="ListHouseRoom" class="btn btn-secondary">Hủy</a>
+        </div>
+    </form>
+
     <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="~/js/House/edit.js"></script>
-}
+    <script src="~/js/goong-js.js"></script>
+    <link rel="stylesheet" href="~/css/goong-js.css" asp-append-version="true" />
+    <script src="~/js/House/edit.js"></script> 
+        
+    <script>
+        goongjs.accessToken = 'nFXjCGo9PppMz9YGX6S2fLdWnTwQKzCCmCimGy3G';
+
+        let map, marker; 
+
+        function initGoongMap() {
+            map = new goongjs.Map({
+                container: 'map',
+                style: 'https://tiles.goong.io/assets/goong_map_web.json',
+                center: [105.8544441, 21.028511], // Hà Nội mặc định
+                zoom: 14
+            });
+
+            marker = new goongjs.Marker()
+                .setLngLat([105.8544441, 21.028511])
+                .addTo(map);
+        }
+
+        function geocodeAddress(address, isInit = false) {
+            $.get(`https://rsapi.goong.io/Geocode?address=${encodeURIComponent(address)}&api_key=RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy`)
+            .done(function (response) {
+                if (response.results && response.results.length > 0) {
+                    if (isInit) {
+                        const firstResult = response.results[0];
+                        const lngLat = [firstResult.geometry.location.lng, firstResult.geometry.location.lat];
+                        map.setCenter(lngLat);
+                        marker.setLngLat(lngLat);
+
+                        const popup = new goongjs.Popup({ offset: 25 }).setText(firstResult.formatted_address);
+                        marker.setPopup(popup).togglePopup();
+                    } else {
+                        showSuggestions(response.results);
+                    }
+                } else if (!isInit) {
+                    $('#addressSuggestions').empty().append(`<li class="list-group-item text-danger">Không tìm thấy địa chỉ</li>`);
+                }
+            })
+            .fail(function () {
+                if (!isInit) {
+                    $('#addressSuggestions').empty().append(`<li class="list-group-item text-danger">Lỗi khi tìm kiếm địa chỉ</li>`);
+                }
+            });
+        }
+
+
+        function showSuggestions(results) {
+            const suggestionBox = $('#addressSuggestions');
+            suggestionBox.empty();
+
+            results.forEach((result) => {
+                const address = result.formatted_address;
+                const location = result.geometry.location;
+
+                const listItem = $(`<li class="list-group-item list-group-item-action">${address}</li>`);
+                listItem.on('click', function () {
+                    $('#fullAddress').val(address);
+                    $('#address').val(address); // cập nhật input thật để lưu vào DB
+                    suggestionBox.empty();
+
+                    const lngLat = [location.lng, location.lat];
+                    map.setCenter(lngLat);
+                    marker.setLngLat(lngLat);
+
+                    const popup = new goongjs.Popup({ offset: 25 }).setText(address);
+                    marker.setPopup(popup).togglePopup();
+                });
+
+                suggestionBox.append(listItem);
+            });
+        }
+
+        $(document).ready(function () {
+            initGoongMap();
+
+            const initialAddress = $('#fullAddress').val().trim();
+            if (initialAddress.length >= 3) {
+                geocodeAddress(initialAddress, true); // gọi với cờ "isInit"
+            }
+
+            $('#fullAddress').on('input', function () {
+                const value = $(this).val().trim();
+                if (value.length >= 3) {
+                    geocodeAddress(value, false);
+                } else {
+                    $('#addressSuggestions').empty();
+                }
+            });
+
+            $('#fullAddress').on('keypress', function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    const val = $(this).val().trim();
+                    if (val) {
+                        geocodeAddress(val, false);
+                    }
+                }
+            });
+        }); 
+
+        // Định dạng giá tiền
+        $(document).ready(function () {
+            const $displayInput = $('#formattedPrice');
+            const $hiddenInput = $('#HouseDetail_Price');
+
+            // Khi load trang
+            const rawInitial = $hiddenInput.val();
+            $displayInput.val(formatCurrencyVND(rawInitial));
+
+            // Khi người dùng nhập
+            $displayInput.on('input', function () {
+                const raw = removeFormat($(this).val());
+                $hiddenInput.val(raw);
+                $(this).val(formatCurrencyVND(raw));
+            });
+        });
+
+        function removeFormat(value) {
+            return value.replace(/[^\d]/g, ''); // Lấy số thuần
+        }
+
+        function formatCurrencyVND(value) {
+            if (!value) return '';
+            const number = parseInt(value, 10) || 0;
+            return number.toLocaleString('vi-VN');
+        }
+    </script>
+</body>

@@ -5,6 +5,19 @@
     int userRole = ViewBag.UserRole;
 } 
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+    <script>
+        iziToast.success({
+            title: 'Thành công!',
+            message: '@TempData["SuccessMessage"]',
+            position: 'topRight',
+            timeout: 2000,
+        });
+    </script>
+}
+
 <head>
     <title>Chi Tiết Nhà</title>
     <link rel="stylesheet" href="~/css/Detail/Detail.css" asp-append-version="true" />
@@ -35,9 +48,25 @@
     </nav>
 
     <div class="detail-container">
-        <h1 class="section-title">Thông Tin Chi Tiết</h1>
+        <h1>Thông Tin Chi Tiết</h1>
         <div class="detail-content">
             <div id="houseImageCarousel" class="carousel slide" data-bs-interval="false">
+                <div class="carousel-indicators">
+                    @{
+                        int i = 0;
+                        foreach (var detail in Model.HouseDetails)
+                        {
+                            foreach (var image in detail.Image.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                <button type="button" data-bs-target="#houseImageCarousel" data-bs-slide-to="@i"
+                                        class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : null)"
+                                        aria-label="Slide @(i + 1)"></button>;
+                                i++;
+                            }
+                        }
+                    }
+                </div>
+
                 <div class="carousel-inner">
                     @{
                         int index = 0;
@@ -134,14 +163,13 @@
 
         <!--Chat và Đặt hẹn-->
         <div class="action-buttons">
-            @if (ViewBag.CurrentUserId != null && ViewBag.OwnerId != ViewBag.CurrentUserId)
+            @if (ViewBag.OwnerId != ViewBag.CurrentUserId)
             {
-                <a href="@Url.Action("Chat", "Chat", new { conversationId = ViewBag.ConversationId })" class="btn btn-search">
+                <a href="javascript:void(0);" onclick="handleChatClick()" class="btn btn-search">
                     <i class="fas fa-comment"></i> Nhắn Tin với Chủ Trọ
                 </a>
+                <button id="bookAppointmentBtn" class="btn btn-search"><i class="fas fa-calendar"></i> Đặt lịch hẹn</button>
             }
-
-            <button id="bookAppointmentBtn" class="btn btn-search"><i class="fas fa-calendar"></i> Đặt lịch hẹn</button>
 
             <!-- Form đặt lịch hẹn (popup) -->
             <div id="appointmentOverlay" class="appointment-overlay"></div>
@@ -171,7 +199,6 @@
                 </div>
             }
         </div>
-
 
         <input type="hidden" id="house-address" data-address="@Model.HouseDetails.FirstOrDefault()?.Address" />
 
@@ -331,43 +358,35 @@
     <script src="~/js/goong-js.js"></script>
     <script src="~/js/House/detail.js"></script>
 </body>
+
 <script>
-   document.addEventListener("DOMContentLoaded", function () {
-    const stars = document.querySelectorAll(".star-rating .fa-star");
+    document.addEventListener("DOMContentLoaded", function () {
+        const stars = document.querySelectorAll(".star-rating .fa-star");
 
-    stars.forEach(star => {
-        star.addEventListener("click", function () {
-            const value = parseInt(this.getAttribute("data-value"));
-            
-            // Bỏ chọn tất cả sao trước khi chọn mới
-            stars.forEach(s => s.classList.remove("selected"));
-            
-            // Chọn lại đúng số sao
-            for (let i = 0; i < value; i++) {
-                stars[i].classList.add("selected");
-            }
+        stars.forEach(star => {
+            star.addEventListener("click", function () {
+                const value = parseInt(this.getAttribute("data-value"));
+                
+                // Bỏ chọn tất cả sao trước khi chọn mới
+                stars.forEach(s => s.classList.remove("selected"));
+                
+                // Chọn lại đúng số sao
+                for (let i = 0; i < value; i++) {
+                    stars[i].classList.add("selected");
+                }
 
-            // Lưu số sao vào data attribute
-            document.querySelector(".star-rating").setAttribute("data-selected", value);
+                // Lưu số sao vào data attribute
+                document.querySelector(".star-rating").setAttribute("data-selected", value);
+            });
         });
     });
-});
 
     async function submitReview() {
         let isAuthenticated = document.getElementById("isAuthenticated").value === "true";
 
         if (!isAuthenticated) {
-            iziToast.warning({
-                title: "Cảnh báo",
-                message: "Bạn cần đăng nhập để gửi đánh giá.",
-                position: "topRight",
-                timeout: 1000,
-            });
-
-            setTimeout(() => {
-                window.location.href = "/Account/Login";
-            }, 1000);
-            return;
+            const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
+            window.location.href = `/Account/Login?returnUrl=${returnUrl}`;
         }
 
         // Lấy số sao được chọn
@@ -445,13 +464,28 @@
                     timeout: 1500,
                 });
             }
-        } catch (error) {
+        } catch (error) { 
             iziToast.error({
                 title: "Lỗi",
                 message: "Đã xảy ra lỗi. Vui lòng thử lại.",
                 position: "topRight",
                 timeout: 1500,
             });
+        }
+    }
+
+    function handleChatClick() {
+        const isAuthenticated = document.getElementById("isAuthenticated").value === "true";
+
+        if (!isAuthenticated) {
+            // Lưu đường dẫn hiện tại kèm theo query mở chat
+            const currentUrl = window.location.pathname + window.location.search;
+            const returnUrl = encodeURIComponent(currentUrl);
+            window.location.href = `/Account/Login?returnUrl=${returnUrl}`;
+        } else {
+            // Nếu đã đăng nhập thì đi tới trang chat 
+            const conversationId = "@ViewBag.ConversationId";
+            window.location.href = `/Chat/Chat?conversationId=${conversationId}`;
         }
     }
 

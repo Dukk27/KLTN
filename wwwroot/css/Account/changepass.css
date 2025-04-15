@@ -7,8 +7,9 @@
 h2 {
     margin-top: 30px;
     text-align: center;
-    color: #333;
     font-size: 24px;
+    font-weight: bold;
+    color: #5b5858;
 }
 
 /* Form*/

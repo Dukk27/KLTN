@@ -2,236 +2,240 @@
 
 <h3 class="text-center mt-3">Quản lý tài khoản</h3>
 
-<link rel="stylesheet" href="~/css/iziToast.css">
-<link rel="stylesheet" href="~/css/Admin/account.css">
+<head>
+    <link rel="stylesheet" href="~/css/iziToast.css">
+    <link rel="stylesheet" href="~/css/Admin/account.css">
+</head>
 
-<div class="table-responsive">
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Tên người dùng</th>
-                <th>Số điện thoại</th>
-                <th>Email</th>
-                <th>Vai trò</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var account in Model)
-            {
+<body>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
                 <tr>
-                    <td>@account.IdUser</td>
-                    <td>@account.UserName</td>
-                    <td>@account.PhoneNumber</td>
-                    <td>@account.Email</td>
-                    <td>
-                        @switch (account.Role)
-                        {
-                            case 0:
-                                @:Admin
-                                break;
-                            case 1:
-                                @:Chủ trọ
-                                break;
-                            default:
-                                @:Người tìm phòng
-                                break;
-                        }
-                    </td>
-                    <td>
-                        @if (account.IsLocked)
-                        {
-                            <span class="badge bg-danger">Bị khoá</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-success">Hoạt động</span>
-                        }
-                    </td>
-                    <td>
-                        <a href="@Url.Action("Details", "Admin", new { id = account.IdUser })" class="btn btn-sm btn-primary"
-                            title="Xem chi tiết tài khoản">
-                            <i class="fas fa-eye"></i>
-                        </a>
-
-                        <button class="btn btn-sm btn-danger delete-account" data-id="@account.IdUser" title="Xoá tài khoản">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-
-                        @if (account.IsLocked)
-                        {
-                            <button class="btn btn-sm btn-success unlock-account" data-id="@account.IdUser"
-                                title="Mở khoá tài khoản">
-                                <i class="fas fa-unlock"></i>
-                            </button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-sm btn-warning lock-account" data-id="@account.IdUser" title="Khoá tài khoản">
-                                <i class="fas fa-lock"></i>
-                            </button>
-                        }
-                    </td>
+                    <th>ID</th>
+                    <th>Tên người dùng</th>
+                    <th>Số điện thoại</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
-<!-- Thêm thư viện iziToast -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
-
-<script>
-    $(document).ready(function () {
-        // Xoá tài khoản
-        $(".delete-account").on("click", function () {
-            const id = $(this).data("id");
-
-            iziToast.question({
-                class: 'iziToast-custom',
-                title: "Xác nhận xoá",
-                message: "Bạn có chắc chắn muốn xoá tài khoản này không?",
-                position: "center",
-                timeout: false,
-                close: false,
-                overlay: true,
-                icon: "fa fa-question-circle",
-                buttons: [
-                    ['<button><i class="fa fa-check"></i> <b>Có</b></button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-
-                        $.post("@Url.Action("DeleteAccount", "Admin")", { id: id }, function (response) {
-                            if (response.success) {
-                                iziToast.success({
-                                    title: 'Thành công!',
-                                    message: 'Xoá tài khoản thành công.',
-                                    position: 'topRight',
-                                    timeout: 1000,
-                                });
-                                $(`tr:has(button[data-id='${id}'])`).remove();
-                            } else {
-                                iziToast.error({
-                                    title: "Lỗi",
-                                    message: response.message,
-                                    position: "topRight",
-                                    timeout: 2000
-                                });
+            </thead>
+            <tbody>
+                @foreach (var account in Model)
+                {
+                    <tr>
+                        <td>@account.IdUser</td>
+                        <td>@account.UserName</td>
+                        <td>@account.PhoneNumber</td>
+                        <td>@account.Email</td>
+                        <td>
+                            @switch (account.Role)
+                            {
+                                case 0:
+                                    @:Admin
+                                    break;
+                                case 1:
+                                    @:Chủ trọ
+                                    break;
+                                default:
+                                    @:Người tìm phòng
+                                    break;
                             }
-                        }).fail(() => {
-                            iziToast.error({
-                                title: "Lỗi!",
-                                message: "Đã xảy ra lỗi khi xoá tài khoản.",
-                                position: "topRight",
-                                timeout: 3000
-                            });
-                        });
+                        </td>
+                        <td>
+                            @if (account.IsLocked)
+                            {
+                                <span class="badge bg-danger">Bị khoá</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Hoạt động</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Details", "Admin", new { id = account.IdUser })" class="btn btn-sm btn-primary"
+                                title="Xem chi tiết tài khoản">
+                                <i class="fas fa-eye"></i>
+                            </a>
 
-                    }, true],
-                    ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-                    }]
-                ]
+                            <button class="btn btn-sm btn-danger delete-account" data-id="@account.IdUser" title="Xoá tài khoản">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+
+                            @if (account.IsLocked)
+                            {
+                                <button class="btn btn-sm btn-success unlock-account" data-id="@account.IdUser"
+                                    title="Mở khoá tài khoản">
+                                    <i class="fas fa-unlock"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-warning lock-account" data-id="@account.IdUser" title="Khoá tài khoản">
+                                    <i class="fas fa-lock"></i>
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- Thêm thư viện iziToast -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+
+    <script>
+        $(document).ready(function () {
+            // Xoá tài khoản
+            $(".delete-account").on("click", function () {
+                const id = $(this).data("id");
+
+                iziToast.question({
+                    class: 'iziToast-custom',
+                    title: "Xác nhận xoá",
+                    message: "Bạn có chắc chắn muốn xoá tài khoản này không?",
+                    position: "center",
+                    timeout: false,
+                    close: false,
+                    overlay: true,
+                    icon: "fa fa-question-circle",
+                    buttons: [
+                        ['<button><i class="fa fa-check"></i> <b>Có</b></button>', function (instance, toast) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                            $.post("@Url.Action("DeleteAccount", "Admin")", { id: id }, function (response) {
+                                if (response.success) {
+                                    iziToast.success({
+                                        title: 'Thành công!',
+                                        message: 'Xoá tài khoản thành công.',
+                                        position: 'topRight',
+                                        timeout: 1000,
+                                    });
+                                    $(`tr:has(button[data-id='${id}'])`).remove();
+                                } else {
+                                    iziToast.error({
+                                        title: "Lỗi",
+                                        message: response.message,
+                                        position: "topRight",
+                                        timeout: 2000
+                                    });
+                                }
+                            }).fail(() => {
+                                iziToast.error({
+                                    title: "Lỗi!",
+                                    message: "Đã xảy ra lỗi khi xoá tài khoản.",
+                                    position: "topRight",
+                                    timeout: 3000
+                                });
+                            });
+
+                        }, true],
+                        ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                        }]
+                    ]
+                });
+            });
+
+            $(document).ready(function () {
+                function bindEvents() {
+                    // Xử lý khoá tài khoản
+                    $(".lock-account").off("click").on("click", function () {
+                        const id = $(this).data("id");
+                        const button = $(this);
+
+                        iziToast.question({
+                            class: 'iziToast-custom',
+                            title: "Xác nhận khoá tài khoản",
+                            message: "Bạn có chắc chắn muốn khoá tài khoản này không?",
+                            position: "center",
+                            timeout: false,
+                            close: false,
+                            overlay: true,
+                            buttons: [
+                                ['<button><i class="fa fa-lock"></i> Khoá</button>', function (instance, toast) {
+                                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                                    $.post("@Url.Action("LockAccount", "Admin")", { id: id }, function (response) {
+                                        if (response.success) {
+                                            iziToast.success({
+                                                title: "Thành công!",
+                                                message: "Tài khoản đã bị khoá.",
+                                                position: "topRight",
+                                                timeout: 1000
+                                            });
+
+                                            // Chuyển nút "Khoá" thành "Mở khoá"
+                                            button.removeClass("btn-warning lock-account").addClass("btn-success unlock-account")
+                                                .html('<i class="fas fa-unlock"></i>')
+                                                .attr("title", "Mở khoá tài khoản");
+
+                                            // Cập nhật trạng thái hiển thị
+                                            button.closest("tr").find("td:nth-child(6)").html('<span class="badge bg-danger">Bị khoá</span>');
+
+                                            // Gán lại sự kiện
+                                            bindEvents();
+                                        }
+                                    });
+                                }, true],
+                                ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
+                                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                                }]
+                            ]
+                        });
+                    });
+
+                    // Xử lý mở khoá tài khoản
+                    $(".unlock-account").off("click").on("click", function () {
+                        const id = $(this).data("id");
+                        const button = $(this);
+
+                        iziToast.question({
+                            class: 'iziToast-custom',
+                            title: "Xác nhận mở khoá",
+                            message: "Bạn có chắc chắn muốn mở khoá tài khoản này không?",
+                            position: "center",
+                            timeout: false,
+                            close: false,
+                            overlay: true,
+                            buttons: [
+                                ['<button><i class="fa fa-unlock"></i> Mở khoá</button>', function (instance, toast) {
+                                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                                    $.post("@Url.Action("UnlockAccount", "Admin")", { id: id }, function (response) {
+                                        if (response.success) {
+                                            iziToast.success({
+                                                title: "Thành công!",
+                                                message: "Tài khoản đã được mở khoá.",
+                                                position: "topRight",
+                                                timeout: 1000
+                                            });
+
+                                            // Chuyển nút "Mở khoá" thành "Khoá"
+                                            button.removeClass("btn-success unlock-account").addClass("btn-warning lock-account")
+                                                .html('<i class="fas fa-lock"></i>')
+                                                .attr("title", "Khoá tài khoản");
+
+                                            // Cập nhật trạng thái hiển thị
+                                            button.closest("tr").find("td:nth-child(6)").html('<span class="badge bg-success">Hoạt động</span>');
+
+                                            // Gán lại sự kiện
+                                            bindEvents();
+                                        }
+                                    });
+                                }, true],
+                                ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
+                                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                                }]
+                            ]
+                        });
+                    });
+                }
+                // Gán sự kiện lần đầu
+                bindEvents();
             });
         });
-
-        $(document).ready(function () {
-            function bindEvents() {
-                // Xử lý khoá tài khoản
-                $(".lock-account").off("click").on("click", function () {
-                    const id = $(this).data("id");
-                    const button = $(this);
-
-                    iziToast.question({
-                        class: 'iziToast-custom',
-                        title: "Xác nhận khoá tài khoản",
-                        message: "Bạn có chắc chắn muốn khoá tài khoản này không?",
-                        position: "center",
-                        timeout: false,
-                        close: false,
-                        overlay: true,
-                        buttons: [
-                            ['<button><i class="fa fa-lock"></i> Khoá</button>', function (instance, toast) {
-                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-
-                                $.post("@Url.Action("LockAccount", "Admin")", { id: id }, function (response) {
-                                    if (response.success) {
-                                        iziToast.success({
-                                            title: "Thành công!",
-                                            message: "Tài khoản đã bị khoá.",
-                                            position: "topRight",
-                                            timeout: 1000
-                                        });
-
-                                        // Chuyển nút "Khoá" thành "Mở khoá"
-                                        button.removeClass("btn-warning lock-account").addClass("btn-success unlock-account")
-                                            .html('<i class="fas fa-unlock"></i>')
-                                            .attr("title", "Mở khoá tài khoản");
-
-                                        // Cập nhật trạng thái hiển thị
-                                        button.closest("tr").find("td:nth-child(6)").html('<span class="badge bg-danger">Bị khoá</span>');
-
-                                        // Gán lại sự kiện
-                                        bindEvents();
-                                    }
-                                });
-                            }, true],
-                            ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
-                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-                            }]
-                        ]
-                    });
-                });
-
-                // Xử lý mở khoá tài khoản
-                $(".unlock-account").off("click").on("click", function () {
-                    const id = $(this).data("id");
-                    const button = $(this);
-
-                    iziToast.question({
-                        class: 'iziToast-custom',
-                        title: "Xác nhận mở khoá",
-                        message: "Bạn có chắc chắn muốn mở khoá tài khoản này không?",
-                        position: "center",
-                        timeout: false,
-                        close: false,
-                        overlay: true,
-                        buttons: [
-                            ['<button><i class="fa fa-unlock"></i> Mở khoá</button>', function (instance, toast) {
-                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-
-                                $.post("@Url.Action("UnlockAccount", "Admin")", { id: id }, function (response) {
-                                    if (response.success) {
-                                        iziToast.success({
-                                            title: "Thành công!",
-                                            message: "Tài khoản đã được mở khoá.",
-                                            position: "topRight",
-                                            timeout: 1000
-                                        });
-
-                                        // Chuyển nút "Mở khoá" thành "Khoá"
-                                        button.removeClass("btn-success unlock-account").addClass("btn-warning lock-account")
-                                            .html('<i class="fas fa-lock"></i>')
-                                            .attr("title", "Khoá tài khoản");
-
-                                        // Cập nhật trạng thái hiển thị
-                                        button.closest("tr").find("td:nth-child(6)").html('<span class="badge bg-success">Hoạt động</span>');
-
-                                        // Gán lại sự kiện
-                                        bindEvents();
-                                    }
-                                });
-                            }, true],
-                            ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
-                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-                            }]
-                        ]
-                    });
-                });
-            }
-            // Gán sự kiện lần đầu
-            bindEvents();
-        });
-    });
-</script>
+    </script>
+</body>

@@ -115,7 +115,9 @@
                                     <i class="fas fa-user"></i> Tài khoản
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Login"><i class="fas fa-sign-in-alt"></i>&nbsp; Đăng nhập</a></li>
+                                    <a class="dropdown-item" href="#" onclick="loginRedirect()">
+                                        <i class="fas fa-sign-in-alt"></i>&nbsp; Đăng nhập
+                                    </a>                                    
                                     <li><a class="dropdown-item" asp-controller="Account" asp-action="Register"><i class="fas fa-user-plus"></i> Đăng ký</a></li>
                                 </ul>
                             </li>
@@ -402,7 +404,19 @@
                         document.body.style.paddingRight = '0px';
                         
                         if (result.isConfirmed) {
-                            window.location.href = "@Url.Action("Logout", "Account")";
+                            const path = window.location.pathname.toLowerCase();
+                            const query = window.location.search;
+                            let returnUrl = '';
+
+                            if (path.startsWith('/home/detail')) {
+                                returnUrl = path + query;
+                            }
+
+                            const logoutUrl = returnUrl
+                                ? '@Url.Action("Logout", "Account")' + '?returnUrl=' + encodeURIComponent(returnUrl)
+                                : '@Url.Action("Logout", "Account")';
+
+                            window.location.href = logoutUrl;  
                         }
                     });
                 });
@@ -585,6 +599,27 @@
                 behavior: 'smooth'
             });
         });
+        
+        function loginRedirect() {
+            const path = window.location.pathname.toLowerCase(); // Lấy đường dẫn hiện tại và chuyển thành chữ thường
+            const query = window.location.search; // Lấy query string (các tham số trong URL)
+            let returnUrl = '';
+
+            // Kiểm tra nếu đường dẫn bắt đầu bằng "/home/detail"
+            if (path.startsWith('/home/detail')) {
+                returnUrl = path + query; // Nếu đúng, gán returnUrl bằng đường dẫn + query string
+            }
+
+            console.log(returnUrl);
+
+            if (returnUrl) {
+                // Chuyển hướng đến trang đăng nhập với returnUrl
+                window.location.href = '/account/login?returnUrl=' + encodeURIComponent(returnUrl);
+            } else {
+                // Nếu không phải là trang chi tiết, chuyển hướng đến trang đăng nhập mà không có returnUrl
+                window.location.href = '/account/login';
+            }
+        }
     </script>
 </body>
 </html>

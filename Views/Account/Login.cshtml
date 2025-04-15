@@ -2,47 +2,53 @@
     ViewData["Title"] = "Đăng nhập";
 }
 
-<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/iziToast.css">
-<script src="~/js/eye.js"></script>
+<head>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/iziToast.css">
+    <script src="~/js/eye.js"></script>
+</head>
 
-<div class="login-container">
-    <div class="card login-card">
-        <div class="card-body">
-            <h1>Chào mừng quý khách đến với TIMTRODE</h1>
-            <h2 class="text-center mb-4">Đăng nhập</h2>
+<body>
+    <div class="login-container">
+        <div class="card login-card">
+            <div class="card-body">
+                <h1>Chào mừng quý khách đến với TIMTRODE</h1>
+                <h2 class="text-center mb-4">Đăng nhập</h2>
 
-            <form method="post" asp-action="Login">
-                <div class="form-group mb-3">
-                    <label for="userName">Tên đăng nhập</label>
-                    <input type="text" class="form-control" id="userName" name="userName" required
-                        placeholder="Nhập tên đăng nhập" />
-                </div>
-                <div class="form-group mb-3">
-                    <label for="password">Mật khẩu</label>
-                    <div class="input-group">
-                        <input type="password" class="form-control" id="password" name="password" required
-                            placeholder="Nhập mật khẩu" />
-                        <button type="button" class="btn-outline-secondary toggle-password" data-target="password">
-                            <i class="fa-regular fa-eye"></i>
-                        </button>
+                <form method="post" asp-action="Login">
+                    <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+                    <div class="form-group mb-3">
+                        <label for="userName">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="userName" name="userName" required
+                            placeholder="Nhập tên đăng nhập" />
                     </div>
-                </div>
-                <div class="text-center mb-3">
-                    <button type="submit" class="btn btn-primary">Đăng nhập</button>
-                </div>
-            </form>
+                    <div class="form-group mb-3">
+                        <label for="password">Mật khẩu</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" name="password" required
+                                placeholder="Nhập mật khẩu" />
+                            <button type="button" class="btn-outline-secondary toggle-password" data-target="password">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-center mb-3">
+                        <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                    </div>
+                </form>
 
-            <p class="text-center mt-2">
-                <a asp-action="ForgotPassword">Quên mật khẩu?</a>
-            </p>
+                <p class="text-center mt-2">
+                    <a asp-action="ForgotPassword">Quên mật khẩu?</a>
+                </p>
 
-            <p class="text-center mt-3">
-                Chưa có tài khoản? <a asp-action="Register">Đăng ký ngay!</a>
-            </p>
+                <p class="text-center mt-3">
+                    Chưa có tài khoản? <a asp-action="Register">Đăng ký ngay!</a>
+                </p>
+            </div>
         </div>
     </div>
-</div>
+</body>
 
 @section Scripts {
     <!-- Thêm thư viện iziToast -->

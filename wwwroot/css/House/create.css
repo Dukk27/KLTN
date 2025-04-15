@@ -153,13 +153,28 @@ label[for="fullAddress"]::after {
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
-/* Hiển thị viền đỏ cho trường bắt buộc khi chưa nhập */
-.form-control.required:invalid {
-  border-color: #dc3545;
-}
-
 .form-control.required:invalid:focus {
   box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Suggestion list container */
+#addressSuggestions {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+  padding-left: 0;
+  background-color: white;
+  position: absolute;
+  z-index: 999;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* List items */
+#addressSuggestions li {
+  padding: 10px;
+  cursor: pointer;
 }
 
 /* Textarea */

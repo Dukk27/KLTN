@@ -80,18 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("bookAppointmentBtn").addEventListener("click", function () {
         if (!isAuthenticated) {
-            iziToast.warning({
-                title: "Cảnh báo",
-                message: "Bạn cần đăng nhập để đặt lịch hẹn.",
-                position: "topRight",
-                timeout: 1000,
-            });
-
-            setTimeout(function () {
-                window.location.href = "/Account/Login";
-            }, 1000);
-
-            return;
+            window.location.href = "/Account/Login";
         }
 
         if (houseOwnerId === currentUserId) {
@@ -162,16 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                 }
             } catch (error) {
-                iziToast.warning({
-                    title: "Cảnh báo",
-                    message: "Bạn cần đăng nhập để đặt lịch hẹn.",
-                    position: "topRight",
-                    timeout: 1000,
-                });
-
-                setTimeout(function () {
-                    window.location.href = "/Account/Login";
-                }, 1000);
+                window.location.href = "/Account/Login";
             }
         });
     }
