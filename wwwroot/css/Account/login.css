@@ -1,0 +1,117 @@
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 650px;
+  background-color: #ffffff;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.login-illustration {
+  flex: 1;
+  min-width: 300px;
+  text-align: center;
+  padding: 15px;
+}
+
+.login-illustration img {
+  width: 200%;
+  max-width: 650px;
+  height: auto;
+  margin-left: -60px; /* đẩy ảnh sát vào bên trái */
+}
+
+.login-form-container {
+  flex: 1;
+  min-width: 350px;
+  max-width: 600px;
+  padding: 20px;
+  margin-right: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-title {
+  text-align: center;
+  font-size: 24px;
+  color: #0140a0;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.login-form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group input {
+  flex: 1;
+}
+
+.toggle-password {
+  margin-left: 5px;
+  background: none;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  font-size: 18px;
+  color: #333;
+}
+
+.btn-primary {
+  background-color: #1168aa;
+  border: none;
+  width: 30%;
+  padding: 12px;
+  border-radius: 15px;
+  font-weight: bold;
+  color: white;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.login-form a {
+  color: #0140a0;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+.login-form p a {
+  font-style: italic;
+  display: inline; /* giữ đường link trên cùng dòng */
+  white-space: nowrap; /* ngăn chữ xuống dòng */
+}
+
+.login-form a:hover {
+  text-decoration: underline;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.form-check {
+    margin-left: 20px;
+}
+
+.form-check label {
+    margin-left: 5px;
+    font-size: 16px;
+    color: #000000;
+}

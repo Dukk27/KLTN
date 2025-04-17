@@ -1,5 +1,7 @@
 // HouseRepository.cs
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 using KLTN.Models;
 using KLTN.Repositories;
@@ -177,12 +179,29 @@ namespace KLTN.Repositories
                 .Include(h => h.IdUserNavigation)
                 .AsQueryable();
 
+            // if (!string.IsNullOrEmpty(searchString))
+            // {
+            //     query = query.Where(h =>
+            //         h.HouseDetails.Any(hd =>
+            //             hd.Address.Contains(searchString) || h.NameHouse.Contains(searchString)
+            //         )
+            //     );
+            // }
+
             if (!string.IsNullOrEmpty(searchString))
             {
-                query = query.Where(h =>
-                    h.HouseDetails.Any(hd => hd.Address.Contains(searchString))
-                );
+                string normalizedSearch = NormalizeAddress(searchString);
+
+                query = query
+                    .AsEnumerable() // chuyển sang client-side evaluation
+                    .Where(h =>
+                        h.HouseDetails.Any(hd =>
+                            NormalizeAddress(hd.Address).Contains(normalizedSearch)
+                        ) || NormalizeAddress(h.NameHouse).Contains(normalizedSearch)
+                    )
+                    .AsQueryable(); // nếu cần tiếp tục chain EF methods phía sau
             }
+
             if (!string.IsNullOrEmpty(priceRange))
             {
                 var ranges = priceRange.Split('-');
@@ -239,7 +258,34 @@ namespace KLTN.Repositories
                 };
             }
 
-            return await query.ToListAsync();
+            // return await query.ToListAsync();
+            return query.ToList(); // Chuyển sang client-side evaluation để sử dụng NormalizeAddress
+        }
+
+        public static string NormalizeAddress(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return string.Empty;
+
+            // Chuyển về dạng FormD để tách dấu ra khỏi ký tự
+            var normalizedString = input.Normalize(NormalizationForm.FormD);
+
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                // Bỏ các ký tự dấu (ký tự Unicode loại "NonSpacingMark")
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder
+                .ToString()
+                .Normalize(NormalizationForm.FormC) // Chuẩn hóa lại
+                .ToLower(); // Chuyển về chữ thường để tiện so sánh
         }
     }
 }

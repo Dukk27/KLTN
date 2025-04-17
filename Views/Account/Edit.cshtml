@@ -2,11 +2,14 @@
 
 @{
     ViewData["Title"] = "Chỉnh sửa thông tin tài khoản";
+    ViewData["ShowSidebar"] = !User.IsInRole("Admin");;
 }
 
 <head>
     <link rel="stylesheet" href="~/css/iziToast.css">
     <link rel="stylesheet" href="~/css/Account/edit.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
+    <script src="~/js/eye.js"></script>
 </head>
 
 <body>
@@ -22,7 +25,7 @@
                         <a href="@Url.Action("Index", "Home")">Trang Chủ</a>
                     }
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Chỉnh Sửa Thông Tin Tài Khoản @Model.UserName</li>
+            <li class="breadcrumb-item active" aria-current="page">Thông Tin Tài Khoản @Model.UserName</li>
         </ol>
     </nav>
 
@@ -50,9 +53,8 @@
             <label for="Password" class="form-label">Mật khẩu</label>
             <input type="password" class="form-control" id="Password" name="Password" value="@Model.Password" hidden />
 
-            <button type="button" class="btn btn-warning btn-change-password"
-                onclick="window.location.href='@Url.Action("ChangePassword", "Account")'">
-                Đổi mật khẩu
+            <button type="button" class="btn btn-warning btn-change-password" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                Thay đổi mật khẩu?
             </button>
         </div>
 
@@ -63,7 +65,7 @@
 
             <!-- Input ẩn để giữ giá trị thực của Role khi gửi form -->
             <input type="hidden" id="Role" name="Role" value="@Model.Role" />
-        </div>
+        </div> 
 
         <div class="form-group" hidden>
             <label for="FreePostUsed" class="form-label">Số bài đăng free đã dùng</label>
@@ -72,10 +74,57 @@
         </div>
 
         <div class="button-container">
-            <button type="button" class="btnclose" onclick="handleClose()">Đóng</button>
+            <button type="button" class="btnclose" onclick="handleClose()">Huỷ</button>
             <button type="submit" class="btn btn-primary">Cập nhật</button>
         </div>
     </form>
+
+    <!-- Modal đổi mật khẩu -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="changePasswordForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="changePasswordModalLabel" style="font-weight: bold">Đổi mật khẩu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="OldPassword" class="form-label">Mật khẩu cũ</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="OldPassword" name="currentPassword" required>
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="OldPassword">
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="NewPassword" class="form-label">Mật khẩu mới</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="NewPassword" name="newPassword" required>
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="NewPassword">
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ConfirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="ConfirmPassword" name="confirmPassword" required>
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="ConfirmPassword">
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btnclose" data-bs-dismiss="modal" style="background-color: #EBEDF4">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Thêm iziToast -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
@@ -129,7 +178,8 @@
                                         iziToast.error({
                                             title: 'Thất bại!',
                                             message: data.message,
-                                            position: 'topRight'
+                                            position: 'topRight',
+                                            timeout: 1500,
                                         });
                                     }
                                 })
@@ -137,7 +187,9 @@
                                     iziToast.error({
                                         title: 'Lỗi hệ thống!',
                                         message: 'Không thể gửi yêu cầu, kiểm tra kết nối.',
-                                        position: 'topRight'
+                                        position: 'topRight',
+                                        color: 'red',
+                                        timeout: 1500
                                     });
                                 }); *@
 
@@ -145,11 +197,6 @@
 
                         ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
                             instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-                            iziToast.info({
-                                title: 'Thông báo',
-                                message: 'Bạn đã hủy cập nhật.',
-                                position: 'topRight'
-                            });
                         }]
                     ]
                 });
@@ -164,5 +211,74 @@
                 window.location.href = '@Url.Action("Index", "Home")'; // Chuyển hướng về trang chủ
             }
         }
+    
+        $('#changePasswordModal').on('show.bs.modal', function () {
+            // Lấy tất cả các input trong modal và xóa giá trị của chúng
+            $('#OldPassword').val('');
+            $('#NewPassword').val('');
+            $('#ConfirmPassword').val('');
+        });
+
+        document.getElementById("changePasswordForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+
+            iziToast.question({
+                timeout: 20000,
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                zindex: 9999,
+                title: 'Xác nhận đổi mật khẩu',
+                message: 'Bạn có chắc chắn muốn thay đổi mật khẩu không?',
+                position: 'center',
+                class: 'iziToast-custom', /* Áp dụng CSS tùy chỉnh */
+                buttons: [
+                    ['<button><i class="fa fa-check"></i>Đồng ý</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                        fetch('@Url.Action("ChangePassword", "Account")', {
+                            method: "POST",
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    iziToast.success({
+                                        title: 'Thành công!',
+                                        message: 'Mật khẩu của bạn đã được thay đổi.',
+                                        position: 'topRight',
+                                        timeout: 1500
+                                    });
+                                    $('#changePasswordModal').modal('hide');
+                                } else {
+                                    iziToast.error({
+                                        title: 'Lỗi!',
+                                        message: data.message || 'Đổi mật khẩu không thành công!',
+                                        position: 'topRight',
+                                        timeout: 1500
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                iziToast.error({
+                                    title: 'Lỗi hệ thống!',
+                                    message: 'Vui lòng thử lại sau.',
+                                    position: 'topRight',
+                                    color: 'red',
+                                    timeout: 1500
+                                });
+                            });
+
+                    }, true],
+
+                    ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }]
+                ]
+            });
+        });
     </script>
 </body>

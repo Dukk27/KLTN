@@ -54,14 +54,10 @@
                             }
                         </td>
                         <td>
-                            <a href="@Url.Action("Details", "Admin", new { id = account.IdUser })" class="btn btn-sm btn-primary"
+                            @* <a href="@Url.Action("Details", "Admin", new { id = account.IdUser })" class="btn btn-sm btn-primary"
                                 title="Xem chi tiết tài khoản">
                                 <i class="fas fa-eye"></i>
-                            </a>
-
-                            <button class="btn btn-sm btn-danger delete-account" data-id="@account.IdUser" title="Xoá tài khoản">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+                            </a> *@
 
                             @if (account.IsLocked)
                             {
@@ -76,6 +72,11 @@
                                     <i class="fas fa-lock"></i>
                                 </button>
                             }
+                            
+                            <button class="btn btn-sm btn-danger delete-account" data-id="@account.IdUser" title="Xoá tài khoản">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+
                         </td>
                     </tr>
                 }

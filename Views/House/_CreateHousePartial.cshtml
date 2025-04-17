@@ -133,7 +133,7 @@
     <div class="section">
         <h4>Địa chỉ</h4>
         <div class="mt-2">
-            <label for="fullAddress">Địa chỉ đầy đủ *</label>
+            <label for="fullAddress">Địa chỉ cụ thể *</label>
             <input type="text" id="fullAddress" class="form-control required"
                 placeholder="Địa chỉ cụ thể (VD: 96 Định Công, Phương Liệt, Thanh Xuân, Hà Nội)" required />
             <ul id="addressSuggestions" class="list-group"></ul>
@@ -145,7 +145,7 @@
     <div id="map" style="width: 100%; height: 400px; margin-top: 15px; margin-bottom: 20px"></div>
 
     <div class="section">
-        <h4>Tiện ích</h4>
+        <h4>Tiện nghi</h4>
         <div class="amenities-container">
             <div class="row">
                 @foreach (var amenity in Model.Amenities)
@@ -314,8 +314,10 @@
                         timeout: 20000,
                         close: false,
                         overlay: true,
-                        title: 'Sử dụng bài đăng miễn phí?',
-                        message: `Bạn còn ${freePostsRemaining} bài đăng miễn phí. Bạn có muốn sử dụng không?`,
+                        @* title: 'Sử dụng bài đăng miễn phí?',
+                        message: `Bạn còn ${freePostsRemaining} bài đăng miễn phí. Bạn có muốn sử dụng không?`, *@
+                        title: 'Xác nhận đăng bài',
+                        message: 'Bạn có muốn đăng bài bây giờ không?',
                         position: 'center',
                         icon: "fa fa-question-circle",
                         buttons: [
@@ -411,6 +413,8 @@
             center: [105.8544441, 21.028511], // Hà Nội mặc định
             zoom: 14
         });
+
+        map.addControl(new goongjs.NavigationControl());
 
         marker = new goongjs.Marker({ draggable: true })
             .setLngLat([105.8544441, 21.028511])

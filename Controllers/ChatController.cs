@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KLTN.Models;
+using KLTN.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -125,7 +126,7 @@ namespace KLTN.Controllers
             return userId1 < userId2 ? $"{userId1}-{userId2}" : $"{userId2}-{userId1}";
         }
 
-        public IActionResult ChatList()
+        public IActionResult ChatList(string conversationId)
         {
             if (!User.Identity.IsAuthenticated)
             {
@@ -156,7 +157,13 @@ namespace KLTN.Controllers
 
                 if (otherUser != null && lastMessage != null)
                 {
+                    // Kiểm tra xem có tin nhắn chưa đọc từ người khác không
                     bool hasUnreadMessages = _context.Messages.Any(m =>
+                        m.ReceiverId == currentUserId && m.SenderId == otherUser.IdUser && !m.IsRead
+                    );
+
+                    // Đếm số tin nhắn chưa đọc từ người khác
+                    var unreadMessagesCount = _context.Messages.Count(m =>
                         m.ReceiverId == currentUserId && m.SenderId == otherUser.IdUser && !m.IsRead
                     );
 
@@ -176,9 +183,8 @@ namespace KLTN.Controllers
                                     .Accounts.Where(a => a.IdUser == lastMessage.SenderId)
                                     .Select(a => a.UserName)
                                     .FirstOrDefault() ?? "Không rõ",
-                            HasUnreadMessages =
-                                hasUnreadMessages // Gán giá trị kiểm tra tin nhắn chưa đọc
-                            ,
+                            HasUnreadMessages = hasUnreadMessages,
+                            UnreadMessagesCount = unreadMessagesCount,
                         }
                     );
                 }
@@ -186,7 +192,73 @@ namespace KLTN.Controllers
 
             conversations = conversations.OrderByDescending(c => c.LastMessageTime).ToList();
 
-            ViewBag.CurrentUserId = currentUserId.Value; // Đảm bảo truyền ID xuống View
+            // hiển thị nội dung chat khi có conversationId
+            ManageChatViewModel currentConversation = null;
+            if (!string.IsNullOrEmpty(conversationId))
+            {
+                var ids = conversationId.Split('-');
+                if (
+                    ids.Length == 2
+                    && int.TryParse(ids[0], out int id1)
+                    && int.TryParse(ids[1], out int id2)
+                )
+                {
+                    int receiverId = (currentUserId.Value == id1) ? id2 : id1;
+                    
+                    // Cập nhật tin nhắn chưa đọc thành đã đọc
+                    var unreadMessages = _context
+                        .Messages.Where(m =>
+                            m.SenderId == receiverId && m.ReceiverId == currentUserId && !m.IsRead
+                        )
+                        .ToList();
+
+                    if (unreadMessages.Any())
+                    {
+                        foreach (var msg in unreadMessages)
+                        {
+                            msg.IsRead = true;
+                        }
+                        _context.SaveChanges();
+                    }
+
+                    var user = _context.Accounts.FirstOrDefault(a => a.IdUser == receiverId);
+                    if (user != null)
+                    {
+                        var chatMessages = _context
+                            .Messages.Where(m =>
+                                (m.SenderId == currentUserId && m.ReceiverId == receiverId)
+                                || (m.SenderId == receiverId && m.ReceiverId == currentUserId)
+                            )
+                            .OrderBy(m => m.Timestamp)
+                            .ToList();
+
+                        currentConversation = new ManageChatViewModel
+                        {
+                            ReceiverId = receiverId,
+                            ReceiverName = user.UserName,
+                            ConversationId = conversationId,
+                            Messages = chatMessages
+                                .Select(m => new ChatMessageViewModel
+                                {
+                                    Sender =
+                                        _context
+                                            .Accounts.FirstOrDefault(a => a.IdUser == m.SenderId)
+                                            ?.UserName ?? "Không rõ",
+                                    Content = m.Content,
+                                    Timestamp = m.Timestamp,
+                                })
+                                .ToList(),
+                        };
+                    }
+                }
+            }
+
+            ViewBag.CurrentConversation = currentConversation;
+            ViewBag.CurrentUserName = _context
+                .Accounts.FirstOrDefault(a => a.IdUser == currentUserId)
+                ?.UserName;
+            ViewBag.CurrentUserId = currentUserId.Value;
+
             return View(conversations);
         }
 

@@ -9,6 +9,6 @@ namespace KLTN.Models
         public int LastSenderId { get; set; } 
         public string LastSenderName { get; set; }
         public bool HasUnreadMessages { get; set; } // Xác định tin nhắn chưa đọc
-
+        public int UnreadMessagesCount { get; set; } 
     }
 }

@@ -55,7 +55,7 @@ async function deleteHouse(id) {
     overlay: true,
     displayMode: "once",
     drag: false,
-    icon: "fa fa-warning",
+    icon: "fa fa-question-circle",
     buttons: [
       [
         '<button><i class="fa fa-check"></i> Xóa ngay</button>',
@@ -167,7 +167,7 @@ async function deleteHouse(id) {
     overlay: true,
     displayMode: "once",
     drag: false,
-    icon: "fa fa-warning",
+    icon: "fa fa-question-circle",
     buttons: [
       [
         '<button><i class="fa fa-check"></i> Xóa ngay</button>',
@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
         overlay: true,
         displayMode: "once",
         drag: false,
-        icon: "fa fa-eye-slash",
+        icon: "fa fa-question-circle",
         buttons: [
           [
             '<button><i class="fa fa-check"></i> Ẩn ngay</button>',
@@ -306,7 +306,7 @@ document.addEventListener("DOMContentLoaded", function () {
         overlay: true,
         displayMode: "once",
         drag: false,
-        icon: "fa fa-eye",
+        icon: "fa fa-question-circle",
         buttons: [
           [
             '<button><i class="fa fa-check"></i> Hiện ngay</button>',

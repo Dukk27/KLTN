@@ -1,57 +1,58 @@
 @{
     ViewData["Title"] = "Đăng nhập";
 }
-
 <head>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/iziToast.css">
+    <link rel="stylesheet" href="~/css/Account/login.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/iziToast.css" />
     <script src="~/js/eye.js"></script>
 </head>
 
 <body>
-    <div class="login-container">
-        <div class="card login-card">
-            <div class="card-body">
-                <h1>Chào mừng quý khách đến với TIMTRODE</h1>
-                <h2 class="text-center mb-4">Đăng nhập</h2>
+    <div class="login-wrapper">
+        <div class="login-illustration">
+            <img src="~/img/login.jpg" alt="Login Illustration" />
+        </div>
 
-                <form method="post" asp-action="Login">
-                    <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+        <div class="login-form-container">
+            <h1 class="login-title">CHÀO MỪNG BẠN ĐẾN VỚI TIMTRODE</h1>
 
-                    <div class="form-group mb-3">
-                        <label for="userName">Tên đăng nhập</label>
-                        <input type="text" class="form-control" id="userName" name="userName" required
-                            placeholder="Nhập tên đăng nhập" />
+            <form method="post" asp-action="Login" class="login-form">
+                <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+                <div class="form-group">
+                    <label for="userName">Tên đăng nhập</label>
+                    <input type="text" class="form-control" id="userName" name="userName" required
+                           placeholder="Nhập tên đăng nhập" />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password" required
+                               placeholder="Nhập mật khẩu" />
+                        <button type="button" class="btn-outline-secondary toggle-password" data-target="password">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="password">Mật khẩu</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="password" name="password" required
-                                placeholder="Nhập mật khẩu" />
-                            <button type="button" class="btn-outline-secondary toggle-password" data-target="password">
-                                <i class="fa-regular fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="text-center mb-3">
-                        <button type="submit" class="btn btn-primary">Đăng nhập</button>
-                    </div>
-                </form>
+                </div>
+
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                </div>
 
                 <p class="text-center mt-2">
-                    <a asp-action="ForgotPassword">Quên mật khẩu?</a>
+                    <a asp-action="ForgotPassword" style ="color:#0140A0;">Quên mật khẩu?</a>
                 </p>
 
-                <p class="text-center mt-3">
-                    Chưa có tài khoản? <a asp-action="Register">Đăng ký ngay!</a>
+                <p class="text-center mt-3" style="font-style">
+                    Bạn chưa có tài khoản? <a asp-action="Register">Đăng ký ngay!</a>
                 </p>
-            </div>
+            </form>
         </div>
     </div>
 </body>
 
 @section Scripts {
-    <!-- Thêm thư viện iziToast -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
 
@@ -66,22 +67,6 @@
                     timeout: 1500
                 });
             }
-            @* const urlParams = new URLSearchParams(window.location.search);
-            const messageType = urlParams.get('type');  // success / error
-            const messageText = urlParams.get('message'); // Nội dung thông báo
-
-            // Nếu có thông báo từ query string, hiển thị iziToast
-            if (messageType && messageText) {
-                iziToast[messageType]({
-                    title: messageType === 'success' ? 'Thành công' : 'Lỗi',
-                    message: messageText,
-                    position: 'topRight',
-                    timeout: 2000
-                });
-
-                // Xóa query string sau khi hiển thị để tránh lặp lại khi reload trang
-                window.history.replaceState({}, document.title, window.location.pathname);
-            } *@
         });
     </script>
 }

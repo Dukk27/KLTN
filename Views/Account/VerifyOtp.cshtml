@@ -1,56 +1,54 @@
 @{
     ViewData["Title"] = "Xác minh OTP";
 }
-
 <head>
-    <style>
-        .container {
-            margin-bottom: 50px;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/Account/login.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/iziToast.css" />
 </head>
 
 <body>
-    <div class="container mt-5">
-        <div class="card shadow-lg mx-auto" style="max-width: 450px; padding: 20px;">
-            <div class="card-body">
-                <h2 class="text-center mb-4">Xác minh OTP</h2>
+    <div class="login-wrapper">
+        <div class="login-illustration">
+            <img src="~/img/login.jpg" alt="OTP Illustration" />
+        </div>
 
-                @if (ViewBag.Message != null)
-                {
-                    <div class="alert alert-info">@ViewBag.Message</div>
-                }
+        <div class="login-form-container">
+            <h1 class="login-title">XÁC MINH MÃ OTP</h1>
 
-                <form method="post" asp-action="VerifyOtp">
-                    <input type="hidden" name="email" value="@ViewBag.Email" />
+            @if (ViewBag.Message != null)
+            {
+                <div class="alert alert-info">@ViewBag.Message</div>
+            }
 
-                    <div class="form-group mb-3">
-                        <label for="otp">Nhập mã OTP</label>
-                        <input type="text" class="form-control" id="otp" name="otp" required
-                            placeholder="Nhập mã OTP gồm 6 chữ số" />
-                    </div>
+            <form method="post" asp-action="VerifyOtp" class="login-form" id="verifyOtpForm">
+                <input type="hidden" name="email" value="@ViewBag.Email" />
 
-                    <div class="text-center mb-3">
-                        <button type="submit" class="btn btn-primary" style="width: 250px;">Xác nhận</button>
-                    </div>
-                </form>
+                <div class="form-group">
+                    <label for="otp">Nhập mã OTP</label>
+                    <input type="text" class="form-control" id="otp" name="otp" required
+                        placeholder="Nhập mã OTP gồm 6 chữ số" />
+                </div>
 
-                <p class="text-center mt-3">
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                </div>
+
+                <p class="text-center mt-3" style="font-style: italic;">
                     <a asp-action="ForgotPassword">Gửi lại mã OTP?</a>
                 </p>
-            </div>
+            </form>
         </div>
     </div>
+</body>
 
-    <!-- Thêm iziToast -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+@section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         $(document).ready(function () {
-            $("form").submit(function (event) {
-                event.preventDefault(); // Ngăn chặn load lại trang
+            $("#verifyOtpForm").submit(function (event) {
+                event.preventDefault();
 
                 var otp = $("#otp").val();
                 var email = $("input[name='email']").val();
@@ -76,7 +74,7 @@
                                 message: response.message,
                                 position: "topRight",
                                 timeout: 1000,
-                                onClosing: function() {
+                                onClosing: function () {
                                     window.location.href = response.redirectUrl;
                                 }
                             });
@@ -101,4 +99,4 @@
             });
         });
     </script>
-</body>
+}

@@ -6,12 +6,14 @@ var map = new goongjs.Map({
   zoom: 15,
 });
  
+map.addControl(new goongjs.NavigationControl());
+
 function zoomIn() {
   var currentZoom = map.getZoom();
   if (currentZoom < 20) {
     map.zoomIn();
   }
-}
+} 
 
 function zoomOut() {
   var currentZoom = map.getZoom();

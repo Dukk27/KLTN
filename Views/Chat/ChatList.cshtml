@@ -1,15 +1,13 @@
 @model List<KLTN.Models.ConversationViewModel>
-
 @{
+    var currentConversation = ViewBag.CurrentConversation as KLTN.ViewModels.ManageChatViewModel;
+    var currentUserName = ViewBag.CurrentUserName as string;
     var currentUserId = ViewBag.CurrentUserId;
+    var receiverId = ViewBag.ReceiverId;
 }
 
 <head>
-    <link rel="stylesheet" href="~/css/iziToast.css">
-    <link rel="stylesheet" href="~/css/Chat/chatlist.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
-    <script src="~/js/Chat/chatList.js"></script>
+    <link rel="stylesheet" href="~/css/Chat/chatlist.css" asp-append-version="true" />
 </head>
 
 <body>
@@ -25,42 +23,175 @@
                     <a href="@Url.Action("Index", "Home")">Trang Chủ</a>
                 }
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Danh Sách Tin Nhắn</li>
+            <li class="breadcrumb-item active" aria-current="page">Tin Nhắn</li>
         </ol>
     </nav>
 
-    <h2 style="font-family: Arial, sans-serif; font-weight: bold; color: #333; text-align: center; margin-bottom: 15px; margin-top: 20px">Danh Sách Tin Nhắn</h2>
-    <div class="chatbox-body">
-        @if (Model.Any())
-        {
-            <ul class="chat-list">
-                @foreach (var conversation in Model)
-                {
-                    var lastSenderName = conversation.LastSenderId == currentUserId ? "Bạn" : conversation.LastSenderName;
+    <div class="wrapper-chatbox shadow rounded border">
+        <div class="d-flex" style="height: 80vh;">
+            <!-- Danh sách hội thoại (bên trái) -->
+            <div class="col-md-3 border-end overflow-auto">
+                <div style="text-align: center;">
+                    <h4 class="p-3">Danh sách chat</h4>
+                </div>
+                <ul class="list-group">
+                    @foreach (var convo in Model)
+                    {
+                        <li class="list-group-item @(convo.ConversationId == currentConversation?.ConversationId ? "active" : "")">
+                            <a href="@Url.Action("ChatList", "Chat", new { conversationId = convo.ConversationId })" class="text-decoration-none text-dark d-block">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="fw-bold">@convo.UserName</div>
+                                    <div class="text-muted small">@convo.LastMessageTime?.ToString("dd/MM/yyyy HH:mm")</div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="text-muted text-truncate" style="max-width: 80%;">
+                                        @convo.LastMessage
+                                    </div>
+                                    @if (convo.HasUnreadMessages && convo.UnreadMessagesCount > 0)
+                                    {
+                                        <span class="badge bg-danger">@convo.UnreadMessagesCount</span>
+                                    }
+                                </div>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
 
-                    <li class="chat-item @(conversation.HasUnreadMessages ? "unread" : "")" onclick="openChat('@conversation.ConversationId')">
-                        <div class="chat-user">
-                            <strong>@conversation.UserName</strong> (@(conversation.HasUnreadMessages ? "Có tin chưa đọc" : "Đã đọc"))
-                            <br />
-                            <small class="last-message @(conversation.HasUnreadMessages ? "unread" : "")">
-                                <b>@lastSenderName:</b> @conversation.LastMessage
-                            </small>
-                        </div>
-                        <div class="chat-meta">
-                            <small class="chat-time">
-                                @(conversation.LastMessageTime?.ToString("HH:mm dd/MM") ?? "")
-                            </small>
-                            <button class="delete-btn" onclick="deleteConversation(event, '@conversation.ConversationId')">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div> 
-                    </li>
+            <!-- Khung chat bên phải -->
+            <div class="col-md-9 d-flex flex-column">
+                @if (currentConversation != null)
+                {
+                    <div class="border-bottom p-3 bg-light">
+                        <h5>Đang trò chuyện với: @currentConversation.ReceiverName</h5>
+                    </div>
+
+                    <input type="hidden" id="currentUserId" value="@currentUserId" />
+                    <input type="hidden" id="receiverId" value="@currentConversation.ReceiverId" />
+
+                    <div id="messages" class="flex-grow-1 overflow-auto p-3" style="background-color: #f9f9f9;">
+                        @foreach (var msg in currentConversation.Messages)
+                        {
+                            <div class="mb-3 d-flex @(msg.Sender == currentUserName ? "justify-content-end" : "justify-content-start")">
+                                <div class="p-2 rounded shadow-sm" style="background-color: @(msg.Sender == currentUserName ? "#d1f7c4" : "#ffffff"); max-width: 40%;">
+                                    <div class="fw-bold">@msg.Sender</div>
+                                    <div class="chat-message">@msg.Content</div>
+                                    <div class="text-muted small">@msg.Timestamp.ToString("HH:mm dd/MM/yy")</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="border-top p-3 d-flex">
+                        <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn..." />
+                        <button id="chat" class="btn btn-primary" onclick="sendMessage()">Gửi</button>
+                    </div>
                 }
-            </ul>
-        }
-        else
-        {
-            <p class="no-messages">Bạn chưa có cuộc trò chuyện nào!.</p>
-        }
+                else
+                {
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <h4>Chọn một cuộc trò chuyện để bắt đầu</h4>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var currentUserId = document.getElementById("currentUserId").value;
+            var receiverId = document.getElementById("receiverId").value;
+
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub")
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            connection.on("ReceiveMessage", function (senderId, senderName, message, timestamp) {
+                if (senderId != currentUserId) {
+                    iziToast.info({
+                        title: `Tin nhắn từ ${senderName}`,
+                        message: message,
+                        position: 'topRight',
+                        timeout: 5000
+                    });
+                }
+                displayMessage(senderId, senderName, message, timestamp);
+            });
+
+            connection.on("SendMessageError", function (errorMessage) {
+                alert("Lỗi khi gửi tin nhắn: " + errorMessage);
+            });
+
+            function displayMessage(senderId, senderName, message, timestamp) {
+                var messagesDiv = document.getElementById("messages");
+                var time = new Date(timestamp);
+                if (isNaN(time.getTime())) time = new Date();
+                var formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' ' + time.toLocaleDateString('vi-VN');
+
+                var wrapperDiv = document.createElement("div");
+                wrapperDiv.classList.add("mb-3", "d-flex");
+                wrapperDiv.classList.add(senderId == currentUserId ? "justify-content-end" : "justify-content-start");
+
+                var msgBox = document.createElement("div");
+                msgBox.classList.add("p-2", "rounded", "shadow-sm");
+                msgBox.style.backgroundColor = senderId == currentUserId ? "#d1f7c4" : "#ffffff";
+                msgBox.style.maxWidth = "40%";
+
+                var nameDiv = document.createElement("div");
+                nameDiv.classList.add("fw-bold");
+                nameDiv.textContent = senderId == currentUserId ? "Bạn" : senderName;
+
+                var contentDiv = document.createElement("div");
+                contentDiv.classList.add("chat-message");
+                contentDiv.textContent = message;
+
+                var timeDiv = document.createElement("div");
+                timeDiv.classList.add("text-muted", "small");
+                timeDiv.textContent = formattedTime;
+
+                msgBox.appendChild(nameDiv);
+                msgBox.appendChild(contentDiv);
+                msgBox.appendChild(timeDiv);
+                wrapperDiv.appendChild(msgBox);
+                messagesDiv.appendChild(wrapperDiv);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+
+            connection.start().then(() => {
+                console.log("Kết nối thành công");
+            }).catch(err => {
+                console.error("Kết nối thất bại:", err.toString());
+            });
+
+            window.sendMessage = function () {
+                var message = document.getElementById("messageInput").value.trim();
+                if (!message) return;
+
+                const senderId = parseInt(currentUserId);
+                const receiver = parseInt(receiverId);
+                const now = new Date().toISOString();
+
+                connection.invoke("SendMessage", senderId, receiver, message)
+                    .then(() => {
+                        document.getElementById("messageInput").value = "";
+                    })
+                    .catch(err => {
+                        alert("Gửi thất bại: " + err.toString());
+                    });
+            };
+
+
+            document.getElementById("messageInput").addEventListener("keydown", function (event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            var messagesDiv = document.getElementById("messages");
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+    </script>
 </body>

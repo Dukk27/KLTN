@@ -15,28 +15,41 @@
 
     <div class="container user-houses-page">
         <h2>Danh Sách Bài Đăng Của Người Dùng @ViewBag.UserName</h2>
-        
-        <div class="row">
-            @if (Model.Houses != null && Model.Houses.Any())
-            {
-                @foreach (var house in Model.Houses)
-                {
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card shadow-sm h-100">
-                            <div class="card-body d-flex flex-column justify-content-between">
-                                <h5 class="card-title text-primary">@house.NameHouse</h5>
-                                <p class="card-text mb-1"><strong>Địa chỉ:</strong> @house.HouseDetails.FirstOrDefault()?.Address</p>
-                                <p class="card-text mb-1"><strong>Giá:</strong> 
-                                    @house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND
-                                </p>
 
+        @if (Model.Houses != null && Model.Houses.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Tên Nhà</th>
+                            <th>Địa Chỉ</th>
+                            <th>Giá</th>
+                            <th>Diện Tích</th>
+                            @if (Model.IsAdmin)
+                            {
+                                <th>Người Đăng</th>
+                            }
+                            <th>Trạng Thái</th>
+                            <th>Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var house in Model.Houses)
+                        {
+                            <tr>
+                                <td>@house.NameHouse</td>
+                                <td>@house.HouseDetails.FirstOrDefault()?.Address</td>
+                                <td>
+                                    @house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND
+                                </td>
                                 @if (Model.IsAdmin)
                                 {
-                                    <p class="card-text mb-1"><strong>Người đăng:</strong> @house.IdUserNavigation.UserName</p>
+                                    <td>@house.IdUserNavigation.UserName</td>
                                 }
+                                <td>@house.HouseDetails.FirstOrDefault()?.DienTich m²</td>
 
-                                <p class="card-text mb-2">
-                                    <strong>Trạng thái:</strong>
+                                <td>
                                     @if (house.Status == HouseStatus.Pending)
                                     {
                                         <span class="badge bg-warning text-dark">Chờ duyệt</span>
@@ -49,45 +62,43 @@
                                     {
                                         <span class="badge bg-danger">Bị từ chối</span>
                                     }
-                                </p>
-
-                                <div class="action-buttons mt-auto d-flex flex-wrap gap-2">
-                                    <button class="btn btn-sm btn-primary" onclick="viewDetail(@house.IdHouse, 'house')" title="Xem chi tiết">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-warning" onclick="editItem(@house.IdHouse, 'house')" title="Chỉnh sửa">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteHouse(@house.IdHouse)" title="Xoá">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-
-                                    @if (house.Status == HouseStatus.Active || house.Status == HouseStatus.Approved)
-                                    {
-                                        <button class="btn btn-sm btn-secondary btn-hide" data-id="@house.IdHouse" title="Ẩn bài đăng">
-                                            <i class="fas fa-eye-slash"></i>
-                                        </button>
-                                    }
-                                    @if (house.Status == HouseStatus.Hidden)
-                                    {
-                                        <button class="btn btn-sm btn-success btn-show" data-id="@house.IdHouse" title="Hiện bài đăng">
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        <button class="btn btn-sm btn-primary" onclick="viewDetail(@house.IdHouse, 'house')" title="Xem chi tiết">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-12 no-posts-message">
-                    Hiện chưa có bài đăng nào.
-                </div>
-            }
-        </div>
+                                        <button class="btn btn-sm btn-warning" onclick="editItem(@house.IdHouse, 'house')" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteHouse(@house.IdHouse)" title="Xoá">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
 
+                                        @if (house.Status == HouseStatus.Active || house.Status == HouseStatus.Approved)
+                                        {
+                                            <button class="btn btn-sm btn-secondary btn-hide" data-id="@house.IdHouse" title="Ẩn bài đăng">
+                                                <i class="fas fa-eye-slash"></i>
+                                            </button>
+                                        }
+                                        @if (house.Status == HouseStatus.Hidden)
+                                        {
+                                            <button class="btn btn-sm btn-success btn-show" data-id="@house.IdHouse" title="Hiện bài đăng">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">Hiện chưa có bài đăng nào.</div>
+        }
     </div>
 
     @section Scripts {

@@ -185,6 +185,8 @@
                 zoom: 14
             });
 
+            map.addControl(new goongjs.NavigationControl());
+
             marker = new goongjs.Marker({ draggable: true })
                 .setLngLat([105.8544441, 21.028511])
                 .addTo(map);

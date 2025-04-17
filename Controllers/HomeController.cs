@@ -156,8 +156,7 @@ namespace KLTN.Controllers
             ViewBag.SelectedDistrict = district;
             ViewBag.SelectedWard = ward;
 
-
-            // Tạo mô tả danh sách nhà trọ + bộ lọc cho người dùng  
+            // Tạo mô tả danh sách nhà trọ + bộ lọc cho người dùng
             string filterDescription = "";
 
             if (!string.IsNullOrEmpty(roomType))
@@ -264,7 +263,9 @@ namespace KLTN.Controllers
             }
             var otherHouses = _context
                 .Houses.Include(h => h.HouseDetails)
-                .Where(h => h.IdUser == house.IdUser && h.IdHouse != id && h.Status != HouseStatus.Pending)
+                .Where(h =>
+                    h.IdUser == house.IdUser && h.IdHouse != id && h.Status != HouseStatus.Pending
+                )
                 .Select(h => new House
                 {
                     IdHouse = h.IdHouse,
@@ -277,7 +278,9 @@ namespace KLTN.Controllers
 
             var otherHousesUser = _context
                 .Houses.Include(h => h.HouseDetails)
-                .Where(h => h.IdUser != house.IdUser && h.IdHouse != id && h.Status != HouseStatus.Pending)
+                .Where(h =>
+                    h.IdUser != house.IdUser && h.IdHouse != id && h.Status != HouseStatus.Pending
+                )
                 .Take(3) // Lấy 3 nhà trọ khác
                 .Select(h => new House
                 {
@@ -317,34 +320,34 @@ namespace KLTN.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SubmitFeedback(string userName, string message)
-        {
-            string subject = $"Góp ý từ người dùng: {userName}";
-            string body =
-                $@"
-                    <p><strong>Tên người gửi:</strong> {userName}</p>
-                    <p><strong>Nội dung góp ý:</strong> {message}</p>
-                ";
-            try
-            {
-                await _emailService.SendEmailAsync(
-                    emailType: "Appointment",
-                    toEmail: "dn596209@gmail.com",
-                    subject: subject,
-                    body: body
-                );
+        // [HttpPost]
+        // public async Task<IActionResult> SubmitFeedback(string userName, string message)
+        // {
+        //     string subject = $"Góp ý từ người dùng: {userName}";
+        //     string body =
+        //         $@"
+        //             <p><strong>Tên người gửi:</strong> {userName}</p>
+        //             <p><strong>Nội dung góp ý:</strong> {message}</p>
+        //         ";
+        //     try
+        //     {
+        //         await _emailService.SendEmailAsync(
+        //             emailType: "Appointment",
+        //             toEmail: "dn596209@gmail.com",
+        //             subject: subject,
+        //             body: body
+        //         );
 
-                TempData["SuccessMessage"] = "Cảm ơn bạn đã gửi góp ý!";
-            }
-            catch (Exception ex)
-            {
-                TempData["SuccessMessage"] = "Đã xảy ra lỗi khi gửi góp ý. Vui lòng thử lại sau.";
-                Console.WriteLine($"Lỗi gửi góp ý: {ex.Message}");
-            }
+        //         TempData["SuccessMessage"] = "Cảm ơn bạn đã gửi góp ý!";
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         TempData["SuccessMessage"] = "Đã xảy ra lỗi khi gửi góp ý. Vui lòng thử lại sau.";
+        //         Console.WriteLine($"Lỗi gửi góp ý: {ex.Message}");
+        //     }
 
-            return RedirectToAction("Index");
-        }
+        //     return RedirectToAction("Index");
+        // }
 
         [HttpGet]
         public IActionResult GetAllHousesForMap()

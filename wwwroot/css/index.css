@@ -1,6 +1,6 @@
 body {
   padding-top: 65px;
-  background-color: rgb(246, 240, 237);
+  background-color: #f9f9f9;
 }
 
 .custom-container {
@@ -10,18 +10,20 @@ body {
 
 .card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: none;
+  border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
   margin-bottom: 20px;
-  width: 100%;
+  width: 100%; /* <-- đảm bảo chiếm hết cột */
   min-height: 450px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* <-- thêm bóng mặc định nhẹ */
+
 }
 
 .card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* bóng rộng và mềm hơn */
 }
 
 .card-img-top {
@@ -30,7 +32,7 @@ body {
 
 .card-body {
   min-height: 250px;
-  background-color: #f8f9fa;
+  background-color: #FFFFFF;
 }
 
 .btn-view-detail {
@@ -72,31 +74,6 @@ body {
 
 .icon {
   margin-right: 5px;
-}
-
-.functional-bar {
-  background-color: #e9ecef;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 0px;
-  gap: 10px;
-}
-
-/* Thanh tìm kiếm */
-.functional-bar .search-bar {
-  flex: 1;
-  max-width: 400px;
-  margin: 0;
-}
-
-.functional-bar .search-bar input {
-  width: 100%;
-  padding: 5px 10px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
 }
 
 /* CSS cho icon chỉ dẫn đường */
@@ -207,7 +184,6 @@ body {
   width: 100%;
   margin: 0 auto;
   visibility: hidden;
-
 }
 
 .slider-container img {
@@ -239,8 +215,34 @@ h5 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(56, 89, 132, 0.8); /* Màu nền tối mờ */
+  background: rgba(89, 125, 171, 0.8); /* Màu nền tối mờ */
   z-index: 0; /* Nằm dưới nội dung */
+}
+
+.input-group.search-group .form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-group.search-group .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Thêm cho bố cục */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col-md-4 {
+  flex: 1 1 33%;
+  margin-bottom: 15px;
+}
+
+.col-md-8 {
+  flex: 1 1 66%;
 }
 
 /* Đảm bảo chiều cao của container select2 */
@@ -253,7 +255,7 @@ h5 {
 }
 
 .select2-selection__arrow {
-  height: 41px !important; /* Chiều cao của mũi tên */
+  height: 38px !important; /* Chiều cao của mũi tên */
 }
 
 /* Chỉnh sửa khi dropdown mở rộng (hiển thị danh sách lựa chọn) */
@@ -281,16 +283,6 @@ h5 {
   margin-bottom: 15px; /* Khoảng cách dưới mỗi dropdown */
 }
 
-/* Điều chỉnh chiều cao cho các dropdown trong form */
-.select2-container .select2-selection--single {
-  min-height: 42px !important; /* Đảm bảo chiều cao tối thiểu */
-}
-
-/* Chỉnh sửa các ô nhập liệu cho Select2 (tìm kiếm) */
-.select2-search {
-  padding: 5px 10px !important;
-}
-
 /* Cải thiện kiểu chữ cho các label */
 .location-filter h5 {
   font-size: 16px;
@@ -307,9 +299,8 @@ h5 {
 }
 
 /* Nút tìm kiếm */
-.btn-search {
-  background-color: #ff6b6b;
-  color: white;
+.btn-filter {
+  background-color: #0140A0;
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
@@ -318,7 +309,7 @@ h5 {
 }
 
 .btn-search:hover {
-  background-color: #ff4757;
+  background-color: #0140A0;
 }
 
 /* Nút bản đồ */
@@ -342,29 +333,6 @@ h5 {
   position: relative;
   z-index: 1; /* Nằm trên lớp phủ */
   color: white;
-}
-
-/* Dropdown menu */
-.dropdown-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  z-index: 2;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block; /* Hiện menu khi hover */
 }
 
 .btn-primary {
@@ -640,14 +608,13 @@ h5 {
   .card {
     min-height: 400px;
   }
-
-  .functional-bar {
-    flex-direction: column;
+  
+  .col-md-4 {
+    flex: 1 1 50%; /* Mỗi cột chiếm 50% chiều rộng */
   }
 
-  .functional-bar .search-bar {
-    margin-bottom: 10px;
-    max-width: 100%;
+  .col-md-8 {
+    flex: 1 1 100%; /* Bộ lọc chiếm toàn bộ chiều rộng */
   }
 }
 
@@ -709,25 +676,3 @@ h5 {
   }
 }
 
-@media (max-width: 576px) {
-  .card {
-    min-height: 300px;
-  }
-
-  .appointment-form {
-    width: 90%;
-  }
-
-  .filter-container {
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-
-  .hero-search-section {
-    min-height: 30vh;
-  }
-
-  .functional-bar .search-bar {
-    max-width: 100%;
-  }
-}

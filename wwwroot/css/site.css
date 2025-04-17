@@ -28,15 +28,13 @@ body {
   flex-direction: column;
 }
 
-/* Footer cố định dưới đáy, không để khoảng trống thừa */
 .footer {
-  background-color: #007bff;
+  background-color: #0140a0;
   color: white;
-  text-align: center;
   padding: 20px 0;
-  width: 100%;
   position: relative;
   bottom: 0;
+  width: 100%;
 }
 
 .footer a {
@@ -66,61 +64,6 @@ body {
   min-height: calc(100vh - 120px);
   /* Điều chỉnh khoảng cách so với header/footer */
   padding: 20px 0;
-}
-
-/* Card chứa form */
-.login-card {
-  max-width: 450px;
-  width: 100%;
-  padding: 20px;
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Tiêu đề */
-.login-card h1 {
-  font-size: 22px;
-  color: purple;
-  text-align: center;
-  font-weight: bold;
-}
-
-/* Nhãn */
-.login-card label {
-  font-weight: bold;
-  color: #333;
-}
-
-/* Ô nhập liệu */
-.login-card input {
-  border-radius: 6px;
-  padding: 10px;
-}
-
-/* Nút đăng nhập */
-.login-card .btn-primary {
-  width: 100%;
-  background-color: #007bff;
-  border: none;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.login-card .btn-primary:hover {
-  background-color: #0056b3;
-}
-
-/* Link hỗ trợ */
-.login-card a {
-  text-decoration: none;
-  color: #007bff;
-}
-
-.login-card a:hover {
-  text-decoration: underline;
 }
 
 /* Hiệu ứng thông báo lỗi */
@@ -163,35 +106,6 @@ body {
   /* Giảm khoảng cách với header */
   padding-bottom: 50px;
   /* Giảm khoảng cách với footer */
-}
-
-/* Nút đăng ký */
-.register-card .btn-primary {
-  width: 100%;
-  background-color: #007bff;
-  border: none;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.register-card .btn-primary:hover {
-  background-color: #0056b3;
-}
-
-/* Radio button */
-.register-card .form-check-input {
-  margin-right: 5px;
-}
-
-.register-card .form-check-label {
-  font-weight: normal;
-}
-
-/* Căn giữa phần đăng nhập */
-.register-card p {
-  text-align: center;
 }
 
 /* Chatbox hiển thị ngay dưới nút */
@@ -253,7 +167,7 @@ body {
 }
 
 .btn {
-  color: rgb(255, 255, 255) !important; 
+  color: rgb(255, 255, 255) !important;
   transition: all 0.3s ease; /* Hiệu ứng mượt mà */
 }
 
@@ -328,7 +242,7 @@ body {
   border-radius: 50%;
   font-size: 18px;
   border: none;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   background-color: white;
   color: #007bff;
@@ -351,12 +265,25 @@ body {
 /* Responsive chỉnh cho đẹp */
 @media (max-width: 991.98px) {
   .navbar .navbar-collapse {
-      background-color: #007bff;
-      padding: 10px 15px;
+    background-color: #007bff;
+    padding: 10px 15px;
   }
 
   .navbar-nav {
-      flex-direction: column;
-      gap: 10px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  .navbar-brand {
+    margin: auto 0;
+    height: 50px; /* hoặc chiều cao navbar */
+  }
+
+  .navbar-brand img {
+    max-height: 45px;
   }
 }
