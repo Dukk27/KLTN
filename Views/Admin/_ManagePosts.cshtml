@@ -68,20 +68,22 @@
                                 <span class="badge bg-danger">Bị từ chối</span>
                             }
                         </td>
-                        <td>       
-                            <button class="btn btn-sm btn-primary btn-view-detail" onclick="viewDetail(@house.IdHouse, 'house')" title="Xem chi tiết bài đăng"><i class="fas fa-eye"></i></button>          
-        
-                            <button class="btn btn-sm btn-danger delete-house" data-id="@house.IdHouse" title="Xoá bài đăng"><i class="fas fa-trash-alt"></i></button>
-                            
-                            @if (house.Status == HouseStatus.Pending || house.Status == HouseStatus.Rejected)
-                            {
-                                <button class="btn btn-sm btn-success approve-house" data-id="@house.IdHouse"><i class="fas fa-check"></i> Duyệt</button>
-                            }
+                        <td>      
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-primary btn-view-detail" onclick="viewDetail(@house.IdHouse, 'house')" title="Xem chi tiết bài đăng"><i class="fas fa-eye"></i></button>          
+            
+                                @* <button class="btn btn-sm btn-danger delete-house" data-id="@house.IdHouse" title="Xoá bài đăng"><i class="fas fa-trash-alt"></i></button> *@
+                                
+                                @if (house.Status == HouseStatus.Pending || house.Status == HouseStatus.Rejected)
+                                {
+                                    <button class="btn btn-sm btn-success approve-house" data-id="@house.IdHouse"><i class="fas fa-check"></i> Duyệt</button>
+                                }
 
-                            @if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden)
-                            {
-                                <button class="btn btn-sm btn-danger reject-house" data-id="@house.IdHouse"><i class="fas fa-times"></i> Từ chối</button>
-                            }
+                                @if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden)
+                                {
+                                    <button class="btn btn-sm btn-danger reject-house" data-id="@house.IdHouse"><i class="fas fa-times"></i> Từ chối</button>
+                                }
+                            </div>
                         </td>
                     </tr>
                 }

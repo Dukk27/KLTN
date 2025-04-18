@@ -10,26 +10,26 @@ namespace KLTN.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
-                name: "UserId",
-                table: "Notifications",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+            // migrationBuilder.AlterColumn<int>(
+            //     name: "UserId",
+            //     table: "Notifications",
+            //     type: "int",
+            //     nullable: false,
+            //     oldClrType: typeof(string),
+            //     oldType: "nvarchar(max)");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Notifications_UserId",
-                table: "Notifications",
-                column: "UserId");
+            // migrationBuilder.CreateIndex(
+            //     name: "IX_Notifications_UserId",
+            //     table: "Notifications",
+            //     column: "UserId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Notifications_Accounts_UserId",
-                table: "Notifications",
-                column: "UserId",
-                principalTable: "Accounts",
-                principalColumn: "IdUser",
-                onDelete: ReferentialAction.Cascade);
+            // migrationBuilder.AddForeignKey(
+            //     name: "FK_Notifications_Accounts_UserId",
+            //     table: "Notifications",
+            //     column: "UserId",
+            //     principalTable: "Accounts",
+            //     principalColumn: "IdUser",
+            //     onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />

@@ -242,24 +242,60 @@ namespace KLTN.Repositories
                 query = query.Where(h => h.IdAmenities.Any(a => amenities.Contains(a.Name)));
             }
 
-            // Sorting
+            // // Sorting
+            // if (!string.IsNullOrEmpty(sortBy))
+            // {
+            //     query = sortBy switch
+            //     {
+            //         "priceLowHigh" => query.OrderBy(h => h.HouseDetails.Min(hd => hd.Price)),
+            //         "priceHighLow" => query.OrderByDescending(h =>
+            //             h.HouseDetails.Max(hd => hd.Price)
+            //         ),
+            //         _ => query.OrderByDescending(h =>
+            //             h.IdHouse
+            //         ) // Default to newest
+            //         ,
+            //     };
+            // }
+
+            // // return await query.ToListAsync();
+            // return query.ToList(); // Chuyển sang client-side evaluation để sử dụng NormalizeAddress
+
+            // Sắp xếp theo lựa chọn
             if (!string.IsNullOrEmpty(sortBy))
             {
-                query = sortBy switch
+                switch (sortBy)
                 {
-                    "priceLowHigh" => query.OrderBy(h => h.HouseDetails.Min(hd => hd.Price)),
-                    "priceHighLow" => query.OrderByDescending(h =>
-                        h.HouseDetails.Max(hd => hd.Price)
-                    ),
-                    _ => query.OrderByDescending(h =>
-                        h.IdHouse
-                    ) // Default to newest
-                    ,
-                };
+                    case "priceLowHigh":
+                        query = query.OrderBy(h =>
+                            h.HouseDetails.Any() ? h.HouseDetails.Min(hd => hd.Price) : 0
+                        );
+                        break;
+                    case "priceHighLow":
+                        query = query.OrderByDescending(h =>
+                            h.HouseDetails.Any() ? h.HouseDetails.Max(hd => hd.Price) : 0
+                        );
+                        break;
+                    default:
+                        query = query.OrderByDescending(h =>
+                            h.HouseDetails.FirstOrDefault() != null
+                                ? h.HouseDetails.FirstOrDefault().TimePost
+                                : DateTime.MinValue
+                        );
+                        break;
+                }
+            }
+            else
+            {
+                // Nếu không có sortBy, mặc định sắp xếp theo TimePost mới nhất
+                query = query.OrderByDescending(h =>
+                    h.HouseDetails.FirstOrDefault() != null
+                        ? h.HouseDetails.FirstOrDefault().TimePost
+                        : DateTime.MinValue
+                );
             }
 
-            // return await query.ToListAsync();
-            return query.ToList(); // Chuyển sang client-side evaluation để sử dụng NormalizeAddress
+            return await query.ToListAsync();
         }
 
         public static string NormalizeAddress(string input)

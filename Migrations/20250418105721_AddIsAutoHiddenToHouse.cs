@@ -5,14 +5,14 @@
 namespace KLTN.Migrations
 {
     /// <inheritdoc />
-    public partial class AddIsLockedToAccounts : Migration
+    public partial class AddIsAutoHiddenToHouse : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             // migrationBuilder.AddColumn<bool>(
-            //     name: "IsLocked",
-            //     table: "Accounts",
+            //     name: "IsAutoHidden",
+            //     table: "Houses",
             //     type: "bit",
             //     nullable: false,
             //     defaultValue: false);
@@ -22,8 +22,8 @@ namespace KLTN.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsLocked",
-                table: "Accounts");
+                name: "IsAutoHidden",
+                table: "Houses");
         }
     }
 }

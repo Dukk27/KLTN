@@ -44,6 +44,19 @@
     </script>
 }
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+    <script>
+        iziToast.error({
+            title: 'Lỗi!',
+            message: '@TempData["ErrorMessage"]',
+            position: 'topRight',
+            timeout: 2000,
+        });
+    </script>
+}
+
 <head>
     <title>Chi Tiết Nhà</title>
     <link rel="stylesheet" href="~/css/Detail/Detail.css" asp-append-version="true" />
@@ -251,12 +264,7 @@
                 <button onclick="changeMapStyle('navigation-night')">Navigation Night</button>
                 <button onclick="changeMapStyle('default')">Default</button>
             </div>
-            @* <div id="zoom-in" class="zoom-control" onclick="zoomIn()">
-                <button>+</button>
-            </div>
-            <div id="zoom-out" class="zoom-control" onclick="zoomOut()">
-                <button>-</button>
-            </div> *@
+ 
             <div id="directions-icon" class="map-icon" onclick="getDirections()">
                 <i class="fa fa-directions"></i>
                 <span class="icon-text">Get Directions</span>
@@ -314,6 +322,30 @@
 
                 <p id="reviewMessage" style="display: none;"></p>
                 <button type="button" onclick="submitReview()" class="btn-submit-review">Gửi đánh giá</button>
+            </div>
+            <div class="mt-4">
+                <a class="report-toggle text-danger text-decoration-none" href="#" id="toggleReportForm" style="font-size: 20px;">
+                    <i class="fas fa-flag"></i> Báo cáo bài đăng nếu bạn cảm thấy bài đăng mang tính chất lừa đảo
+                </a>
+
+                <div id="reportForm" class="report-section mt-3" style="display: none;">
+                    <form asp-action="ReportHouse" asp-controller="Report" method="post">
+                        <input type="hidden" name="houseId" value="@Model.IdHouse" />
+
+                        <div class="mb-3">
+                            <label for="Content" class="form-label fw-bold text-danger">
+                                &nbsp;Lý do báo cáo
+                            </label>
+                            <textarea id="Content" name="reason" class="form-control shadow-sm rounded-3"
+                                    rows="5" maxlength="500" required
+                                    placeholder="Viết lý do báo cáo..." style="font-size: 16px;"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-flag"></i> Gửi Báo Cáo
+                        </button>
+                    </form>
+                </div>
             </div>
         }
 
@@ -427,6 +459,19 @@
                     // Lưu số sao vào data attribute
                     document.querySelector(".star-rating").setAttribute("data-selected", value);
                 });
+            });
+
+            const toggleBtn = document.getElementById("toggleReportForm");
+            const reportForm = document.getElementById("reportForm");
+
+            toggleBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                if (reportForm.style.display === "none" || reportForm.style.display === "") {
+                    reportForm.style.display = "block";
+                } else {
+                    reportForm.style.display = "none";
+                }
             });
         });
 
@@ -542,6 +587,7 @@
                 window.location.href = `/Chat/ChatList?conversationId=${conversationId}`;
             }
         }
+        
 
         // Sử dụng API key cho các chức năng geocode, autocomplete, v.v.
         async function setInitialAddress() {

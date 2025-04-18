@@ -27,6 +27,16 @@
             border-radius: 8px;
             animation: fadeIn 0.5s ease-in-out;
         }
+
+        .house-link {
+            text-decoration: none; /* Loại bỏ gạch chân */
+            color: #007bff; /* Thay đổi màu sắc của liên kết */
+            font-weight: bold; /* Đậm văn bản */
+        }
+
+        .house-link:hover {
+            color: #0056b3; /* Thay đổi màu khi hover */
+        }
     </style>
 </head>
 
@@ -56,8 +66,11 @@
                     <tr>
                         <td><input type="checkbox" class="review-checkbox" value="@review.IdReview"></td>
                         <td>@review.IdUserNavigation?.UserName</td>
-                        <td>@review.IdHouseNavigation?.NameHouse</td>
-                        <td>@review.Content</td>
+                        <td>
+                            <a href="@Url.Action("Detail", "Home", new { id = review.IdHouseNavigation?.IdHouse })"class="house-link">
+                                @review.IdHouseNavigation?.NameHouse
+                            </a>
+                        </td>                        <td>@review.Content</td>
                         <td>@review.Rating</td>
                         <td>@review.ReviewDate?.ToString("dd/MM/yyyy")</td>
                     </tr>

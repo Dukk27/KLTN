@@ -15,7 +15,7 @@ table {
 }
 
 th, td {
-    text-align: left;
+    text-align: center;
     padding: 12px;
     border: 1px solid #ddd;
     word-wrap: break-word; /* Đảm bảo chữ không bị tràn ra ngoài */

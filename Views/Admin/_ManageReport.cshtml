@@ -1,0 +1,122 @@
+@model IEnumerable<KLTN.Models.Report>
+
+<link rel="stylesheet" href="~/css/iziToast.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+
+<style>
+    td:last-child {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .house-link {
+        text-decoration: none; /* Loại bỏ gạch chân */
+        color: #007bff; /* Thay đổi màu sắc của liên kết */
+        font-weight: bold; /* Đậm văn bản */
+    }
+
+    .house-link:hover {
+        color: #0056b3; /* Thay đổi màu khi hover */
+    }
+</style>
+
+<div class="container mt-3">
+    <h3 class="mb-4" style="text-align: center">Danh sách báo cáo bài đăng</h3>
+
+    <table class="table table-bordered table-striped" style="margin: 0 auto; text-align: center;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Bài đăng</th>
+                <th>Người báo cáo</th>
+                <th>Lý do</th>
+                <th>Ngày báo cáo</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr id="row-@item.Id">
+                    <td>@item.Id</td>
+                    <td>
+                        <a href="@Url.Action("Detail", "Home", new { id = item.HouseId })" class="house-link">
+                            @item.House?.NameHouse
+                        </a>
+                    </td>
+                    <td>@item.User?.UserName</td>
+                    <td>@item.Reason</td>
+                    <td>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td class="status">
+                        @if (item.IsApproved)
+                        {
+                            <span class="badge bg-success">Đã duyệt</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Chưa duyệt</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!item.IsApproved)
+                        {
+                            <button class="btn btn-sm btn-success approve-btn" data-id="@item.Id">
+                                <i class="fas fa-check"></i> Duyệt
+                            </button>
+                            <button class="btn btn-sm btn-danger reject-btn" data-id="@item.Id">
+                                <i class="fas fa-times"></i> Từ chối
+                            </button>
+                        }
+                        else
+                        {
+                            <em>Không khả dụng</em>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.approve-btn').click(function () {
+            const id = $(this).data('id');
+
+            $.post('@Url.Action("DuyetBaoCao", "Admin")', { id: id }, function (res) {
+                if (res.success) {
+                    iziToast.success({ title: 'Thành công', message: 'Báo cáo đã được duyệt.', position: 'topRight' });
+
+                    const row = $(`#row-${id}`);
+                    row.find('.status').html('<span class="badge bg-success">Đã duyệt</span>');
+                    row.find('td:last-child').html('<em>Không khả dụng</em>');
+                } else {
+                    iziToast.error({ title: 'Lỗi', message: res.message, position: 'topRight' });
+                }
+            }).fail(() => {
+                iziToast.error({ title: 'Lỗi', message: 'Không thể kết nối đến máy chủ.', position: 'topRight' });
+            });
+        });
+
+        $('.reject-btn').click(function () {
+            const id = $(this).data('id');
+
+            $.post('@Url.Action("TuChoiBaoCao", "Admin")', { id: id }, function (res) {
+                if (res.success) {
+                    iziToast.success({ title: 'Thành công', message: 'Đã từ chối và xóa báo cáo.', position: 'topRight' });
+
+                    $(`#row-${id}`).fadeOut(300, function () { $(this).remove(); });
+                } else {
+                    iziToast.error({ title: 'Lỗi', message: res.message, position: 'topRight' });
+                }
+            }).fail(() => {
+                iziToast.error({ title: 'Lỗi', message: 'Không thể kết nối đến máy chủ.', position: 'topRight' });
+            });
+        });
+    });
+</script>

@@ -8,20 +8,6 @@ var map = new goongjs.Map({
  
 map.addControl(new goongjs.NavigationControl());
 
-function zoomIn() {
-  var currentZoom = map.getZoom();
-  if (currentZoom < 20) {
-    map.zoomIn();
-  }
-} 
-
-function zoomOut() {
-  var currentZoom = map.getZoom();
-  if (currentZoom > 3) {
-    map.zoomOut();
-  }
-}
-
 // Hàm thay đổi kiểu bản đồ
 function changeMapStyle(style) {
   let styleUrl = "";
@@ -233,3 +219,4 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 });
+

@@ -10,39 +10,39 @@ namespace KLTN.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "IsRead",
-                table: "Messages",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
+            // migrationBuilder.AddColumn<bool>(
+            //     name: "IsRead",
+            //     table: "Messages",
+            //     type: "bit",
+            //     nullable: false,
+            //     defaultValue: false);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "TienNuoc",
-                table: "HouseDetails",
-                type: "nvarchar(max)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(50)",
-                oldMaxLength: 50);
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "TienNuoc",
+            //     table: "HouseDetails",
+            //     type: "nvarchar(max)",
+            //     nullable: false,
+            //     oldClrType: typeof(string),
+            //     oldType: "nvarchar(50)",
+            //     oldMaxLength: 50);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "TienDv",
-                table: "HouseDetails",
-                type: "nvarchar(max)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(50)",
-                oldMaxLength: 50);
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "TienDv",
+            //     table: "HouseDetails",
+            //     type: "nvarchar(max)",
+            //     nullable: false,
+            //     oldClrType: typeof(string),
+            //     oldType: "nvarchar(50)",
+            //     oldMaxLength: 50);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "TienDien",
-                table: "HouseDetails",
-                type: "nvarchar(max)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(50)",
-                oldMaxLength: 50);
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "TienDien",
+            //     table: "HouseDetails",
+            //     type: "nvarchar(max)",
+            //     nullable: false,
+            //     oldClrType: typeof(string),
+            //     oldType: "nvarchar(50)",
+            //     oldMaxLength: 50);
         }
 
         /// <inheritdoc />

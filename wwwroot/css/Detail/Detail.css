@@ -574,6 +574,28 @@ h1 {
     white-space: nowrap;
 }
 
+.report-section {
+  border: 1px solid #dc3545;
+  padding: 15px;
+  background-color: #fff0f0;
+  border-radius: 6px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.report-section input[type="text"] {
+  border: 1px solid #dc3545;
+  box-shadow: none;
+  min-height: 150px;
+}
+
+.report-section button.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  font-weight: bold;
+  margin: 0 auto;
+}
+
 /* Responsive behavior for small screens */
 @media (max-width: 768px) {
     .appointment-form {
@@ -627,6 +649,6 @@ h1 {
 
     .xem-chi-tiet-btn {
         margin-top: 70px;
-        margin-right: 265px;
+        margin-right: 273px;
     }
 }

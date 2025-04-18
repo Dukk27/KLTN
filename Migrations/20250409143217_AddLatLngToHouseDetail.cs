@@ -10,17 +10,17 @@ namespace KLTN.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<double>(
-                name: "Latitude",
-                table: "HouseDetails",
-                type: "float",
-                nullable: true);
+            // migrationBuilder.AddColumn<double>(
+            //     name: "Latitude",
+            //     table: "HouseDetails",
+            //     type: "float",
+            //     nullable: true);
 
-            migrationBuilder.AddColumn<double>(
-                name: "Longitude",
-                table: "HouseDetails",
-                type: "float",
-                nullable: true);
+            // migrationBuilder.AddColumn<double>(
+            //     name: "Longitude",
+            //     table: "HouseDetails",
+            //     type: "float",
+            //     nullable: true);
         }
 
         /// <inheritdoc />

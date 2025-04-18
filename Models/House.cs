@@ -47,5 +47,7 @@ namespace KLTN.Models
         public virtual ICollection<Amenity> IdAmenities { get; set; }
 
         public HouseStatus Status { get; set; } = HouseStatus.Pending;
+        public bool IsAutoHidden { get; set; }
+        public int ReportVersion { get; set; } = 1;
     }
 }

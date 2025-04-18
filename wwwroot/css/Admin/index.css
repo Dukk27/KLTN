@@ -49,10 +49,10 @@ html, body {
     transition: background-color 0.2s ease;
 }
 
-#sidebar .main-nav-item a:hover {
+/* #sidebar .main-nav-item a:hover {
     background-color: #f1f1f1;
     color: #007bff;
-}
+} */
 
 #sidebar i {
     margin-right: 12px;
@@ -71,6 +71,12 @@ html, body {
 
 #contentPlaceholder {
     min-height: 500px; /* Đảm bảo đủ không gian để footer không trồi lên khi chưa có nội dung */
+}
+
+.nav-link.active {
+    background-color: #007bff; 
+    color: white;
+    border-radius: 5px;
 }
 
 /* Mặc định ẩn sidebar ở mobile */

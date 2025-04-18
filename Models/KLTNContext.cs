@@ -23,6 +23,7 @@ namespace KLTN.Models
         public DbSet<Appointment> Appointments { get; set; } = null!;
         public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<Notification> Notifications { get; set; } = null!;
+        public DbSet<Report> Reports { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
