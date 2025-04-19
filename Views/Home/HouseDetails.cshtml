@@ -221,7 +221,7 @@
             <div id="appointmentForm" class="appointment-form">
                 <h3>Đặt Lịch Hẹn Xem Nhà</h3>
                 <label for="appointmentDate">Chọn ngày:</label>
-                <input type="date" id="appointmentDate" required min="">
+                <input type="datetime-local" id="appointmentDateTime" required>
                 <div class="appointment-buttons">
                     <button id="submitAppointment" class="btn btn-success">Xác nhận</button>
                     <button id="closeForm" class="btn btn-secondary">Hủy</button>
@@ -289,7 +289,7 @@
                             <!-- Tên người đánh giá, Ngày đánh giá và Rating (Số sao) cùng nằm trên 1 hàng -->
                             <div class="review-header">
                                 <strong>@review.IdUserNavigation.UserName</strong>
-                                <span class="review-date">@review.ReviewDate?.ToString("dd/MM/yyyy")</span>
+                                <span class="review-date">@review.ReviewDate?.ToString("dd/MM/yyyy HH:mm")</span>
                                 <span class="review-rating">Rating: @review.Rating ★</span>
                             </div>
                             

@@ -126,8 +126,10 @@ function openFullSizeImage(imgElement) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  let today = new Date().toISOString().split("T")[0];
-  document.getElementById("appointmentDate").setAttribute("min", today);
+  let now = new Date();
+  let localISOTime = now.toISOString().slice(0, 16); // yyyy-MM-ddTHH:mm
+  document.getElementById("appointmentDateTime").setAttribute("min", localISOTime);
+
 
   let isAuthenticated =
     document.getElementById("isAuthenticated").value === "true";
@@ -169,20 +171,21 @@ document.addEventListener("DOMContentLoaded", function () {
       .addEventListener("click", async function (event) {
         event.preventDefault();
 
-        const date = document.getElementById("appointmentDate").value;
+        const dateTime = document.getElementById("appointmentDateTime").value;
         const houseId = document.querySelector(".review-form").dataset.houseId;
 
-        if (!date || date < today) {
+        if (!dateTime || new Date(dateTime) < new Date()) {
           iziToast.error({
             title: "Lỗi!",
-            message: "Vui lòng chọn ngày hợp lệ trước khi đặt lịch.",
+            message: "Vui lòng chọn ngày và giờ hợp lệ trước khi đặt lịch.",
             position: "topRight",
             timeout: 1500,
           });
           return;
         }
+        
 
-        const appointmentData = { HouseId: houseId, AppointmentDate: date };
+        const appointmentData = { HouseId: houseId, AppointmentDate: dateTime };
 
         try {
           const response = await fetch("/Appointment/Create", {

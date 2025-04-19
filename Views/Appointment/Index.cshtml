@@ -14,8 +14,25 @@
             <li class="breadcrumb-item active" aria-current="page">Danh Sách Lịch Hẹn</li>
         </ol>
     </nav>
-
+ 
     <h2>Danh Sách Lịch Hẹn</h2>
+    
+    <div class="d-flex justify-content-center mb-3">
+        <form method="get" class="d-inline">
+            <select id="filter" name="filter" class="form-select d-inline w-auto" onchange="this.form.submit()">
+                @if ((string)ViewBag.Filter == "expired")
+                {
+                    <option value="valid">Lịch còn hạn</option>
+                    <option value="expired" selected>Lịch đã hết hạn</option>
+                }
+                else
+                {
+                    <option value="valid" selected>Lịch còn hạn</option>
+                    <option value="expired">Lịch đã hết hạn</option>
+                }
+            </select>
+        </form>
+    </div>
 
     @if (!Model.Any())
     {
@@ -36,15 +53,13 @@
             </div>
 
             <div class="accordion" id="appointmentAccordion">
-
-
                 @foreach (var appt in Model)
                 {
-                    <div class="accordion-item mb-2" data-id="@appt.AppointmentId">
+                    <div class="accordion-item mb-2 @(appt.Status == AppointmentStatus.Confirmed ? "confirmed-item" : appt.Status == AppointmentStatus.Cancelled ? "cancelled-item" : "")" data-id="@appt.AppointmentId">
                         <h2 class="accordion-header" id="heading-@appt.AppointmentId">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@appt.AppointmentId" aria-expanded="false">
                                 <input type="checkbox" class="form-check-input me-2 appointment-checkbox" value="@appt.AppointmentId" />
-                                <strong>@appt.User?.UserName</strong> - Ngày hẹn @appt.AppointmentDate.ToString("dd/MM/yyyy")
+                                <strong>@appt.User?.UserName</strong> - Ngày hẹn @appt.AppointmentDate.ToString("dd/MM/yyyy HH:mm")
                             </button>
                         </h2>
                         <div id="collapse-@appt.AppointmentId" class="accordion-collapse collapse" data-bs-parent="#appointmentAccordion">

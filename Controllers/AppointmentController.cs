@@ -38,20 +38,21 @@ namespace KLTN.Controllers
 
             var user = _context.Accounts.FirstOrDefault(u => u.IdUser == userId.Value);
 
-            appointment.UserId = userId.Value; // Lấy giá trị int từ Session
+            appointment.UserId = userId.Value;
             appointment.Status = AppointmentStatus.Pending;
-            appointment.AppointmentDate = appointment.AppointmentDate.Date;
 
-            // Lấy chủ nhà của bài đăng
+            // KHÔNG cắt giờ nữa
+            // appointment.AppointmentDate = appointment.AppointmentDate.Date;
+
+            // Gửi thông báo cho chủ nhà
             var house = _context.Houses.Find(appointment.HouseId);
             if (house != null)
             {
-                // Tạo thông báo cho chủ nhà khi có người đặt lịch
                 var notification = new Notification
                 {
                     UserId = house.IdUser,
                     Message =
-                        $"📅 {user.UserName} đã đặt lịch hẹn vào {appointment.AppointmentDate:dd/MM/yyyy}.",
+                        $"📅 {user.UserName} đã đặt lịch hẹn vào {appointment.AppointmentDate:dd/MM/yyyy HH:mm}.",
                     CreatedAt = DateTime.Now,
                     IsRead = false,
                 };
@@ -59,6 +60,7 @@ namespace KLTN.Controllers
                 _context.Notifications.Add(notification);
                 _context.SaveChanges();
             }
+
             _context.Appointments.Add(appointment);
             _context.SaveChanges();
 
@@ -71,18 +73,45 @@ namespace KLTN.Controllers
             );
         }
 
-        // Hiển thị danh sách lịch hẹn
+        // // Hiển thị danh sách lịch hẹn
+        // [Authorize]
+        // public IActionResult Index()
+        // {
+        //     var userId = HttpContext.Session.GetInt32("UserId");
+
+        //     var appointments = _context
+        //         .Appointments.Include(a => a.User)
+        //         .Include(a => a.House)
+        //         .Where(a => a.House.IdUser == userId && a.AppointmentDate >= DateTime.Now) // Lọc theo chủ bài đăng
+        //         .OrderBy(a => a.AppointmentDate)
+        //         .ToList();
+
+        //     return View(appointments);
+        // }
+
         [Authorize]
-        public IActionResult Index()
+        public IActionResult Index(string filter = "valid")
         {
             var userId = HttpContext.Session.GetInt32("UserId");
+            var now = DateTime.Now;
 
-            var appointments = _context
+            IQueryable<Appointment> query = _context
                 .Appointments.Include(a => a.User)
                 .Include(a => a.House)
-                .Where(a => a.House.IdUser == userId) // Lọc theo chủ bài đăng
-                .ToList();
+                .Where(a => a.House.IdUser == userId);
 
+            if (filter == "expired")
+            {
+                query = query.Where(a => a.AppointmentDate < now);
+            }
+            else // default: valid
+            {
+                query = query.Where(a => a.AppointmentDate >= now);
+            }
+
+            var appointments = query.OrderBy(a => a.AppointmentDate).ToList();
+
+            ViewBag.Filter = filter;
             return View(appointments);
         }
 
@@ -93,6 +122,7 @@ namespace KLTN.Controllers
             var appointment = await _context
                 .Appointments.Include(a => a.User)
                 .Include(a => a.House)
+                .ThenInclude(h => h.HouseDetails) // Dùng housedetail để lấy thông tin địa chỉ
                 .FirstOrDefaultAsync(a => a.AppointmentId == id);
 
             if (appointment == null)
@@ -112,7 +142,8 @@ namespace KLTN.Controllers
             var notification = new Notification
             {
                 UserId = appointment.UserId, // Người đặt lịch nhận thông báo
-                Message = $"✅ Lịch hẹn vào {appointment.AppointmentDate:dd/MM/yyyy} đã được xác nhận.",
+                Message =
+                    $"✅ Lịch hẹn vào {appointment.AppointmentDate:dd/MM/yyyy HH:mm} đã được xác nhận.",
                 CreatedAt = DateTime.Now,
                 IsRead = false,
             };
@@ -128,8 +159,9 @@ namespace KLTN.Controllers
                 string body =
                     $@"
                     <p>Xin chào <b>{appointment.User.UserName}</b>,</p>
-                    <p>Lịch hẹn xem nhà của bạn vào ngày <b>{appointment.AppointmentDate:dd/MM/yyyy}</b> 
+                    <p>Lịch hẹn xem nhà của bạn vào ngày <b>{appointment.AppointmentDate:dd/MM/yyyy HH:mm}</b> 
                     tại nhà trọ <b>{appointment.House?.NameHouse}</b> đã được xác nhận.</p>
+                    <p><b>Địa chỉ:</b> {appointment .House?.HouseDetails.FirstOrDefault() ?.Address ?? "Không có địa chỉ"}</p>
                     <p>Vui lòng đến đúng giờ!</p>
                     <br>
                     <p>Trân trọng,<br>Hệ Thống Đặt Lịch Hẹn</p>";
@@ -169,7 +201,8 @@ namespace KLTN.Controllers
             var notification = new Notification
             {
                 UserId = appointment.UserId, // Gửi cho người đặt lịch
-                Message = $"❌ Lịch hẹn vào {appointment.AppointmentDate:dd/MM/yyyy} tại {appointment.House?.NameHouse} đã bị hủy.",
+                Message =
+                    $"❌ Lịch hẹn vào {appointment.AppointmentDate:dd/MM/yyyy} tại {appointment.House?.NameHouse} đã bị hủy.",
                 CreatedAt = DateTime.Now,
                 IsRead = false,
             };

@@ -6,9 +6,11 @@ namespace KLTN.Models
 {
     public enum AppointmentStatus
     {
-        Pending = 0,   // Chờ xác nhận
+        Pending = 0, // Chờ xác nhận
         Confirmed = 1, // Đã xác nhận
-        Cancelled = 2  // Đã hủy
+        Cancelled =
+            2 // Đã hủy
+        ,
     }
 
     public class Appointment
@@ -25,8 +27,10 @@ namespace KLTN.Models
         [Required]
         public DateTime AppointmentDate { get; set; }
 
+        public bool IsNotified { get; set; } = false;
+
         [Required]
-        [Column(TypeName = "int")] 
+        [Column(TypeName = "int")]
         public AppointmentStatus Status { get; set; }
 
         public virtual Account? User { get; set; }

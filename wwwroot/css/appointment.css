@@ -110,6 +110,15 @@ h2 {
     color: white;
 }
 
+/* Màu nền cho từng trạng thái */
+.confirmed-item {
+    background-color: #157347; 
+}
+
+.cancelled-item {
+    background-color: #dc3545;
+}
+
 .cancel-btn:hover {
     background-color: #bb2d3b;
     transform: scale(1.02);
