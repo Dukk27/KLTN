@@ -4,8 +4,12 @@
     <link rel="stylesheet" href="~/css/iziToast.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="~/css/Admin/account.css">
-
     <style>
+        th {
+            white-space: nowrap; /* Ngăn việc xuống dòng trong tiêu đề */
+            text-align: center; /* Căn giữa các tiêu đề */
+        }
+
         td:last-child {
             white-space: nowrap; /* Ngăn xuống dòng */
             text-align: center; /* Căn giữa nội dung */
@@ -27,8 +31,13 @@
 <body>
     <h3 class="text-center mt-3">Quản lý bài đăng</h3>
 
+    <div class="row mb-3">
+        <div class="col-12 col-md-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="🔍 Tìm kiếm bài đăng..">
+        </div>
+    </div>
+    
     <div class="table-responsive">
-
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -45,9 +54,9 @@
                 @foreach (var house in Model)
                 {
                     @if (house.Status == HouseStatus.Unpaid)
-                {
-                    continue; // Bỏ qua bài chưa thanh toán
-                }
+                    {
+                        continue; // Bỏ qua bài chưa thanh toán
+                    }
                     <tr>
                         <td>@house.IdHouse</td>
                         <td>@house.NameHouse</td>
@@ -79,7 +88,7 @@
                                     <button class="btn btn-sm btn-success approve-house" data-id="@house.IdHouse"><i class="fas fa-check"></i> Duyệt</button>
                                 }
 
-                                @if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden)
+                                @if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden || house.Status == HouseStatus.Pending)
                                 {
                                     <button class="btn btn-sm btn-danger reject-house" data-id="@house.IdHouse"><i class="fas fa-times"></i> Từ chối</button>
                                 }
@@ -119,120 +128,87 @@
             }
 
         $(document).ready(function () {
-            
-            // Xóa bài đăng
-            $(document).on("click", ".delete-house", function () {
-                const id = $(this).data("id");
-
-                iziToast.show({
-                    class: "iziToast-custom",
-                    title: "Xác nhận xóa",
-                    message: "Bạn có chắc muốn xóa bài đăng này?",
-                    position: "center",
-                    timeout: false,
-                    close: false,
-                    overlay: true,
-                    icon: "fa fa-question-circle",
-                    displayMode: "once",
-                    buttons: [
-                        [
-                            '<button><i class="fa fa-check"></i> Xóa</button>',
-                            function (instance, toast) {
-                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-
-                                $.post("@Url.Action("DeletePost", "Admin")", { id: id }, function (response) {
-                                    iziToast.show({
-                                        title: response.success ? "Thành công!" : "Lỗi!",
-                                        message: response.message,
-                                        position: "topRight",
-                                        color: response.success ? "green" : "red",
-                                        timeout: 1000
-                                    });
-
-                                    if (response.success) {
-                                        $(`tr:has(button[data-id='${id}'])`).remove();
-                                    }
-                                }).fail(() => {
-                                    iziToast.error({
-                                        title: "Lỗi!",
-                                        message: "Đã xảy ra lỗi khi xóa bài đăng.",
-                                        position: "topRight"
-                                    });
-                                });
-                            },
-                            true
-                        ],
-                        [
-                            '<button><i class="fa fa-times"></i> Hủy</button>',
-                            function (instance, toast) {
-                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                            }
-                        ]
-                    ]
-                });
-            });
-
             let isToastVisible = false;
 
-            // Xóa sự kiện cũ trước khi gán mới
             $(document).off("click", ".approve-house").on("click", ".approve-house", function () {
                 if (isToastVisible) return; // Nếu đang hiển thị thì không mở thêm
                 isToastVisible = true;
 
                 const id = $(this).data("id");
 
-                iziToast.show({
-                    class: "iziToast-custom",
-                    title: "Xác nhận duyệt",
-                    message: "Bạn có chắc muốn duyệt bài đăng này?",
-                    position: "center",
-                    timeout: false,
-                    close: false,
-                    overlay: true,
-                    icon: "fa fa-question-circle",
-                    displayMode: "once",
-                    onClosing: function() { // Khi iziToast bị đóng, đặt lại biến
-                        isToastVisible = false;
-                    },
-                    buttons: [
-                        [
-                            '<button><i class="fa fa-check"></i> Duyệt</button>',
-                            function (instance, toast) {
-                                isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
-                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-
-                                $.post("@Url.Action("ApprovePost", "Admin")", { id: id }, function (response) {
-                                    iziToast.show({
-                                        title: response.success ? "Thành công!" : "Lỗi!",
-                                        message: response.message,
-                                        position: "topRight",
-                                        color: response.success ? "green" : "red",
-                                        timeout: 1000
-                                    });
-
-                                    if (response.success) {
-                                        updateStatus(id, "Đã duyệt", "bg-success");
-                                        toggleButtons(id, "reject");
-                                    }
-                                }).fail(() => {
-                                    iziToast.error({
-                                        title: "Lỗi!",
-                                        message: "Đã xảy ra lỗi khi duyệt bài đăng.",
-                                        position: "topRight"
-                                    });
-                                });
+                /* // Kiểm tra điều kiện bài đăng
+                $.post("/Admin/ApprovePost", { id: id }, function (response) {
+                    if (response.success === false) {
+                        iziToast.error({
+                            title: "Lỗi!",
+                            message: "Bài đăng đang thiếu: <br/>" + response.message,
+                            position: "topRight",
+                            timeout: 5000
+                        });
+                        isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
+                    } else {  */
+                        // Nếu hợp lệ, hiển thị confirm để duyệt bài
+                        iziToast.show({
+                            class: "iziToast-custom",
+                            title: "Xác nhận duyệt",
+                            message: "Bạn có chắc muốn duyệt bài đăng này?",
+                            position: "center",
+                            timeout: false,
+                            close: false,
+                            overlay: true,
+                            icon: "fa fa-question-circle",
+                            displayMode: "once",
+                            onClosing: function() { // Khi iziToast bị đóng, đặt lại biến
+                                isToastVisible = false;
                             },
-                            true
-                        ],
-                        [
-                            '<button><i class="fa fa-times"></i> Hủy</button>',
-                            function (instance, toast) {
-                                isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
-                                instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                            }
-                        ]
-                    ]
-                });
+                            buttons: [
+                                [
+                                    '<button><i class="fa fa-check"></i> Duyệt</button>',
+                                    function (instance, toast) {
+                                        isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
+                                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                                        $.post("@Url.Action("ApprovePost", "Admin")", { id: id }, function (response) {
+                                            iziToast.show({
+                                                title: response.success ? "Thành công!" : "Lỗi!",
+                                                message: response.message,
+                                                position: "topRight",
+                                                color: response.success ? "green" : "red",
+                                                timeout: 1000
+                                            });
+
+                                            if (response.success) {
+                                                updateStatus(id, "Đã duyệt", "bg-success");
+                                                toggleButtons(id, "reject");
+                                            }
+                                        }).fail(() => {
+                                            iziToast.error({
+                                                title: "Lỗi!",
+                                                message: "Đã xảy ra lỗi khi duyệt bài đăng.",
+                                                position: "topRight"
+                                            });
+                                        });
+                                    },
+                                    true
+                                ],
+                                [
+                                    '<button><i class="fa fa-times"></i> Hủy</button>',
+                                    function (instance, toast) {
+                                        isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
+                                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                                    }
+                                ]
+                            ]
+                        });
+                    /* }
+                }).fail(() => {
+                    iziToast.error({
+                        title: "Lỗi!",
+                        message: "Đã xảy ra lỗi khi kiểm tra bài đăng.",
+                        position: "topRight"
+                    });
+                    isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
+                }); */
             });
 
             $(document).off("click", ".reject-house").on("click", ".reject-house", function () {
@@ -243,25 +219,51 @@
 
                 iziToast.show({
                     class: "iziToast-custom",
-                    title: "Xác nhận từ chối",
-                    message: "Bạn có chắc muốn từ chối bài đăng này?",
-                    position: "center",
+                    title: 'Xác nhận từ chối',
+                    message: 'Vui lòng nhập lý do từ chối bài đăng:',
+                    position: 'center',
                     timeout: false,
                     close: false,
                     overlay: true,
-                    icon: "fa fa-question-circle",
-                    displayMode: "once",
-                    onClosing: function() { // Khi iziToast bị đóng, đặt lại biến
-                        isToastVisible = false;
+                    icon: 'fa fa-question-circle',
+                    drag: false,
+                    displayMode: 1,
+                    inputs: [
+                        [
+                            '<textarea id="reject-reason" rows="3" placeholder="Nhập lý do..." style="width:100%;resize:none;" required></textarea>',
+                            'keyup',
+                            function (instance, toast, input, e) {
+                                // Kích hoạt input
+                            }
+                        ]
+                    ],
+                    onOpening: function(instance, toast){
+                        setTimeout(() => {
+                            const textarea = toast.querySelector('#reject-reason');
+                            if (textarea) textarea.focus();
+                        }, 100); // Delay một chút để đảm bảo toast đã render xong
+                    },
+                    onClosed: function () {
+                        isToastVisible = false; 
                     },
                     buttons: [
                         [
                             '<button><i class="fa fa-times"></i> Từ chối</button>',
-                            function (instance, toast) {
-                                isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
+                            function (instance, toast, button, e, inputs) {
+                                const reason = inputs[0].value.trim();
+
+                                if (!reason) {
+                                    iziToast.warning({
+                                        title: "Cảnh báo",
+                                        message: "Vui lòng nhập lý do.",
+                                        position: "topRight"
+                                    });
+                                    return;
+                                }
+
                                 instance.hide({ transitionOut: "fadeOut" }, toast, "button");
 
-                                $.post("@Url.Action("RejectPost", "Admin")", { id: id }, function (response) {
+                                $.post("@Url.Action("RejectPost", "Admin")", { id: id, reason: reason }, function (response) {
                                     iziToast.show({
                                         title: response.success ? "Thành công!" : "Lỗi!",
                                         message: response.message,
@@ -287,7 +289,6 @@
                         [
                             '<button><i class="fa fa-times"></i> Hủy</button>',
                             function (instance, toast) {
-                                isToastVisible = false; // Đặt lại trạng thái để cho phép hiển thị lần sau
                                 instance.hide({ transitionOut: "fadeOut" }, toast, "button");
                             }
                         ]
@@ -300,24 +301,45 @@
                 const statusCell = $(`tr:has(button[data-id='${id}']) td:nth-child(6)`);
                 statusCell.html(`<span class="badge ${statusClass}">${statusText}</span>`);
             }
-
-            // Hàm đổi nút duyệt, từ chối
+            
             function toggleButtons(id, action) {
-                const actionCell = $(`tr:has(button[data-id='${id}']) td:last-child`);
+                const row = $(`tr:has(button[data-id='${id}'])`);
+                const actionCell = row.find("td:last-child .action-buttons");
+
                 if (action === "reject") {
-                    actionCell.find(".approve-house").replaceWith(
-                        `<button class="btn btn-sm btn-danger reject-house" data-id="${id}">
-                            <i class="fas fa-times"></i> Từ chối
-                        </button>`
-                    );
-                } else {
-                    actionCell.find(".reject-house").replaceWith(
-                        `<button class="btn btn-sm btn-success approve-house" data-id="${id}">
-                            <i class="fas fa-check"></i> Duyệt
-                        </button>`
-                    );
+                    // Đã duyệt → Chuyển sang chỉ còn nút từ chối
+                    row.find(".approve-house").remove();
+
+                    // Nếu chưa có nút từ chối thì thêm vào
+                    if (actionCell.find(".reject-house").length === 0) {
+                        actionCell.append(`
+                            <button class="btn btn-sm btn-danger reject-house" data-id="${id}">
+                                <i class="fas fa-times"></i> Từ chối
+                            </button>
+                        `);
+                    }
+                } else if (action === "approve") {
+                    // Bị từ chối → Chuyển sang chỉ còn nút duyệt
+                    row.find(".reject-house").remove();
+
+                    // Nếu chưa có nút duyệt thì thêm vào
+                    if (actionCell.find(".approve-house").length === 0) {
+                        actionCell.append(`
+                            <button class="btn btn-sm btn-success approve-house" data-id="${id}">
+                                <i class="fas fa-check"></i> Duyệt
+                            </button>
+                        `);
+                    }
                 }
             }
+
+            // Tìm kiếm bài đăng
+            $("#searchInput").on("keyup", function () {
+                const value = $(this).val().toLowerCase();
+                $("table tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
         });
     </script>
 </body>

@@ -180,7 +180,7 @@ namespace KLTN.Controllers
                 }
                 else
                 {
-                    if (isAjaxRequest)
+                    if (isAjaxRequest) 
                     {
                         return Json(
                             new

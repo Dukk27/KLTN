@@ -3,51 +3,26 @@
 <head>
     <link rel="stylesheet" href="~/css/iziToast.css">
     <link rel="stylesheet" href="~/css/Admin/responsive.css">
-    <style>
-        .delete-selected-btn {
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .delete-selected-btn:disabled {
-            background-color: #ccc !important;
-            border-color: #ccc !important;
-            cursor: not-allowed;
-        }
-        .no-reviews {
-            text-align: center;
-            font-size: 1.2rem;
-            color: #555;
-            margin-top: 20px;
-            padding: 20px;
-            border: 1px dashed #ccc;
-            background-color:#fff3cd;
-            border-radius: 8px;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .house-link {
-            text-decoration: none; /* Loại bỏ gạch chân */
-            color: #007bff; /* Thay đổi màu sắc của liên kết */
-            font-weight: bold; /* Đậm văn bản */
-        }
-
-        .house-link:hover {
-            color: #0056b3; /* Thay đổi màu khi hover */
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/Admin/review.css">
 </head>
-
+ 
 <body>
     <h3 class="text-center mt-3">Quản lý bình luận</h3>
 
-    @if (Model.Any())
+    @if (Model.Any()) 
     {
-        <button class="btn btn-danger delete-selected-btn" disabled>
-            <i class="fas fa-trash-alt"></i>&nbsp;Xóa bình luận đã chọn
-        </button><br><br>
+        <div class="row mb-3">
+            <div class="col-12 col-md-6 d-flex">
+                <!-- Ô tìm kiếm -->
+                <input type="text" id="searchInput" class="form-control" placeholder="🔍 Tìm kiếm bình luận...">
+            </div>
+            <div class="col-12 col-md-6 d-flex justify-content-end">
+                <!-- Nút xóa -->
+                <button class="btn btn-danger delete-selected-btn" disabled>
+                    <i class="fas fa-trash-alt"></i>&nbsp;Xóa bình luận đã chọn
+                </button>
+            </div>
+        </div>
 
         <table class="table table-bordered table-striped">
             <thead>
@@ -246,6 +221,14 @@
                         ]
                     ]
                 });
+            });
+        });
+
+        // Tìm kiếm tài khoản theo tên, sđt hoặc email
+        $("#searchInput").on("keyup", function () {
+            const value = $(this).val().toLowerCase();
+            $("table tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
             });
         });
     </script>

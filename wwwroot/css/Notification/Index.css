@@ -1,9 +1,8 @@
 h2 {
-    font-family: Arial, sans-serif;
     color: #333;
     margin-top: 20px;
     margin-bottom: 20px;
-    font-weight: bold;
+    font-weight: bold; 
     text-align: center;
 } 
 /* --- Container chính --- */

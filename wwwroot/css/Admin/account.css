@@ -1,105 +1,113 @@
 body {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 .table-responsive {
-    max-width: 100%;
-    overflow-x: auto;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 /* ======= Thiết lập cho bảng ======= */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0 auto;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
 }
 
-th, td {
-    text-align: center;
-    padding: 12px;
-    border: 1px solid #ddd;
-    word-wrap: break-word; /* Đảm bảo chữ không bị tràn ra ngoài */
+th,
+td {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  word-wrap: break-word; /* Đảm bảo chữ không bị tràn ra ngoài */
 }
 
 thead {
-    background-color: #f4f4f4;
+  background-color: #f4f4f4;
 }
 
 th {
-    font-weight: bold;
-    background-color: #f9f9f9;
+  font-weight: bold;
+  background-color: #f9f9f9;
 }
 
 button {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .btn-sm {
-    padding: 5px 10px;
+  padding: 5px 10px;
 }
 
 .badge {
-    font-size: 12px;
+  font-size: 12px;
 }
 
+#searchInput {
+  margin-top: 20px;
+  min-width: 400px; 
+
+}
 /* ======= Responsive cho thiết bị nhỏ (Tablet, Mobile) ======= */
 
 @media (max-width: 768px) {
-    .table-responsive {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    } 
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 
-    table {
-        min-width: 600px;
-    }
+  table {
+    min-width: 600px;
+  }
 
-    th, td {
-        font-size: 14px;
-        padding: 8px;
-        white-space: nowrap;
-    }
+  th,
+  td {
+    font-size: 14px;
+    padding: 8px;
+    white-space: nowrap;
+  }
 
-    button {
-        font-size: 12px;
-    }
+  button {
+    font-size: 12px;
+  }
 
-    .btn-sm {
-        padding: 4px 8px;
-    }
+  .btn-sm {
+    padding: 4px 8px;
+  }
 
-    .badge {
-        font-size: 11px;
-    }
+  .badge {
+    font-size: 11px;
+  }
 
-    h3 {
-        font-size: 20px;
-    }
-    .iziToast {
-        width: 80% !important; /* Làm iziToast nhỏ lại trên mobile */
-        font-size: 14px !important; /* Giảm kích thước chữ */
-        padding: 10px !important; /* Thu gọn padding */
-        left: 40% !important; /* Canh giữa màn hình */
-        transform: translateX(-50%) !important;
-      }
+  h3 {
+    font-size: 20px;
+  }
+  .iziToast {
+    width: 80% !important; /* Làm iziToast nhỏ lại trên mobile */
+    font-size: 14px !important; /* Giảm kích thước chữ */
+    padding: 10px !important; /* Thu gọn padding */
+    left: 40% !important; /* Canh giữa màn hình */
+    transform: translateX(-50%) !important;
+  }
 }
 
 @media (max-width: 480px) {
-    th, td {
-        font-size: 13px;
-        padding: 6px;
-    }
+  th,
+  td {
+    font-size: 13px;
+    padding: 6px;
+  }
 
-    h3 {
-        font-size: 18px;
-    }
+  h3 {
+    font-size: 18px;
+  }
 
-    .iziToast {
-        width: 80% !important; /* Làm iziToast nhỏ lại trên mobile */
-        font-size: 14px !important; /* Giảm kích thước chữ */
-        padding: 10px !important; /* Thu gọn padding */
-        left: 40% !important; /* Canh giữa màn hình */
-        transform: translateX(-50%) !important;
-      }
+  .iziToast {
+    width: 80% !important; /* Làm iziToast nhỏ lại trên mobile */
+    font-size: 14px !important; /* Giảm kích thước chữ */
+    padding: 10px !important; /* Thu gọn padding */
+    left: 40% !important; /* Canh giữa màn hình */
+    transform: translateX(-50%) !important;
+  }
 }

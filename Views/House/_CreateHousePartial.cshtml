@@ -236,14 +236,19 @@
                     isValid = false;
                 }
 
+                if (!$("#HouseDetail_Describe").val().trim()) {
+                    $("#HouseDetail_Describe").next(".text-danger").text("Vui lòng nhập mô tả!");
+                    isValid = false;
+                }
+
                 let dienTich = parseFloat($("#HouseDetail_DienTich").val());
-                if (isNaN(dienTich) || dienTich < 0) {
+                if (isNaN(dienTich) || dienTich <= 0) {
                     $("#HouseDetail_DienTich").next(".text-danger").text("Diện tích phải là số dương!");
                     isValid = false;
                 }
 
                 let price = parseFloat($("#HouseDetail_Price").val().replace(/\D/g, ''));
-                if (isNaN(price) || price < 0) {
+                if (isNaN(price) || price <= 0) {
                     $("#HouseDetail_Price").next(".text-danger").text("Giá thuê phải là số dương!");
                     isValid = false;
                 }

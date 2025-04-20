@@ -55,6 +55,7 @@ namespace KLTN.Controllers
                         || h.Status == HouseStatus.Pending
                         || h.Status == HouseStatus.Active
                         || h.Status == HouseStatus.Hidden
+                        || h.Status == HouseStatus.Rejected
                     );
                 }
                 var viewModel = new HomeViewModel

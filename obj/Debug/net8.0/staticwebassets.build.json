@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "v+dWZOgPHjQzzjc+uvKIPUknGp7EXeyyRJROTIwJh0k=",
+  "Hash": "aWRBePN/xpGl2IQ7plBnuUBhtximdBFCQQl6B/V2tnw=",
   "Source": "KLTN",
   "BasePath": "_content/KLTN",
   "Mode": "Default",
@@ -205,6 +205,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\Admin\\responsive.css"
+    },
+    {
+      "Identity": "D:\\KLTN\\KLTN\\wwwroot\\css\\Admin\\review.css",
+      "SourceId": "KLTN",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\KLTN\\KLTN\\wwwroot\\",
+      "BasePath": "_content/KLTN",
+      "RelativePath": "css/Admin/review.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\Admin\\review.css"
     },
     {
       "Identity": "D:\\KLTN\\KLTN\\wwwroot\\css\\appointment.css",
@@ -775,6 +794,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\houses\\0d02259b-6843-49eb-bc7e-9ef44b4395af.jpg"
+    },
+    {
+      "Identity": "D:\\KLTN\\KLTN\\wwwroot\\img\\houses\\0d805ff6-9bb5-4055-9a64-1d3e435edba2.jpg",
+      "SourceId": "KLTN",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\KLTN\\KLTN\\wwwroot\\",
+      "BasePath": "_content/KLTN",
+      "RelativePath": "img/houses/0d805ff6-9bb5-4055-9a64-1d3e435edba2.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\houses\\0d805ff6-9bb5-4055-9a64-1d3e435edba2.jpg"
     },
     {
       "Identity": "D:\\KLTN\\KLTN\\wwwroot\\img\\houses\\0e3d9b19-5bb8-4604-8729-0eea832160ca.jpg",

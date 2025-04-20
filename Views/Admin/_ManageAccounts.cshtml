@@ -8,6 +8,11 @@
 </head>
 
 <body>
+    <div class="row mb-3">
+        <div class="col-12 col-md-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="🔍 Tìm kiếm tài khoản...">
+        </div>
+    </div>
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead>
@@ -236,6 +241,14 @@
                 }
                 // Gán sự kiện lần đầu
                 bindEvents();
+            });
+
+            // Tìm kiếm tài khoản theo tên, sđt hoặc email
+            $("#searchInput").on("keyup", function () {
+                const value = $(this).val().toLowerCase();
+                $("table tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
             });
         });
     </script>

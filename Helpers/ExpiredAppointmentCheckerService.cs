@@ -43,7 +43,9 @@ namespace KLTN.Helpers
 
                 var expiredAppointments = await context
                     .Appointments.Where(a =>
-                        a.AppointmentDate < now && a.Status == AppointmentStatus.Pending && !a.IsNotified
+                        a.AppointmentDate < now
+                        && a.Status == AppointmentStatus.Pending
+                        && !a.IsNotified
                     )
                     .Include(a => a.User)
                     .Include(a => a.House)

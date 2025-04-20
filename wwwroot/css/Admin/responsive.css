@@ -1,21 +1,19 @@
-
 @media (max-width: 768px) {
-    .iziToast {
-        width: 80% !important; /* Làm iziToast nhỏ lại trên mobile */
-        font-size: 14px !important; /* Giảm kích thước chữ */
-        padding: 10px !important; /* Thu gọn padding */
-        left: 40% !important; /* Canh giữa màn hình */
-        transform: translateX(-50%) !important;
-      }
+  .iziToast {
+    width: 80% !important; /* Làm iziToast nhỏ lại trên mobile */
+    font-size: 14px !important; /* Giảm kích thước chữ */
+    padding: 10px !important; /* Thu gọn padding */
+    left: 40% !important; /* Canh giữa màn hình */
+    transform: translateX(-50%) !important;
   }
-  
-  @media (max-width: 480px) {
-    .iziToast {
-        width: 80% !important; /* Làm iziToast nhỏ lại trên mobile */
-        font-size: 14px !important; /* Giảm kích thước chữ */
-        padding: 10px !important; /* Thu gọn padding */
-        left: 40% !important; /* Canh giữa màn hình */
-        transform: translateX(-50%) !important;
-      }
+}
+
+@media (max-width: 480px) {
+  .iziToast {
+    width: 80% !important; /* Làm iziToast nhỏ lại trên mobile */
+    font-size: 14px !important; /* Giảm kích thước chữ */
+    padding: 10px !important; /* Thu gọn padding */
+    left: 40% !important; /* Canh giữa màn hình */
+    transform: translateX(-50%) !important;
   }
-  
+}

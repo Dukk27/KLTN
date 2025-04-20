@@ -3,45 +3,53 @@
 <head>
     <link rel="stylesheet" href="~/css/iziToast.css">
     <link rel="stylesheet" href="~/css/Admin/responsive.css">
+    <link rel="stylesheet" href="~/css/Admin/review.css">
 </head>
 
 <body>
-    <div class="container">
-        <h3 class="text-center mt-3">Quản lý tiện nghi</h3>
-        <button class="btn btn-primary mb-2" onclick="openCreateModal()">
-            <i class="fa fa-plus-circle"></i> Thêm mới
-        </button>
+    <h3 class="text-center mt-3">Quản lý tiện nghi</h3>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên Tiện Nghi</th>
-                    <th>Hành Động</th>
-                </tr>
-            </thead>
-            <tbody id="amenityTableBody">
-                @{
-                    int index = 1;
-                }
-                @foreach (var amenity in Model)
-                {
-                    <tr id="row_@amenity.IdAmenity">
-                        <td>@index</td>
-                        <td>@amenity.Name</td>
-                        <td>
-                            <button class="btn btn-warning btn-sm" onclick="openEditModal(@amenity.IdAmenity, '@amenity.Name')"
-                                title="Chỉnh sửa tiện nghi"><i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteAmenity(@amenity.IdAmenity)"
-                                title="Xoá tiện nghi"><i class="fas fa-trash-alt"></i></button>
-                        </td>
-                    </tr>
-                    index++;
-                }
-            </tbody>
-        </table>
+    <div class="row mb-3">
+        <div class="col-12 col-md-6 d-flex">
+            <!-- Ô tìm kiếm -->
+            <input type="text" id="searchInput" class="form-control" placeholder="🔍 Tìm kiếm tiện nghi...">
+        </div>
+        <div class="col-12 col-md-6 d-flex justify-content-end">
+            <button class="btn btn-primary mt-3" onclick="openCreateModal()">
+                <i class="fa fa-plus-circle"></i> Thêm mới
+            </button>
+        </div>
     </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên Tiện Nghi</th>
+                <th>Hành Động</th>
+            </tr>
+        </thead>
+        <tbody id="amenityTableBody">
+            @{
+                int index = 1;
+            }
+            @foreach (var amenity in Model)
+            {
+                <tr id="row_@amenity.IdAmenity">
+                    <td>@index</td>
+                    <td>@amenity.Name</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="openEditModal(@amenity.IdAmenity, '@amenity.Name')"
+                            title="Chỉnh sửa tiện nghi"><i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAmenity(@amenity.IdAmenity)"
+                            title="Xoá tiện nghi"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+                index++;
+            }
+        </tbody>
+    </table>
 
     <!-- Modal để thêm/sửa tiện nghi -->
     <div id="amenityModal" class="modal fade">
@@ -204,5 +212,13 @@
                     });
                 });
         }
+
+        // Tìm kiếm 
+        $("#searchInput").on("keyup", function () {
+            const value = $(this).val().toLowerCase();
+            $("table tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
     </script>
 </body>

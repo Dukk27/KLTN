@@ -21,7 +21,7 @@
             <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle">
                     <thead class="table-light">
-                        <tr>
+                        <tr class="text-center">
                             <th>Tên Nhà</th>
                             <th>Địa Chỉ</th>
                             <th>Giá</th>
@@ -34,7 +34,7 @@
                             <th>Hành Động</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-center">
                         @foreach (var house in Model.Houses)
                         {
                             <tr>
@@ -62,9 +62,9 @@
                                     {
                                         <span class="badge bg-success">Đã duyệt</span>
                                     }
-                                    else
+                                    else if (house.Status == HouseStatus.Rejected)
                                     {
-                                        <span class="badge bg-danger">Bị từ chối</span>
+                                        <span class="badge bg-danger">Bị từ chối.<br> Hãy xem lý do ở thông báo</span>
                                     }
                                 </td>
                                 <td>

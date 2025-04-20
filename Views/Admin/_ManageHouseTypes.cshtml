@@ -3,46 +3,54 @@
 <head>
     <link rel="stylesheet" href="~/css/iziToast.css">
     <link rel="stylesheet" href="~/css/Admin/responsive.css">
+    <link rel="stylesheet" href="~/css/Admin/review.css">
 </head>
 
 <body>
-    <div class="container">
-        <h3 class="text-center mt-3">Quản lý loại nhà</h3>
-        <button class="btn btn-primary mb-2" onclick="openCreateModal()">
-            <i class="fa fa-plus-circle"></i> Thêm mới
-        </button>
-
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên Loại Nhà</th>
-                    <th>Hành Động</th>
-                </tr>
-            </thead>
-            <tbody id="houseTypeTableBody">
-                @{
-                    int index = 1;
-                }
-                @foreach (var houseType in Model)
-                {
-                    <tr id="row_@houseType.IdHouseType">
-                        <td>@index</td>
-                        <td>@houseType.Name</td>
-                        <td>
-                            <button class="btn btn-warning btn-sm"
-                                onclick="openEditModal(@houseType.IdHouseType, '@houseType.Name')" title="Chỉnh sửa loại nhà"><i
-                                    class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteHouseType(@houseType.IdHouseType)"
-                                title="Xoá loại nhà"><i class="fas fa-trash-alt"></i> </button>
-                        </td>
-                    </tr>
-                    index++;
-                }
-            </tbody>
-        </table>
+    <h3 class="text-center mt-3">Quản lý loại nhà</h3>
+    
+    <div class="row mb-3">
+        <div class="col-12 col-md-6 d-flex">
+            <!-- Ô tìm kiếm -->
+            <input type="text" id="searchInput" class="form-control" placeholder="🔍 Tìm kiếm loại nhà...">
+        </div>
+        <div class="col-12 col-md-6 d-flex justify-content-end">
+            <button class="btn btn-primary mt-3" onclick="openCreateModal()">
+                <i class="fa fa-plus-circle"></i> Thêm mới
+            </button>
+        </div>
     </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên Loại Nhà</th>
+                <th>Hành Động</th>
+            </tr>
+        </thead>
+        <tbody id="houseTypeTableBody">
+            @{
+                int index = 1;
+            }
+            @foreach (var houseType in Model)
+            {
+                <tr id="row_@houseType.IdHouseType">
+                    <td>@index</td>
+                    <td>@houseType.Name</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm"
+                            onclick="openEditModal(@houseType.IdHouseType, '@houseType.Name')" title="Chỉnh sửa loại nhà"><i
+                                class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteHouseType(@houseType.IdHouseType)"
+                            title="Xoá loại nhà"><i class="fas fa-trash-alt"></i> </button>
+                    </td>
+                </tr>
+                index++;
+            }
+        </tbody>
+    </table>
 
     <!-- Modal để thêm/sửa loại nhà -->
     <div id="houseTypeModal" class="modal fade">
@@ -209,5 +217,13 @@
                 }
             );
         }
+
+        // Tìm kiếm 
+        $("#searchInput").on("keyup", function () {
+            const value = $(this).val().toLowerCase();
+            $("table tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
     </script>
 </body>

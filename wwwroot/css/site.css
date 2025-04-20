@@ -166,6 +166,18 @@ body {
   cursor: pointer;
 }
 
+.notification-text {
+  display: inline-block;
+  white-space: nowrap;       /* Giữ văn bản trong một dòng */
+  overflow: hidden;          /* Ẩn phần văn bản thừa */
+  text-overflow: ellipsis;   /* Thêm "..." khi văn bản quá dài */
+  max-width: 450px;          /* Giới hạn chiều rộng của phần tử */
+}
+
+#notificationList {
+  width: 500px;  /* Đặt chiều rộng phù hợp cho dropdown */
+}
+
 .btn {
   color: rgb(255, 255, 255) !important;
   transition: all 0.3s ease; /* Hiệu ứng mượt mà */

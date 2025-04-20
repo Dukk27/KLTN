@@ -37,6 +37,10 @@
       "PackagePath": "staticwebassets\\css\\Admin\\responsive.css"
     },
     {
+      "Id": "D:\\KLTN\\KLTN\\wwwroot\\css\\Admin\\review.css",
+      "PackagePath": "staticwebassets\\css\\Admin\\review.css"
+    },
+    {
       "Id": "D:\\KLTN\\KLTN\\wwwroot\\css\\Chat\\chatlist.css",
       "PackagePath": "staticwebassets\\css\\Chat\\chatlist.css"
     },
@@ -155,6 +159,10 @@
     {
       "Id": "D:\\KLTN\\KLTN\\wwwroot\\img\\houses\\0d02259b-6843-49eb-bc7e-9ef44b4395af.jpg",
       "PackagePath": "staticwebassets\\img\\houses\\0d02259b-6843-49eb-bc7e-9ef44b4395af.jpg"
+    },
+    {
+      "Id": "D:\\KLTN\\KLTN\\wwwroot\\img\\houses\\0d805ff6-9bb5-4055-9a64-1d3e435edba2.jpg",
+      "PackagePath": "staticwebassets\\img\\houses\\0d805ff6-9bb5-4055-9a64-1d3e435edba2.jpg"
     },
     {
       "Id": "D:\\KLTN\\KLTN\\wwwroot\\img\\houses\\0e3d9b19-5bb8-4604-8729-0eea832160ca.jpg",

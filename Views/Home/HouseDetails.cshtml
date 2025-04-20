@@ -208,12 +208,16 @@
 
         <!--Chat và Đặt hẹn-->
         <div class="action-buttons">
-            @if (ViewBag.OwnerId != ViewBag.CurrentUserId)
+            @if (ViewBag.OwnerId != ViewBag.CurrentUserId && ViewBag.IsOwnerLocked == false)
             {
                 <a href="javascript:void(0);" onclick="handleChatClick()" class="btn btn-search">
                     <i class="fas fa-comment"></i> Nhắn Tin với Chủ Trọ
                 </a>
                 <button id="bookAppointmentBtn" class="btn btn-search"><i class="fas fa-calendar"></i> Đặt lịch hẹn</button>
+            }
+            else if (ViewBag.OwnerId != ViewBag.CurrentUserId && ViewBag.IsOwnerLocked == true)
+            {
+                <p class="text-danger mt-2">🔒 Chủ trọ hiện đang bị khóa tài khoản, không thể nhắn tin hoặc đặt lịch hẹn.</p>
             }
 
             <!-- Form đặt lịch hẹn (popup) -->
@@ -541,7 +545,7 @@
                         <div class="review-header">
                             <strong class="review-username">${result.review.UserName}</strong>
                             <span class="review-date">${result.review.ReviewDate}</span>
-                            <span class="review-rating">(Rating: ${result.review.Rating} ★)</span>
+                            <span class="review-rating">Rating: ${result.review.Rating} ★</span>
                         </div>
                         <p class="review-content">${result.review.Content}</p>
                     `;

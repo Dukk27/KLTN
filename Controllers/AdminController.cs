@@ -257,6 +257,23 @@ namespace KLTN.Controllers
                 return Json(new { success = false, message = "Bài đăng không tồn tại." });
             }
 
+            // var detail = house.HouseDetails.FirstOrDefault();
+            // if (detail == null)
+            // {
+            //     return Json(
+            //         new { success = false, message = "Bài đăng thiếu thông tin chi tiết." }
+            //     );
+            // }
+
+            // // Kiểm tra tiêu chí và tạo thông báo lỗi nếu có
+            // var validationMessages = ValidateHouseDetail(detail);
+            // if (validationMessages.Count > 0)
+            // {
+            //     return Json(
+            //         new { success = false, message = string.Join("<br/>", validationMessages) }
+            //     );
+            // }
+
             house.Status = HouseStatus.Approved;
             house.IsAutoHidden = false; // Nếu trước đó bị ẩn tự động, reset lại
             house.ReportVersion += 1; // Reset lượt report bằng cách tăng version
@@ -277,9 +294,33 @@ namespace KLTN.Controllers
             return Json(new { success = true, message = "Bài đăng đã được duyệt." });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RejectPost(int id)
+        private List<string> ValidateHouseDetail(HouseDetail detail)
         {
+            var errors = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(detail.Address))
+                errors.Add("Địa chỉ không được để trống.");
+
+            if (detail.DienTich <= 0)
+                errors.Add("Diện tích phải lớn hơn 0m².");
+
+            if (detail.Price <= 0)
+                errors.Add("Tiền thuê phải lớn hơn 0.");
+
+            if (string.IsNullOrWhiteSpace(detail.Describe))
+                errors.Add("Mô tả nhà không được để trống.");
+
+            return errors;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectPost(int id, string reason)
+        {
+            if (string.IsNullOrWhiteSpace(reason))
+            {
+                return Json(new { success = false, message = "Vui lòng nhập lý do từ chối." });
+            }
+
             var house = await _housesRepository.GetHouseWithDetailsAsync(id);
             if (house == null)
             {
@@ -289,11 +330,11 @@ namespace KLTN.Controllers
             house.Status = HouseStatus.Rejected;
             await _housesRepository.UpdateAsync(house);
 
-            // Gửi thông báo cho chủ bài đăng
+            // Gửi thông báo cho chủ bài đăng kèm lý do
             var notification = new Notification
             {
                 UserId = house.IdUser,
-                Message = $"❌ Bài đăng '{house.NameHouse}' của bạn đã bị từ chối.",
+                Message = $"❌ Bài đăng '{house.NameHouse}' của bạn đã bị từ chối.\nLý do: {reason}",
                 CreatedAt = DateTime.Now,
                 IsRead = false,
             };
@@ -301,7 +342,9 @@ namespace KLTN.Controllers
             _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, message = "Bài đăng đã bị từ chối." });
+            return Json(
+                new { success = true, message = "Bài đăng đã bị từ chối và lý do đã được gửi." }
+            );
         }
 
         // Quản lý loại nhà

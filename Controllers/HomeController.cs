@@ -253,6 +253,10 @@ namespace KLTN.Controllers
             ViewBag.CurrentUserId = currentUserId;
             ViewBag.OwnerId = house.IdUserNavigation?.IdUser;
 
+            // Kiểm tra xem tài khoản của chủ nhà có bị khóa hay không
+            var owner = await _accountRepository.GetAccountByIdAsync(house.IdUser);
+            ViewBag.IsOwnerLocked = owner?.IsLocked ?? false;
+
             // Tạo conversationId (nếu người dùng đã đăng nhập)
             if (currentUserId != null && house.IdUserNavigation != null)
             {
@@ -264,7 +268,10 @@ namespace KLTN.Controllers
             var otherHouses = _context
                 .Houses.Include(h => h.HouseDetails)
                 .Where(h =>
-                    h.IdUser == house.IdUser && h.IdHouse != id && h.Status != HouseStatus.Pending
+                    h.IdUser == house.IdUser
+                    && h.IdHouse != id
+                    && h.Status != HouseStatus.Pending
+                    && h.Status != HouseStatus.Rejected
                 )
                 .Select(h => new House
                 {
@@ -279,7 +286,10 @@ namespace KLTN.Controllers
             var otherHousesUser = _context
                 .Houses.Include(h => h.HouseDetails)
                 .Where(h =>
-                    h.IdUser != house.IdUser && h.IdHouse != id && h.Status != HouseStatus.Pending
+                    h.IdUser != house.IdUser
+                    && h.IdHouse != id
+                    && h.Status != HouseStatus.Pending
+                    && h.Status != HouseStatus.Rejected
                 )
                 .Take(3) // Lấy 3 nhà trọ khác
                 .Select(h => new House
@@ -295,7 +305,7 @@ namespace KLTN.Controllers
             ViewBag.OtherHousesUser = otherHousesUser;
             ViewBag.OtherHouses = otherHouses;
 
-            return PartialView("HouseDetails", house);
+            return View("HouseDetails", house);
         }
 
         [HttpGet]
