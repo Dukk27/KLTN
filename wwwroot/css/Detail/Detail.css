@@ -2,7 +2,7 @@ h1 {
   font-size: 34px;
   font-weight: bold;
   margin: 0px 0 20px;
-  color: #333;  
+  color: #333;
   text-align: center;
 }
 
@@ -15,13 +15,13 @@ h1 {
   font-size: 22px;
   font-weight: bold;
   margin: 30px 0 20px;
-  color: #1168AA;
+  color: #1168aa;
   text-align: center;
 }
 
 .section-underline {
   height: 3px;
-  background-color: #1168AA;
+  background-color: #1168aa;
   margin-top: -15px;
   margin-bottom: 20px;
   width: 100%; /* gần full màn */
@@ -108,7 +108,7 @@ h1 {
   border-radius: 8px;
   margin-top: 20px;
   max-width: 1100px;
-  margin :0 auto;
+  margin: 0 auto;
 }
 
 /* Khung bao quanh cả textarea + sao */
@@ -146,12 +146,12 @@ h1 {
 }
 
 .star-rating .fa-star.selected {
-  color: #FFA534;
+  color: #ffa534;
 }
 
 /* Nút gửi */
 .btn-submit-review {
-  background-color: #FF6A00;
+  background-color: #ff6a00;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -212,7 +212,6 @@ h1 {
 .house-info p {
   font-size: 20px;
   margin: 5px 0;
-  font-family: Arial, sans-serif;
 }
 
 .review-section {
@@ -245,7 +244,7 @@ h1 {
 
 .review-item {
   padding: 10px;
-  border-bottom: 1px solid #E1E1E1;
+  border-bottom: 1px solid #e1e1e1;
   margin-bottom: 15px;
 }
 
@@ -257,12 +256,12 @@ h1 {
 
 .review-header strong {
   font-size: 16px;
-  color: #11142D;
+  color: #11142d;
 }
 
 .review-date {
   font-size: 14px;
-  color: #9A9AB0;
+  color: #9a9ab0;
   margin-left: -800px;
 }
 
@@ -305,41 +304,6 @@ h1 {
 .breadcrumb-item.active {
   color: #6c757d;
   font-weight: bold;
-}
-
-.zoom-control {
-  position: absolute;
-  top: 10px;
-  z-index: 1000;
-  display: inline-block;
-  margin: 5px;
-  background-color: rgba(82, 151, 242, 0.7);
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-}
-
-.zoom-control button {
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-  color: #333;
-  border: none;
-  background-color: transparent;
-  text-align: center;
-  line-height: 40px; /* Để nút có chữ ở giữa */
-  cursor: pointer;
-  border-radius: 50%;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-#zoom-in {
-  right: 10px;
-}
-
-#zoom-out {
-  right: 10px;
-  top: 60px; /* Nằm dưới nút zoom-in */
 }
 
 #map {
@@ -454,7 +418,7 @@ h1 {
 .carousel-item img {
   width: 100%;
   height: 400px;
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
   margin-bottom: 50px;
 }
 
@@ -473,7 +437,7 @@ h1 {
 .carousel-control-prev,
 .carousel-control-next {
   position: absolute;
-  top: 50%;
+  top: 45%;
   transform: translateY(-50%);
   width: 50px;
   height: 50px;
@@ -528,7 +492,7 @@ h1 {
 }
 
 .no-houses-message {
-  background-color: #f8d7da; 
+  background-color: #f8d7da;
   color: #721c24; /* Màu chữ đỏ đậm */
   padding: 15px; /* Thêm khoảng cách bên trong */
   border-radius: 5px; /* Bo tròn góc */
@@ -540,38 +504,38 @@ h1 {
 
 .other-houses-list ul,
 .suggested-houses-list ul {
-    padding-left: 0;
+  padding-left: 0;
 }
 
 .other-houses-list .list-group-item,
 .suggested-houses-list .list-group-item {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    padding: 15px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
 }
 
 .other-houses-list img,
 .suggested-houses-list img {
-    width: 150px;
-    height: 120px;
-    object-fit: cover;
-    margin-right: 15px;
-    border-radius: 8px;
+  width: 150px;
+  height: 120px;
+  object-fit: cover;
+  margin-right: 15px;
+  border-radius: 8px;
 }
 
 .house-info-preview {
-    flex: 1;
-    min-width: 200px;
+  flex: 1;
+  min-width: 200px;
 }
 
 .xem-chi-tiet-btn {
-    margin-top: 10px;
-    white-space: nowrap;
+  margin-top: 10px;
+  white-space: nowrap;
 }
 
 .report-section {
@@ -595,60 +559,70 @@ h1 {
   font-weight: bold;
   margin: 0 auto;
 }
+.list-group-item {
+  position: relative;
+  cursor: pointer;
+}
+
+.full-link-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
 
 /* Responsive behavior for small screens */
 @media (max-width: 768px) {
-    .appointment-form {
-        width: 90vw;
-        padding: 20px;
-    }
+  .appointment-form {
+    width: 90vw;
+    padding: 20px;
+  }
 
-    .appointment-form h3 {
-        font-size: 18px;
-        text-align: center;
-    }
+  .appointment-form h3 {
+    font-size: 18px;
+    text-align: center;
+  }
 
-    #appointmentDate {
-      font-size: 16px;
-      padding: 12px 12px;
-    }
+  #appointmentDate {
+    font-size: 16px;
+    padding: 12px 12px;
+  }
 
-    .appointment-form label,
-    .appointment-form input,
-    .appointment-form textarea {
-        font-size: 14px;
-    }
+  .appointment-form label,
+  .appointment-form input,
+  .appointment-form textarea {
+    font-size: 14px;
+  }
 
-    .appointment-buttons {
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-    }
+  .appointment-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
 
-    .appointment-buttons .btn {
-        width: 50%;
-    }
-    .other-houses-list .list-group-item,
-    .suggested-houses-list .list-group-item {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
+  .appointment-buttons .btn {
+    width: 50%;
+  }
+  .other-houses-list .list-group-item,
+  .suggested-houses-list .list-group-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 
-    .other-houses-list img,
-    .suggested-houses-list img {
-        margin: 0 auto 10px auto;
-        width: 100%;
-        max-width: 320px;
-        height: auto;
-    }
+  .other-houses-list img,
+  .suggested-houses-list img {
+    margin: 0 auto 10px auto;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+  }
 
-    .house-info-preview {
-        width: 100%;
-    }
+  .house-info-preview {
+    width: 100%;
+  }
 
-    .xem-chi-tiet-btn {
-        margin-top: 70px;
-        margin-right: 273px;
-    }
+  .xem-chi-tiet-btn {
+    margin-top: 80px;
+    margin-right: 263px;
+  }
 }

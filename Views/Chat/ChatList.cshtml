@@ -6,7 +6,7 @@
     var receiverId = ViewBag.ReceiverId;
 }
 
-<head>
+<head> 
     <link rel="stylesheet" href="~/css/Chat/chatlist.css" asp-append-version="true" />
 </head>
 
@@ -34,13 +34,18 @@
                 <div style="text-align: center;">
                     <h4 class="p-3">Danh sách chat</h4>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <input type="text" id="searchInput" class="form-control border border-dark" placeholder="🔍 Tìm kiếm đoạn chat...">
+                    </div>
+                </div>
                 <ul class="list-group">
                     @foreach (var convo in Model)
                     {
-                        <li class="list-group-item @(convo.ConversationId == currentConversation?.ConversationId ? "active" : "")">
+                        <li class="list-group-item border border-dark rounded mb-1 @(convo.ConversationId == currentConversation?.ConversationId ? "active" : "")">
                             <a href="@Url.Action("ChatList", "Chat", new { conversationId = convo.ConversationId })" class="text-decoration-none text-dark d-block">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <div class="fw-bold">@convo.UserName</div>
+                                    <div class="fw-bold user-name">@convo.UserName</div>
                                     <div class="text-muted small">@convo.LastMessageTime?.ToString("dd/MM/yyyy HH:mm")</div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
@@ -182,7 +187,6 @@
                     });
             };
 
-
             document.getElementById("messageInput").addEventListener("keydown", function (event) {
                 if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
@@ -192,6 +196,14 @@
 
             var messagesDiv = document.getElementById("messages");
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+
+        $("#searchInput").on("keyup", function () {
+            const value = $(this).val().toLowerCase();
+            $(".list-group-item").each(function () {
+                const name = $(this).find(".user-name").text().toLowerCase();
+                $(this).toggle(name.indexOf(value) > -1);
+            });
         });
     </script>
 </body>

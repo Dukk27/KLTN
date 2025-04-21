@@ -204,52 +204,86 @@
                             <div class="row g-3">
                                 @foreach (var house in Model.Houses)
                                 {
-                                    <div class="col-12 col-sm-6 col-lg-3" >
-                                        <div class="card">
-                                            @{
-                                                var firstImage = house.HouseDetails.FirstOrDefault()?.Image?
-                                                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                                    .FirstOrDefault();
-                                            } 
-                                            <img src="@firstImage" class="card-img-top" alt="@house.NameHouse"
-                                                style="height: 200px; object-fit: cover;">
+                                    <div class="col-12 col-sm-6 col-lg-3">
+                                        <a href="@Url.Action("Detail", "Home", new { id = house.IdHouse })" class="card-link-wrapper">
+                                            <div class="card position-relative">
+                                                @{
+                                                    var firstImage = house.HouseDetails.FirstOrDefault()?.Image?
+                                                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                        .FirstOrDefault();
+                                                }
+                                                <img src="@firstImage" class="card-img-top" alt="@house.NameHouse"
+                                                    style="height: 200px; object-fit: cover;">
+                                                <div class="card-body d-flex flex-column">
+                                                    <h5 class="card-title">@house.NameHouse</h5>
+                                                    <p class="card-text"><strong>Người đăng:</strong> @house.IdUserNavigation.UserName</p>
+                                                    <p class="card-text"><strong>Địa chỉ:</strong> @house.HouseDetails.FirstOrDefault()?.Address</p>
+                                                    <p class="card-text">
+                                                        <strong>Giá nhà:</strong>
+                                                        <span style="color: red;">
+                                                            @house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND
+                                                        </span>
+                                                    </p>
+                                                    <p class="card-text">
+                                                        <strong>Diện tích:</strong> @house.HouseDetails.FirstOrDefault()?.DienTich m²
+                                                    </p>
+                                                    <p class="card-text">
+                                                        <strong>Loại nhà trọ:</strong> @house.HouseType?.Name
+                                                    </p>
+                                                    <p class="card-text">
+                                                        <strong>Trạng thái:</strong>
+                                                        @if (house.HouseDetails.FirstOrDefault()?.Status == "Chưa cho thuê")
+                                                        {
+                                                            <span class="status-not-rented">Chưa cho thuê</span>
+                                                        }
+                                                        else if (house.HouseDetails.FirstOrDefault()?.Status == "Đã cho thuê")
+                                                        {
+                                                            <span class="status-rented">Đã cho thuê</span>
+                                                        }
+                                                    </p>
+                                                    @{
+                                                        var timePost = house.HouseDetails.FirstOrDefault()?.TimePost;
+                                                        TimeSpan? timeSincePost = timePost.HasValue ? DateTime.Now - timePost.Value : (TimeSpan?)null;
 
-                                            <div class="card-body d-flex flex-column">
-                                                <h5 class="card-title">@house.NameHouse</h5>
-                                                <p class="card-text"><strong>Người đăng:</strong> @house.IdUserNavigation.UserName</p>
-                                                <p class="card-text"><strong>Địa chỉ:</strong> @house.HouseDetails.FirstOrDefault()?.Address</p>
-                                                <p class="card-text">
-                                                    <strong>Giá nhà:</strong>
-                                                    <span style="color: red;">
-                                                        @house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND
-                                                    </span>
-                                                </p>
-                                                <p class="card-text">
-                                                    <strong>Diện tích:</strong> @house.HouseDetails.FirstOrDefault()?.DienTich m²
-                                                </p>
-                                                <p class="card-text">
-                                                    <strong>Loại nhà trọ:</strong> @house.HouseType?.Name
-                                                </p>
-                                                <p class="card-text">
-                                                    <strong>Trạng thái:</strong>
-                                                    @if (house.HouseDetails.FirstOrDefault()?.Status == "Chưa cho thuê")
-                                                    {
-                                                        <span class="status-not-rented">Chưa cho thuê</span>
+                                                        string timeAgoText = "";
+
+                                                        if (timeSincePost.HasValue)
+                                                        {
+                                                            if (timeSincePost.Value.TotalSeconds < 60)
+                                                            {
+                                                                timeAgoText = $"Đăng {Math.Floor(timeSincePost.Value.TotalSeconds)} giây trước";
+                                                            }
+                                                            else if (timeSincePost.Value.TotalMinutes < 60)
+                                                            {
+                                                                timeAgoText = $"Đăng {Math.Floor(timeSincePost.Value.TotalMinutes)} phút trước";
+                                                            }
+                                                            else if (timeSincePost.Value.TotalHours < 24)
+                                                            {
+                                                                timeAgoText = $"Đăng {Math.Floor(timeSincePost.Value.TotalHours)} giờ trước";
+                                                            }
+                                                            else
+                                                            {
+                                                                timeAgoText = $"Đăng {Math.Floor(timeSincePost.Value.TotalDays)} ngày trước";
+                                                            }
+                                                        }
                                                     }
-                                                    else if (house.HouseDetails.FirstOrDefault()?.Status == "Đã cho thuê")
+
+                                                    <p class="card-text">
+                                                        <strong>Ngày đăng:</strong> @timePost?.ToString("dd/MM/yyyy")
+                                                    </p>
+                                                    @if (!string.IsNullOrEmpty(timeAgoText))
                                                     {
-                                                        <span class="status-rented">Đã cho thuê</span>
+                                                        <p class="card-text text-muted" style="font-size: 0.9em;">
+                                                            @timeAgoText
+                                                        </p>
                                                     }
-                                                </p>
-                                                <p class="card-text">
-                                                    <strong>Ngày đăng:</strong>
-                                                    @house.HouseDetails.FirstOrDefault()?.TimePost.ToString("dd/MM/yyyy")
-                                                </p>
-                                                <a href="javascript:void(0)" onclick="goToDetail(@house.IdHouse)" class="btn btn-view-detail mt-auto">
-                                                    <i class="fas fa-eye icon"></i> Xem Chi Tiết
-                                                </a>
+
+                                                    @* <a href="@Url.Action("Detail", "Home", new { id = house.IdHouse })" class="btn btn-view-detail mt-auto z-2 position-relative">
+                                                        <i class="fas fa-eye icon"></i> Xem Chi Tiết
+                                                    </a> *@
+                                                </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     </div>
                                 }
                             </div>

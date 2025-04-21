@@ -1,3 +1,11 @@
+th,
+td {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  word-wrap: break-word; /* Đảm bảo chữ không bị tràn ra ngoài */
+}
+
 .delete-selected-btn {
   font-weight: 500;
   padding: 8px 16px;
@@ -67,6 +75,7 @@
   border-color: #ccc !important;
   cursor: not-allowed;
 }
+
 @media (max-width: 768px) {
   .row.mb-3 .col-12 {
     margin-bottom: 10px;

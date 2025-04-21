@@ -27,11 +27,13 @@ namespace KLTN.Models
         [Required]
         public DateTime AppointmentDate { get; set; }
 
-        public bool IsNotified { get; set; } = false;
+        public bool IsNotified { get; set; } = false; // Kiểm tra gửi thông báo
 
         [Required]
         [Column(TypeName = "int")]
         public AppointmentStatus Status { get; set; }
+
+        public bool IsReminderSent { get; set; } = false; // Gửi nhắc nhở
 
         public virtual Account? User { get; set; }
 

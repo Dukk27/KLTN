@@ -273,6 +273,9 @@ namespace KLTN.Controllers
                     && h.Status != HouseStatus.Pending
                     && h.Status != HouseStatus.Rejected
                 )
+                .OrderByDescending(h =>
+                    h.HouseDetails.OrderByDescending(d => d.TimePost).FirstOrDefault().TimePost
+                ) // Sắp xếp theo TimePost mới nhất
                 .Select(h => new House
                 {
                     IdHouse = h.IdHouse,
@@ -291,7 +294,10 @@ namespace KLTN.Controllers
                     && h.Status != HouseStatus.Pending
                     && h.Status != HouseStatus.Rejected
                 )
-                .Take(3) // Lấy 3 nhà trọ khác
+                .OrderByDescending(h =>
+                    h.HouseDetails.OrderByDescending(d => d.TimePost).FirstOrDefault().TimePost
+                ) // Sắp xếp theo TimePost mới nhất
+                .Take(5) // Lấy 3 nhà trọ khác
                 .Select(h => new House
                 {
                     IdHouse = h.IdHouse,

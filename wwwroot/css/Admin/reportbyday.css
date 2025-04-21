@@ -1,7 +1,8 @@
-.mb-3 {
-  margin-top: 20px;
-  margin-bottom: 20px;
-} 
+
+.report-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
 label {
   font-weight: 500;
@@ -28,7 +29,6 @@ table.table th,
 table.table td {
   border: 1px solid #ddd;
   padding: 10px;
-  text-align: left;
 }
 
 table.table th {
@@ -45,10 +45,46 @@ table.table tr:hover {
   transition: background-color 0.2s;
 }
 
+.date-filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: nowrap; /* Quan trọng: giữ cùng 1 dòng */
+  margin-bottom: 20px;
+  flex-direction: row;
+}
+
+.date-filter-container label {
+  margin-bottom: 0;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.date-filter-container input[type="date"] {
+  padding: 6px 10px;
+  font-size: 14px;
+  width: 200px;
+}
+
+.date-filter-container button {
+  font-weight: 500;
+  padding: 6px 16px;
+  white-space: nowrap;
+}
+
 /* Responsive tweaks (optional) */
 @media (max-width: 992px) {
-  .mb-3 {
-    display: flex;
+  .date-filter-container {
     flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .date-filter-container input[type="date"],
+  .date-filter-container button {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
   }
 }

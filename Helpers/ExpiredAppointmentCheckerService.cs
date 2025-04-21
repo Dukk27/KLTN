@@ -53,6 +53,7 @@ namespace KLTN.Helpers
 
                 foreach (var appointment in expiredAppointments)
                 {
+                    // Gửi cho người đặt lịch
                     var notification = new Notification
                     {
                         UserId = appointment.UserId,
@@ -72,14 +73,101 @@ namespace KLTN.Helpers
                             $@"
                             <p>Xin chào <b>{appointment.User.UserName}</b>,</p>
                             <p>Lịch hẹn xem nhà của bạn vào ngày <b>{appointment.AppointmentDate:dd/MM/yyyy HH:mm}</b> tại nhà trọ <b>{appointment.House?.NameHouse}</b> đã quá hạn và chưa được xác nhận.</p>
-                            <p>Vui lòng liên hệ để xác nhận lại hoặc hủy lịch hẹn nếu không còn nhu cầu.</p>
+                            <p>Vui lòng liên hệ chủ trọ để xác nhận lại lịch hẹn.</p>
                             <br>
                             <p>Trân trọng,<br>Hệ Thống Đặt Lịch Hẹn</p>";
 
                         await emailService.SendEmailAsync("Appointment", toEmail, subject, body);
                     }
 
+                    // Gửi cho chủ trọ
+                    var houseOwner = await context.Accounts.FindAsync(appointment.House.IdUser);
+                    if (houseOwner != null)
+                    {
+                        var ownerNotification = new Notification
+                        {
+                            UserId = houseOwner.IdUser,
+                            Message =
+                                $"⚠️ Lịch hẹn với khách vào {appointment.AppointmentDate:dd/MM/yyyy HH:mm} tại bài đăng '{appointment.House?.NameHouse}' đã quá hạn mà chưa được xác nhận.",
+                            CreatedAt = DateTime.Now,
+                            IsRead = false,
+                        };
+
+                        context.Notifications.Add(ownerNotification);
+
+                        if (!string.IsNullOrWhiteSpace(houseOwner.Email))
+                        {
+                            string toEmail = houseOwner.Email;
+                            string subject = "Lịch hẹn với khách đã quá hạn!";
+                            string body =
+                                $@"
+                                    <p>Xin chào <b>{houseOwner.UserName}</b>,</p>
+                                    <p>Lịch hẹn với khách vào ngày <b>{appointment.AppointmentDate:dd/MM/yyyy HH:mm}</b> tại nhà trọ <b>{appointment.House?.NameHouse}</b> đã quá hạn và chưa được xác nhận.</p>
+                                    <p>Vui lòng kiểm tra lại để đảm bảo quá trình đặt lịch không bị gián đoạn.</p>
+                                    <br>
+                                    <p>Trân trọng,<br>Hệ Thống Đặt Lịch Hẹn</p>";
+
+                            await emailService.SendEmailAsync(
+                                "Appointment",
+                                toEmail,
+                                subject,
+                                body
+                            );
+                        }
+                    }
+
                     appointment.IsNotified = true; // Đánh dấu là đã thông báo
+                }
+
+                // Gửi thông báo cho chủ trọ trước 30 phút (nếu chưa nhắc)
+                var upcomingAppointments = await context
+                    .Appointments.Where(a =>
+                        a.AppointmentDate > now
+                        && a.AppointmentDate <= now.AddDays(1)
+                        && a.Status == AppointmentStatus.Pending
+                        && !a.IsReminderSent
+                    )
+                    .Include(a => a.House)
+                    .ToListAsync();
+
+                foreach (var appointment in upcomingAppointments)
+                {
+                    var houseOwner = await context.Accounts.FindAsync(appointment.House.IdUser);
+                    if (houseOwner != null)
+                    {
+                        var notification = new Notification
+                        {
+                            UserId = houseOwner.IdUser,
+                            Message =
+                                $"⏰ Bạn có lịch hẹn với khách lúc {appointment.AppointmentDate:HH:mm dd/MM/yyyy} cho bài đăng '{appointment.House?.NameHouse}'.",
+                            CreatedAt = DateTime.Now,
+                            IsRead = false,
+                        };
+                        context.Notifications.Add(notification);
+
+                        if (!string.IsNullOrWhiteSpace(houseOwner.Email))
+                        {
+                            string toEmail = houseOwner.Email;
+                            string subject = "Nhắc nhở lịch hẹn sắp tới!";
+                            string body =
+                                $@"
+                                    <p>Xin chào <b>{houseOwner.UserName}</b>,</p>
+                                    <p>Bạn có lịch hẹn với khách vào lúc <b>{appointment.AppointmentDate:HH:mm dd/MM/yyyy}</b> tại nhà trọ <b>{appointment.House?.NameHouse}</b>.</p>
+                                    <p>Vui lòng chuẩn bị tiếp đón khách đúng giờ.</p>
+                                    <br>
+                                    <p>Trân trọng,<br>Hệ Thống Đặt Lịch Hẹn</p>";
+
+                            await emailService.SendEmailAsync(
+                                "Appointment",
+                                toEmail,
+                                subject,
+                                body
+                            );
+                        }
+
+                        // Đánh dấu là đã nhắc
+                        appointment.IsReminderSent = true;
+                    }
                 }
 
                 await context.SaveChangesAsync();

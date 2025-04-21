@@ -5,13 +5,13 @@
 namespace KLTN.Migrations
 {
     /// <inheritdoc />
-    public partial class AddIsNotifiedToAppointment : Migration
+    public partial class AddIsReminderSentToAppointment : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             // migrationBuilder.AddColumn<bool>(
-            //     name: "IsNotified",
+            //     name: "IsReminderSent",
             //     table: "Appointments",
             //     type: "bit",
             //     nullable: false,
@@ -22,7 +22,7 @@ namespace KLTN.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsNotified",
+                name: "IsReminderSent",
                 table: "Appointments");
         }
     }

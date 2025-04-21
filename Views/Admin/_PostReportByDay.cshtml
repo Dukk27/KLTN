@@ -7,33 +7,35 @@
 </head>
 
 <body>
-    <h3 class="text-center mt-3">Thống kê bài đăng theo ngày</h3>
+    <h3 class="text-center mt-3 mb-3">Thống kê bài đăng theo ngày</h3>
 
-    <div class="mb-3">
-        <label>Từ ngày:</label>
-        <input type="date" id="startDate" class="form-control" style="display:inline-block; width: 200px;" />
+    <div class="report-wrapper text-center">
+        <div class="date-filter-container">
+            <label>Từ ngày:</label>
+            <input type="date" id="startDate" class="form-control" />
 
-        <label class="ms-3">Đến ngày:</label>
-        <input type="date" id="endDate" class="form-control" style="display:inline-block; width: 200px;" />
+            <label>Đến ngày:</label>
+            <input type="date" id="endDate" class="form-control" />
 
-        <button class="btn btn-primary ms-3" onclick="loadReportByDate()">Lọc</button>
+            <button class="btn btn-primary" onclick="loadReportByDate()">Lọc</button>
+        </div>
+
+        <table class="table">
+            <thead id="reportHeader" style="display: none;">
+                <tr>
+                    <th>Ngày đăng</th>
+                    <th>ID</th>
+                    <th>Địa chỉ</th>
+                    <th>Giá</th>
+                    <th>Trạng thái</th>
+                    <th>Người đăng</th>
+                </tr>
+            </thead>
+            <tbody id="reportBody">
+                
+            </tbody>
+        </table>
     </div>
-
-    <table class="table">
-        <thead id="reportHeader" style="display: none;">
-            <tr>
-                <th>Ngày đăng</th>
-                <th>ID</th>
-                <th>Địa chỉ</th>
-                <th>Giá</th>
-                <th>Trạng thái</th>
-                <th>Người đăng</th>
-            </tr>
-        </thead>
-        <tbody id="reportBody">
-            
-        </tbody>
-    </table>
 
     <script>
         function initDateDefaults() {

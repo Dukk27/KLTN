@@ -190,16 +190,10 @@ namespace KLTN.Repositories
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                string normalizedSearch = NormalizeAddress(searchString);
-
-                query = query
-                    .AsEnumerable() // chuyển sang client-side evaluation
-                    .Where(h =>
-                        h.HouseDetails.Any(hd =>
-                            NormalizeAddress(hd.Address).Contains(normalizedSearch)
-                        ) || NormalizeAddress(h.NameHouse).Contains(normalizedSearch)
-                    )
-                    .AsQueryable(); // nếu cần tiếp tục chain EF methods phía sau
+                query = query.Where(h =>
+                    h.HouseDetails.Any(hd => EF.Functions.Like(hd.Address, $"%{searchString}%"))
+                    || EF.Functions.Like(h.NameHouse, $"%{searchString}%")
+                );
             }
 
             if (!string.IsNullOrEmpty(priceRange))

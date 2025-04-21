@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "aWRBePN/xpGl2IQ7plBnuUBhtximdBFCQQl6B/V2tnw=",
+  "Hash": "VhameHxgw8rczW8toknUowjMSdbV+g2FeSphAJ1sFjY=",
   "Source": "KLTN",
   "BasePath": "_content/KLTN",
   "Mode": "Default",
@@ -2428,6 +2428,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\houses\\7d7a6196-ac47-416f-867c-1e83e4fae923.jpg"
+    },
+    {
+      "Identity": "D:\\KLTN\\KLTN\\wwwroot\\img\\houses\\7fe8633c-4d0a-4f44-98d3-54783e03a133.jpg",
+      "SourceId": "KLTN",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\KLTN\\KLTN\\wwwroot\\",
+      "BasePath": "_content/KLTN",
+      "RelativePath": "img/houses/7fe8633c-4d0a-4f44-98d3-54783e03a133.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\houses\\7fe8633c-4d0a-4f44-98d3-54783e03a133.jpg"
     },
     {
       "Identity": "D:\\KLTN\\KLTN\\wwwroot\\img\\houses\\8112ce5a-cc8b-42c4-ad7a-6e9b25f6660f.jpg",

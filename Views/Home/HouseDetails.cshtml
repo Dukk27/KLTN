@@ -121,7 +121,7 @@
                                 </div>
                                 index++;
                             }
-                        }
+                        } 
                     }
                 </div>
                 <!-- Nút điều hướng -->
@@ -141,7 +141,7 @@
                 @foreach (var detail in Model.HouseDetails)
                 {
                     <div class="address-box mb-3">
-                        <p style="font-size: 16px;">
+                        <p style="font-size: 18px;">
                             <strong>Địa chỉ:</strong>
                             <span>@detail.Address</span>
                         </p>
@@ -365,17 +365,22 @@
                         var houseDetailsList = otherHouse.HouseDetails?.ToList();
                         var firstDetail = houseDetailsList?.FirstOrDefault();
 
-                        <li class="list-group-item position-relative" style="min-height: 100px;">
+                        <li class="list-group-item">
+                            <a href="@Url.Action("Detail", "Home", new { id = otherHouse.IdHouse })" class="full-link-overlay"></a>
                             <div class="d-flex align-items-start">
                                 @if (firstDetail != null)
                                 {
+                                    var timePost = firstDetail.TimePost; 
+                                    var daysAgo = (DateTime.Now - timePost).Days;
+
                                     <img src="@firstDetail.Image.Split(',')[0]" alt="Hình ảnh nhà"
-                                        style="width: 150px; height: 120px; object-fit: cover; margin-right: 15px; margin-top:10px;" />
+                                        style="width: 150px; height: 160px; object-fit: cover; margin-right: 15px; margin-top:10px;" />
                                     <div class="house-info-preview" style="flex: 1;">
                                         <h5>@otherHouse.NameHouse</h5>
                                         <p><strong>Địa chỉ:</strong> @firstDetail.Address</p>
                                         <p><strong>Diện tích:</strong> @firstDetail.DienTich m²</p>
-                                        <p><strong>Giá:</strong> @firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</p>
+                                        <p><strong>Giá:</strong>&nbsp;<label style="color: red"> @firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</label></p>
+                                        <p><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy") (<em>@daysAgo ngày trước</em>)</p>
                                     </div>
 
                                     <a href="@Url.Action("Detail", "Home", new { id = otherHouse.IdHouse })"
@@ -390,11 +395,12 @@
                     }
                 </ul>
             }
-            else 
+            else
             {
                 <p class="no-houses-message">Chủ nhà chưa có phòng trọ khác.</p>
             }
         </div>
+
 
         <label class="section-title">Có Thể Bạn Quan Tâm</label>
         <div class="section-underline"></div>
@@ -407,17 +413,22 @@
                     {
                         var firstDetail = house.HouseDetails?.FirstOrDefault();
 
-                        <li class="list-group-item position-relative" style="min-height: 100px;">
+                        <li class="list-group-item">
+                            <a href="@Url.Action("Detail", "Home", new { id = house.IdHouse })" class="full-link-overlay"></a>
                             <div class="d-flex align-items-start">
                                 @if (firstDetail != null)
                                 {
+                                    var timePost = firstDetail.TimePost; 
+                                    var daysAgo = (DateTime.Now - timePost).Days;
+
                                     <img src="@firstDetail.Image.Split(',')[0]" alt="Hình ảnh nhà"
-                                        style="width: 150px; height: 120px; object-fit: cover; margin-right: 15px; margin-top:10px;" />
+                                        style="width: 150px; height: 160px; object-fit: cover; margin-right: 15px; margin-top:10px;" />
                                     <div class="house-info-preview" style="flex: 1;">
                                         <h5>@house.NameHouse</h5>
                                         <p><strong>Địa chỉ:</strong> @firstDetail.Address</p>
                                         <p><strong>Diện tích:</strong> @firstDetail.DienTich m²</p>
-                                        <p><strong>Giá:</strong> @firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</p>
+                                        <p><strong>Giá:</strong>&nbsp;<label style="color: red"> @firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</label></p>
+                                        <p><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy") (<em>@daysAgo ngày trước</em>)</p>
                                     </div>
 
                                     <a href="@Url.Action("Detail", "Home", new { id = house.IdHouse })"

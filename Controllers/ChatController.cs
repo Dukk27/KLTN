@@ -204,7 +204,7 @@ namespace KLTN.Controllers
                 )
                 {
                     int receiverId = (currentUserId.Value == id1) ? id2 : id1;
-                    
+
                     // Cập nhật tin nhắn chưa đọc thành đã đọc
                     var unreadMessages = _context
                         .Messages.Where(m =>
