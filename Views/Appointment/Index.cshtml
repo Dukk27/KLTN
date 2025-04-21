@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="~/css/iziToast.css">
     <link rel="stylesheet" href="~/css/appointment.css">
 </head>
-
+ 
 <body>
     <div class="appointment-page">
 
@@ -41,7 +41,7 @@
     else
     {
         <div class="table-container"> 
-            <div class="d-flex justify-content-between align-items-center mb-3 px-2">
+            @* <div class="d-flex justify-content-between align-items-center mb-3 px-2">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="select-all">
                     <label class="form-check-label" for="select-all">Chọn tất cả</label>
@@ -50,7 +50,7 @@
                 <button class="btn btn-danger delete-selected-btn ms-auto" disabled>
                     <i class="fas fa-trash-alt"></i> Xóa đã chọn
                 </button>
-            </div>
+            </div> *@
 
             <div class="accordion" id="appointmentAccordion">
                 @foreach (var appt in Model)
@@ -58,15 +58,20 @@
                     <div class="accordion-item mb-2 @(appt.Status == AppointmentStatus.Confirmed ? "confirmed-item" : appt.Status == AppointmentStatus.Cancelled ? "cancelled-item" : "")" data-id="@appt.AppointmentId">
                         <h2 class="accordion-header" id="heading-@appt.AppointmentId">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@appt.AppointmentId" aria-expanded="false">
-                                <input type="checkbox" class="form-check-input me-2 appointment-checkbox" value="@appt.AppointmentId" />
-                                <strong>@appt.User?.UserName</strong> - Ngày hẹn @appt.AppointmentDate.ToString("dd/MM/yyyy HH:mm")
-                            </button>
+                                @* <input type="checkbox" class="form-check-input me-2 appointment-checkbox" value="@appt.AppointmentId" /> *@
+                                <strong>@appt.House?.NameHouse</strong>&nbsp;- Ngày hẹn @appt.AppointmentDate.ToString("dd/MM/yyyy HH:mm")
+                            </button>                  
                         </h2> 
                         <div id="collapse-@appt.AppointmentId" class="accordion-collapse collapse" data-bs-parent="#appointmentAccordion">
                             <div class="accordion-body">
-                                <p><strong>Số điện thoại</strong> @appt.User?.PhoneNumber</p>
-                                <p><strong>Email</strong> @appt.User?.Email</p>
-                                <p><strong>Tên bài đăng</strong> @appt.House?.NameHouse</p>
+                                <p><strong>Người đặt hẹn:</strong> @appt.User?.UserName</p>
+                                <p><strong>Số điện thoại:</strong> @appt.User?.PhoneNumber</p>
+                                <p><strong>Email:</strong> @appt.User?.Email</p>
+                                <p><strong>Tên bài đăng:</strong> 
+                                    <a style= "text-decoration: none;" href="@Url.Action("Detail", "Home", new { id = appt.House?.IdHouse })">
+                                        <b>@appt.House?.NameHouse</b>
+                                    </a>
+                                </p>                                 
                                 <p><strong>Trạng thái</strong>
                                     @if (appt.Status == AppointmentStatus.Pending)
                                     {
@@ -82,14 +87,28 @@
                                     }
                                 </p>
 
+                                @{
+                                    var currentUserId = Context.Session.GetInt32("UserId") ?? 0;
+                                    var otherUserId = appt.User?.IdUser ?? 0;
+                                    var conversationId = currentUserId < otherUserId
+                                        ? $"{currentUserId}-{otherUserId}"
+                                        : $"{otherUserId}-{currentUserId}";
+                                }
+                                <a href="@Url.Action("ChatList", "Chat", new { conversationId = conversationId })"
+                                class="btn btn-sm btn-primary chat-btn">
+                                    <i class="fas fa-comments"></i> Nhắn tin với @appt.User?.UserName
+                                </a>
+    
                                 @if (appt.Status == AppointmentStatus.Pending)
                                 {
-                                    <button class="btn btn-sm btn-success confirm-btn" data-id="@appt.AppointmentId">Xác nhận</button>
-                                    <button class="btn btn-sm btn-danger cancel-btn" data-id="@appt.AppointmentId">Hủy</button>
+                                    <div class="mt-2">
+                                        <button class="btn btn-sm btn-success confirm-btn" data-id="@appt.AppointmentId">Xác nhận</button>
+                                        <button class="btn btn-sm btn-danger cancel-btn" data-id="@appt.AppointmentId">Hủy</button>
+                                    </div>
                                 }
                                 else
                                 {
-                                    <span class="text-muted">Không khả dụng</span>
+                                    <div class="text-muted mt-2">Không khả dụng</div>
                                 }
                             </div>
                         </div>

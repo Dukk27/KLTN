@@ -94,6 +94,18 @@
         .modal-body {
             padding-right: 0 !important;
         }
+
+        /* Hiệu ứng hover cho các mục trong dropdown */
+        .dropdown-item:hover {
+            background-color: #0140A0; /* Màu nền khi hover */
+            color: #000000; /* Màu chữ khi hover */
+            cursor: pointer; /* Hiển thị con trỏ chuột khi hover */
+        }
+
+        /* Tùy chỉnh cho dropdown nếu cần */
+        .dropdown-item {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
     </style>
 </head>
 
@@ -203,6 +215,9 @@
                                         href='@Url.Action("Edit", "Account", new { id = @Context.Session.GetInt32("UserId") })'>
                                         <i class="fas fa-edit"></i> Thông tin cá nhân
                                     </a>
+                                    <a class="dropdown-item" href='@Url.Action("MyAppointments", "Appointment")'>
+                                        <i class="fas fa-calendar-alt"></i> Lịch hẹn tôi đã đặt
+                                    </a>
                                     <li><a class="dropdown-item" href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                                 </ul>
                             </li>
@@ -300,8 +315,8 @@
     </div>
 
     <!-- Modal đăng bài -->
-    <div class="modal fade" id="createHouseModal" tabindex="-1" aria-labelledby="createHouseModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="createHouseModal" tabindex="-1" role="dialog" aria-labelledby="createHouseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createHouseModalLabel">Đăng tin mới</h5>

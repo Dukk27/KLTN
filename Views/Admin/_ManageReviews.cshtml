@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-hover">
             <thead>
                 <tr>
                     <th><input type="checkbox" id="select-all"></th>
@@ -45,7 +45,8 @@
                             <a href="@Url.Action("Detail", "Home", new { id = review.IdHouseNavigation?.IdHouse })"class="house-link">
                                 @review.IdHouseNavigation?.NameHouse
                             </a>
-                        </td>                        <td>@review.Content</td>
+                        </td>                        
+                        <td>@review.Content</td>
                         <td>@review.Rating</td>
                         <td>@review.ReviewDate?.ToString("dd/MM/yyyy")</td>
                     </tr>

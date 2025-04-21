@@ -1,3 +1,7 @@
+body {
+  background-color: #ffffff;
+}
+
 .chat-message {
   word-wrap: break-word;
   white-space: pre-wrap;

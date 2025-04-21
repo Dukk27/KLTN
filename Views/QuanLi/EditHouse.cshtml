@@ -50,8 +50,8 @@
 
         <div class="form-group">
             <label asp-for="HouseDetail.Price">Giá thuê *</label>
-<input type="text" class="form-control currency-price" id="formattedPrice" value="@Model.HouseDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN"))" />
-<input type="hidden" name="HouseDetail.Price" id="HouseDetail_Price" value="@Model.HouseDetail.Price" />
+                <input type="text" class="form-control currency-price" id="formattedPrice" value="@Model.HouseDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN"))" />
+                <input type="hidden" name="HouseDetail.Price" id="HouseDetail_Price" value="@Model.HouseDetail.Price" />
             <span asp-validation-for="HouseDetail.Price" class="text-danger"></span>
         </div>
 
@@ -123,7 +123,7 @@
 
         <div class="form-group">
             <label for="imageFiles">Hình ảnh *</label>
-            <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple />
+            <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple accept="image/*" />
 
             @if (!string.IsNullOrEmpty(Model.HouseDetail?.Image))
             {

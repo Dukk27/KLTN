@@ -210,6 +210,23 @@ namespace KLTN.Controllers
             _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
 
+            // Gửi email cho người đặt lịch hẹn
+            if (appointment.User != null)
+            {
+                string toEmail = appointment.User.Email;
+                string subject = "Lịch hẹn của bạn đã bị hủy!";
+                string body =
+                    $@"
+                    <p>Xin chào <b>{appointment.User.UserName}</b>,</p>
+                    <p>Lịch hẹn xem nhà của bạn vào ngày <b>{appointment.AppointmentDate:dd/MM/yyyy HH:mm}</b> 
+                    tại nhà trọ <b>{appointment.House?.NameHouse}</b> đã bị hủy bởi chủ nhà.</p>
+                    <p>Vui lòng kiểm tra lại các lịch hẹn của bạn trên hệ thống.</p>
+                    <br>
+                    <p>Trân trọng,<br>Hệ Thống Đặt Lịch Hẹn</p>";
+
+                await _emailService.SendEmailAsync("Appointment", toEmail, subject, body);
+            }
+
             return Json(
                 new { success = true, message = "Lịch hẹn đã bị hủy và thông báo đã được gửi!" }
             );
@@ -252,6 +269,38 @@ namespace KLTN.Controllers
             _context.SaveChanges();
 
             return Json(new { success = true, message = "Đã xóa các lịch hẹn đã chọn!" });
+        }
+
+        // Hiển thị lịch hẹn của người dùng đã đặt
+        [Authorize]
+        public IActionResult MyAppointments(string filter = "valid")
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var now = DateTime.Now;
+
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            IQueryable<Appointment> query = _context
+                .Appointments.Include(a => a.House)
+                .ThenInclude(h => h.IdUserNavigation)
+                .Where(a => a.UserId == userId); // Người đặt lịch là chính user
+
+            if (filter == "expired")
+            {
+                query = query.Where(a => a.AppointmentDate < now);
+            }
+            else
+            {
+                query = query.Where(a => a.AppointmentDate >= now);
+            }
+
+            var appointments = query.OrderBy(a => a.AppointmentDate).ToList();
+
+            ViewBag.Filter = filter;
+            return View("MyAppointments", appointments);
         }
     }
 }

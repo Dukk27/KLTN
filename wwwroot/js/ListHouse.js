@@ -69,28 +69,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-
-  // Đóng modal khi nhấn nút
-  document
-    .querySelectorAll("#closeModalBtn, #closeModalFooterBtn")
-    .forEach((btn) => {
-      btn.addEventListener("click", function () {
-        const modal = bootstrap.Modal.getInstance(
-          document.getElementById("createHouseModal")
-        );
-        if (modal) modal.hide();
-      });
-    });
-
-  // Đóng modal khi ấn bên ngoài
-  if (createHouseModal) {
-    createHouseModal.addEventListener("click", function (event) {
-      if (event.target === createHouseModal) {
-        const modalInstance = bootstrap.Modal.getInstance(createHouseModal);
-        if (modalInstance) modalInstance.hide();
-      }
-    });
-  }
 });
 
 // Điều hướng đến trang chi tiết

@@ -148,15 +148,13 @@
     </div>
 
 
-    <!-- Modal Tạo Nhà Trọ - Với iframe để cô lập CSS -->
+    <!-- Modal Tạo Nhà Trọ -->
     <div class="modal fade" id="createHouseModal" tabindex="-1" role="dialog" aria-labelledby="createHouseModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createHouseModalLabel">Tạo bài đăng nhà trọ mới</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModalBtn">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0" id="createHouseModalBody">
                     <!-- Sử dụng iframe để cô lập CSS -->
@@ -271,6 +269,7 @@
                                                     <p class="card-text">
                                                         <strong>Ngày đăng:</strong> @timePost?.ToString("dd/MM/yyyy")
                                                     </p>
+
                                                     @if (!string.IsNullOrEmpty(timeAgoText))
                                                     {
                                                         <p class="card-text text-muted" style="font-size: 0.9em;">

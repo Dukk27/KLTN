@@ -95,3 +95,8 @@
   color: #6c757d;
   font-weight: bold;
 }
+
+table.table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}

@@ -1,5 +1,4 @@
 h2 {
-    font-family: Arial, sans-serif;
     color: #333;
     margin-top: 20px;
     margin-bottom: 40px;
@@ -83,12 +82,15 @@ h2 {
 }
 
 .confirm-btn,
-.cancel-btn {
+.cancel-btn, .chat-btn {
     padding: 6px 14px;
     font-size: 14px;
     font-weight: 500;
     border-radius: 0.4rem;
     transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.chat-btn {
+    min-width: 154px;
 }
 
 .confirm-btn {

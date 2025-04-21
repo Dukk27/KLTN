@@ -22,13 +22,9 @@ td {
   word-wrap: break-word; /* Đảm bảo chữ không bị tràn ra ngoài */
 }
 
-thead {
+table.table th {
   background-color: #f4f4f4;
-}
-
-th {
   font-weight: bold;
-  background-color: #f9f9f9;
 }
 
 button {

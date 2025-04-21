@@ -1,0 +1,109 @@
+@model IEnumerable<KLTN.Models.Appointment>
+
+<head>
+    <link rel="stylesheet" href="~/css/iziToast.css">
+    <link rel="stylesheet" href="~/css/appointment.css">
+</head>
+
+<body>
+    <div class="appointment-page">
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Lịch Hẹn Của Tôi</li>
+            </ol>
+        </nav>
+
+        <h2>Lịch Hẹn Tôi Đã Đặt</h2>
+
+        <div class="d-flex justify-content-center mb-3">
+            <form method="get" class="d-inline">
+                <select id="filter" name="filter" class="form-select d-inline w-auto" onchange="this.form.submit()">
+                    @if ((string)ViewBag.Filter == "expired")
+                    {
+                        <option value="valid">Lịch còn hạn</option>
+                        <option value="expired" selected>Lịch đã hết hạn</option>
+                    }
+                    else
+                    {
+                        <option value="valid" selected>Lịch còn hạn</option>
+                        <option value="expired">Lịch đã hết hạn</option>
+                    }
+                </select>
+            </form>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="no-appointments">Bạn chưa đặt lịch hẹn nào.</div>
+        }
+        else
+        {
+            <div class="table-container">
+                <div class="accordion" id="appointmentAccordion">
+                    @foreach (var appt in Model)
+                    {
+                        <div class="accordion-item mb-2 @(appt.Status == AppointmentStatus.Confirmed ? "confirmed-item" : appt.Status == AppointmentStatus.Cancelled ? "cancelled-item" : "")" data-id="@appt.AppointmentId">
+                            <h2 class="accordion-header" id="heading-@appt.AppointmentId">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@appt.AppointmentId" aria-expanded="false">
+                                    <strong>@appt.House?.NameHouse</strong>&nbsp;- Ngày hẹn @appt.AppointmentDate.ToString("dd/MM/yyyy HH:mm")
+                                </button>
+                            </h2>
+                            <div id="collapse-@appt.AppointmentId" class="accordion-collapse collapse" data-bs-parent="#appointmentAccordion">
+                                <div class="accordion-body">
+                                    <p><strong>Chủ bài đăng:</strong> @appt.House?.IdUserNavigation?.UserName</p>
+                                    <p><strong>Số điện thoại:</strong> @appt.House?.IdUserNavigation?.PhoneNumber</p>
+                                    <p><strong>Email:</strong> @appt.House?.IdUserNavigation?.Email</p>
+
+                                    <p><strong>Tên bài đăng:</strong> 
+                                        <a style= "text-decoration: none;" href="@Url.Action("Detail", "Home", new { id = appt.House?.IdHouse })">
+                                            <b>@appt.House?.NameHouse</b>
+                                        </a>
+                                    </p>     
+                                                                  
+                                    <p><strong>Trạng thái</strong>
+                                        @if (appt.Status == AppointmentStatus.Pending)
+                                        {
+                                            <span class="badge bg-warning text-dark">Chờ xác nhận</span>
+                                        }
+                                        else if (appt.Status == AppointmentStatus.Confirmed)
+                                        {
+                                            <span class="badge bg-success">Đã được xác nhận</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Đã bị hủy</span>
+                                        }
+                                    </p>
+
+                                    @{
+                                        var currentUserId = Context.Session.GetInt32("UserId") ?? 0;
+                                        var otherUserId = appt.House?.IdUserNavigation?.IdUser ?? 0;
+                                        var conversationId = currentUserId < otherUserId
+                                            ? $"{currentUserId}-{otherUserId}"
+                                            : $"{otherUserId}-{currentUserId}";
+                                    }
+
+                                    <a href="@Url.Action("ChatList", "Chat", new { conversationId = conversationId })"
+                                        class="btn btn-sm btn-primary chat-btn">
+                                        <i class="fas fa-comments"></i> Nhắn tin với chủ trọ
+                                    </a>
+
+                                    @if (appt.Status == AppointmentStatus.Pending)
+                                    {
+                                        <div class="mt-2 text-muted">Đang chờ chủ trọ xác nhận</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-muted mt-2">Không khả dụng</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</body>

@@ -80,7 +80,8 @@ builder.Services.AddScoped<HouseService>();
 builder.Services.AddScoped<IHouseTypeRepository, HouseTypeRepository>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddSingleton<EmailService>();
-builder.Services.AddHostedService<KLTN.Helpers.ExpiredAppointmentCheckerService>(); // Đảm bảo đúng namespace
+builder.Services.AddHostedService<KLTN.Helpers.ExpiredAppointmentCheckerService>();
+// builder.Services.AddHostedService<AppointmentCleanupService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddTransient<ChatHub>();
