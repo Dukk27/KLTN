@@ -12,13 +12,13 @@
         <input type="hidden" asp-for="House.IdHouse" />
 
         <div class="form-group">
-            <label asp-for="House.NameHouse">Tên nhà trọ *</label>
+            <label asp-for="House.NameHouse">Tiêu đề bài đăng <span style="color:red">*</span></label>
             <input asp-for="House.NameHouse" class="form-control" />
             <span asp-validation-for="House.NameHouse" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label>Loại nhà trọ *</label>
+            <label>Loại nhà trọ <span style="color:red">*</span></label>
             <select asp-for="SelectedHouseType" asp-items="Model.HouseTypes" class="form-control">
                 <option value="">-- Chọn loại nhà trọ --</option>
             </select>
@@ -26,7 +26,7 @@
         </div>
 
         <div class="form-group position-relative">
-            <label for="fullAddress">Địa chỉ *</label>
+            <label for="fullAddress">Địa chỉ <span style="color:red">*</span></label>
             <input type="text" id="fullAddress" class="form-control" value="@Model.HouseDetail.Address" autocomplete="off" />
             <input type="hidden" id="address" name="HouseDetail.Address" value="@Model.HouseDetail.Address" />
             <ul id="addressSuggestions" class="list-group position-absolute w-100" style="z-index:1000;"></ul>
@@ -49,20 +49,20 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="HouseDetail.Price">Giá thuê *</label>
+            <label asp-for="HouseDetail.Price">Giá thuê <span style="color:red">*</span></label>
                 <input type="text" class="form-control currency-price" id="formattedPrice" value="@Model.HouseDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN"))" />
                 <input type="hidden" name="HouseDetail.Price" id="HouseDetail_Price" value="@Model.HouseDetail.Price" />
             <span asp-validation-for="HouseDetail.Price" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="HouseDetail.DienTich">Diện tích (m²) *</label>
+            <label asp-for="HouseDetail.DienTich">Diện tích (m²) <span style="color:red">*</span></label>
             <input asp-for="HouseDetail.DienTich" class="form-control" />
             <span asp-validation-for="HouseDetail.DienTich" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label for="electricityBillingMethod">Cách tính tiền điện *</label>
+            <label for="electricityBillingMethod">Cách tính tiền điện <span style="color:red">*</span></label>
             <select id="electricityBillingMethod" class="form-control">
                 <option value="" disabled selected>Chọn cách tính tiền điện</option>
                 <option value="theo-so">Tính theo số điện (VNĐ/kWh)</option>
@@ -71,13 +71,13 @@
             </select>
         </div>
         <div class="form-group">
-            <label asp-for="HouseDetail.TienDien">Tiền điện *</label>
+            <label asp-for="HouseDetail.TienDien">Tiền điện <span style="color:red">*</span></label>
             <input asp-for="HouseDetail.TienDien" class="form-control" id="tienDien" />
             <span asp-validation-for="HouseDetail.TienDien" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label for="waterBillingMethod">Cách tính tiền nước *</label>
+            <label for="waterBillingMethod">Cách tính tiền nước <span style="color:red">*</span></label>
             <select id="waterBillingMethod" class="form-control">
                 <option value="" disabled selected>Chọn cách tính tiền nước</option>
                 <option value="theo-so">Tính theo số nước (VNĐ/m³)</option>
@@ -86,19 +86,19 @@
             </select>
         </div>
         <div class="form-group">
-            <label asp-for="HouseDetail.TienNuoc">Tiền nước *</label>
+            <label asp-for="HouseDetail.TienNuoc">Tiền nước <span style="color:red">*</span></label>
             <input asp-for="HouseDetail.TienNuoc" class="form-control" id="tienNuoc" />
             <span asp-validation-for="HouseDetail.TienNuoc" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="HouseDetail.TienDv">Tiền dịch vụ *</label>
+            <label asp-for="HouseDetail.TienDv">Tiền dịch vụ <span style="color:red">*</span></label>
             <input asp-for="HouseDetail.TienDv" class="form-control" />
             <span asp-validation-for="HouseDetail.TienDv" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="HouseDetail.Describe">Mô tả</label>
+            <label asp-for="HouseDetail.Describe">Mô tả <span style="color:red">*</span></label>
             <textarea asp-for="HouseDetail.Describe" class="form-control"></textarea>
             <span asp-validation-for="HouseDetail.Describe" class="text-danger"></span>
         </div>
@@ -122,7 +122,7 @@
         </div>
 
         <div class="form-group">
-            <label for="imageFiles">Hình ảnh *</label>
+            <label for="imageFiles">Hình ảnh <span style="color:red">*</span></label>
             <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple accept="image/*" />
 
             @if (!string.IsNullOrEmpty(Model.HouseDetail?.Image))
@@ -147,7 +147,7 @@
         </div>
 
         <div class="form-group">
-            <label>Tiện ích *</label>
+            <label>Tiện ích <span style="color:red">*</span></label>
             @foreach (var amenity in Model.Amenities)
             {
                 <div class="form-check">

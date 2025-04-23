@@ -25,6 +25,7 @@ namespace KLTN.Models
         [Range(1, 2, ErrorMessage = "Vai trò không hợp lệ.")]
         public int Role { get; set; }
 
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc.")]
         public string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Email là bắt buộc.")]

@@ -64,8 +64,9 @@ namespace KLTN.Controllers
             {
                 if (lockoutEndTime > DateTime.Now)
                 {
+                    var remainingTime = lockoutEndTime - DateTime.Now;
                     ViewBag.Error =
-                        $"Tài khoản của bạn đã bị khóa. Vui lòng thử lại sau {lockoutEndTime - DateTime.Now}.";
+                        $"Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau {remainingTime.Minutes} phút {remainingTime.Seconds} giây.";
                     return View();
                 }
                 else

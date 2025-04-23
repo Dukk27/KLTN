@@ -150,7 +150,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        @if (string.IsNullOrEmpty(userName))
+                        @if (string.IsNullOrEmpty(userName)) 
                         {
                             <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("Index", User.IsInRole("Admin") ? "Admin" : "Home")">Trang

@@ -36,21 +36,21 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label asp-for="HouseDetail.DienTich">Diện tích (m²) *</label>
+                    <label asp-for="HouseDetail.DienTich">Diện tích (m²) <span style="color:red">*</span></label>
                     <input asp-for="HouseDetail.DienTich" class="form-control" placeholder="Diện tích (VD: 25)" />
                     <span asp-validation-for="HouseDetail.DienTich" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label asp-for="HouseDetail.Price">Giá thuê (VNĐ/tháng) *</label>
+                    <label asp-for="HouseDetail.Price">Giá thuê (VNĐ/tháng) <span style="color:red">*</span></label>
                     <input asp-for="HouseDetail.Price" class="form-control" placeholder="Giá thuê (VD: 3.000.000)" />
                     <span asp-validation-for="HouseDetail.Price" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label asp-for="House.NameHouse">Tiêu đề *</label>
+                    <label asp-for="House.NameHouse">Tiêu đề bài đăng <span style="color:red">*</span></label>
                     <input asp-for="House.NameHouse" class="form-control"
                         placeholder="Tiêu đề (VD: Phòng trọ giá rẻ)" />
                     <span asp-validation-for="House.NameHouse" class="text-danger"></span>
@@ -61,7 +61,7 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="electricityBillingMethod">Cách tính tiền điện *</label>
+                    <label for="electricityBillingMethod">Cách tính tiền điện <span style="color:red">*</span></label>
                     <select id="electricityBillingMethod" class="form-control">
                         <option value="theo-so">Tính theo số điện (VNĐ/kWh)</option>
                         <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
@@ -69,7 +69,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label asp-for="HouseDetail.TienDien">Giá điện *</label>
+                    <label asp-for="HouseDetail.TienDien">Giá điện <span style="color:red">*</span></label>
                     <input asp-for="HouseDetail.TienDien" class="form-control" id="tienDien"
                         placeholder="Giá điện (VD: 3.500)" />
                     <span asp-validation-for="HouseDetail.TienDien" class="text-danger"></span>
@@ -77,7 +77,7 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="waterBillingMethod">Cách tính tiền nước *</label>
+                    <label for="waterBillingMethod">Cách tính tiền nước <span style="color:red">*</span></label>
                     <select id="waterBillingMethod" class="form-control">
                         <option value="theo-so">Tính theo số nước (VNĐ/m³)</option>
                         <option value="theo-nguoi">Tính theo đầu người (VNĐ/tháng)</option>
@@ -85,7 +85,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label asp-for="HouseDetail.TienNuoc">Giá nước *</label>
+                    <label asp-for="HouseDetail.TienNuoc">Giá nước <span style="color:red">*</span></label>
                     <input asp-for="HouseDetail.TienNuoc" class="form-control" id="tienNuoc"
                         placeholder="Giá nước (VD: 10.000)" />
                     <span asp-validation-for="HouseDetail.TienNuoc" class="text-danger"></span>
@@ -93,7 +93,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label asp-for="HouseDetail.Describe">Mô tả</label>
+                    <label asp-for="HouseDetail.Describe">Mô tả <span style="color:red">*</span></label>
                     <textarea asp-for="HouseDetail.Describe" class="form-control" rows="5"
                         placeholder="Mô tả chi tiết về nhà trọ (VD: Phòng rộng rãi, có ban công...)"></textarea>
                     <span asp-validation-for="HouseDetail.Describe" class="text-danger"></span>
@@ -110,7 +110,7 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label>Loại nhà trọ *</label>
+                    <label>Loại nhà trọ <span style="color:red">*</span></label>
                     <select asp-for="SelectedHouseType" asp-items="Model.HouseTypes" class="form-control">
                         <option value="">-- Chọn loại nhà trọ --</option>
                     </select>
@@ -122,7 +122,7 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label asp-for="HouseDetail.TienDv">Giá dịch vụ khác *</label>
+                    <label asp-for="HouseDetail.TienDv">Giá dịch vụ khác <span style="color:red">*</span></label>
                     <input asp-for="HouseDetail.TienDv" class="form-control" placeholder="Giá dịch vụ (VD: 100.000)" />
                     <span asp-validation-for="HouseDetail.TienDv" class="text-danger"></span>
                 </div>
@@ -133,7 +133,7 @@
     <div class="section">
         <h4>Địa chỉ</h4>
         <div class="mt-2">
-            <label for="fullAddress">Địa chỉ cụ thể *</label>
+            <label for="fullAddress">Địa chỉ cụ thể <span style="color:red">*</span></label>
             <input type="text" id="fullAddress" class="form-control required"
                 placeholder="Địa chỉ cụ thể (VD: 96 Định Công, Phương Liệt, Thanh Xuân, Hà Nội)" required />
             <ul id="addressSuggestions" class="list-group"></ul>
@@ -185,7 +185,7 @@
     <div class="section">
         <h4>Hình ảnh</h4>
         <div class="form-group">
-            <label>Hình ảnh nhà trọ (Tối đa 5 ảnh) *</label>
+            <label>Hình ảnh nhà trọ (Tối đa 5 ảnh) <span style="color:red">*</span></label>
             <!-- chấp nhận mọi định dạng ảnh -->
             <input type="file" class="form-control" name="imageFiles" id="imageFiles" multiple accept="image/*" /> 
             <div class="image-preview mt-2 d-flex" id="imagePreview"></div>
@@ -225,7 +225,7 @@
                     $("#fullAddressError").text("Vui lòng nhập địa chỉ cụ thể");
                     isValid = false;
                 }
-
+ 
                 // Kiểm tra nếu địa chỉ không được chọn từ gợi ý
                 if (!$('#address').val().trim()) {
                     $('#fullAddressError').text("Vui lòng chọn địa chỉ từ danh sách gợi ý");

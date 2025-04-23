@@ -111,72 +111,69 @@
   padding: 4px 8px;
 }
 
-/* Responsive: Điều chỉnh cho các thiết bị nhỏ hơn */
-@media (max-width: 768px) {
-  .account-form {
-    width: 90%; /* Form chiếm 100% chiều rộng trên màn hình nhỏ */
-    margin: 20px; /* Giảm khoảng cách từ các cạnh */
-    padding: 15px; /* Giảm padding để phù hợp với không gian */
+@media (max-width: 992px) {
+  body {
+    padding: 15px;
+  }
+
+  .breadcrumb {
+    font-size: 14px;
+    flex-wrap: wrap;
   }
 
   .page-title {
-    font-size: 20px; /* Giảm kích thước tiêu đề */
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .account-form {
+    padding: 10px;
   }
 
   .form-group {
-    margin-bottom: 10px; /* Giảm khoảng cách giữa các nhóm nhập liệu */
+    margin-bottom: 16px;
   }
 
   .form-label {
-    font-size: 14px; /* Giảm kích thước font của nhãn */
+    font-size: 14px;
   }
 
   .form-control {
-    font-size: 14px; /* Giảm kích thước font của ô nhập liệu */
-    padding: 10px; /* Tăng padding để dễ nhập liệu */
+    font-size: 14px;
+    padding: 8px 10px;
   }
 
   .btn-change-password {
-    font-size: 14px; /* Giảm kích thước font của nút */
-    padding: 6px 10px; /* Giảm padding */
+    margin-top: 10px;
+    width: 100%;
   }
 
   .button-container {
-    flex-direction: column; /* Xếp các nút theo chiều dọc */
-    gap: 10px; /* Thêm khoảng cách giữa các nút */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
   }
 
-  .btn-primary,
-  .btn-secondary {
-    width: 100%; /* Các nút chiếm 100% chiều rộng */
+  .button-container button {
+    width: 100%;
   }
 
-  .btn-close {
-    width: 100%; /* Đảm bảo nút đóng chiếm toàn bộ chiều rộng */
-  }
-}
-
-@media (max-width: 480px) {
-  .page-title {
-    font-size: 18px; /* Giảm kích thước tiêu đề thêm một lần nữa */
+  /* Modal chỉnh cho vừa màn hình nhỏ */
+  .modal-dialog {
+    margin: 10px;
   }
 
-  .form-control {
-    font-size: 10px; /* Giảm kích thước font cho ô nhập liệu */
-    padding: 8px; /* Giảm padding để tiết kiệm không gian */
+  .modal-content {
+    padding: 10px;
   }
 
-  .btn-change-password {
-    font-size: 10px; /* Giảm kích thước font cho nút */
-    padding: 6px 8px; /* Giảm padding thêm */
+  .input-group .form-control {
+    flex: 1;
   }
 
-  .btn-primary,
-  .btn-secondary {
-    font-size: 12px; /* Giảm kích thước font cho các nút */
-  }
-
-  .button-container {
-    gap: 8px; /* Giảm khoảng cách giữa các nút */
+  .input-group .btn {
+    padding: 0 10px;
   }
 }

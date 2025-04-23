@@ -281,7 +281,7 @@ body {
     padding: 10px 15px;
   }
 
-  .navbar-nav {
+  .navbar-nav { 
     flex-direction: column;
     gap: 10px;
   }
@@ -297,5 +297,40 @@ body {
 
   .navbar-brand img {
     max-height: 45px;
+  }
+
+  /* Dropdown căn giữa */
+  .navbar .dropdown-menu {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90vw;
+    max-width: 400px;
+    z-index: 1050;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Canh giữa icon chuông và giữ layout */
+  #notificationDropdown {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Badge thông báo không bị lệch */
+  #notificationDropdown .badge {
+    position: absolute !important;
+    top: -5px;
+    right: -10px;
+    transform: none;
+  }
+
+  /* Dropdown item spacing */
+  .dropdown-menu .dropdown-item {
+    white-space: normal;
+    padding: 10px 12px;
+    text-align: center;
   }
 }

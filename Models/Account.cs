@@ -30,8 +30,8 @@ namespace KLTN.Models
         [Range(1, 2, ErrorMessage = "Vai trò không hợp lệ.")]
         public int Role { get; set; }
 
-        [Phone]
-        [StringLength(15, ErrorMessage = "Số điện thoại không hợp lệ.")]
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc.")]
+        [StringLength(10, ErrorMessage = "Số điện thoại không hợp lệ.")]
         public string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Email là bắt buộc.")]
