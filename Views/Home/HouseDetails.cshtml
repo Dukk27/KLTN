@@ -287,7 +287,7 @@
             @if (Model.Reviews != null && Model.Reviews.Any())
             {
                 <ul class="review-list">
-                    @foreach (var review in Model.Reviews)
+                @foreach (var review in Model.Reviews.Where(r => !r.IdUserNavigation.IsLocked))
                     { 
                         <li class="review-item">
                             <!-- Tên người đánh giá, Ngày đánh giá và Rating (Số sao) cùng nằm trên 1 hàng -->
@@ -442,7 +442,7 @@
                         </li>
                     }
                 </ul>
-            }
+            } 
             else
             {
                 <p class="no-houses-message">Không có nhà trọ gợi ý.</p>

@@ -66,6 +66,10 @@
                                     {
                                         <span class="badge bg-danger">Bị từ chối.<br> Hãy xem lý do ở thông báo</span>
                                     }
+                                    else if (house.Status == HouseStatus.Expired)
+                                    {
+                                        <span class="badge bg-warning">Yêu cầu cập nhật lại.<br> Bài đăng đã quá 30 ngày</span>
+                                    }
                                 </td>
                                 <td>
                                     <div class="d-flex flex-wrap gap-1">

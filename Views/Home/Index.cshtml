@@ -240,27 +240,29 @@
                                                     </p>
                                                     @{
                                                         var timePost = house.HouseDetails.FirstOrDefault()?.TimePost;
-                                                        TimeSpan? timeSincePost = timePost.HasValue ? DateTime.Now - timePost.Value : (TimeSpan?)null;
+                                                        var timeUpdate = house.HouseDetails.FirstOrDefault()?.TimeUpdate;
+
+                                                        TimeSpan? timeSinceUpdate = timeUpdate.HasValue ? DateTime.Now - timeUpdate.Value : (TimeSpan?)null;
 
                                                         string timeAgoText = "";
 
-                                                        if (timeSincePost.HasValue)
+                                                        if (timeSinceUpdate.HasValue)
                                                         {
-                                                            if (timeSincePost.Value.TotalSeconds < 60)
+                                                            if (timeSinceUpdate.Value.TotalSeconds < 60)
                                                             {
-                                                                timeAgoText = $"Đăng {Math.Floor(timeSincePost.Value.TotalSeconds)} giây trước";
+                                                                timeAgoText = $"Cập nhật {Math.Floor(timeSinceUpdate.Value.TotalSeconds)} giây trước";
                                                             }
-                                                            else if (timeSincePost.Value.TotalMinutes < 60)
+                                                            else if (timeSinceUpdate.Value.TotalMinutes < 60)
                                                             {
-                                                                timeAgoText = $"Đăng {Math.Floor(timeSincePost.Value.TotalMinutes)} phút trước";
+                                                                timeAgoText = $"Cập nhật {Math.Floor(timeSinceUpdate.Value.TotalMinutes)} phút trước";
                                                             }
-                                                            else if (timeSincePost.Value.TotalHours < 24)
+                                                            else if (timeSinceUpdate.Value.TotalHours < 24)
                                                             {
-                                                                timeAgoText = $"Đăng {Math.Floor(timeSincePost.Value.TotalHours)} giờ trước";
+                                                                timeAgoText = $"Cập nhật {Math.Floor(timeSinceUpdate.Value.TotalHours)} giờ trước";
                                                             }
                                                             else
                                                             {
-                                                                timeAgoText = $"Đăng {Math.Floor(timeSincePost.Value.TotalDays)} ngày trước";
+                                                                timeAgoText = $"Cập nhật {Math.Floor(timeSinceUpdate.Value.TotalDays)} ngày trước";
                                                             }
                                                         }
                                                     }
@@ -344,29 +346,7 @@
             </ul>
         </nav>
     }
-
-
-    @* <div>
-        <section class="feedback-form bg-light p-4 rounded mt-5" data-aos="fade-up">
-            <h4>Gửi góp ý cho chúng tôi</h4>
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-            }
-            <form asp-action="SubmitFeedback" method="post">
-                <div class="mb-3">
-                    <label for="userName" class="form-label"></label>
-                    <input type="text" name="userName" class="form-control" required placeholder="Họ và tên" />
-                </div>
-                <div class="mb-3">
-                    <label for="message" class="form-label"></label>
-                    <textarea name="message" class="form-control" rows="4" required placeholder="Nội dung góp ý"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Gửi góp ý</button>
-            </form>
-        </section>
-    </div> *@
-
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var currentUserId = @ViewBag.CurrentUserId;

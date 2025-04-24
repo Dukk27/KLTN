@@ -224,6 +224,9 @@ namespace KLTN.Controllers
                     var user = _context.Accounts.FirstOrDefault(a => a.IdUser == receiverId);
                     if (user != null)
                     {
+                        // Truyền trạng thái khoá
+                        ViewBag.IsReceiverLocked = user.IsLocked;
+
                         var chatMessages = _context
                             .Messages.Where(m =>
                                 (m.SenderId == currentUserId && m.ReceiverId == receiverId)

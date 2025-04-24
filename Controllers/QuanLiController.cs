@@ -56,8 +56,27 @@ namespace KLTN.Controllers
                         || h.Status == HouseStatus.Active
                         || h.Status == HouseStatus.Hidden
                         || h.Status == HouseStatus.Rejected
+                        || h.Status == HouseStatus.Expired
                     );
                 }
+
+                // Kiểm tra bài đăng nào quá 30 ngày và yêu cầu chỉnh sửa
+                foreach (var house in houses)
+                {
+                    var houseDetail = house.HouseDetails.FirstOrDefault();
+                    if (houseDetail != null)
+                    {
+                        var timePost = houseDetail.TimePost; // Lấy thời gian bài đăng
+                        var timeDiff = DateTime.Now - timePost; // Chênh lệch thời gian hiện tại và thời gian bài đăng
+
+                        // Nếu bài đăng quá 30 ngày và không phải đã ẩn hoặc đã bị từ chối, gán trạng thái Expired
+                        if (timeDiff.TotalDays > 30 && house.Status != HouseStatus.Expired)
+                        {
+                            house.Status = HouseStatus.Expired;
+                        }
+                    }
+                }
+
                 var viewModel = new HomeViewModel
                 {
                     Houses = houses,
@@ -314,7 +333,8 @@ namespace KLTN.Controllers
                 var notification = new Notification
                 {
                     UserId = admin.IdUser, // Gửi thông báo cho Admin
-                    Message = $"Người dùng {User.Identity.Name} đã chỉnh sửa bài đăng: {existingHouse.NameHouse}.",
+                    Message =
+                        $"Người dùng {User.Identity.Name} đã chỉnh sửa bài đăng: {existingHouse.NameHouse}.",
                     CreatedAt = DateTime.Now,
                     IsRead = false,
                 };
@@ -330,7 +350,6 @@ namespace KLTN.Controllers
                     message = "Cập nhật thành công, bài đăng sẽ sớm được Quản trị viên duyệt!",
                 }
             );
-            //return Json(new { success = true, message = "Sửa nhà trọ thành công.", updatedHouse = existingHouse });
         }
 
         [HttpDelete]

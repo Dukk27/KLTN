@@ -274,7 +274,16 @@ namespace KLTN.Controllers
             //     );
             // }
 
+            var houseDetail = house.HouseDetails.FirstOrDefault();
+            if (houseDetail == null)
+            {
+                return Json(
+                    new { success = false, message = "Thông tin chi tiết bài đăng không tồn tại." }
+                );
+            }
+
             house.Status = HouseStatus.Approved;
+            houseDetail.TimeUpdate = DateTime.Now;
             house.IsAutoHidden = false; // Nếu trước đó bị ẩn tự động, reset lại
             house.ReportVersion += 1; // Reset lượt report bằng cách tăng version
             await _housesRepository.UpdateAsync(house);
@@ -750,7 +759,7 @@ namespace KLTN.Controllers
                 HouseStatus.Pending => "Chờ duyệt",
                 HouseStatus.Approved => "Đã duyệt",
                 HouseStatus.Hidden => "Đã ẩn",
-                HouseStatus.Active => "Đang hiển thị",
+                HouseStatus.Active => "Đã duyệt",
                 HouseStatus.Rejected => "Từ chối",
                 _ => "Không xác định",
             };
@@ -779,9 +788,7 @@ namespace KLTN.Controllers
 
             // Đánh dấu báo cáo là đã duyệt
             report.IsApproved = true;
-            await _context.SaveChangesAsync();
 
-            // Lấy thông tin bài đăng và người báo cáo
             var house = await _context.Houses.FindAsync(report.HouseId);
             if (house == null)
             {
@@ -789,76 +796,104 @@ namespace KLTN.Controllers
             }
 
             // Tạo thông báo cho người báo cáo
-            var notificationForReporter = new Notification
-            {
-                UserId = report.UserId, // Người báo cáo
-                Message =
-                    $"Báo cáo của bạn đối với bài đăng '{house.NameHouse}' đã được admin duyệt.",
-                CreatedAt = DateTime.Now,
-                IsRead = false,
-            };
+            _context.Notifications.Add(
+                new Notification
+                {
+                    UserId = report.UserId,
+                    Message =
+                        $"Báo cáo của bạn đối với bài đăng '{house.NameHouse}' đã được admin duyệt.",
+                    CreatedAt = DateTime.Now,
+                    IsRead = false,
+                }
+            );
 
-            _context.Notifications.Add(notificationForReporter); // Lưu thông báo cho người báo cáo
-
-            // Đếm số lượng báo cáo đã duyệt của bài đăng này
+            // Đếm số lượng báo cáo đã duyệt của bài đăng này (kể cả cái hiện tại đã đánh dấu ở trên)
             var approvedCount = await _context
                 .Reports.Where(r => r.HouseId == report.HouseId && r.IsApproved)
                 .CountAsync();
 
-            // Nếu >= 3 báo cáo đã duyệt thì ẩn bài đăng
-            if (approvedCount >= 3)
+            if (approvedCount >= 3 && house.Status != HouseStatus.Hidden)
             {
-                if (house.Status != HouseStatus.Hidden)
-                {
-                    house.Status = HouseStatus.Hidden; // Ẩn bài đăng
-                    house.IsAutoHidden = true;
-                    await _context.SaveChangesAsync();
+                house.Status = HouseStatus.Hidden;
+                house.IsAutoHidden = true;
 
-                    // Tạo thông báo cho chủ bài đăng
-                    var notificationToOwner = new Notification
+                // Thông báo cho chủ bài đăng
+                _context.Notifications.Add(
+                    new Notification
                     {
-                        UserId = house.IdUser, // Chủ bài đăng
+                        UserId = house.IdUser,
                         Message =
                             $"Bài đăng '{house.NameHouse}' của bạn đã bị ẩn do bị báo cáo quá nhiều lần.",
                         CreatedAt = DateTime.Now,
                         IsRead = false,
-                    };
+                    }
+                );
 
-                    _context.Notifications.Add(notificationToOwner); // Lưu thông báo cho chủ bài đăng
-
-                    // Tạo thông báo cho người báo cáo
-                    var notificationToReporter = new Notification
+                // Thông báo bổ sung cho người báo cáo
+                _context.Notifications.Add(
+                    new Notification
                     {
-                        UserId = report.UserId, // Người báo cáo
+                        UserId = report.UserId,
                         Message =
                             $"Báo cáo của bạn đối với bài đăng '{house.NameHouse}' đã được admin duyệt và bài đăng đã bị ẩn.",
                         CreatedAt = DateTime.Now,
                         IsRead = false,
-                    };
+                    }
+                );
+            }
+            else
+            {
+                // Nếu chưa đủ 3, vẫn gửi thông báo cho người đăng
+                _context.Notifications.Add(
+                    new Notification
+                    {
+                        UserId = house.IdUser,
+                        Message =
+                            $"Bài đăng '{house.NameHouse}' của bạn đã bị báo cáo và báo cáo đã được admin duyệt.",
+                        CreatedAt = DateTime.Now,
+                        IsRead = false,
+                    }
+                );
+            }
 
-                    _context.Notifications.Add(notificationToReporter); // Lưu thông báo cho người báo cáo
-                    await _context.SaveChangesAsync();
+            // Đếm tổng số báo cáo đã duyệt cho tất cả bài đăng của người đăng
+            var totalApprovedReportsForUser = await _context
+                .Reports.Where(r =>
+                    r.IsApproved
+                    && _context.Houses.Any(h => h.IdHouse == r.HouseId && h.IdUser == house.IdUser)
+                )
+                .CountAsync();
 
-                    return Json(
-                        new
+            if (totalApprovedReportsForUser >= 10)
+            {
+                var account = await _context.Accounts.FindAsync(house.IdUser);
+                if (account != null && !account.IsLocked)
+                {
+                    account.IsLocked = true;
+
+                    _context.Notifications.Add(
+                        new Notification
                         {
-                            success = true,
-                            autoHidden = true,
-                            message = "Bài đăng đã bị ẩn do bị báo cáo nhiều lần.",
+                            UserId = account.IdUser,
+                            Message = "Tài khoản của bạn đã bị khóa do bị báo cáo quá nhiều lần.",
+                            CreatedAt = DateTime.Now,
+                            IsRead = false,
                         }
                     );
                 }
             }
 
-            // Lưu tất cả các thông báo nếu chưa có auto-hidden
+            // Chỉ lưu 1 lần duy nhất
             await _context.SaveChangesAsync();
 
             return Json(
                 new
                 {
                     success = true,
-                    autoHidden = false,
-                    message = "Báo cáo đã được duyệt.",
+                    autoHidden = (approvedCount >= 3),
+                    message = (approvedCount >= 3)
+                        ? "Bài đăng đã bị ẩn do bị báo cáo nhiều lần."
+                        : "Báo cáo đã được duyệt.",
                 }
             );
         }

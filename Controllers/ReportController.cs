@@ -28,8 +28,7 @@ namespace KLTN.Controllers
 
             if (userId == null)
             {
-                TempData["ErrorMessage"] = "Bạn cần đăng nhập để báo cáo.";
-                return Redirect($"http://localhost:35393/Home/Detail?id={houseId}");
+                return RedirectToAction("Login", "Account");
             }
 
             // Lấy version hiện tại của bài đăng
@@ -47,7 +46,7 @@ namespace KLTN.Controllers
                 r.UserId == userId.Value
                 && r.HouseId == houseId
                 && r.ReportVersion == currentVersion
-            );
+            ); 
 
             if (alreadyReported)
             {
@@ -64,7 +63,7 @@ namespace KLTN.Controllers
                 CreatedAt = DateTime.Now,
                 IsApproved = false,
                 ReportVersion =
-                    currentVersion // Gán version vào đây
+                    currentVersion // Gán version 
                 ,
             };
 

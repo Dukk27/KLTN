@@ -21,7 +21,7 @@
                 else
                 {
                     <a href="@Url.Action("Index", "Home")">Trang Chủ</a>
-                }
+                } 
             </li>
             <li class="breadcrumb-item active" aria-current="page">Tin Nhắn</li>
         </ol>
@@ -87,10 +87,20 @@
                         }
                     </div>
 
-                    <div class="border-top p-3 d-flex">
-                        <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn..." />
-                        <button id="chat" class="btn btn-primary" onclick="sendMessage()">Gửi</button>
-                    </div>
+                    @if (ViewBag.IsReceiverLocked != null && ViewBag.IsReceiverLocked == true)
+                    {
+                        <div class="text-center p-3" style="background-color:#fff3cd; color:#856404; border:1px solid #ffeeba; border-radius:4px;">
+                            Tài khoản này đã bị khoá. Bạn không thể gửi tin nhắn.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="border-top p-3 d-flex">
+                            <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn..." />
+                            <button id="chat" class="btn btn-primary" onclick="sendMessage()">Gửi</button>
+                        </div>
+                    }
+
                 }
                 else
                 {

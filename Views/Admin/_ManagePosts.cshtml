@@ -131,7 +131,7 @@
             let isToastVisible = false;
 
             $(document).off("click", ".approve-house").on("click", ".approve-house", function () {
-                if (isToastVisible) return; // Nếu đang hiển thị thì không mở thêm
+                //if (isToastVisible) return; // Nếu đang hiển thị thì không mở thêm
                 isToastVisible = true;
 
                 const id = $(this).data("id");
@@ -212,7 +212,7 @@
             });
 
             $(document).off("click", ".reject-house").on("click", ".reject-house", function () {
-                if (isToastVisible) return; // Nếu đang hiển thị thì không mở thêm
+                //if (isToastVisible) return; // Nếu đang hiển thị thì không mở thêm 
                 isToastVisible = true;
 
                 const id = $(this).data("id");

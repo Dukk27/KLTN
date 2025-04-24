@@ -105,6 +105,7 @@ namespace KLTN.Controllers
             houses = houses
                 .Where(h => h.Status == HouseStatus.Active || h.Status == HouseStatus.Approved)
                 .Where(h => h.HouseDetails.Any(d => d.Status == "Chưa cho thuê"))
+                .Where(h => h.IdUserNavigation != null && !h.IdUserNavigation.IsLocked)
                 .ToList();
 
             int totalHouses = houses.Count();
@@ -272,6 +273,7 @@ namespace KLTN.Controllers
                     && h.IdHouse != id
                     && h.Status != HouseStatus.Pending
                     && h.Status != HouseStatus.Rejected
+                    && !h.IsAutoHidden
                 )
                 .OrderByDescending(h =>
                     h.HouseDetails.OrderByDescending(d => d.TimePost).FirstOrDefault().TimePost
@@ -293,6 +295,7 @@ namespace KLTN.Controllers
                     && h.IdHouse != id
                     && h.Status != HouseStatus.Pending
                     && h.Status != HouseStatus.Rejected
+                    && !h.IsAutoHidden
                 )
                 .OrderByDescending(h =>
                     h.HouseDetails.OrderByDescending(d => d.TimePost).FirstOrDefault().TimePost
@@ -335,35 +338,6 @@ namespace KLTN.Controllers
         {
             return View();
         }
-
-        // [HttpPost]
-        // public async Task<IActionResult> SubmitFeedback(string userName, string message)
-        // {
-        //     string subject = $"Góp ý từ người dùng: {userName}";
-        //     string body =
-        //         $@"
-        //             <p><strong>Tên người gửi:</strong> {userName}</p>
-        //             <p><strong>Nội dung góp ý:</strong> {message}</p>
-        //         ";
-        //     try
-        //     {
-        //         await _emailService.SendEmailAsync(
-        //             emailType: "Appointment",
-        //             toEmail: "dn596209@gmail.com",
-        //             subject: subject,
-        //             body: body
-        //         );
-
-        //         TempData["SuccessMessage"] = "Cảm ơn bạn đã gửi góp ý!";
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         TempData["SuccessMessage"] = "Đã xảy ra lỗi khi gửi góp ý. Vui lòng thử lại sau.";
-        //         Console.WriteLine($"Lỗi gửi góp ý: {ex.Message}");
-        //     }
-
-        //     return RedirectToAction("Index");
-        // }
 
         [HttpGet]
         public IActionResult GetAllHousesForMap()

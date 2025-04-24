@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KLTN.Helpers;
 using KLTN.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,12 @@ namespace KLTN.Controllers
     public class NotificationController : Controller
     {
         private readonly KLTNContext _context;
+        private readonly NotificationService _notificationService;
 
-        public NotificationController(KLTNContext context)
+        public NotificationController(KLTNContext context, NotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         // Hiển thị danh sách thông báo của user
@@ -167,6 +170,19 @@ namespace KLTN.Controllers
             _context.SaveChanges();
 
             return Json(new { success = true, message = "Tất cả thông báo đã bị xóa." });
+        }
+
+        [HttpPost]
+        public IActionResult CheckExpiredPosts()
+        {
+            _notificationService.NotifyExpiredPosts();
+            return Json(
+                new
+                {
+                    success = true,
+                    message = "Đã kiểm tra và gửi thông báo nếu có bài đăng quá 30 ngày.",
+                }
+            );
         }
     }
 }

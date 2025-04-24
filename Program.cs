@@ -81,7 +81,11 @@ builder.Services.AddScoped<IHouseTypeRepository, HouseTypeRepository>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddSingleton<EmailService>();
 builder.Services.AddHostedService<KLTN.Helpers.ExpiredAppointmentCheckerService>();
+
 // builder.Services.AddHostedService<AppointmentCleanupService>();
+// Service thông báo quá hạn bài đăng
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddHostedService<ExpiredPostNotificationJob>();
 
 builder.Services.AddSignalR();
 builder.Services.AddTransient<ChatHub>();

@@ -284,7 +284,7 @@ namespace KLTN.Repositories
                 // Nếu không có sortBy, mặc định sắp xếp theo TimePost mới nhất
                 query = query.OrderByDescending(h =>
                     h.HouseDetails.FirstOrDefault() != null
-                        ? h.HouseDetails.FirstOrDefault().TimePost
+                        ? h.HouseDetails.FirstOrDefault().TimeUpdate
                         : DateTime.MinValue
                 );
             }

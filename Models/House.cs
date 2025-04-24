@@ -13,6 +13,7 @@ namespace KLTN.Models
         Rejected,
         Active,
         Hidden,
+        Expired,
     }
 
     public partial class House

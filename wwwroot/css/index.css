@@ -16,7 +16,7 @@ body {
   position: relative;
   margin-bottom: 20px;
   width: 100%; /* <-- đảm bảo chiếm hết cột */
-  min-height: 450px;
+  min-height: 615px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* <-- thêm bóng mặc định nhẹ */
 
 }
