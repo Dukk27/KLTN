@@ -38,6 +38,16 @@ namespace KLTN.Repositories
             return await _context.Accounts.AnyAsync(a => a.UserName == username);
         }
 
+        public async Task<bool> IsPhoneExistAsync(string phone)
+        {
+            return await _context.Accounts.AnyAsync(a => a.PhoneNumber == phone);
+        }
+
+        public async Task<bool> IsEmailExistAsync(string email)
+        {
+            return await _context.Accounts.AnyAsync(a => a.Email == email);
+        }
+
         public async Task<IEnumerable<Account>> GetAllAccountsAsync()
         {
             return await _context.Accounts.ToListAsync();

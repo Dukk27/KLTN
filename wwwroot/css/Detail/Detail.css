@@ -570,59 +570,22 @@ h1 {
   z-index: 1;
 }
 
-/* Responsive behavior for small screens */
-@media (max-width: 768px) {
-  .appointment-form {
-    width: 90vw;
-    padding: 20px;
-  }
-
-  .appointment-form h3 {
-    font-size: 18px;
-    text-align: center;
-  }
-
-  #appointmentDate {
-    font-size: 16px;
-    padding: 12px 12px;
-  }
-
-  .appointment-form label,
-  .appointment-form input,
-  .appointment-form textarea {
-    font-size: 14px;
-  }
-
-  .appointment-buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  .appointment-buttons .btn {
-    width: 50%;
-  }
-  .other-houses-list .list-group-item,
-  .suggested-houses-list .list-group-item {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .other-houses-list img,
-  .suggested-houses-list img {
-    margin: 0 auto 10px auto;
-    width: 100%;
-    max-width: 320px;
-    height: auto;
-  }
-
-  .house-info-preview {
-    width: 100%;
-  }
-
+@media (max-width: 992px) {
+  /* Ẩn nút "Xem Chi Tiết" */
   .xem-chi-tiet-btn {
-    margin-top: 80px;
-    margin-right: 263px;
+    display: none !important;
+  }
+
+  .amenities-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 auto;
+
+  }
+
+  .amenities-wrapper .col-md-3 {
+      flex: 0 0 15%;
+      max-width: 25%;
+      margin: 0 auto;
   }
 }

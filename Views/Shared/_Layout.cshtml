@@ -208,8 +208,8 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user"></i> Xin chào, @User.Identity.Name
-                                </a>
+                                    <i class="fas fa-user"></i> Xin chào, <span id="headerUserName">@User.Identity.Name</span>
+                                </a> 
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <a class="dropdown-item"
                                         href='@Url.Action("Edit", "Account", new { id = @Context.Session.GetInt32("UserId") })'>
@@ -777,6 +777,9 @@
                 window.location.href = '/account/login';
             }
         }
+
+        // Cập nhật tên ngay sau khi đổi
+        document.getElementById("headerUserName").innerText = data.updatedData.userName;
     </script>
 </body>
 </html>

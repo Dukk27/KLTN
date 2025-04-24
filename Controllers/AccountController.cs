@@ -213,6 +213,18 @@ namespace KLTN.Controllers
                 errors.Add("Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác.");
             }
 
+            // Kiểm tra số điện thoại đã tồn tại chưa
+            if (await _accountRepository.IsPhoneExistAsync(model.PhoneNumber))
+            {
+                errors.Add("Số điện thoại đã được sử dụng. Vui lòng dùng số khác.");
+            }
+
+            // Kiểm tra email đã tồn tại chưa
+            if (await _accountRepository.IsEmailExistAsync(model.Email))
+            {
+                errors.Add("Email đã được sử dụng. Vui lòng dùng email khác.");
+            }
+
             // Nếu có bất kỳ lỗi nào, lưu vào ViewBag và quay lại View
             if (errors.Any())
             {
@@ -309,6 +321,21 @@ namespace KLTN.Controllers
                 );
             }
 
+            // Nếu người dùng thay đổi số điện thoại
+            if (existingUser.PhoneNumber != account.PhoneNumber)
+            {
+                if (await _accountRepository.IsPhoneExistAsync(account.PhoneNumber))
+                {
+                    return Json(
+                        new
+                        {
+                            success = false,
+                            message = "Số điện thoại đã tồn tại trong hệ thống. Không thể thay đổi!",
+                        }
+                    );
+                }
+            }
+
             // Kiểm tra email hợp lệ
             var emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             if (!Regex.IsMatch(account.Email, emailPattern))
@@ -320,6 +347,21 @@ namespace KLTN.Controllers
                         message = "Email không hợp lệ. Vui lòng nhập đúng định dạng!",
                     }
                 );
+            }
+
+            // Nếu người dùng thay đổi email
+            if (existingUser.Email != account.Email)
+            {
+                if (await _accountRepository.IsEmailExistAsync(account.Email))
+                {
+                    return Json(
+                        new
+                        {
+                            success = false,
+                            message = "Email đã tồn tại trong hệ thống. Không thể thay đổi!",
+                        }
+                    );
+                }
             }
 
             await _accountRepository.UpdateAccountAsync(account);
