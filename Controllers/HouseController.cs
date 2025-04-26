@@ -155,7 +155,8 @@ namespace KLTN.Controllers
                         var notification = new Notification
                         {
                             UserId = admin.IdUser, // Gửi thông báo cho Admin
-                            Message = $"📢 Bài đăng mới: '{model.House.NameHouse}' cần được duyệt.",
+                            Message =
+                                $"📢 Bài đăng mới có tiêu đề: {model.House.NameHouse} cần được duyệt.",
                             CreatedAt = DateTime.Now,
                             IsRead = false,
                         };
@@ -180,7 +181,7 @@ namespace KLTN.Controllers
                 }
                 else
                 {
-                    if (isAjaxRequest) 
+                    if (isAjaxRequest)
                     {
                         return Json(
                             new

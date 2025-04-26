@@ -76,6 +76,79 @@ h1 {
   margin: 15px 0;
 }
 
+.appointment-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+  text-align: left;
+}
+
+.form-group input {
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.custom-confirm-btn,
+.btn-secondary {
+  width: 48%; /* Đặt width của 2 nút bằng nhau */
+  font-size: 14px;
+  padding: 10px 12px;
+  text-align: center; /* Căn giữa chữ trong nút */
+  display: inline-block; /* Đảm bảo nút nằm cùng hàng */
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.custom-confirm-btn {
+  background-color: #0140a0;
+  color: white;
+}
+
+.custom-confirm-btn:hover {
+  background-color: #012f78;
+}
+
+.btn-secondary {
+  background-color: #ccc;
+  color: #000000 !important;
+}
+
+.btn-secondary:hover {
+  background-color: #999;
+}
+
+.note {
+  font-size: 14px;
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.note p {
+  margin: 0;
+  line-height: 1.5;
+}
+
 .detail-item {
   margin-bottom: 10px;
 }
@@ -494,7 +567,6 @@ h1 {
 .no-houses-message {
   background-color: #f8d7da;
   color: #721c24; /* Màu chữ đỏ đậm */
-  padding: 15px; /* Thêm khoảng cách bên trong */
   border-radius: 5px; /* Bo tròn góc */
   font-weight: bold; /* Chữ in đậm */
   font-size: 20px;
@@ -502,21 +574,40 @@ h1 {
   margin-top: 15px; /* Khoảng cách phía trên */
 }
 
-.other-houses-list ul,
-.suggested-houses-list ul {
-  padding-left: 0;
+/* carousel bài đăng khác của chủ trọ và có thể bạn quan tâm */
+.slick-custom-prev,
+.slick-custom-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
 }
 
-.other-houses-list .list-group-item,
-.suggested-houses-list .list-group-item {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  padding: 15px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+.slick-custom-prev {
+  left: -20px;
+}
+
+.slick-custom-next {
+  right: -20px;
+}
+
+.slick-house-carousel {
+  position: relative;
+}
+
+/* Nếu container cha có overflow: hidden, cần override */
+.slick-slider {
+  overflow: visible !important;
 }
 
 .other-houses-list img,
@@ -570,6 +661,25 @@ h1 {
   z-index: 1;
 }
 
+.card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Giới hạn 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 48px; /* 2 dòng */
+}
+
+/*Dòng địa chỉ max 2 dòng trong card */
+.address-truncate {
+  max-height: 3.6em; /* khoảng 2 dòng */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* hiển thị tối đa 2 dòng */
+  -webkit-box-orient: vertical;
+}
+
 @media (max-width: 992px) {
   /* Ẩn nút "Xem Chi Tiết" */
   .xem-chi-tiet-btn {
@@ -577,15 +687,38 @@ h1 {
   }
 
   .amenities-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      margin: 0 auto;
-
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
   }
 
   .amenities-wrapper .col-md-3 {
-      flex: 0 0 15%;
-      max-width: 25%;
-      margin: 0 auto;
+    flex: 0 0 15%;
+    max-width: 25%;
+    margin: 0 auto;
+  }
+
+  .appointment-form {
+    min-width: 60%;
+    padding: 15px; /* Điều chỉnh padding */
+  }
+
+  .form-group input {
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+
+  .custom-confirm-btn,
+  .btn-secondary {
+    min-width: 90px; /* Đảm bảo 2 nút bằng nhau */
+    font-size: 16px;
+    padding: 12px 15px;
+  }
+
+  /* Căn nút xuống dưới cùng */
+  .appointment-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
   }
 }

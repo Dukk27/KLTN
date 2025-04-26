@@ -16,9 +16,8 @@ body {
   position: relative;
   margin-bottom: 20px;
   width: 100%; /* <-- đảm bảo chiếm hết cột */
-  min-height: 615px;
+  min-height: 550px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* <-- thêm bóng mặc định nhẹ */
-
 }
 
 .card:hover {
@@ -32,7 +31,7 @@ body {
 
 .card-body {
   min-height: 250px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 .card-link-wrapper {
@@ -47,7 +46,26 @@ body {
 
 .card-link-wrapper:hover .card {
   transform: scale(1.02);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/*Dòng địa chỉ max 2 dòng trong card */
+.address-truncate {
+  max-height: 3.6em; /* khoảng 2 dòng */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* hiển thị tối đa 2 dòng */
+  -webkit-box-orient: vertical;
+}
+
+.card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Giới hạn 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 48px; /* 2 dòng */
 }
 
 .mt-4 {
@@ -294,7 +312,7 @@ h5 {
 
 /* Nút tìm kiếm */
 .btn-filter {
-  background-color: #0140A0;
+  background-color: #0140a0;
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
@@ -303,7 +321,7 @@ h5 {
 }
 
 .btn-search:hover {
-  background-color: #0140A0;
+  background-color: #0140a0;
 }
 
 /* Nút bản đồ */
@@ -594,11 +612,11 @@ h5 {
   .card {
     min-height: 400px;
   }
-  
+
   .search-group {
     max-width: 100% !important;
   }
-  
+
   .col-md-4 {
     flex: 1 1 50%; /* Mỗi cột chiếm 50% chiều rộng */
   }
@@ -612,5 +630,3 @@ h5 {
     flex: 1 1 100%; /* Bộ lọc chiếm toàn bộ chiều rộng */
   }
 }
-
-

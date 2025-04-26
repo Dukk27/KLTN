@@ -82,7 +82,8 @@ namespace KLTN.Controllers
                 var notification = new Notification
                 {
                     UserId = house.IdUser, // Chủ nhà trọ nhận thông báo
-                    Message = $"Bài đăng '{house.NameHouse}' vừa nhận đánh giá từ {userName}.",
+                    Message =
+                        $"Bài đăng của bạn có tiêu đề: {house.NameHouse} vừa nhận đánh giá từ {userName}.",
                     CreatedAt = DateTime.Now,
                     IsRead = false,
                 };

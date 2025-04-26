@@ -182,7 +182,8 @@
                             }
                             
                             @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin")) {
-                                <a asp-action="ChatList" asp-controller="Chat" class="btn ml-2 btn-responsive @(currentController == "chat" && currentAction == "chatlist" ? "active" : "")" style="height: 45px">                                    <i class="fas fa-comments"></i> Tin nhắn
+                                <a asp-action="ChatList" asp-controller="Chat" class="btn ml-2 btn-responsive @(currentController == "chat" && currentAction == "chatlist" ? "active" : "")" style="height: 45px; margin-top: 4px">                                    
+                                    <i class="fas fa-comments"></i> Tin nhắn
                                     <span id="unreadMessagesBadge" class="badge bg-danger" style="display: none;">
                                         0
                                     </span>
@@ -217,6 +218,9 @@
                                     </a>
                                     <a class="dropdown-item" href='@Url.Action("MyAppointments", "Appointment")'>
                                         <i class="fas fa-calendar-alt"></i> Lịch hẹn tôi đã đặt
+                                    </a>
+                                    <a class="dropdown-item" href='@Url.Action("Index", "Notification")'>
+                                        <i class="fas fa-bell"></i> Thông báo của tôi
                                     </a>
                                     <li><a class="dropdown-item" href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                                 </ul>

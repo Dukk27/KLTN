@@ -46,7 +46,7 @@ namespace KLTN.Controllers
                 r.UserId == userId.Value
                 && r.HouseId == houseId
                 && r.ReportVersion == currentVersion
-            ); 
+            );
 
             if (alreadyReported)
             {
@@ -63,7 +63,7 @@ namespace KLTN.Controllers
                 CreatedAt = DateTime.Now,
                 IsApproved = false,
                 ReportVersion =
-                    currentVersion // Gán version 
+                    currentVersion // Gán version
                 ,
             };
 
@@ -73,7 +73,7 @@ namespace KLTN.Controllers
             {
                 UserId = 1, // Admin
                 Message =
-                    $"Một báo cáo mới đã được gửi về bài đăng '{house.NameHouse}' với lý do: {reason}",
+                    $"Một báo cáo mới đã được gửi về bài đăng có tiêu đề: {house.NameHouse} với lý do: {reason}",
                 CreatedAt = DateTime.Now,
                 IsRead = false,
             };

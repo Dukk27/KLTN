@@ -56,6 +56,10 @@
         });
     </script>
 }
+@{
+    var otherHousesList = ViewBag.OtherHouses as List<KLTN.Models.House>;
+    var showNavigation = otherHousesList != null && otherHousesList.Count > 5;
+}
 
 <head>
     <title>Chi Tiết Nhà</title>
@@ -65,6 +69,13 @@
     <link rel="stylesheet" href="~/css/goong-js.css" asp-append-version="true" />
     <input type="hidden" id="Latitude" name="Lat" />
     <input type="hidden" id="Longitude" name="Lng" />
+    <!-- Slick CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Slick JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 </head> 
 
 <body>
@@ -140,6 +151,29 @@
             <div class="house-info">
                 @foreach (var detail in Model.HouseDetails)
                 {
+                    @{
+                        var timeDiffNullable = DateTime.Now - detail.TimeUpdate;
+                        var timeDiff = timeDiffNullable.HasValue ? timeDiffNullable.Value : TimeSpan.Zero;
+                        string timeDisplay = "";
+
+                        if (timeDiff.TotalMinutes < 1)
+                        {
+                            timeDisplay = "Vừa xong";
+                        }
+                        else if (timeDiff.TotalMinutes < 60)
+                        {
+                            timeDisplay = $"{(int)timeDiff.TotalMinutes} phút trước";
+                        }
+                        else if (timeDiff.TotalHours < 24)
+                        {
+                            timeDisplay = $"{(int)timeDiff.TotalHours} giờ trước";
+                        }
+                        else
+                        {
+                            timeDisplay = $"{(int)timeDiff.TotalDays} ngày trước";
+                        }
+                    }
+
                     <div class="address-box mb-3">
                         <p style="font-size: 18px;">
                             <strong>Địa chỉ:</strong>
@@ -202,6 +236,13 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <div class="address-box mb-3">
+                        <p style="font-size: 18px; font-style: italic">
+                            <strong>Cập nhật:</strong>
+                            <span>@timeDisplay</span>
+                        </p>
+                    </div>
                 }
             </div>
         </div>
@@ -224,13 +265,27 @@
             <div id="appointmentOverlay" class="appointment-overlay"></div>
             <div id="appointmentForm" class="appointment-form">
                 <h3>Đặt Lịch Hẹn Xem Nhà</h3>
-                <label for="appointmentDate">Chọn ngày:</label>
-                <input type="datetime-local" id="appointmentDateTime" required>
+
+                <div class="form-group">
+                    <label for="appointmentDateTime">Thời gian hẹn gặp <span style="color:red">*</span></label>
+                    <input type="datetime-local" id="appointmentDateTime" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="appointmentLocation">Địa điểm hẹn</label>
+                    <input type="text" id="appointmentLocation" readonly class="form-control" />
+                </div>
+ 
+                <div class="note">
+                    <p>Bạn sẽ nhận được email khi chủ nhà xác nhận lịch hẹn với nội dung: Bạn có lịch hẹn với <strong>[Họ và tên]</strong> tại <strong>[Địa điểm hẹn]</strong> vào <strong>[Thời gian hẹn gặp]</strong>.</p>
+                </div>
+
                 <div class="appointment-buttons">
-                    <button id="submitAppointment" class="btn btn-success">Xác nhận</button>
-                    <button id="closeForm" class="btn btn-secondary">Hủy</button>
+                    <button id="closeForm" class="btn btn-secondary">Đóng</button>
+                    <button id="submitAppointment" class="btn custom-confirm-btn">Đặt lịch</button>
                 </div>
             </div>
+
             <input type="hidden" id="isAuthenticated" value="@User.Identity.IsAuthenticated.ToString().ToLower()" />
             <input type="hidden" id="userRole" value="@ViewBag.UserRole" />
             <input type="hidden" id="houseOwnerId" value="@Model.IdUserNavigation.IdUser" />
@@ -353,96 +408,74 @@
             </div>
         }
 
-        <label class="section-title">Các Bài Viết Khác Của Người Đăng</label>
+        <label class="section-title">Các Bài Viết Khác Của Người Đăng @ViewBag.OwnerName</label>
         <div class="section-underline"></div>
-
-        <div class="other-houses-list">
-            @if (ViewBag.OtherHouses != null && (ViewBag.OtherHouses as List<KLTN.Models.House>)?.Any() == true)
-            {
-                <ul class="list-group">
-                    @foreach (var otherHouse in ViewBag.OtherHouses as List<KLTN.Models.House>)
-                    {
-                        var houseDetailsList = otherHouse.HouseDetails?.ToList();
-                        var firstDetail = houseDetailsList?.FirstOrDefault();
-
-                        <li class="list-group-item">
-                            <a href="@Url.Action("Detail", "Home", new { id = otherHouse.IdHouse })" class="full-link-overlay"></a>
-                            <div class="d-flex align-items-start">
-                                @if (firstDetail != null)
-                                {
-                                    var timePost = firstDetail.TimePost; 
-                                    var daysAgo = (DateTime.Now - timePost).Days;
-
-                                    <img src="@firstDetail.Image.Split(',')[0]" alt="Hình ảnh nhà"
-                                        style="width: 150px; height: 160px; object-fit: cover; margin-right: 15px; margin-top:10px;" />
-                                    <div class="house-info-preview" style="flex: 1;">
-                                        <h5>@otherHouse.NameHouse</h5>
-                                        <p><strong>Địa chỉ:</strong> @firstDetail.Address</p>
-                                        <p><strong>Diện tích:</strong> @firstDetail.DienTich m²</p>
-                                        <p><strong>Giá:</strong>&nbsp;<label style="color: red"> @firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</label></p>
-                                        <p><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy") (<em>@daysAgo ngày trước</em>)</p>
-                                    </div>
-
-                                    <a href="@Url.Action("Detail", "Home", new { id = otherHouse.IdHouse })"
-                                    class="btn btn-sm btn-primary xem-chi-tiet-btn">Xem Chi Tiết</a>
-                                }
-                                else
-                                {
-                                    <p class="text-muted">Không có thông tin chi tiết phòng.</p>
-                                }
-                            </div>
-                        </li>
-                    }
-                </ul>
-            }
-            else
+        <div class="no-houses-message">
+            @if (ViewBag.OtherHouses == null || !(ViewBag.OtherHouses as List<KLTN.Models.House>)?.Any() == true)
             {
                 <p class="no-houses-message">Chủ nhà chưa có phòng trọ khác.</p>
             }
         </div>
+        <div class="slick-house-carousel">
+            @if (ViewBag.OtherHouses != null && (ViewBag.OtherHouses as List<KLTN.Models.House>)?.Any() == true)
+            {
+                foreach (var otherHouse in ViewBag.OtherHouses as List<KLTN.Models.House>)
+                {
+                    var firstDetail = otherHouse.HouseDetails?.FirstOrDefault();
+                    if (firstDetail != null)
+                    {
+                        var timePost = firstDetail.TimePost;
 
+                        <div class="card me-2">
+                            <img src="@firstDetail.Image.Split(',')[0]" class="card-img-top" style="height: 160px; object-fit: cover;" />
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><strong>@otherHouse.NameHouse</strong></h5>
+                                <p class="card-text"><strong>Người đăng:</strong> <span>@ViewBag.OwnerName</span></p>
+                                <p class="card-text address-truncate"><strong>Địa chỉ:</strong> @firstDetail.Address</p>
+                                <p class="card-text"><strong>Diện tích:</strong> @firstDetail.DienTich m²</p>
+                                <p class="card-text"><strong>Giá:</strong> 
+                                    <span style="color: red">@firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</span>
+                                </p>
+                                <p class="card-text"><strong>Loại nhà trọ:</strong> @otherHouse.HouseType?.Name</p>
+                                <p class="card-text"><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy")</p>
+                                <a href="@Url.Action("Detail", "Home", new { id = otherHouse.IdHouse })" class="btn btn-sm btn-primary mt-auto">Xem Chi Tiết</a>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        </div>
 
         <label class="section-title">Có Thể Bạn Quan Tâm</label>
         <div class="section-underline"></div>
-
-        <div class="suggested-houses-list">
+        <div class="slick-house-carousel">
             @if (ViewBag.OtherHousesUser != null && (ViewBag.OtherHousesUser as List<KLTN.Models.House>)?.Any() == true)
             {
-                <ul class="list-group">
-                    @foreach (var house in ViewBag.OtherHousesUser as List<KLTN.Models.House>)
+                foreach (var house in ViewBag.OtherHousesUser as List<KLTN.Models.House>)
+                {
+                    var firstDetail = house.HouseDetails?.FirstOrDefault();
+                    if (firstDetail != null)
                     {
-                        var firstDetail = house.HouseDetails?.FirstOrDefault();
+                        var timePost = firstDetail.TimePost;
 
-                        <li class="list-group-item">
-                            <a href="@Url.Action("Detail", "Home", new { id = house.IdHouse })" class="full-link-overlay"></a>
-                            <div class="d-flex align-items-start">
-                                @if (firstDetail != null)
-                                {
-                                    var timePost = firstDetail.TimePost; 
-                                    var daysAgo = (DateTime.Now - timePost).Days;
-
-                                    <img src="@firstDetail.Image.Split(',')[0]" alt="Hình ảnh nhà"
-                                        style="width: 150px; height: 160px; object-fit: cover; margin-right: 15px; margin-top:10px;" />
-                                    <div class="house-info-preview" style="flex: 1;">
-                                        <h5>@house.NameHouse</h5>
-                                        <p><strong>Địa chỉ:</strong> @firstDetail.Address</p>
-                                        <p><strong>Diện tích:</strong> @firstDetail.DienTich m²</p>
-                                        <p><strong>Giá:</strong>&nbsp;<label style="color: red"> @firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</label></p>
-                                        <p><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy") (<em>@daysAgo ngày trước</em>)</p>
-                                    </div>
-
-                                    <a href="@Url.Action("Detail", "Home", new { id = house.IdHouse })"
-                                    class="btn btn-sm btn-primary xem-chi-tiet-btn">Xem Chi Tiết</a>
-                                }
-                                else
-                                {
-                                    <p class="text-muted">Không có thông tin chi tiết phòng.</p>
-                                }
+                        <div class="card me-2">
+                            <img src="@firstDetail.Image.Split(',')[0]" class="card-img-top" style="height: 160px; object-fit: cover;" />
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><strong>@house.NameHouse</strong></h5>
+                                <p class="card-text"><strong>Người đăng:</strong> @house.IdUserNavigation?.UserName</p>
+                                <p class="card-text address-truncate"><strong>Địa chỉ:</strong> @firstDetail.Address</p>
+                                <p class="card-text"><strong>Diện tích:</strong> @firstDetail.DienTich m²</p>
+                                <p class="card-text"><strong>Giá:</strong>
+                                    <span style="color: red">@firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</span>
+                                </p>
+                                <p class="card-text"><strong>Loại nhà trọ:</strong> @house.HouseType?.Name</p>
+                                <p class="card-text"><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy")</p>
+                                <a href="@Url.Action("Detail", "Home", new { id = house.IdHouse })" class="btn btn-sm btn-primary mt-auto">Xem Chi Tiết</a>
                             </div>
-                        </li>
+                        </div>
                     }
-                </ul>
-            } 
+                }
+            }
             else
             {
                 <p class="no-houses-message">Không có nhà trọ gợi ý.</p>
@@ -603,7 +636,6 @@
             }
         }
         
-
         // Sử dụng API key cho các chức năng geocode, autocomplete, v.v.
         async function setInitialAddress() {
             var addressFromModel = document.getElementById("house-address").dataset.address;
@@ -680,5 +712,56 @@
 
         setInitialAddress();
 
+        // Tự thêm địa chỉ vào form hẹn 
+        const addressFromRazor = "@Html.Raw(Model.HouseDetails.FirstOrDefault()?.Address)";
+        // Sự kiện mở form
+        document.getElementById("bookAppointmentBtn")?.addEventListener("click", function () {
+            document.getElementById("appointmentOverlay").style.display = "block";
+            document.getElementById("appointmentForm").style.display = "block";
+
+            // Gán địa chỉ vào input
+            document.getElementById("appointmentLocation").value = addressFromRazor || "Không có địa chỉ";
+        });
+
+        // Đóng form
+        document.getElementById("closeForm")?.addEventListener("click", function () {
+            document.getElementById("appointmentOverlay").style.display = "none";
+            document.getElementById("appointmentForm").style.display = "none";
+        });
+   
+        // Carousel cho bài đăng khác của chủ trọ và có thể bạn quan tâm
+        $('.slick-house-carousel').slick({
+            slidesToShow: 5,
+            slidesToScroll: 1,
+            arrows: true,
+            prevArrow: '<button type="button" class="slick-custom-prev"><i class="fas fa-chevron-left"></i></button>',
+            nextArrow: '<button type="button" class="slick-custom-next"><i class="fas fa-chevron-right"></i></button>',
+            responsive: [
+                {
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 4
+                    }
+                },
+                {
+                    breakpoint: 992,
+                    settings: {
+                        slidesToShow: 3
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                },
+                {
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: 1
+                    }
+                }
+            ]
+        });
     </script>
 </body>

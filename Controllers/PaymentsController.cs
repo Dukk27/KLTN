@@ -132,7 +132,7 @@ namespace KLTN.Controllers
                         {
                             UserId = admin.IdUser, // Gửi thông báo cho Admin
                             Message =
-                                $"💰 Bài đăng '{house.NameHouse}' đã được thanh toán và chờ duyệt.",
+                                $"💰 Bài đăng có tiêu đề: {house.NameHouse} đã được thanh toán và chờ duyệt.",
                             CreatedAt = DateTime.Now,
                             IsRead = false,
                         };

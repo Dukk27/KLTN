@@ -55,7 +55,8 @@ namespace KLTN.Controllers
                 var account = await _accountRepository.GetAccountByIdAsync(userLock.Value);
                 if (account.IsLocked)
                 {
-                    ViewBag.Error = "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.";
+                    ViewBag.Error =
+                        "Tài khoản của bạn đã bị khóa vĩnh viễn do vi phạm quy định đăng tin.";
                     return View();
                 }
             }
@@ -66,7 +67,7 @@ namespace KLTN.Controllers
                 {
                     var remainingTime = lockoutEndTime - DateTime.Now;
                     ViewBag.Error =
-                        $"Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau {remainingTime.Minutes} phút {remainingTime.Seconds} giây.";
+                        $"Tài khoản của bạn đang bị khóa tạm thời. Vui lòng thử lại sau {remainingTime.Minutes} phút {remainingTime.Seconds} giây.";
                     return View();
                 }
                 else

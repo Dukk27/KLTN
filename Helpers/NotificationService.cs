@@ -56,7 +56,7 @@ namespace KLTN.Helpers
                     {
                         UserId = house.IdUser,
                         Message =
-                            $"Bài đăng '{house.NameHouse}' của bạn đã quá 30 ngày. Vui lòng đăng lại",
+                            $"Bài đăng của bạn có tiêu đề: {house.NameHouse} đã quá 30 ngày. Hệ thống đã ẩn bài đăng của bạn. Vui lòng cập nhật lại",
                         IsRead = false,
                         CreatedAt = DateTime.Now,
                     };

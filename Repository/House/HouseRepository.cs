@@ -169,7 +169,9 @@ namespace KLTN.Repositories
             string priceRange,
             string sortBy,
             string roomType,
-            List<string> amenities
+            List<string> amenities,
+            double? minArea,
+            double? maxArea
         )
         {
             var query = _context
@@ -213,6 +215,17 @@ namespace KLTN.Repositories
                 {
                     query = query.Where(h => h.HouseDetails.Any(hd => hd.Price >= minOnlyPrice));
                 }
+            }
+
+            // Filter by area (DienTich)
+            if (minArea.HasValue || maxArea.HasValue)
+            {
+                query = query.Where(h =>
+                    h.HouseDetails.Any(hd =>
+                        (!minArea.HasValue || hd.DienTich >= minArea.Value)
+                        && (!maxArea.HasValue || hd.DienTich <= maxArea.Value)
+                    )
+                );
             }
 
             // Filter by room type
@@ -270,6 +283,13 @@ namespace KLTN.Repositories
                             h.HouseDetails.Any() ? h.HouseDetails.Max(hd => hd.Price) : 0
                         );
                         break;
+                    case "oldest":
+                        query = query.OrderBy(h =>
+                            h.HouseDetails.FirstOrDefault() != null
+                                ? h.HouseDetails.FirstOrDefault().TimePost
+                                : DateTime.MaxValue
+                        );
+                        break;
                     default:
                         query = query.OrderByDescending(h =>
                             h.HouseDetails.FirstOrDefault() != null
@@ -281,7 +301,7 @@ namespace KLTN.Repositories
             }
             else
             {
-                // Nếu không có sortBy, mặc định sắp xếp theo TimePost mới nhất
+                // Nếu không có sortBy, mặc định sắp xếp theo TimeUpdate mới nhất
                 query = query.OrderByDescending(h =>
                     h.HouseDetails.FirstOrDefault() != null
                         ? h.HouseDetails.FirstOrDefault().TimeUpdate

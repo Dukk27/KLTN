@@ -99,7 +99,7 @@ namespace KLTN.Controllers
                     new
                     {
                         success = true,
-                        message = "Cập nhật tài khoản thành công!",
+                        message = "Cập nhật thông tin tài khoản thành công!",
                         previousPage,
                     }
                 );
@@ -148,7 +148,7 @@ namespace KLTN.Controllers
                 var notification = new Notification
                 {
                     UserId = house.IdUser,
-                    Message = $"❌ Bài đăng '{house.NameHouse}' của bạn đã bị xóa.",
+                    Message = $"❌ Bài đăng có tiêu đề: {house.NameHouse} đã bị xóa bởi Admin.",
                     CreatedAt = DateTime.Now,
                     IsRead = false,
                 };
@@ -213,7 +213,7 @@ namespace KLTN.Controllers
                             {
                                 UserId = review.IdUser,
                                 Message =
-                                    $"❌ Bình luận của bạn trên bài đăng '{review.IdHouseNavigation?.NameHouse}' đã bị xóa bởi Admin.",
+                                    $"❌ Bình luận của bạn trên bài đăng có tiêu đề: {review.IdHouseNavigation?.NameHouse} đã bị xóa bởi Admin.",
                                 CreatedAt = DateTime.Now,
                                 IsRead = false,
                             }
@@ -257,23 +257,6 @@ namespace KLTN.Controllers
                 return Json(new { success = false, message = "Bài đăng không tồn tại." });
             }
 
-            // var detail = house.HouseDetails.FirstOrDefault();
-            // if (detail == null)
-            // {
-            //     return Json(
-            //         new { success = false, message = "Bài đăng thiếu thông tin chi tiết." }
-            //     );
-            // }
-
-            // // Kiểm tra tiêu chí và tạo thông báo lỗi nếu có
-            // var validationMessages = ValidateHouseDetail(detail);
-            // if (validationMessages.Count > 0)
-            // {
-            //     return Json(
-            //         new { success = false, message = string.Join("<br/>", validationMessages) }
-            //     );
-            // }
-
             var houseDetail = house.HouseDetails.FirstOrDefault();
             if (houseDetail == null)
             {
@@ -292,7 +275,7 @@ namespace KLTN.Controllers
             var notification = new Notification
             {
                 UserId = house.IdUser,
-                Message = $"✅ Bài đăng '{house.NameHouse}' của bạn đã được duyệt!",
+                Message = $"✅ Bài đăng có tiêu đề: {house.NameHouse} đã được duyệt!",
                 CreatedAt = DateTime.Now,
                 IsRead = false,
             };
@@ -301,25 +284,6 @@ namespace KLTN.Controllers
             await _context.SaveChangesAsync();
 
             return Json(new { success = true, message = "Bài đăng đã được duyệt." });
-        }
-
-        private List<string> ValidateHouseDetail(HouseDetail detail)
-        {
-            var errors = new List<string>();
-
-            if (string.IsNullOrWhiteSpace(detail.Address))
-                errors.Add("Địa chỉ không được để trống.");
-
-            if (detail.DienTich <= 0)
-                errors.Add("Diện tích phải lớn hơn 0m².");
-
-            if (detail.Price <= 0)
-                errors.Add("Tiền thuê phải lớn hơn 0.");
-
-            if (string.IsNullOrWhiteSpace(detail.Describe))
-                errors.Add("Mô tả nhà không được để trống.");
-
-            return errors;
         }
 
         [HttpPost]
@@ -343,7 +307,8 @@ namespace KLTN.Controllers
             var notification = new Notification
             {
                 UserId = house.IdUser,
-                Message = $"❌ Bài đăng '{house.NameHouse}' của bạn đã bị từ chối.\nLý do: {reason}",
+                Message =
+                    $"❌ Bài đăng có tiêu đề: {house.NameHouse} đã bị từ chối.\nLý do: {reason}",
                 CreatedAt = DateTime.Now,
                 IsRead = false,
             };
@@ -801,7 +766,7 @@ namespace KLTN.Controllers
                 {
                     UserId = report.UserId,
                     Message =
-                        $"Báo cáo của bạn đối với bài đăng '{house.NameHouse}' đã được admin duyệt.",
+                        $"Báo cáo của bạn đối với bài đăng có tiêu đề: {house.NameHouse} đã được admin duyệt.",
                     CreatedAt = DateTime.Now,
                     IsRead = false,
                 }
@@ -812,7 +777,8 @@ namespace KLTN.Controllers
                 .Reports.Where(r => r.HouseId == report.HouseId && r.IsApproved)
                 .CountAsync();
 
-            if (approvedCount >= 3 && house.Status != HouseStatus.Hidden)
+            // thêm 1 lần true ở trên
+            if (approvedCount >= 2 && house.Status != HouseStatus.Hidden)
             {
                 house.Status = HouseStatus.Hidden;
                 house.IsAutoHidden = true;
@@ -823,7 +789,7 @@ namespace KLTN.Controllers
                     {
                         UserId = house.IdUser,
                         Message =
-                            $"Bài đăng '{house.NameHouse}' của bạn đã bị ẩn do bị báo cáo quá nhiều lần.",
+                            $"Bài đăng của bạn có tiêu đề: {house.NameHouse} đã bị ẩn do bị báo cáo quá nhiều lần.",
                         CreatedAt = DateTime.Now,
                         IsRead = false,
                     }
@@ -835,7 +801,7 @@ namespace KLTN.Controllers
                     {
                         UserId = report.UserId,
                         Message =
-                            $"Báo cáo của bạn đối với bài đăng '{house.NameHouse}' đã được admin duyệt và bài đăng đã bị ẩn.",
+                            $"Báo cáo của bạn đối với bài đăng có tiêu đề: {house.NameHouse} đã được admin duyệt và bài đăng đã bị ẩn.",
                         CreatedAt = DateTime.Now,
                         IsRead = false,
                     }
@@ -849,7 +815,7 @@ namespace KLTN.Controllers
                     {
                         UserId = house.IdUser,
                         Message =
-                            $"Bài đăng '{house.NameHouse}' của bạn đã bị báo cáo và báo cáo đã được admin duyệt.",
+                            $"Bài đăng của bạn có tiêu đề: {house.NameHouse} đã bị báo cáo và báo cáo đã được admin duyệt.",
                         CreatedAt = DateTime.Now,
                         IsRead = false,
                     }
@@ -921,7 +887,7 @@ namespace KLTN.Controllers
             {
                 UserId = report.UserId, // Người báo cáo
                 Message =
-                    $"Báo cáo của bạn đối với bài đăng '{house.NameHouse}' đã bị từ chối bởi Admin.",
+                    $"Báo cáo của bạn đối với bài đăng có tiêu đề: {house.NameHouse} đã bị từ chối bởi Admin.",
                 CreatedAt = DateTime.Now,
                 IsRead = false,
             };

@@ -30,6 +30,12 @@ h3 {
   margin-right: auto;
 }
 
+td:first-child {
+  white-space: normal; /* Cho phép xuống dòng */
+  word-break: break-word; /* Nếu từ quá dài thì cắt từ */
+  max-width: 250px; /* Giới hạn chiều rộng tối đa */
+}
+
 /* Định dạng khác cho phần container */
 .container {
   width: 90%;

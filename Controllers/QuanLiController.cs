@@ -334,7 +334,7 @@ namespace KLTN.Controllers
                 {
                     UserId = admin.IdUser, // Gửi thông báo cho Admin
                     Message =
-                        $"Người dùng {User.Identity.Name} đã chỉnh sửa bài đăng: {existingHouse.NameHouse}.",
+                        $"Người dùng {User.Identity.Name} đã chỉnh sửa bài đăng có tiêu đề: {existingHouse.NameHouse}.",
                     CreatedAt = DateTime.Now,
                     IsRead = false,
                 };

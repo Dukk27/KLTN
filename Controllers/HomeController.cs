@@ -45,6 +45,8 @@ namespace KLTN.Controllers
             string sortBy,
             string roomType,
             List<string> amenities,
+            double? minArea,
+            double? maxArea,
             string province,
             string district,
             string ward,
@@ -68,14 +70,17 @@ namespace KLTN.Controllers
             ViewBag.SortBy = sortBy;
             ViewBag.RoomType = roomType;
             ViewBag.SelectedAmenities = amenities;
-
+            ViewBag.MinArea = minArea;
+            ViewBag.MaxArea = maxArea;
             // Truy vấn tìm kiếm theo địa chỉ
             var houses = await _houseRepository.GetFilteredHousesAsync(
                 searchString,
                 priceRange,
                 sortBy,
                 roomType,
-                amenities
+                amenities,
+                minArea,
+                maxArea
             );
 
             if (!string.IsNullOrEmpty(province))
@@ -185,6 +190,15 @@ namespace KLTN.Controllers
                 filterDescription += $"Phường/Xã: {ward}, ";
             }
 
+            if (minArea.HasValue && maxArea.HasValue)
+            {
+                filterDescription += $"Diện tích: {minArea} - {maxArea} m², ";
+            }
+            else if (minArea.HasValue)
+            {
+                filterDescription += $"Diện tích từ: {minArea} m², ";
+            }
+
             // Xóa dấu phẩy cuối cùng nếu có
             if (!string.IsNullOrEmpty(filterDescription))
             {
@@ -253,6 +267,7 @@ namespace KLTN.Controllers
             ViewBag.UserRole = userRole;
             ViewBag.CurrentUserId = currentUserId;
             ViewBag.OwnerId = house.IdUserNavigation?.IdUser;
+            ViewBag.OwnerName = house.IdUserNavigation?.UserName;
 
             // Kiểm tra xem tài khoản của chủ nhà có bị khóa hay không
             var owner = await _accountRepository.GetAccountByIdAsync(house.IdUser);
@@ -268,6 +283,7 @@ namespace KLTN.Controllers
             }
             var otherHouses = _context
                 .Houses.Include(h => h.HouseDetails)
+                .Include(h => h.HouseType)
                 .Where(h =>
                     h.IdUser == house.IdUser
                     && h.IdHouse != id
@@ -285,11 +301,14 @@ namespace KLTN.Controllers
                     HouseDetails =
                         h.HouseDetails.ToList() // Chuyển HashSet thành List
                     ,
+                    HouseType = h.HouseType,
                 })
                 .ToList();
 
             var otherHousesUser = _context
                 .Houses.Include(h => h.HouseDetails)
+                .Include(h => h.IdUserNavigation) // Include để lấy user
+                .Include(h => h.HouseType) // Include lấy housetype
                 .Where(h =>
                     h.IdUser != house.IdUser
                     && h.IdHouse != id
@@ -300,7 +319,6 @@ namespace KLTN.Controllers
                 .OrderByDescending(h =>
                     h.HouseDetails.OrderByDescending(d => d.TimePost).FirstOrDefault().TimePost
                 ) // Sắp xếp theo TimePost mới nhất
-                .Take(5) // Lấy 3 nhà trọ khác
                 .Select(h => new House
                 {
                     IdHouse = h.IdHouse,
@@ -308,6 +326,8 @@ namespace KLTN.Controllers
                     HouseDetails =
                         h.HouseDetails.ToList() // Chuyển HashSet thành List
                     ,
+                    IdUserNavigation = h.IdUserNavigation,
+                    HouseType = h.HouseType,
                 })
                 .ToList();
 

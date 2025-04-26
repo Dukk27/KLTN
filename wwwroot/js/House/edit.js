@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   form.addEventListener("submit", function (event) {
     event.preventDefault(); // Ngăn chặn submit mặc định
-    
+
     let isValid = true;
     $(".text-danger").text(""); // Xóa thông báo lỗi cũ
 
@@ -60,9 +60,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Kiểm tra nếu địa chỉ không được chọn từ gợi ý
-    if (!$('#address').val().trim()) {
-        $('#fullAddressError').text("Vui lòng chọn địa chỉ từ danh sách gợi ý");
-        isValid = false;
+    if (!$("#address").val().trim()) {
+      $("#fullAddressError").text("Vui lòng chọn địa chỉ từ danh sách gợi ý");
+      isValid = false;
     }
 
     if (!$("#House_NameHouse").val().trim()) {
@@ -209,54 +209,86 @@ document.addEventListener("DOMContentLoaded", function () {
     let input = document.getElementById("tienDien");
 
     if (method === "bao-gom") {
-        // Nếu phương thức là "Bao gồm trong tiền trọ"
-        if (input.value !== "Bao gồm trong tiền trọ") {
-            input.value = "Bao gồm trong tiền trọ"; // Gán lại giá trị
-        }
-        input.readOnly = true; // Làm cho ô nhập liệu không thể chỉnh sửa
+      // Nếu phương thức là "Bao gồm trong tiền trọ"
+      if (input.value !== "Bao gồm trong tiền trọ") {
+        input.value = "Bao gồm trong tiền trọ"; // Gán lại giá trị
+      }
+      input.readOnly = true; // Làm cho ô nhập liệu không thể chỉnh sửa
     } else {
-        input.readOnly = false; // Làm cho ô nhập liệu có thể chỉnh sửa lại
-        let value = input.value.replace(/\D/g, ""); // Loại bỏ các ký tự không phải số
-        if (value) {
-            input.value = method === "theo-so" ? value + " VND/kWh" : value + " VND/Tháng";
-        } else {
-            input.value = ""; // Nếu không có giá trị thì gán rỗng
-        }
+      input.readOnly = false; // Làm cho ô nhập liệu có thể chỉnh sửa lại
+      let value = input.value.replace(/\D/g, ""); // Loại bỏ các ký tự không phải số
+      if (value) {
+        input.value =
+          method === "theo-so" ? value + " VND/kWh" : value + " VND/Tháng";
+      } else {
+        input.value = ""; // Nếu không có giá trị thì gán rỗng
+      }
     }
   }
 
   function updateWaterPrice() {
-      let method = document.getElementById("waterBillingMethod")?.value;
-      let input = document.getElementById("tienNuoc");
+    let method = document.getElementById("waterBillingMethod")?.value;
+    let input = document.getElementById("tienNuoc");
 
-      if (method === "bao-gom") {
-          // Nếu phương thức là "Bao gồm trong tiền trọ"
-          if (input.value !== "Bao gồm trong tiền trọ") {
-              input.value = "Bao gồm trong tiền trọ"; // Gán lại giá trị
-          }
-          input.readOnly = true; // Làm cho ô nhập liệu không thể chỉnh sửa
-      } else {
-          input.readOnly = false; // Làm cho ô nhập liệu có thể chỉnh sửa lại
-          let value = input.value.replace(/\D/g, ""); // Loại bỏ các ký tự không phải số
-          if (value) {
-              input.value = method === "theo-so" ? value + " VND/m³" : value + " VND/Tháng";
-          } else {
-              input.value = ""; // Nếu không có giá trị thì gán rỗng
-          }
+    if (method === "bao-gom") {
+      // Nếu phương thức là "Bao gồm trong tiền trọ"
+      if (input.value !== "Bao gồm trong tiền trọ") {
+        input.value = "Bao gồm trong tiền trọ"; // Gán lại giá trị
       }
+      input.readOnly = true; // Làm cho ô nhập liệu không thể chỉnh sửa
+    } else {
+      input.readOnly = false; // Làm cho ô nhập liệu có thể chỉnh sửa lại
+      let value = input.value.replace(/\D/g, ""); // Loại bỏ các ký tự không phải số
+      if (value) {
+        input.value =
+          method === "theo-so" ? value + " VND/m³" : value + " VND/Tháng";
+      } else {
+        input.value = ""; // Nếu không có giá trị thì gán rỗng
+      }
+    }
   }
 
-  document
-      .getElementById("electricityBillingMethod")
-      ?.addEventListener("change", updateElectricityPrice);
+  // Tự động thêm đơn vị khi nhập tiền điện
+  $("#tienDien").on("input blur", function () {
+    let method = $("#electricityBillingMethod").val();
+    if (method !== "bao-gom") {
+      let value = $(this).val().replace(/\D/g, "");
+      if (value) {
+        $(this).val(
+          method === "theo-so" ? value + " VND/kWh" : value + " VND/Tháng"
+        );
+      } else {
+        $(this).val("");
+      }
+    }
+  });
+
+  // Tự động thêm đơn vị khi nhập tiền nước
+  $("#tienNuoc").on("input blur", function () {
+    let method = $("#waterBillingMethod").val();
+    if (method !== "bao-gom") {
+      let value = $(this).val().replace(/\D/g, "");
+      if (value) {
+        $(this).val(
+          method === "theo-so" ? value + " VND/m³" : value + " VND/Tháng"
+        );
+      } else {
+        $(this).val("");
+      }
+    }
+  });
 
   document
-      .getElementById("waterBillingMethod")
-      ?.addEventListener("change", updateWaterPrice);
+    .getElementById("electricityBillingMethod")
+    ?.addEventListener("change", updateElectricityPrice);
+
+  document
+    .getElementById("waterBillingMethod")
+    ?.addEventListener("change", updateWaterPrice);
 
   // Hàm khởi tạo trang, kiểm tra trạng thái ban đầu của các phương thức
-  $(document).ready(function() {
-      updateElectricityPrice(); // Đảm bảo giá trị được khởi tạo đúng khi trang load
-      updateWaterPrice(); // Đảm bảo giá trị được khởi tạo đúng khi trang load
+  $(document).ready(function () {
+    updateElectricityPrice(); // Đảm bảo giá trị được khởi tạo đúng khi trang load
+    updateWaterPrice(); // Đảm bảo giá trị được khởi tạo đúng khi trang load
   });
 });

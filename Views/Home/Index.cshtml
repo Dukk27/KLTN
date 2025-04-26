@@ -30,6 +30,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
     <!-- JS của Slick Carousel -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
@@ -115,6 +116,7 @@
                                     <select class="form-control" name="priceRange">
                                         <option value="" disabled selected>Khoảng giá</option> <!-- Placeholder cho khoảng giá -->
                                         <option value="">Tất cả</option>
+                                        <option value="0-999999" selected="@(ViewBag.PriceRange == "0-999999")">Dưới 1 triệu</option>
                                         <option value="1000000-3000000" selected="@(ViewBag.PriceRange == "1000000-3000000")">1-3 triệu</option>
                                         <option value="3000000-5000000" selected="@(ViewBag.PriceRange == "3000000-5000000")">3-5 triệu</option>
                                         <option value="5000000-10000000" selected="@(ViewBag.PriceRange == "5000000-10000000")">5-10 triệu</option>
@@ -127,9 +129,16 @@
                                     <select class="form-control" name="sortBy">
                                         <option value="" disabled selected>Sắp xếp theo</option> <!-- Placeholder cho sắp xếp -->
                                         <option value="newest" selected="@(ViewBag.SortBy == "newest")">Mới nhất</option>
+                                        <option value="oldest" selected="@(ViewBag.SortBy == "oldest")">Cũ nhất</option>
                                         <option value="priceLowHigh" selected="@(ViewBag.SortBy == "priceLowHigh")">Giá: Thấp đến Cao</option>
                                         <option value="priceHighLow" selected="@(ViewBag.SortBy == "priceHighLow")">Giá: Cao đến Thấp</option>
                                     </select>
+                                </div>
+
+                                <!-- Diện tích -->
+                                <div class="col-md-4 mb-3 d-flex gap-2">
+                                    <input type="number" name="minArea" class="form-control" placeholder="Diện tích từ (m²)" value="@ViewBag.MinArea" min="0" />
+                                    <input type="number" name="maxArea" class="form-control" placeholder="Đến (m²)" value="@ViewBag.MaxArea" min="0" />
                                 </div>
                             </div>
                         </div>
@@ -211,16 +220,16 @@
                                                 }
                                                 <img src="@firstImage" class="card-img-top" alt="@house.NameHouse"
                                                     style="height: 200px; object-fit: cover;">
-                                                <div class="card-body d-flex flex-column">
-                                                    <h5 class="card-title">@house.NameHouse</h5>
+                                                <div class="card-body d-flex flex-column"> 
+                                                    <h5 class="card-title"><strong>@house.NameHouse</strong></h5>
                                                     <p class="card-text"><strong>Người đăng:</strong> @house.IdUserNavigation.UserName</p>
-                                                    <p class="card-text"><strong>Địa chỉ:</strong> @house.HouseDetails.FirstOrDefault()?.Address</p>
+                                                    <p class="card-text address-truncate"><strong>Địa chỉ:</strong> @house.HouseDetails.FirstOrDefault()?.Address</p>
                                                     <p class="card-text">
                                                         <strong>Giá nhà:</strong>
                                                         <span style="color: red;">
                                                             @house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND
                                                         </span>
-                                                    </p>
+                                                    </p> 
                                                     <p class="card-text">
                                                         <strong>Diện tích:</strong> @house.HouseDetails.FirstOrDefault()?.DienTich m²
                                                     </p>
@@ -308,6 +317,8 @@
                             sortBy = ViewBag.SortBy,
                             roomType = ViewBag.RoomType,
                             amenities = ViewBag.SelectedAmenities,
+                            minArea = ViewBag.MinArea,
+                            maxArea = ViewBag.MaxArea,
                             pageNumber = Model.CurrentPage - 1,
                             scroll = "true"
                         })">«</a>
@@ -323,6 +334,8 @@
                             sortBy = ViewBag.SortBy,
                             roomType = ViewBag.RoomType,
                             amenities = ViewBag.SelectedAmenities,
+                            minArea = ViewBag.MinArea,
+                            maxArea = ViewBag.MaxArea,
                             pageNumber = i,
                             scroll = "true"
                         })">@i</a>
@@ -338,6 +351,8 @@
                             sortBy = ViewBag.SortBy,
                             roomType = ViewBag.RoomType,
                             amenities = ViewBag.SelectedAmenities,
+                            minArea = ViewBag.MinArea,
+                            maxArea = ViewBag.MaxArea,
                             pageNumber = Model.CurrentPage + 1,
                             scroll = "true"
                         })">»</a>
