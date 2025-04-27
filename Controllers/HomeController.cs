@@ -171,8 +171,23 @@ namespace KLTN.Controllers
             }
             if (!string.IsNullOrEmpty(priceRange))
             {
-                filterDescription += $"Giá: {priceRange.Replace("-", " - ")} VND, ";
+                var prices = priceRange.Split('-');
+                if (
+                    prices.Length == 2
+                    && decimal.TryParse(prices[0], out decimal minPrice)
+                    && decimal.TryParse(prices[1], out decimal maxPrice)
+                )
+                {
+                    var culture = new System.Globalization.CultureInfo("vi-VN");
+                    filterDescription +=
+                        $"Giá thuê: {minPrice.ToString("#,0", culture)} - {maxPrice.ToString("#,0", culture)} VND/Tháng, ";
+                }
+                else
+                {
+                    filterDescription += $"Giá thuê: {priceRange.Replace("-", " - ")} VND/Tháng, ";
+                }
             }
+
             if (amenities != null && amenities.Any())
             {
                 filterDescription += $"Tiện nghi: {string.Join(", ", amenities)}, ";

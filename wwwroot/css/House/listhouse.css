@@ -36,6 +36,14 @@ td:first-child {
   max-width: 250px; /* Giới hạn chiều rộng tối đa */
 }
 
+td:nth-child(2) { /* Chọn <td> thứ 2 chứa địa chỉ */
+  max-width: 350px;  /* Giới hạn chiều rộng tối đa */
+  white-space: normal; /* Cho phép xuống dòng */
+  word-break: break-word; /* Nếu từ quá dài thì cắt từ */
+  overflow: hidden; /* Ẩn phần vượt ra ngoài */
+  padding: 8px; /* Thêm padding cho ô */
+}
+
 /* Định dạng khác cho phần container */
 .container {
   width: 90%;
@@ -43,8 +51,20 @@ td:first-child {
   margin-bottom: 20px;
 }
 
+/* Khi màn hình nhỏ hơn 992px */
 @media (max-width: 992px) {
-  user-houses-page .action-buttons {
+  .table-responsive {
+    overflow-x: auto; /* Cho phép cuộn ngang */
+  }
+
+  .table td {
+    padding: 8px; /* Thêm padding cho các ô */
+    text-align: center; /* Căn giữa nội dung */
+  }
+  td, th {
+    min-width: 100px; /* Đảm bảo mỗi cột có độ rộng tối thiểu */
+  }
+  .user-houses-page .action-buttons {
     justify-content: center;
   }
 
@@ -59,20 +79,10 @@ td:first-child {
   }
 }
 
+/* Khi màn hình nhỏ hơn 768px */
 @media (max-width: 768px) {
-  user-houses-page .action-buttons {
-    justify-content: center;
-  }
-
-  .user-houses-page .action-buttons .btn {
-    flex: 1 0 45%;
-    max-width: 48%;
-  }
-  
-  .btn {
-    display: block;
-    width: 100%;
-    margin: 5px 0;
+  .no-posts-message {
+    margin-bottom: 20px;
   }
 
   .iziToast {

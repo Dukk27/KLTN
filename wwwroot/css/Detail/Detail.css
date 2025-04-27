@@ -58,10 +58,81 @@ h1 {
 }
 
 .detail-image {
-  max-width: 90%; /* Image should take the full width of the container */
-  height: auto; /* Maintain aspect ratio */
+  max-width: 90%; 
+  height: auto; 
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* css carousel lướt ảnh */
+.carousel-item img {
+  width: 100%;
+  height: 500px;
+  background-color: #f0f0f0;
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+
+.carousel-indicators [data-bs-target] {
+  background-color: #54585c;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.carousel {
+  position: relative;
+  max-width: 100%; /* Giữ cho carousel không vượt quá kích thước của nó */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.carousel-control-prev {
+  left: 10px; /* Giữ khoảng cách với mép carousel */
+}
+
+.carousel-control-next {
+  right: 10px; /* Giữ khoảng cách với mép carousel */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* css hiện ảnh */
+.fullscreen-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(75, 70, 70, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.fullscreen-image img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  cursor: pointer;
 }
 
 .house-info {
@@ -485,76 +556,6 @@ h1 {
 
 .action-btn i {
   margin-right: 8px;
-}
-
-/* css carousel lướt ảnh */
-.carousel-item img {
-  width: 100%;
-  height: 400px;
-  background-color: #f0f0f0;
-  margin-bottom: 50px;
-}
-
-.carousel-indicators [data-bs-target] {
-  background-color: #54585c;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.carousel {
-  position: relative;
-  max-width: 100%; /* Giữ cho carousel không vượt quá kích thước của nó */
-}
-
-.carousel-control-prev,
-.carousel-control-next {
-  position: absolute;
-  top: 45%;
-  transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
-
-.carousel-control-prev {
-  left: 10px; /* Giữ khoảng cách với mép carousel */
-}
-
-.carousel-control-next {
-  right: 10px; /* Giữ khoảng cách với mép carousel */
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  width: 20px;
-  height: 20px;
-}
-
-/* css hiện ảnh */
-.fullscreen-image {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(75, 70, 70, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.fullscreen-image img {
-  max-width: 90%;
-  max-height: 90%;
-  object-fit: contain;
-  cursor: pointer;
 }
 
 .xem-chi-tiet-btn {

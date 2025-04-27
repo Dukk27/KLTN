@@ -31,6 +31,7 @@
                                 <th>Người Đăng</th>
                             }
                             <th>Trạng Thái</th>
+                            <th>Ngày Đăng</th>
                             <th>Hành Động</th>
                         </tr>
                     </thead>
@@ -71,8 +72,9 @@
                                         <span class="badge bg-warning">Yêu cầu cập nhật lại.<br> Bài đăng đã quá 30 ngày</span>
                                     }
                                 </td>
+                                <td>@house.HouseDetails.FirstOrDefault()?.TimePost.ToString("dd/MM/yyyy")</td>
                                 <td>
-                                    <div class="d-flex flex-wrap gap-1">
+                                    <div class="d-flex justify-content-center gap-1">
                                         <button class="btn btn-sm btn-primary" onclick="viewDetail(@house.IdHouse, 'house')" title="Xem chi tiết">
                                             <i class="fas fa-eye"></i>
                                         </button>

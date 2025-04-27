@@ -130,4 +130,46 @@ h2 {
     white-space: normal;
     line-height: 1.5;
     font-size: 16px;
+} 
+
+@media (max-width: 992px) {
+    /* Container chính */
+    .notification-container {
+        padding: 15px;
+        margin: 15px;
+    }
+
+    /* Tiêu đề */
+    .notification-container h2 {
+        font-size: 22px;
+    }
+
+    /* Nút hành động */
+    .notification-actions {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .notification-actions button {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    /* Danh sách thông báo */
+    .notification-list li {
+        flex-direction: row;
+        text-align: left;
+    }
+
+    .notification-list li button {
+        margin-top: 5px;
+        width: 100%;
+        max-width: 80px;
+    }
+
+    .notification-list li span {
+        font-size: 14px;
+        max-width: 80%;
+    }
 }

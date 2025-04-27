@@ -1,11 +1,10 @@
 .layout-wrapper {
     display: flex;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
+    /* min-height: 100vh; */
 }
 
 /* Sidebar */
-.sidebar {
+/* .sidebar {
     width: 300px;
     background-color: #f4f2f2;
     color: #F9F9F9;
@@ -34,14 +33,14 @@
 
 .sidebar-menu a:hover {
     background-color: #34495e;
-}
+} */
 
 /* Main content */
 .main-content {
     flex: 1;
-    padding: 20px;
+    /* padding: 20px; */
     background-color: #f8f9fa;
-    overflow-y: auto;
+    /* overflow-y: auto; */
 }
 
 .breadcrumb {

@@ -156,7 +156,7 @@ namespace KLTN.Controllers
         public async Task<IActionResult> Logout(string returnUrl = null)
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Session.Remove("UserName");
+            HttpContext.Session.Clear();
 
             var userName = HttpContext.Session.GetString("UserName");
             if (!string.IsNullOrEmpty(userName))

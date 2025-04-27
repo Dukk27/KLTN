@@ -114,7 +114,7 @@
                                         class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : null)"
                                         aria-label="Slide @(i + 1)"></button>;
                                 i++;
-                            }
+                            } 
                         }
                     }
                 </div>
@@ -151,27 +151,25 @@
             <div class="house-info">
                 @foreach (var detail in Model.HouseDetails)
                 {
-                    @{
-                        var timeDiffNullable = DateTime.Now - detail.TimeUpdate;
-                        var timeDiff = timeDiffNullable.HasValue ? timeDiffNullable.Value : TimeSpan.Zero;
-                        string timeDisplay = "";
+                    var timeDiffNullable = DateTime.Now - detail.TimeUpdate;
+                    var timeDiff = timeDiffNullable.HasValue ? timeDiffNullable.Value : TimeSpan.Zero;
+                    string timeDisplay = "";
 
-                        if (timeDiff.TotalMinutes < 1)
-                        {
-                            timeDisplay = "Vừa xong";
-                        }
-                        else if (timeDiff.TotalMinutes < 60)
-                        {
-                            timeDisplay = $"{(int)timeDiff.TotalMinutes} phút trước";
-                        }
-                        else if (timeDiff.TotalHours < 24)
-                        {
-                            timeDisplay = $"{(int)timeDiff.TotalHours} giờ trước";
-                        }
-                        else
-                        {
-                            timeDisplay = $"{(int)timeDiff.TotalDays} ngày trước";
-                        }
+                    if (timeDiff.TotalMinutes < 1)
+                    {
+                        timeDisplay = "Vừa xong";
+                    }
+                    else if (timeDiff.TotalMinutes < 60)
+                    {
+                        timeDisplay = $"{(int)timeDiff.TotalMinutes} phút trước";
+                    }
+                    else if (timeDiff.TotalHours < 24)
+                    {
+                        timeDisplay = $"{(int)timeDiff.TotalHours} giờ trước";
+                    }
+                    else
+                    {
+                        timeDisplay = $"{(int)timeDiff.TotalDays} ngày trước";
                     }
 
                     <div class="address-box mb-3">

@@ -559,7 +559,7 @@
         const isLoggedIn = '@(!string.IsNullOrEmpty(userName))'.toLowerCase() === 'true';
 
         document.addEventListener("DOMContentLoaded", function () {
-            // ========== 1. Xử lý logout ==========
+            // Logout
             const logoutLink = document.getElementById("logoutLink");
             if (logoutLink) {
                 logoutLink.addEventListener("click", function (e) {
@@ -594,7 +594,7 @@
                 });
             }
 
-            // ========== 2. Load Notification ==========
+            // Load Notification
             function loadNotifications() {
                 $.get('/Notification/GetUnreadNotificationCount', function (data) {
                     if (data.count > 0) {
@@ -672,7 +672,7 @@
             setInterval(loadNotifications, 4000);
             loadNotifications();
 
-            // ========== 3. Load Unread Messages ==========
+            // Load Unread Messages 
             function loadUnreadMessages() {
                 $.get('/Chat/GetUnreadMessagesCount', function (data) {
                     if (data.count > 0) {
@@ -683,9 +683,9 @@
                 });
             }
             setInterval(loadUnreadMessages, 1000);
-            loadUnreadMessages();
+            loadUnreadMessages(); 
 
-            // ========== 4. Modal đăng tin ==========
+            // Modal đăng tin 
             document.querySelectorAll("#showCreateHouseForm").forEach(button => {
                 button.addEventListener("click", function () {
                     if (!isLoggedIn) {

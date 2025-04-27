@@ -77,6 +77,8 @@ namespace KLTN.Controllers
                     }
                 }
 
+                houses = houses.OrderByDescending(h => h.HouseDetails.FirstOrDefault()?.TimePost);
+
                 var viewModel = new HomeViewModel
                 {
                     Houses = houses,
