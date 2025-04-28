@@ -110,8 +110,8 @@ h1 {
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
 }
 
 /* css hiện ảnh */
@@ -679,6 +679,13 @@ h1 {
   display: -webkit-box;
   -webkit-line-clamp: 2; /* hiển thị tối đa 2 dòng */
   -webkit-box-orient: vertical;
+  line-height: 1.8em; 
+  min-height: 3.6em;
+}
+
+.card-link {
+  text-decoration: none; /* Loại bỏ gạch dưới mặc định của thẻ <a> */
+  color: inherit; /* Giữ nguyên màu sắc của các phần tử trong card */
 }
 
 @media (max-width: 992px) {

@@ -241,6 +241,20 @@
                             <span>@timeDisplay</span>
                         </p>
                     </div>
+
+                    @if (Model.Reviews != null && Model.Reviews.Any())
+                    {
+                        var avgRating = Model.Reviews.Average(r => r.Rating);
+                        var roundedRating = Math.Round(avgRating, 1); // làm tròn 1 số thập phân, ví dụ: 4.3 ★
+
+                        <div class="address-box mb-3">
+                            <p style="font-size: 18px; font-style: italic">
+                                <strong>Đánh giá trung bình:</strong> 
+                                <span>@roundedRating <i class="fa fa-star text-warning"></i></span> 
+                                (<span>@Model.Reviews.Count() đánh giá</span>)
+                            </p>
+                        </div>
+                    }
                 }
             </div>
         </div>
@@ -413,7 +427,7 @@
             {
                 <p class="no-houses-message">Chủ nhà chưa có phòng trọ khác.</p>
             }
-        </div>
+        </div> 
         <div class="slick-house-carousel">
             @if (ViewBag.OtherHouses != null && (ViewBag.OtherHouses as List<KLTN.Models.House>)?.Any() == true)
             {
@@ -425,19 +439,21 @@
                         var timePost = firstDetail.TimePost;
 
                         <div class="card me-2">
-                            <img src="@firstDetail.Image.Split(',')[0]" class="card-img-top" style="height: 160px; object-fit: cover;" />
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title"><strong>@otherHouse.NameHouse</strong></h5>
-                                <p class="card-text"><strong>Người đăng:</strong> <span>@ViewBag.OwnerName</span></p>
-                                <p class="card-text address-truncate"><strong>Địa chỉ:</strong> @firstDetail.Address</p>
-                                <p class="card-text"><strong>Diện tích:</strong> @firstDetail.DienTich m²</p>
-                                <p class="card-text"><strong>Giá:</strong> 
-                                    <span style="color: red">@firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</span>
-                                </p>
-                                <p class="card-text"><strong>Loại nhà trọ:</strong> @otherHouse.HouseType?.Name</p>
-                                <p class="card-text"><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy")</p>
-                                <a href="@Url.Action("Detail", "Home", new { id = otherHouse.IdHouse })" class="btn btn-sm btn-primary mt-auto">Xem Chi Tiết</a>
-                            </div>
+                            <a href="@Url.Action("Detail", "Home", new { id = otherHouse.IdHouse })" class="card-link">
+                                <img src="@firstDetail.Image.Split(',')[0]" class="card-img-top" style="height: 160px; object-fit: cover;" />
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title"><strong>@otherHouse.NameHouse</strong></h5>
+                                    <p class="card-text"><strong>Người đăng:</strong> <span>@ViewBag.OwnerName</span></p>
+                                    <p class="card-text address-truncate"><strong>Địa chỉ:</strong> @firstDetail.Address</p>
+                                    <p class="card-text"><strong>Diện tích:</strong> @firstDetail.DienTich m²</p>
+                                    <p class="card-text"><strong>Giá:</strong> 
+                                        <span style="color: red">@firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</span>
+                                    </p>
+                                    <p class="card-text"><strong>Loại nhà trọ:</strong> @otherHouse.HouseType?.Name</p>
+                                    <p class="card-text"><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy")</p>
+                                    @* <a href="@Url.Action("Detail", "Home", new { id = otherHouse.IdHouse })" class="btn btn-sm btn-primary mt-auto">Xem Chi Tiết</a> *@
+                                </div>
+                            </a>
                         </div>
                     }
                 }
@@ -457,19 +473,21 @@
                         var timePost = firstDetail.TimePost;
 
                         <div class="card me-2">
-                            <img src="@firstDetail.Image.Split(',')[0]" class="card-img-top" style="height: 160px; object-fit: cover;" />
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title"><strong>@house.NameHouse</strong></h5>
-                                <p class="card-text"><strong>Người đăng:</strong> @house.IdUserNavigation?.UserName</p>
-                                <p class="card-text address-truncate"><strong>Địa chỉ:</strong> @firstDetail.Address</p>
-                                <p class="card-text"><strong>Diện tích:</strong> @firstDetail.DienTich m²</p>
-                                <p class="card-text"><strong>Giá:</strong>
-                                    <span style="color: red">@firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</span>
-                                </p>
-                                <p class="card-text"><strong>Loại nhà trọ:</strong> @house.HouseType?.Name</p>
-                                <p class="card-text"><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy")</p>
-                                <a href="@Url.Action("Detail", "Home", new { id = house.IdHouse })" class="btn btn-sm btn-primary mt-auto">Xem Chi Tiết</a>
-                            </div>
+                            <a href="@Url.Action("Detail", "Home", new { id = house.IdHouse })" class="card-link">
+                                <img src="@firstDetail.Image.Split(',')[0]" class="card-img-top" style="height: 160px; object-fit: cover;" />
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title"><strong>@house.NameHouse</strong></h5>
+                                    <p class="card-text"><strong>Người đăng:</strong> @house.IdUserNavigation?.UserName</p>
+                                    <p class="card-text address-truncate"><strong>Địa chỉ:</strong> @firstDetail.Address</p>
+                                    <p class="card-text"><strong>Diện tích:</strong> @firstDetail.DienTich m²</p>
+                                    <p class="card-text"><strong>Giá:</strong>
+                                        <span style="color: red">@firstDetail.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</span>
+                                    </p>
+                                    <p class="card-text"><strong>Loại nhà trọ:</strong> @house.HouseType?.Name</p>
+                                    <p class="card-text"><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy")</p>
+                                    @* <a href="@Url.Action("Detail", "Home", new { id = house.IdHouse })" class="btn btn-sm btn-primary mt-auto">Xem Chi Tiết</a> *@
+                                </div>
+                            </a>
                         </div>
                     }
                 }
@@ -729,7 +747,7 @@
    
         // Carousel cho bài đăng khác của chủ trọ và có thể bạn quan tâm
         $('.slick-house-carousel').slick({
-            slidesToShow: 5,
+            slidesToShow: 4,
             slidesToScroll: 1,
             arrows: true,
             prevArrow: '<button type="button" class="slick-custom-prev"><i class="fas fa-chevron-left"></i></button>',
@@ -738,23 +756,17 @@
                 {
                     breakpoint: 1200,
                     settings: {
-                        slidesToShow: 4
+                        slidesToShow: 3
                     }
                 },
                 {
                     breakpoint: 992,
                     settings: {
-                        slidesToShow: 3
-                    }
-                },
-                {
-                    breakpoint: 768,
-                    settings: {
                         slidesToShow: 2
                     }
                 },
                 {
-                    breakpoint: 576,
+                    breakpoint: 768,
                     settings: {
                         slidesToShow: 1
                     }
