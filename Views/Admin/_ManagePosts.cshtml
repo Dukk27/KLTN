@@ -31,9 +31,31 @@
 <body>
     <h3 class="text-center mt-3">Quản lý bài đăng</h3>
 
-    <div class="row mb-3">
-        <div class="col-12 col-md-4">
-            <input type="text" id="searchInput" class="form-control" placeholder="🔍 Tìm kiếm bài đăng..">
+    <div class="row mb-3 mt-3">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm bài đăng..">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <select id="statusFilter" class="form-control">
+                <option value="">-- Lọc theo trạng thái --</option>
+                <option value="Chờ duyệt">Chờ duyệt</option>
+                <option value="Đã duyệt">Đã duyệt</option>
+                <option value="Bị từ chối">Bị từ chối</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select id="userFilter" class="form-control">
+                <option value="">-- Lọc theo người đăng --</option>
+                @foreach (var user in Model.Select(h => h.IdUserNavigation.UserName).Distinct())
+                {
+                    <option value="@user">@user</option>
+                }
+            </select>
         </div>
     </div>
     
@@ -340,6 +362,29 @@
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });
+
+            // Bộ lọc nâng cao
+            function applyFilters() {
+                const searchText = $("#searchInput").val().toLowerCase();
+                const selectedStatus = $("#statusFilter").val();
+                const selectedUser = $("#userFilter").val();
+
+                $("table tbody tr").each(function () {
+                    const row = $(this);
+                    const rowText = row.text().toLowerCase();
+                    const rowStatus = row.find("td:nth-child(6) span").text().trim();
+                    const rowUser = row.find("td:nth-child(5)").text().trim();
+
+                    const matchesSearch = rowText.indexOf(searchText) > -1;
+                    const matchesStatus = !selectedStatus || rowStatus === selectedStatus;
+                    const matchesUser = !selectedUser || rowUser === selectedUser;
+
+                    row.toggle(matchesSearch && matchesStatus && matchesUser);
+                });
+            }
+
+            // Gọi khi input thay đổi
+            $("#searchInput, #statusFilter, #userFilter").on("input change", applyFilters);
         });
     </script>
 </body>

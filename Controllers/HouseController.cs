@@ -156,7 +156,7 @@ namespace KLTN.Controllers
                         {
                             UserId = admin.IdUser, // Gửi thông báo cho Admin
                             Message =
-                                $"📢 Bài đăng mới có tiêu đề: {model.House.NameHouse} cần được duyệt.",
+                                $"Bài đăng mới có tiêu đề: {model.House.NameHouse} cần được duyệt.",
                             CreatedAt = DateTime.Now,
                             IsRead = false,
                         };

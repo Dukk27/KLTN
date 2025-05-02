@@ -62,7 +62,7 @@ namespace KLTN.Helpers
                     {
                         UserId = appointment.UserId,
                         Message =
-                            $"❗ Lịch hẹn vào {appointment.AppointmentDate:HH:mm dd/MM/yyyy} tại bài đăng có tiêu đề: {appointment.House?.NameHouse} (Địa chỉ: {houseAddress}) đã quá hạn mà chưa được xác nhận.",
+                            $"Lịch hẹn vào {appointment.AppointmentDate:HH:mm dd/MM/yyyy} tại bài đăng có tiêu đề: {appointment.House?.NameHouse} (Địa chỉ: {houseAddress}) đã quá hạn mà chưa được xác nhận.",
                         CreatedAt = DateTime.Now,
                         IsRead = false,
                     };
@@ -93,7 +93,7 @@ namespace KLTN.Helpers
                         {
                             UserId = houseOwner.IdUser,
                             Message =
-                                $"⚠️ Lịch hẹn với khách vào {appointment.AppointmentDate:HH:mm dd/MM/yyyy} tại bài đăng có tiêu đề: {appointment.House?.NameHouse} (Địa chỉ: {houseAddress}) đã quá hạn mà chưa được xác nhận.",
+                                $"Lịch hẹn với khách vào {appointment.AppointmentDate:HH:mm dd/MM/yyyy} tại bài đăng có tiêu đề: {appointment.House?.NameHouse} (Địa chỉ: {houseAddress}) đã quá hạn mà chưa được xác nhận.",
                             CreatedAt = DateTime.Now,
                             IsRead = false,
                         };
@@ -150,7 +150,7 @@ namespace KLTN.Helpers
                         {
                             UserId = houseOwner.IdUser,
                             Message =
-                                $"⏰ Bạn có lịch hẹn với khách lúc {appointment.AppointmentDate:HH:mm dd/MM/yyyy} tại bài đăng có tiêu đề: {appointment.House?.NameHouse} (Địa chỉ: {houseAddress}).",
+                                $"Bạn có lịch hẹn với khách lúc {appointment.AppointmentDate:HH:mm dd/MM/yyyy} tại bài đăng có tiêu đề: {appointment.House?.NameHouse} (Địa chỉ: {houseAddress}).",
                             CreatedAt = DateTime.Now,
                             IsRead = false,
                         };

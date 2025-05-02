@@ -16,6 +16,40 @@
         </nav>
 
         <h2>Lịch Hẹn Tôi Đã Đặt</h2>
+        
+        <div class="container">
+            <form id="searchFilterForm" class="row g-3 align-items-center mb-3">
+                <div class="col-12 col-md-3 col-lg-3">
+                    <label for="searchInput" class="form-label">Tìm kiếm</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm theo tiêu đề bài đăng..." onkeyup="filterAppointments()" />
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-3 col-lg-3">
+                    <label for="statusFilter" class="form-label">Trạng thái</label>
+                    <select id="statusFilter" class="form-select" onchange="filterAppointments()">
+                        <option value="">-- Tất cả trạng thái --</option>
+                        <option value="pending">Chờ xác nhận</option>
+                        <option value="confirmed">Đã được xác nhận</option>
+                        <option value="cancelled">Đã bị hủy</option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-md-3 col-lg-3">
+                    <label for="startDate" class="form-label">Từ ngày</label>
+                    <input type="date" id="startDate" class="form-control" onchange="filterAppointments()" />
+                </div>
+
+                <div class="col-12 col-md-3 col-lg-3">
+                    <label for="endDate" class="form-label">Đến ngày</label>
+                    <input type="date" id="endDate" class="form-control" onchange="filterAppointments()" />
+                </div>
+            </form>
+        </div>
 
         <div class="d-flex justify-content-center mb-3">
             <form method="get" class="d-inline">
@@ -40,70 +74,102 @@
         }
         else
         {
-            <div class="table-container">
-                <div class="accordion" id="appointmentAccordion">
-                    @foreach (var appt in Model)
-                    {
-                        <div class="accordion-item mb-2 @(appt.Status == AppointmentStatus.Confirmed ? "confirmed-item" : appt.Status == AppointmentStatus.Cancelled ? "cancelled-item" : "")" data-id="@appt.AppointmentId">
-                            <h2 class="accordion-header" id="heading-@appt.AppointmentId">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@appt.AppointmentId" aria-expanded="false">
-                                    <strong>@appt.House?.NameHouse</strong>&nbsp;- Ngày hẹn @appt.AppointmentDate.ToString("dd/MM/yyyy HH:mm")
-                                </button>
-                            </h2>
-                            <div id="collapse-@appt.AppointmentId" class="accordion-collapse collapse" data-bs-parent="#appointmentAccordion">
-                                <div class="accordion-body">
-                                    <p><strong>Chủ bài đăng:</strong> @appt.House?.IdUserNavigation?.UserName</p>
-                                    <p><strong>Số điện thoại:</strong> @appt.House?.IdUserNavigation?.PhoneNumber</p>
-                                    <p><strong>Email:</strong> @appt.House?.IdUserNavigation?.Email</p>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center align-middle">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Tên bài đăng</th>
+                            <th>Chủ bài đăng</th>
+                            <th>Liên hệ</th>
+                            <th>Ngày hẹn</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var appt in Model)
+                        {
+                            var currentUserId = Context.Session.GetInt32("UserId") ?? 0;
+                            var otherUserId = appt.House?.IdUserNavigation?.IdUser ?? 0;
+                            var conversationId = currentUserId < otherUserId
+                                ? $"{currentUserId}-{otherUserId}"
+                                : $"{otherUserId}-{currentUserId}";
 
-                                    <p><strong>Tên bài đăng:</strong> 
-                                        <a style= "text-decoration: none;" href="@Url.Action("Detail", "Home", new { id = appt.House?.IdHouse })">
-                                            <b>@appt.House?.NameHouse</b>
-                                        </a>
-                                    </p>     
-                                                                  
-                                    <p><strong>Trạng thái</strong>
-                                        @if (appt.Status == AppointmentStatus.Pending)
-                                        {
-                                            <span class="badge bg-warning text-dark">Chờ xác nhận</span>
-                                        }
-                                        else if (appt.Status == AppointmentStatus.Confirmed)
-                                        {
-                                            <span class="badge bg-success">Đã được xác nhận</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-danger">Đã bị hủy</span>
-                                        }
-                                    </p>
-
-                                    @{
-                                        var currentUserId = Context.Session.GetInt32("UserId") ?? 0;
-                                        var otherUserId = appt.House?.IdUserNavigation?.IdUser ?? 0;
-                                        var conversationId = currentUserId < otherUserId
-                                            ? $"{currentUserId}-{otherUserId}"
-                                            : $"{otherUserId}-{currentUserId}";
-                                    }
-
-                                    <a href="@Url.Action("ChatList", "Chat", new { conversationId = conversationId })"
-                                        class="btn btn-sm btn-primary chat-btn">
+                            <tr data-id="@appt.AppointmentId" data-status="@appt.Status.ToString().ToLower()">
+                                <td>
+                                    <a href="@Url.Action("Detail", "Home", new { id = appt.House?.IdHouse })" style="text-decoration: none">
+                                        <b>@appt.House?.NameHouse</b>
+                                    </a>
+                                </td>
+                                <td>@appt.House?.IdUserNavigation?.UserName</td>
+                                <td>
+                                    <div>@appt.House?.IdUserNavigation?.PhoneNumber</div>
+                                    <div>@appt.House?.IdUserNavigation?.Email</div>
+                                </td>
+                                <td>@appt.AppointmentDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <span class="badge @(appt.Status == AppointmentStatus.Pending ? "bg-warning text-dark" : appt.Status == AppointmentStatus.Confirmed ? "bg-success" : "bg-danger")">
+                                        @(appt.Status == AppointmentStatus.Pending ? "Chờ xác nhận" : appt.Status == AppointmentStatus.Confirmed ? "Đã được xác nhận" : "Đã bị hủy")
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("ChatList", "Chat", new { conversationId = conversationId })" class="btn btn-sm btn-primary mb-1">
                                         <i class="fas fa-comments"></i> Nhắn tin với chủ trọ
                                     </a>
-
-                                    @if (appt.Status == AppointmentStatus.Pending)
-                                    {
-                                        <div class="mt-2 text-muted">Đang chờ chủ trọ xác nhận</div>
-                                    }
-                                    else
-                                    {
-                                        <div class="text-muted mt-2">Không khả dụng</div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         }
     </div>
+
+    <script>
+        function filterAppointments() {
+            var searchInput = document.getElementById('searchInput').value.toLowerCase();
+            var statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+            var startDate = document.getElementById('startDate').value;
+            var endDate = document.getElementById('endDate').value;
+            var rows = document.querySelectorAll('table tbody tr');
+
+            rows.forEach(function (row) {
+                var titleText = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+                var rowStatus = row.getAttribute('data-status') || '';
+                var appointmentDate = row.querySelector('td:nth-child(4)').textContent.trim();
+
+                // Chuyển đổi ngày trong bảng sang định dạng yyyy-MM-dd để so sánh với ngày input
+                var formattedAppointmentDate = formatDateForComparison(appointmentDate);
+
+                // Kiểm tra các điều kiện lọc
+                var matchesSearch = titleText.includes(searchInput);
+                var matchesStatus = statusFilter === '' || rowStatus === statusFilter;
+                var matchesDate = true;
+
+                if (startDate) {
+                    matchesDate = formattedAppointmentDate >= startDate;
+                }
+
+                if (endDate) {
+                    matchesDate = matchesDate && formattedAppointmentDate <= endDate;
+                }
+
+                // Ẩn hoặc hiển thị dòng theo điều kiện lọc
+                row.style.display = (matchesSearch && matchesStatus && matchesDate) ? '' : 'none';
+            });
+        }
+
+        // Hàm chuyển đổi ngày từ định dạng dd/MM/yyyy HH:mm thành yyyy-MM-dd để so sánh với input date
+        function formatDateForComparison(appointmentDate) {
+            var dateParts = appointmentDate.split(" ")[0].split("/"); // Lấy phần ngày (dd/MM/yyyy)
+            var day = dateParts[0];
+            var month = dateParts[1];
+            var year = dateParts[2];
+            return `${year}-${month}-${day}`; // Định dạng ngày thành yyyy-MM-dd
+        }
+
+        window.onload = function () {
+            filterAppointments(); // Lọc khi tải trang
+        };
+    </script>
 </body>

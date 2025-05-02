@@ -30,20 +30,32 @@
         .house-link:hover {
             color: #0056b3; /* Thay đổi màu khi hover */
         }
-
-        #searchInput {
-            margin-top: 20px;
-            min-width: 400px; 
-        }
     </style>
 </head>
 
 <body>
     <h3 class="text-center mt-3">Danh sách báo cáo bài đăng</h3>
 
-    <div class="row mb-3">
+    <div class="row mb-3 mt-3">
         <div class="col-12 col-md-4">
-            <input type="text" id="searchInput" class="form-control" placeholder="🔍 Tìm kiếm báo xấu...">
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm báo xấu...">
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-2">
+            <input type="date" id="dateFilter" class="form-control">
+        </div>
+        <div class="col-6 col-md-3 mb-2">
+            <select id="reporterFilter" class="form-control">
+                <option value="">-- Lọc theo người báo cáo --</option>
+                @foreach (var reporter in Model.Select(r => r.User?.UserName).Distinct())
+                {
+                    <option value="@reporter">@reporter</option>
+                }
+            </select>
         </div>
     </div>
 
@@ -145,6 +157,51 @@
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });
+
+            // Lọc theo người báo cáo
+            $("#reporterFilter").on("change", function () {
+                const selectedReporter = $(this).val();
+                filterReports($("#searchInput").val(), $("#dateFilter").val(), selectedReporter);
+            });
+
+            // Lọc theo ngày
+            $("#dateFilter").on("change", function () {
+                const selectedDate = $(this).val();
+                filterReports($("#searchInput").val(), selectedDate, $("#reporterFilter").val());
+            });
+
+            // Hàm lọc báo cáo
+            function filterReports(searchText, selectedDate, selectedReporter) {
+                $("table tbody tr").each(function () {
+                    const reportText = $(this).text().toLowerCase();
+                    const reportDate = $(this).find("td:eq(4)").text().trim(); // Ngày ở cột thứ 5 (index 4)
+                    const reporterName = $(this).find("td:eq(2)").text().trim(); // Người báo cáo ở cột thứ 3 (index 2)
+
+                    // Chuyển đổi ngày trong bảng về định dạng yyyy-MM-dd
+                    const formattedReportDate = formatDateForComparison(reportDate);
+
+                    // Kiểm tra điều kiện lọc
+                    const matchesSearch = searchText === "" || reportText.indexOf(searchText.toLowerCase()) > -1;
+                    const matchesDate = selectedDate === "" || formattedReportDate === selectedDate;
+                    const matchesReporter = selectedReporter === "" || reporterName === selectedReporter;
+
+                    // Ẩn hoặc hiển thị dòng
+                    if (matchesSearch && matchesDate && matchesReporter) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+
+            // Hàm chuyển đổi ngày từ định dạng dd/MM/yyyy sang yyyy-MM-dd
+            function formatDateForComparison(reportDate) {
+                const parts = reportDate.split(" ")[0].split("/"); // Lấy ngày (dd/MM/yyyy)
+                const day = parts[0];
+                const month = parts[1];
+                const year = parts[2];
+                return `${year}-${month}-${day}`;
+            }
         });
     </script>
 </body>

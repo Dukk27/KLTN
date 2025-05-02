@@ -39,11 +39,6 @@ button {
   font-size: 12px;
 }
 
-#searchInput {
-  margin-top: 20px;
-  min-width: 400px; 
-
-}
 /* ======= Responsive cho thiết bị nhỏ (Tablet, Mobile) ======= */
 
 @media (max-width: 768px) {

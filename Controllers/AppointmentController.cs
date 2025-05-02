@@ -49,7 +49,7 @@ namespace KLTN.Controllers
                 {
                     UserId = house.IdUser,
                     Message =
-                        $"📅 {user.UserName} đã đặt lịch hẹn vào {appointment.AppointmentDate:HH:mm dd/MM/yyyy} cho bài đăng có tiêu đề: {house.NameHouse}.",
+                        $"{user.UserName} đã đặt lịch hẹn vào {appointment.AppointmentDate:HH:mm dd/MM/yyyy} cho bài đăng có tiêu đề: {house.NameHouse}.",
                     CreatedAt = DateTime.Now,
                     IsRead = false,
                 };
@@ -143,7 +143,7 @@ namespace KLTN.Controllers
             {
                 UserId = appointment.UserId, // Người đặt lịch nhận thông báo
                 Message =
-                    $"✅ Lịch hẹn vào {appointment.AppointmentDate:HH:mm dd/MM/yyyy} tại bài đăng có tiêu đề: {appointment.House?.NameHouse} đã được xác nhận (Địa chỉ: {houseAddress}).",
+                    $"Lịch hẹn vào {appointment.AppointmentDate:HH:mm dd/MM/yyyy} tại bài đăng có tiêu đề: {appointment.House?.NameHouse} đã được xác nhận (Địa chỉ: {houseAddress}).",
                 CreatedAt = DateTime.Now,
                 IsRead = false,
             };
@@ -206,7 +206,7 @@ namespace KLTN.Controllers
             {
                 UserId = appointment.UserId, // Gửi cho người đặt lịch
                 Message =
-                    $"❌ Lịch hẹn vào {appointment.AppointmentDate:HH:mm dd/MM/yyyy} tại bài đăng có tiêu đề: {appointment.House?.NameHouse} (Địa chỉ: {houseAddress}) đã bị hủy.",
+                    $"Lịch hẹn vào {appointment.AppointmentDate:HH:mm dd/MM/yyyy} tại bài đăng có tiêu đề: {appointment.House?.NameHouse} (Địa chỉ: {houseAddress}) đã bị hủy.",
                 CreatedAt = DateTime.Now,
                 IsRead = false,
             };

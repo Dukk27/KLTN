@@ -148,7 +148,7 @@ namespace KLTN.Controllers
                 var notification = new Notification
                 {
                     UserId = house.IdUser,
-                    Message = $"❌ Bài đăng có tiêu đề: {house.NameHouse} đã bị xóa bởi Admin.",
+                    Message = $"Bài đăng có tiêu đề: {house.NameHouse} đã bị xóa bởi Admin.",
                     CreatedAt = DateTime.Now,
                     IsRead = false,
                 };
@@ -213,7 +213,7 @@ namespace KLTN.Controllers
                             {
                                 UserId = review.IdUser,
                                 Message =
-                                    $"❌ Bình luận của bạn trên bài đăng có tiêu đề: {review.IdHouseNavigation?.NameHouse} đã bị xóa bởi Admin.",
+                                    $"Bình luận của bạn trên bài đăng có tiêu đề: {review.IdHouseNavigation?.NameHouse} đã bị xóa bởi Admin.",
                                 CreatedAt = DateTime.Now,
                                 IsRead = false,
                             }
@@ -275,7 +275,7 @@ namespace KLTN.Controllers
             var notification = new Notification
             {
                 UserId = house.IdUser,
-                Message = $"✅ Bài đăng có tiêu đề: {house.NameHouse} đã được duyệt!",
+                Message = $"Bài đăng có tiêu đề: {house.NameHouse} đã được duyệt!",
                 CreatedAt = DateTime.Now,
                 IsRead = false,
             };
@@ -307,8 +307,7 @@ namespace KLTN.Controllers
             var notification = new Notification
             {
                 UserId = house.IdUser,
-                Message =
-                    $"❌ Bài đăng có tiêu đề: {house.NameHouse} đã bị từ chối.\nLý do: {reason}",
+                Message = $"Bài đăng có tiêu đề: {house.NameHouse} đã bị từ chối.\nLý do: {reason}",
                 CreatedAt = DateTime.Now,
                 IsRead = false,
             };

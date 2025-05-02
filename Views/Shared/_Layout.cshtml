@@ -76,6 +76,14 @@
             white-space: nowrap; /* Không cho phép xuống dòng */
         }
 
+        .navbar .nav-link:hover,
+        .navbar .btn:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Màu nền khi hover */
+            color:rgb(255, 255, 255) !important; 
+            text-decoration: none;
+            cursor: pointer;
+        }
+
         /* Lớp active để làm nổi bật nút */
         .navbar .active {
             font-weight: bold;
@@ -98,7 +106,7 @@
         /* Hiệu ứng hover cho các mục trong dropdown */
         .dropdown-item:hover {
             background-color: #0140A0; /* Màu nền khi hover */
-            color: #000000; /* Màu chữ khi hover */
+            color:rgb(255, 255, 255) !important;
             cursor: pointer; /* Hiển thị con trỏ chuột khi hover */
         }
 
@@ -202,23 +210,25 @@
                                     <button id="showCreateHouseForm" class="btn-warning ml-2 btn-responsive" style="height: 45px">
                                         <i class="fas fa-paper-plane"></i> Đăng tin ngay
                                     </button>
-                                }
-                            }
+                                } 
+                            } 
 
                             <!-- Dropdown tài khoản -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user"></i> Xin chào, <span id="headerUserName">@User.Identity.Name</span>
+                                    <i class="fas fa-user"></i> Xin chào, <span id="headerUserName">@Context.Session.GetString("UserName")</span>
                                 </a> 
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <a class="dropdown-item"
                                         href='@Url.Action("Edit", "Account", new { id = @Context.Session.GetInt32("UserId") })'>
                                         <i class="fas fa-edit"></i> Thông tin cá nhân
                                     </a>
-                                    <a class="dropdown-item" href='@Url.Action("MyAppointments", "Appointment")'>
-                                        <i class="fas fa-calendar-alt"></i> Lịch hẹn tôi đã đặt
-                                    </a>
+                                    @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin")) {
+                                        <a class="dropdown-item" href='@Url.Action("MyAppointments", "Appointment")'>
+                                            <i class="fas fa-calendar-alt"></i> Lịch hẹn tôi đã đặt
+                                        </a>
+                                    }
                                     <a class="dropdown-item" href='@Url.Action("Index", "Notification")'>
                                         <i class="fas fa-bell"></i> Thông báo của tôi
                                     </a>
@@ -261,7 +271,7 @@
     @{
         var isAdminPage = currentController?.StartsWith("admin") == true;
         var hideForActions = new[] { "login", "register", "edit", "changepassword", "forgotpassword", "resetpassword", "verifyotp", "chatlist", "chat", "listhouseroom", "edithouse"};
-        var isSpecificHiddenPage = currentController == "appointment" && currentAction == "index";
+        var isSpecificHiddenPage = currentController == "appointment" && currentAction == "index" || currentAction == "myappointments";
     }
 
     @if (!isAdminPage && !hideForActions.Contains(currentAction) && !isSpecificHiddenPage)

@@ -45,14 +45,8 @@ td {
   align-items: center;
 }
 
-#searchInput {
-  max-width: 400px; 
-  margin-top: 17px;
-}
-
 /* Đảm bảo nút xóa nằm ở phía bên phải */
 .delete-selected-btn {
-  margin-top: 17px;
   font-weight: 500;
   padding: 8px 16px;
   border-radius: 5px;
@@ -65,15 +59,26 @@ td {
   justify-content: flex-end;
 }
 
-/* Đảm bảo nút xóa không bị dính vào khung tìm kiếm */
-.delete-selected-btn {
-  margin-left: 10px; /* Tạo khoảng cách giữa nút xóa và khung tìm kiếm */
-}
-
 .delete-selected-btn:disabled {
   background-color: #ccc !important;
   border-color: #ccc !important;
   cursor: not-allowed;
+}
+
+/* Điều chỉnh chiều cao của các ô nhập liệu và nút xóa cho đồng đều */
+.input-group .form-control,
+#searchInput,
+#dateFilter,
+#reviewerFilter {
+    height: 38px; /* Đặt chiều cao cố định cho ô tìm kiếm và lọc */
+    line-height: 1.5; /* Điều chỉnh chiều cao dòng để nội dung không bị vỡ */
+}
+
+/* Căn chỉnh nút xóa */
+.delete-selected-btn {
+    height: 38px; /* Đảm bảo chiều cao nút xóa bằng với ô nhập liệu */
+    padding: 8px 16px; /* Điều chỉnh padding để đảm bảo nút có độ dày hợp lý */
+    line-height: 1.5; /* Đảm bảo nội dung nút xóa căn chỉnh tốt */
 }
 
 @media (max-width: 768px) {

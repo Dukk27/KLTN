@@ -39,7 +39,7 @@
                     <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" />
                 </div>
 
-                <div class="form-group">
+                <div class="form-group"> 
                     <label for="Password" class="form-label">Mật khẩu</label>
                     <input type="password" class="form-control" id="Password" name="Password" value="@Model.Password" hidden />
                     <button type="button" class="btn btn-warning btn-change-password" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
@@ -142,6 +142,9 @@
                                 .then(response => response.json())
                                 .then(data => {
                                     if (data.success) {
+                                        // Cập nhật tên ngay sau khi đổi
+                                        document.getElementById("headerUserName").innerText = data.updatedData.userName;
+                                        
                                         iziToast.success({
                                             title: 'Thành công!',
                                             message: 'Thông tin tài khoản đã được cập nhật.',

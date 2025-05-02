@@ -13,13 +13,45 @@
         </ol>
     </nav> 
 
-    <div class="container user-houses-page">
+    <div class="container user-houses-page"> 
         <h2>Danh Sách Bài Đăng Của Người Dùng @ViewBag.UserName</h2>
+
+        <form id="filterForm" class="row g-3 align-items-end mb-3">
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Nhập tiêu đề, địa chỉ..." onkeyup="filterList()" />
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3">
+                <select id="statusFilter" class="form-select" onchange="filterList()">
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="Pending">Chờ duyệt</option>
+                    <option value="Approved,Active">Đã duyệt</option>
+                    <option value="Hidden">Đã ẩn</option>
+                    <option value="Rejected">Bị từ chối</option>
+                    <option value="Expired">Hết hạn</option>
+                </select>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3">
+                <label for="startDate" class="form-label">Từ ngày</label>
+                <input type="date" id="startDate" class="form-control" onchange="filterList()" />
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3">
+                <label for="endDate" class="form-label">Đến ngày</label>
+                <input type="date" id="endDate" class="form-control" onchange="filterList()" />
+            </div>
+        </form>
 
         @if (Model.Houses != null && Model.Houses.Any())
         {
             <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle">
+                <table class="table table-bordered table-hover align-middle" id="housesTable">
                     <thead class="table-secondary">
                         <tr class="text-center">
                             <th>Tiêu đề bài đăng</th>
@@ -38,7 +70,11 @@
                     <tbody class="text-center">
                         @foreach (var house in Model.Houses)
                         {
-                            <tr>
+                            <tr class="house-row"
+                                data-status="@house.Status.ToString()"
+                                data-name="@house.NameHouse.ToLower()"
+                                data-address="@house.HouseDetails.FirstOrDefault()?.Address.ToLower()"
+                                data-date="@house.HouseDetails.FirstOrDefault()?.TimePost.ToString("yyyy-MM-dd")">
                                 <td>@house.NameHouse</td>
                                 <td>@house.HouseDetails.FirstOrDefault()?.Address</td>
                                 <td>
@@ -116,4 +152,52 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
         <script src="~/js/House/listhouseroom.js"></script>
     }
+
+    <script>
+        function filterList() {
+            var searchInput = document.getElementById('searchInput').value.toLowerCase();
+            var statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+            var startDate = document.getElementById('startDate').value;
+            var endDate = document.getElementById('endDate').value;
+
+            var rows = document.querySelectorAll('#housesTable .house-row');
+
+            rows.forEach(function (row) {
+                var houseName = row.getAttribute('data-name');
+                var houseAddress = row.getAttribute('data-address');
+                var houseStatus = row.getAttribute('data-status').toLowerCase();
+                var postDate = row.getAttribute('data-date'); // yyyy-MM-dd
+
+                var matchesSearch = houseName.includes(searchInput) || houseAddress.includes(searchInput);
+
+                var matchesStatus = false;
+                if (statusFilter === "approved,active") {
+                    matchesStatus = (houseStatus === "approved" || houseStatus === "active");
+                } else if (statusFilter) {
+                    matchesStatus = houseStatus === statusFilter;
+                } else {
+                    matchesStatus = true;
+                }
+
+                // Lọc khoảng ngày
+                var matchesDate = true;
+                if (postDate) {
+                    if (startDate && postDate < startDate) {
+                        matchesDate = false;
+                    }
+                    if (endDate && postDate > endDate) {
+                        matchesDate = false;
+                    }
+                }
+
+                if (matchesSearch && matchesStatus && matchesDate) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        window.onload = filterList;
+    </script>
 </body>

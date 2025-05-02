@@ -11,13 +11,29 @@
 
     @if (Model.Any()) 
     {
-        <div class="row mb-3">
-            <div class="col-12 col-md-6 d-flex">
-                <!-- Ô tìm kiếm -->
-                <input type="text" id="searchInput" class="form-control" placeholder="🔍 Tìm kiếm bình luận...">
+        <div class="row mb-3 mt-3">
+            <div class="col-12 col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </span>
+                
+                    <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm bình luận...">
+                </div>
             </div>
-            <div class="col-12 col-md-6 d-flex justify-content-end">
-                <!-- Nút xóa -->
+            <div class="col-12 col-md-3">
+                <input type="date" id="dateFilter" class="form-control" placeholder="Chọn ngày">
+            </div>
+            <div class="col-12 col-md-3">
+                <select id="reviewerFilter" class="form-control">
+                    <option value="">-- Lọc theo người đánh giá --</option>
+                    @foreach (var reviewer in Model.Select(r => r.IdUserNavigation?.UserName).Distinct())
+                    {
+                        <option value="@reviewer">@reviewer</option>
+                    }
+                </select>
+            </div>
+            <div class="col-12 col-md-2 d-flex justify-content-end">
                 <button class="btn btn-danger delete-selected-btn" disabled>
                     <i class="fas fa-trash-alt"></i>&nbsp;Xóa bình luận đã chọn
                 </button>
@@ -225,12 +241,56 @@
             });
         });
 
-        // Tìm kiếm tài khoản theo tên, sđt hoặc email
+        // Lọc theo từ khóa tìm kiếm
         $("#searchInput").on("keyup", function () {
             const value = $(this).val().toLowerCase();
-            $("table tbody tr").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-            });
+            filterReviews(value, $("#dateFilter").val(), $("#reviewerFilter").val());
         });
+
+        // Lọc theo ngày
+        $("#dateFilter").on("change", function () {
+            const selectedDate = $(this).val();
+            filterReviews($("#searchInput").val(), selectedDate, $("#reviewerFilter").val());
+        });
+
+        // Lọc theo người đánh giá
+        $("#reviewerFilter").on("change", function () {
+            const selectedReviewer = $(this).val();
+            filterReviews($("#searchInput").val(), $("#dateFilter").val(), selectedReviewer);
+        });
+
+        // Hàm lọc
+        function filterReviews(searchText, selectedDate, selectedReviewer) {
+            $("table tbody tr").each(function () {
+                const reviewText = $(this).text().toLowerCase();
+                const reviewDate = $(this).find("td:eq(5)").text().trim(); // Ngày ở cột thứ 6 (index 5)
+                const reviewerName = $(this).find("td:eq(1)").text().trim(); // Người đánh giá ở cột thứ 2 (index 1)
+
+                // Chuyển ngày trong bảng về định dạng yyyy-MM-dd để so sánh
+                const formattedReviewDate = formatDateForComparison(reviewDate);
+
+                // Kiểm tra điều kiện lọc
+                const matchesSearch = searchText === "" || reviewText.indexOf(searchText.toLowerCase()) > -1;
+                const matchesDate = selectedDate === "" || formattedReviewDate === selectedDate;
+                const matchesReviewer = selectedReviewer === "" || reviewerName === selectedReviewer;
+
+                // Ẩn hoặc hiển thị dòng
+                if (matchesSearch && matchesDate && matchesReviewer) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        // Hàm chuyển ngày từ dd/MM/yyyy sang yyyy-MM-dd để so sánh
+        function formatDateForComparison(dateString) {
+            const dateParts = dateString.split('/');
+            const formattedDate = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); // Tạo ngày theo định dạng yyyy-MM-dd
+            const year = formattedDate.getFullYear();
+            const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0'); // Thêm số 0 ở trước tháng nếu nhỏ hơn 10
+            const day = formattedDate.getDate().toString().padStart(2, '0'); // Thêm số 0 ở trước ngày nếu nhỏ hơn 10
+            return `${year}-${month}-${day}`;
+        }
     </script>
 </body>

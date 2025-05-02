@@ -245,13 +245,21 @@
                     @if (Model.Reviews != null && Model.Reviews.Any())
                     {
                         var avgRating = Model.Reviews.Average(r => r.Rating);
-                        var roundedRating = Math.Round(avgRating, 1); // làm tròn 1 số thập phân, ví dụ: 4.3 ★
+                        var roundedRating = Math.Round(avgRating, 1); // làm tròn 1 số thập phân
 
                         <div class="address-box mb-3">
                             <p style="font-size: 18px; font-style: italic">
                                 <strong>Đánh giá trung bình:</strong> 
                                 <span>@roundedRating <i class="fa fa-star text-warning"></i></span> 
                                 (<span>@Model.Reviews.Count() đánh giá</span>)
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="address-box mb-3">
+                            <p style="font-size: 18px; font-style: italic">
+                                <strong>Bài đăng chưa có đánh giá nào.</strong>
                             </p>
                         </div>
                     }

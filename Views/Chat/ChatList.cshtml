@@ -36,13 +36,18 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-12">
-                        <input type="text" id="searchInput" class="form-control border border-dark" placeholder="🔍 Tìm kiếm đoạn chat...">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-white border-dark">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" id="searchInput" class="form-control border-dark" placeholder="Tìm kiếm đoạn chat...">
+                        </div>
                     </div>
                 </div>
                 <ul class="list-group">
                     @foreach (var convo in Model)
                     {
-                        <li class="list-group-item border border-dark rounded mb-1 @(convo.ConversationId == currentConversation?.ConversationId ? "active" : "")">
+                        <li class="list-group-item custom-chat-item border border-dark rounded mb-1 @(convo.ConversationId == currentConversation?.ConversationId ? "active" : "")">
                             <a href="@Url.Action("ChatList", "Chat", new { conversationId = convo.ConversationId })" class="text-decoration-none text-dark d-block">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="fw-bold user-name">@convo.UserName</div>
@@ -68,7 +73,7 @@
                 @if (currentConversation != null)
                 {
                     <div class="border-bottom p-3 bg-light">
-                        <h5>Đang trò chuyện với: @currentConversation.ReceiverName</h5>
+                        <h5>Đang trò chuyện với: <strong>@currentConversation.ReceiverName</strong></h5>
                     </div>
 
                     <input type="hidden" id="currentUserId" value="@currentUserId" />
@@ -79,7 +84,8 @@
                         {
                             <div class="mb-3 d-flex @(msg.Sender == currentUserName ? "justify-content-end" : "justify-content-start")">
                                 <div class="p-2 rounded shadow-sm" style="background-color: @(msg.Sender == currentUserName ? "#d1f7c4" : "#ffffff"); max-width: 40%;">
-                                    <div class="fw-bold">@msg.Sender</div>
+                                    @* <div class="fw-bold">@msg.Sender</div> *@
+                                    <div class="fw-bold">@((msg.Sender == currentUserName) ? "Bạn" : msg.Sender)</div>
                                     <div class="chat-message">@msg.Content</div>
                                     <div class="text-muted small">@msg.Timestamp.ToString("HH:mm dd/MM/yy")</div>
                                 </div>

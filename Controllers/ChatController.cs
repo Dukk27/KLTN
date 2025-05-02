@@ -203,6 +203,11 @@ namespace KLTN.Controllers
                     && int.TryParse(ids[1], out int id2)
                 )
                 {
+                    if (currentUserId != id1 && currentUserId != id2)
+                    {
+                        return RedirectToAction("Error", "Home"); // redirect nếu không hợp lệ
+                    }
+
                     int receiverId = (currentUserId.Value == id1) ? id2 : id1;
 
                     // Cập nhật tin nhắn chưa đọc thành đã đọc

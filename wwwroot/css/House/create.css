@@ -278,6 +278,13 @@ select.form-control {
   border-color: #545b62;
 }
 
+#submitBtn:disabled {
+  background-color: #ccc !important;  
+  border-color: #ccc !important;      
+  color: #666 !important;           
+  cursor: not-allowed;                
+}
+
 /* Button row */
 .button-row {
   margin-top: 30px;

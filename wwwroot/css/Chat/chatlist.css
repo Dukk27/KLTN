@@ -29,3 +29,8 @@ body {
   color: #6c757d;
   font-weight: bold;
 }
+
+.list-group-item.active {
+  background-color: #c1dcfe !important;
+  color: #000;
+}

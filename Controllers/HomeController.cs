@@ -433,5 +433,10 @@ namespace KLTN.Controllers
 
             return input;
         }
+
+        public ActionResult Rules()
+        {
+            return View();
+        }
     }
 }

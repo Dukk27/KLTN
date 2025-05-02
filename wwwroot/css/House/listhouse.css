@@ -2,9 +2,17 @@ h2,
 h3 {
   color: #333;
   margin-top: 7px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   font-weight: bold;
   text-align: center;
+}
+
+#filterForm {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-houses-page {

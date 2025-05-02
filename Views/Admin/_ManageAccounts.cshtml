@@ -8,11 +8,32 @@
 </head>
 
 <body>
-    <div class="row mb-3">
+    <div class="row mb-3 mt-3">
         <div class="col-12 col-md-4">
-            <input type="text" id="searchInput" class="form-control" placeholder="🔍 Tìm kiếm tài khoản...">
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm tài khoản...">
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-2">
+            <select id="roleFilter" class="form-select">
+                <option value="">-- Lọc theo vai trò --</option>
+                <option value="admin">Admin</option>
+                <option value="chủ trọ">Chủ trọ</option>
+                <option value="người tìm phòng">Người tìm phòng</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-3 mb-2">
+            <select id="statusFilter" class="form-select">
+                <option value="">-- Lọc theo trạng thái --</option>
+                <option value="hoạt động">Hoạt động</option>
+                <option value="bị khoá">Bị khoá</option>
+            </select>
         </div>
     </div>
+
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <thead>
@@ -29,7 +50,11 @@
             <tbody>
                 @foreach (var account in Model)
                 {
-                    <tr>
+                    <tr data-role="@(
+                        account.Role == 0 ? "admin" : 
+                        account.Role == 1 ? "chủ trọ" : 
+                        "người tìm phòng")"
+                        data-status="@(account.IsLocked ? "bị khoá" : "hoạt động")">
                         <td>@account.IdUser</td>
                         <td>@account.UserName</td>
                         <td>@account.PhoneNumber</td>
@@ -250,6 +275,27 @@
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });
+
+            function filterAccounts() {
+                const keyword = $("#searchInput").val().toLowerCase();
+                const role = $("#roleFilter").val();
+                const status = $("#statusFilter").val();
+
+                $("table tbody tr").each(function () {
+                    const rowText = $(this).text().toLowerCase();
+                    const rowRole = $(this).data("role");
+                    const rowStatus = $(this).data("status");
+
+                    const matchesKeyword = rowText.indexOf(keyword) > -1;
+                    const matchesRole = role === "" || rowRole === role;
+                    const matchesStatus = status === "" || rowStatus === status;
+
+                    $(this).toggle(matchesKeyword && matchesRole && matchesStatus);
+                });
+            }
+
+            // Gắn sự kiện khi thay đổi bộ lọc
+            $("#searchInput, #roleFilter, #statusFilter").on("input change", filterAccounts);
         });
     </script>
 </body>
