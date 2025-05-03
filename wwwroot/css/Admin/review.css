@@ -80,6 +80,25 @@ td {
     padding: 8px 16px; /* Điều chỉnh padding để đảm bảo nút có độ dày hợp lý */
     line-height: 1.5; /* Đảm bảo nội dung nút xóa căn chỉnh tốt */
 }
+#content {
+  background-color: #fff;
+  padding: 30px;
+  flex: 1;
+  overflow: auto;
+  min-height: 100vh;
+  position: relative;  /* Thêm position relative cho vùng chứa */
+}
+
+#pagination {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  padding: 10px 0;
+  text-align: center;
+  z-index: 100;
+}
 
 @media (max-width: 768px) {
   .row.mb-3 .col-12 {

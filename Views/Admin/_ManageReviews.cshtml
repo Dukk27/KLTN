@@ -69,6 +69,9 @@
                 }
             </tbody>
         </table>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-3" id="pagination"></ul>
+        </nav>
     }
     else
     {
@@ -244,22 +247,25 @@
         // Lọc theo từ khóa tìm kiếm
         $("#searchInput").on("keyup", function () {
             const value = $(this).val().toLowerCase();
+            console.log("Tìm kiếm: ", value);
             filterReviews(value, $("#dateFilter").val(), $("#reviewerFilter").val());
         });
 
         // Lọc theo ngày
         $("#dateFilter").on("change", function () {
             const selectedDate = $(this).val();
+            console.log("Ngày lọc: ", selectedDate);
             filterReviews($("#searchInput").val(), selectedDate, $("#reviewerFilter").val());
         });
 
         // Lọc theo người đánh giá
         $("#reviewerFilter").on("change", function () {
             const selectedReviewer = $(this).val();
+            console.log("Người đánh giá: ", selectedReviewer);
             filterReviews($("#searchInput").val(), $("#dateFilter").val(), selectedReviewer);
         });
 
-        // Hàm lọc
+        // Hàm lọc bình luận
         function filterReviews(searchText, selectedDate, selectedReviewer) {
             $("table tbody tr").each(function () {
                 const reviewText = $(this).text().toLowerCase();
@@ -281,6 +287,46 @@
                     $(this).hide();
                 }
             });
+
+            reapplyPagination();
+        }
+
+        // Hàm áp dụng phân trang
+        function reapplyPagination() {
+            paginateTable(10); // Số dòng mỗi trang
+        }
+
+        // Hàm phân trang
+        function paginateTable(rowsPerPage) {
+            const rows = $("table tbody tr:visible");
+            const totalRows = rows.length;
+            const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+            $("#pagination").empty();
+
+            for (let i = 1; i <= totalPages; i++) {
+                $("#pagination").append(`
+                    <li class="page-item${i === 1 ? " active" : ""}">
+                        <a class="page-link" href="#">${i}</a>
+                    </li>
+                `);
+            }
+
+            rows.hide();
+            rows.slice(0, rowsPerPage).show();
+
+            $("#pagination .page-link").on("click", function (e) {
+                e.preventDefault();
+                const page = parseInt($(this).text());
+
+                $("#pagination .page-item").removeClass("active");
+                $(this).parent().addClass("active");
+
+                const start = (page - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+
+                rows.hide().slice(start, end).show();
+            });
         }
 
         // Hàm chuyển ngày từ dd/MM/yyyy sang yyyy-MM-dd để so sánh
@@ -292,5 +338,8 @@
             const day = formattedDate.getDate().toString().padStart(2, '0'); // Thêm số 0 ở trước ngày nếu nhỏ hơn 10
             return `${year}-${month}-${day}`;
         }
+
+        // Gọi lại phân trang khi lọc
+        reapplyPagination();
     </script>
 </body>

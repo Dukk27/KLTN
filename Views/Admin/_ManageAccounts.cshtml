@@ -33,6 +33,33 @@
             </select>
         </div>
     </div>
+    
+    @{
+        var adminCount = Model.Count(a => a.Role == 0);
+        var chuTroCount = Model.Count(a => a.Role == 1);
+        var nguoiTimPhongCount = Model.Count(a => a.Role == 2); 
+        var totalAccount = adminCount + chuTroCount + nguoiTimPhongCount;
+    }
+    <div class="row mb-3 mt-3">
+        <div class="col-md-12 d-flex justify-content-start text-center gap-custom">
+            <div>
+                <div class="fw-bold">Tổng tài khoản</div>
+                <div class="fs-4">@totalAccount</div>
+            </div>
+            <div>
+                <div class="fw-bold">Admin</div>
+                <div class="fs-4 text-warning"><u>@adminCount</u></div>
+            </div>
+            <div>
+                <div class="fw-bold">Chủ trọ</div>
+                <div class="fs-4 text-success"><u>@chuTroCount</u></div>
+            </div>
+            <div>
+                <div class="fw-bold">Người tìm phòng</div>
+                <div class="fs-4 text-primary"><u>@nguoiTimPhongCount</u></div>
+            </div>
+        </div>
+    </div>
 
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
@@ -112,6 +139,9 @@
                 }
             </tbody>
         </table>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-3" id="pagination"></ul>
+        </nav>
     </div>
     <!-- Thêm thư viện iziToast -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
@@ -119,57 +149,6 @@
 
     <script>
         $(document).ready(function () {
-            // Xoá tài khoản
-            $(".delete-account").on("click", function () {
-                const id = $(this).data("id");
-
-                iziToast.question({
-                    class: 'iziToast-custom',
-                    title: "Xác nhận xoá",
-                    message: "Bạn có chắc chắn muốn xoá tài khoản này không?",
-                    position: "center",
-                    timeout: false,
-                    close: false,
-                    overlay: true,
-                    icon: "fa fa-question-circle",
-                    buttons: [
-                        ['<button><i class="fa fa-check"></i> <b>Có</b></button>', function (instance, toast) {
-                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-
-                            $.post("@Url.Action("DeleteAccount", "Admin")", { id: id }, function (response) {
-                                if (response.success) {
-                                    iziToast.success({
-                                        title: 'Thành công!',
-                                        message: 'Xoá tài khoản thành công.',
-                                        position: 'topRight',
-                                        timeout: 1000,
-                                    });
-                                    $(`tr:has(button[data-id='${id}'])`).remove();
-                                } else {
-                                    iziToast.error({
-                                        title: "Lỗi",
-                                        message: response.message,
-                                        position: "topRight",
-                                        timeout: 2000
-                                    });
-                                }
-                            }).fail(() => {
-                                iziToast.error({
-                                    title: "Lỗi!",
-                                    message: "Đã xảy ra lỗi khi xoá tài khoản.",
-                                    position: "topRight",
-                                    timeout: 3000
-                                });
-                            });
-
-                        }, true],
-                        ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
-                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-                        }]
-                    ]
-                });
-            });
-
             $(document).ready(function () {
                 function bindEvents() {
                     // Xử lý khoá tài khoản
@@ -276,6 +255,7 @@
                 });
             });
 
+            // Hàm lọc tài khoản theo tên, sđt, email, vai trò và trạng thái
             function filterAccounts() {
                 const keyword = $("#searchInput").val().toLowerCase();
                 const role = $("#roleFilter").val();
@@ -292,10 +272,54 @@
 
                     $(this).toggle(matchesKeyword && matchesRole && matchesStatus);
                 });
+
+                reapplyPagination();
             }
 
             // Gắn sự kiện khi thay đổi bộ lọc
-            $("#searchInput, #roleFilter, #statusFilter").on("input change", filterAccounts);
+            $("#searchInput, #roleFilter, #statusFilter").on("input change", function () {
+                filterAccounts();
+            });
+
+            // Hàm phân trang
+            function paginateTable(rowsPerPage) {
+                const rows = $("table tbody tr:visible");
+                const totalRows = rows.length;
+                const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+                $("#pagination").empty();
+
+                for (let i = 1; i <= totalPages; i++) {
+                    $("#pagination").append(`
+                        <li class="page-item${i === 1 ? " active" : ""}">
+                            <a class="page-link" href="#">${i}</a>
+                        </li>
+                    `);
+                }
+
+                rows.hide();
+                rows.slice(0, rowsPerPage).show();
+
+                $("#pagination .page-link").on("click", function (e) {
+                    e.preventDefault();
+                    const page = parseInt($(this).text());
+
+                    $("#pagination .page-item").removeClass("active");
+                    $(this).parent().addClass("active");
+
+                    const start = (page - 1) * rowsPerPage;
+                    const end = start + rowsPerPage;
+
+                    rows.hide().slice(start, end).show();
+                });
+            }
+
+            // Hàm áp dụng lại phân trang sau khi thay đổi bộ lọc
+            function reapplyPagination() {
+                paginateTable(10); // số dòng mỗi trang
+            }
+
+            reapplyPagination();
         });
     </script>
 </body>

@@ -54,9 +54,13 @@
                                     <div class="text-muted small">@convo.LastMessageTime?.ToString("dd/MM/yyyy HH:mm")</div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <div class="text-muted text-truncate" style="max-width: 80%;">
+                                    @* <div class="text-muted text-truncate" style="max-width: 80%;">
                                         @convo.LastMessage
+                                    </div> *@
+                                    <div class="text-muted text-truncate" style="max-width: 80%;">
+                                        @(convo.LastSenderId == currentUserId ? "Bạn: " : "")@convo.LastMessage
                                     </div>
+
                                     @if (convo.HasUnreadMessages && convo.UnreadMessagesCount > 0)
                                     {
                                         <span class="badge bg-danger">@convo.UnreadMessagesCount</span>
@@ -91,7 +95,7 @@
                                 </div>
                             </div>
                         }
-                    </div>
+                    </div> 
 
                     @if (ViewBag.IsReceiverLocked != null && ViewBag.IsReceiverLocked == true)
                     {

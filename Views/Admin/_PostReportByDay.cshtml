@@ -67,13 +67,31 @@
                         thead.style.display = "table-header-group"; // Hiện tiêu đề khi có dữ liệu
                         data.forEach(post => {
                             const date = new Date(post.timePost).toLocaleDateString('vi-VN');
+                            let statusClass = "";
+                            switch (post.status) {
+                                case "Chờ duyệt":
+                                    statusClass = "badge bg-warning";
+                                    break;
+                                case "Đã duyệt":
+                                    statusClass = "badge bg-success";
+                                    break;
+                                case "Từ chối":
+                                    statusClass = "badge bg-danger";
+                                    break;
+                                case "Đã ẩn":
+                                    statusClass = "badge bg-secondary";
+                                    break;
+                                default:
+                                    statusClass = "badge bg-light text-dark";
+                            }
+
                             const html = `
                                 <tr>
                                     <td>${date}</td>
                                     <td>${post.idHouse}</td>
                                     <td>${post.address}</td>
                                     <td>${post.price?.toLocaleString('vi-VN')} VND</td>
-                                    <td>${post.status}</td>
+                                    <td><span class="${statusClass}">${post.status}</span></td>
                                     <td>${post.userName}</td>
                                 </tr>
                             `;

@@ -39,6 +39,34 @@ button {
   font-size: 12px;
 }
 
+#content {
+  background-color: #fff;
+  padding: 30px;
+  flex: 1;
+  overflow: auto;
+  min-height: 100vh;
+  position: relative;  /* Thêm position relative cho vùng chứa */
+}
+
+#pagination {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  padding: 10px 0;
+  text-align: center;
+  z-index: 100;
+}
+
+.table-responsive {
+  padding-bottom: 50px; /* Đảm bảo không bị che khuất bởi phân trang */
+}
+
+.gap-custom {
+  gap: 8rem; 
+}
+
 /* ======= Responsive cho thiết bị nhỏ (Tablet, Mobile) ======= */
 
 @media (max-width: 768px) {

@@ -30,6 +30,26 @@
         .house-link:hover {
             color: #0056b3; /* Thay đổi màu khi hover */
         }
+
+        #content {
+            background-color: #fff;
+            padding: 30px;
+            flex: 1;
+            overflow: auto;
+            min-height: 100vh;
+            position: relative;  /* Thêm position relative cho vùng chứa */
+        }
+
+        #pagination {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            padding: 10px 0;
+            text-align: center;
+            z-index: 100;
+        }
     </style>
 </head>
 
@@ -45,7 +65,7 @@
                 <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm báo xấu...">
             </div>
         </div>
-        <div class="col-6 col-md-3 mb-2">
+        <div class="col-6 col-md-2 mb-2">
             <input type="date" id="dateFilter" class="form-control">
         </div>
         <div class="col-6 col-md-3 mb-2">
@@ -57,6 +77,13 @@
                 }
             </select>
         </div>
+        <div class="col-6 col-md-3 mb-2">
+            <select id="statusFilter" class="form-control">
+                <option value="">-- Lọc theo trạng thái --</option>
+                <option value="approved">Đã duyệt</option>
+                <option value="pending">Chưa duyệt</option>
+            </select>
+        </div>
     </div>
 
     <table class="table table-bordered table-hover">
@@ -66,7 +93,7 @@
                 <th>Tiêu đề bài đăng</th>
                 <th>Người báo cáo</th>
                 <th>Lý do</th>
-                <th>Ngày báo cáo</th>
+                <th>Thời gian báo cáo</th>
                 <th>Trạng thái</th>
                 <th>Hành động</th>
             </tr>
@@ -114,7 +141,11 @@
         </tbody>
     </table>
 
-    <script>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mt-3" id="pagination"></ul>
+    </nav>
+
+    <script> 
         $(document).ready(function () {
             $('.approve-btn').click(function () {
                 const id = $(this).data('id');
@@ -170,27 +201,73 @@
                 filterReports($("#searchInput").val(), selectedDate, $("#reporterFilter").val());
             });
 
-            // Hàm lọc báo cáo
-            function filterReports(searchText, selectedDate, selectedReporter) {
+            $("#statusFilter").on("change", function () {
+                filterReports($("#searchInput").val(), $("#dateFilter").val(), $("#reporterFilter").val(), $(this).val());
+            });
+
+            // Cập nhật hàm filterReports với thêm biến selectedStatus
+            function filterReports(searchText, selectedDate, selectedReporter, selectedStatus) {
                 $("table tbody tr").each(function () {
                     const reportText = $(this).text().toLowerCase();
-                    const reportDate = $(this).find("td:eq(4)").text().trim(); // Ngày ở cột thứ 5 (index 4)
-                    const reporterName = $(this).find("td:eq(2)").text().trim(); // Người báo cáo ở cột thứ 3 (index 2)
+                    const reportDate = $(this).find("td:eq(4)").text().trim(); // cột 5
+                    const reporterName = $(this).find("td:eq(2)").text().trim(); // cột 3
+                    const statusText = $(this).find("td:eq(5)").text().trim(); // cột 6
 
-                    // Chuyển đổi ngày trong bảng về định dạng yyyy-MM-dd
                     const formattedReportDate = formatDateForComparison(reportDate);
 
-                    // Kiểm tra điều kiện lọc
                     const matchesSearch = searchText === "" || reportText.indexOf(searchText.toLowerCase()) > -1;
                     const matchesDate = selectedDate === "" || formattedReportDate === selectedDate;
                     const matchesReporter = selectedReporter === "" || reporterName === selectedReporter;
+                    const matchesStatus =
+                        selectedStatus === "" ||
+                        (selectedStatus === "approved" && statusText.includes("Đã duyệt")) ||
+                        (selectedStatus === "pending" && statusText.includes("Chưa duyệt"));
 
-                    // Ẩn hoặc hiển thị dòng
-                    if (matchesSearch && matchesDate && matchesReporter) {
+                    if (matchesSearch && matchesDate && matchesReporter && matchesStatus) {
                         $(this).show();
                     } else {
                         $(this).hide();
                     }
+                });
+
+                reapplyPagination();
+            }
+
+            // Hàm áp dụng phân trang
+            function reapplyPagination() {
+                paginateTable(10); // Số dòng mỗi trang
+            }
+
+            // Hàm phân trang
+            function paginateTable(rowsPerPage) {
+                const rows = $("table tbody tr:visible");
+                const totalRows = rows.length;
+                const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+                $("#pagination").empty();
+
+                for (let i = 1; i <= totalPages; i++) {
+                    $("#pagination").append(`
+                        <li class="page-item${i === 1 ? " active" : ""}">
+                            <a class="page-link" href="#">${i}</a>
+                        </li>
+                    `);
+                }
+
+                rows.hide();
+                rows.slice(0, rowsPerPage).show();
+
+                $("#pagination .page-link").on("click", function (e) {
+                    e.preventDefault();
+                    const page = parseInt($(this).text());
+
+                    $("#pagination .page-item").removeClass("active");
+                    $(this).parent().addClass("active");
+
+                    const start = (page - 1) * rowsPerPage;
+                    const end = start + rowsPerPage;
+
+                    rows.hide().slice(start, end).show();
                 });
             }
 
@@ -202,6 +279,8 @@
                 const year = parts[2];
                 return `${year}-${month}-${day}`;
             }
+
+            reapplyPagination();
         });
     </script>
 </body>

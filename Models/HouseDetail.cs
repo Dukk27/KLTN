@@ -42,6 +42,11 @@ namespace KLTN.Models
         public DateTime? TimeUpdate { get; set; }
 
         public string? ContactName2 { get; set; }
+
+        [RegularExpression(
+            @"^0\d{9}$",
+            ErrorMessage = "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0"
+        )]
         public string? ContactPhone2 { get; set; }
 
         public double? Latitude { get; set; }
