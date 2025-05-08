@@ -166,6 +166,40 @@ namespace KLTN.Controllers
             }
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> HideHouse(int id)
+        {
+            var house = await _housesRepository.GetHouseWithDetailsAsync(id);
+            if (house == null)
+            {
+                return Json(new { success = false, message = "Bài đăng không tồn tại." });
+            }
+
+            // Cập nhật trạng thái bài đăng thành "Ẩn"
+            house.Status = HouseStatus.Hidden;
+            await _housesRepository.UpdateAsync(house);
+
+            return Json(new { success = true, message = "Bài đăng đã được ẩn thành công." });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ShowHouse(int id)
+        {
+            var house = await _housesRepository.GetHouseWithDetailsAsync(id);
+            if (house == null)
+            {
+                return Json(new { success = false, message = "Bài đăng không tồn tại!" });
+            }
+
+            // Đổi trạng thái thành Active (Hiện bài)
+            house.Status = HouseStatus.Active;
+            await _housesRepository.UpdateAsync(house);
+
+            return Json(new { success = true, message = "Bài đăng đã được hiển thị lại!" });
+        }
+
         // Quản lý bình luận
         public async Task<IActionResult> ManageReviews()
         {
@@ -736,6 +770,7 @@ namespace KLTN.Controllers
             var reports = await _context
                 .Reports.Include(r => r.House)
                 .Include(r => r.User)
+                .OrderByDescending(r => r.CreatedAt) // Sắp xếp theo thời gian mới nhất
                 .ToListAsync();
 
             return PartialView("_ManageReport", reports);
@@ -773,7 +808,11 @@ namespace KLTN.Controllers
 
             // Đếm số lượng báo cáo đã duyệt của bài đăng này (kể cả cái hiện tại đã đánh dấu ở trên)
             var approvedCount = await _context
-                .Reports.Where(r => r.HouseId == report.HouseId && r.IsApproved)
+                .Reports.Where(r =>
+                    r.HouseId == report.HouseId
+                    && r.IsApproved
+                    && r.ReportVersion == house.ReportVersion
+                )
                 .CountAsync();
 
             // thêm 1 lần true ở trên

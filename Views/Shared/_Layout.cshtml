@@ -303,10 +303,21 @@
                 <div class="modal-header position-relative">
                     <h5 class="modal-title">Bản đồ vị trí các nhà trọ</h5>
 
-                    <!-- Thanh tìm kiếm -->
-                    <div id="searchContainer" class="position-absolute"
-                        style="top: 80px; left: 30px; z-index: 1001; min-width: 350px; border-radius: 6px; border: 1px solid black;">
-                        <input id="searchAddressInput" type="text" class="form-control" placeholder="Nhập địa chỉ nhà trọ..." />
+                    <!-- Container chứa cả ô tìm kiếm và dropdown -->
+                    <div class="position-absolute d-flex gap-2 align-items-center" style="top: 80px; left: 30px; z-index: 1001;">
+                        <div id="searchContainer" style="min-width: 350px; border-radius: 6px; border: 1px solid black;">
+                            <input id="searchAddressInput" type="text" class="form-control" placeholder="Nhập địa chỉ nhà trọ..." />
+                        </div>
+
+                        <div>
+                            <select id="radiusSelector" class="form-select">
+                                <option value="1">1 km</option>
+                                <option value="2" selected>2 km</option>
+                                <option value="3">3 km</option>
+                                <option value="5">5 km</option>
+                                <option value="10">10 km</option>
+                            </select>
+                        </div>
                     </div>
 
                     <!-- Kết quả hiển thị chính giữa header -->
@@ -531,20 +542,6 @@
                 }, 500);
             });
 
-            // Tìm kiếm khi nhấn Enter
-            $(document).on('keydown', '#searchAddressInput', function (e) {
-                if (e.key === 'Enter') {
-                    const keyword = $(this).val().toLowerCase().trim();
-
-                    currentSearchResults = allHouseData.filter(h =>
-                        h.Address && h.Address.toLowerCase().includes(keyword)
-                    );
-
-                    currentResultIndex = 0; // Reset index when performing a new search
-                    renderMarkers(currentSearchResults);
-                }
-            });
-
             // Xử lý nút đóng modal bản đồ
             document.querySelector('#goongMapModal .btn-close').addEventListener('click', function () {
                 const modalElement = document.getElementById('goongMapModal');
@@ -572,6 +569,240 @@
 
             // Khi nhấn nút Previous
             document.getElementById('prevResultBtn').addEventListener('click', showPreviousResult);
+        });
+
+        let typingTimer;
+        let selectedAddressText = "";
+
+        const searchInput = document.getElementById('searchAddressInput');
+
+        searchInput.addEventListener('input', function () {
+            clearTimeout(typingTimer);
+            const query = this.value;
+
+            if (query.length >= 2) {
+                typingTimer = setTimeout(() => {
+                    fetch(`https://rsapi.goong.io/Place/AutoComplete?api_key=RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy&input=${encodeURIComponent(query)}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            const suggestions = data.predictions.map(p => p.description);
+                            showSuggestions(suggestions); 
+                        });
+                }, 300);
+            }
+        });
+
+        function showSuggestions(suggestions) {
+            // Tạo ul
+            const list = document.createElement('ul');
+            list.className = 'list-group position-absolute bg-white w-100';
+            list.style.zIndex = '1002';
+
+            suggestions.forEach(s => {
+                const item = document.createElement('li');
+                item.className = 'list-group-item list-group-item-action';
+                item.style.cursor = 'pointer';
+                item.textContent = s;
+
+                item.addEventListener('click', function () {
+                    selectedAddressText = s;
+                    document.getElementById('searchAddressInput').value = s;
+
+                    const oldSuggestions = document.querySelectorAll('.autocomplete-suggestions');
+                    oldSuggestions.forEach(el => el.remove());
+
+                    const selectedParts = extractCoreAddress(s);
+                    doSearchByAddress(selectedParts);
+                });
+
+                list.appendChild(item);
+            });
+
+            // Xóa suggestion cũ
+            const oldSuggestions = document.querySelectorAll('.autocomplete-suggestions');
+            oldSuggestions.forEach(el => el.remove());
+
+            // Tạo wrapper mới
+            const wrapper = document.createElement('div');
+            wrapper.className = 'autocomplete-suggestions position-relative w-100';
+            wrapper.appendChild(list);
+
+            const container = document.getElementById('searchContainer');
+            container.appendChild(wrapper);
+        }
+
+        // Hàm chuẩn hóa tên (loại bỏ tiền tố phường, quận, thành phố,...)
+        function normalizeName(name) {
+            return name
+                .toLowerCase()
+                .replace(/^(phường|xã|thị trấn|quận|huyện|thành phố|tp\.?|tỉnh)\s*/gi, '')
+                .trim();
+        }
+
+        function extractCoreAddress(fullAddress) {
+            const parts = fullAddress.split(',').map(p => normalizeName(p.trim()));
+            const len = parts.length;
+
+            return {
+                street: len >= 4 ? parts[len - 4] : null,   // phố/đường
+                ward: len >= 3 ? parts[len - 3] : null,     // phường/xã
+                district: len >= 2 ? parts[len - 2] : null, // quận/huyện
+                province: len >= 1 ? parts[len - 1] : null  // tỉnh/thành
+            };
+        }
+
+        function doSearchByAddress(selectedAddress) {
+            const fullAddress = $('#searchAddressInput').val().trim();
+
+            fetch(`https://rsapi.goong.io/Geocode?address=${encodeURIComponent(fullAddress)}&api_key=RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.results && data.results.length > 0) {
+                        const location = data.results[0].geometry.location;
+                        const lat1 = location.lat;
+                        const lng1 = location.lng;
+
+                        mapmodal.flyTo({
+                            center: [lng1, lat1],
+                            zoom: 13, 
+                            speed: 1.2,
+                            curve: 1,
+                            easing: t => t
+                        });
+
+                        const radius = parseFloat(document.getElementById('radiusSelector').value);
+                        drawCircleAround(lat1, lng1, radius);
+
+                        const nearby = allHouseData.filter(h => {
+                            if (!h.Lat || !h.Lng) return false;
+                            const dist = getDistanceFromLatLonInKm(lat1, lng1, h.Lat, h.Lng);
+                            return dist <= radius;
+                        });
+
+                        currentSearchResults = nearby;
+                        currentResultIndex = 0;
+                        renderMarkers(currentSearchResults);
+
+                        setTimeout(() => {
+                            document.getElementById('searchResultsCount').textContent =
+                                `Có ${nearby.length} phòng trọ trong bán kính ${radius}km quanh khu vực "${fullAddress}"`;
+
+                        }, 0);
+                    } else {
+                        alert("Không tìm thấy tọa độ từ địa chỉ.");
+                    }
+                })
+                .catch(err => {
+                    console.error("Geocode error:", err);
+                    alert("Lỗi khi tìm tọa độ từ địa chỉ.");
+                });
+        }
+
+        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Bán kính Trái Đất (km)
+            const dLat = deg2rad(lat2 - lat1);
+            const dLon = deg2rad(lon2 - lon1);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180);
+        }
+
+       // Xử lý Enter trong input tìm kiếm
+        document.getElementById('searchAddressInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query === '') {
+                    // Nếu không nhập gì -> hiển thị lại toàn bộ trọ
+                    currentSearchResults = [];
+                    currentResultIndex = 0;
+                    renderMarkers(allHouseData);
+
+                    // Xóa gợi ý
+                    const suggestions = document.querySelectorAll('.autocomplete-suggestions');
+                    suggestions.forEach(el => el.remove());
+
+                    // Xóa đường tròn nếu có
+                    if (circleLayerId) {
+                        if (mapmodal.getLayer(circleLayerId)) mapmodal.removeLayer(circleLayerId);
+                        if (mapmodal.getSource(circleLayerId)) mapmodal.removeSource(circleLayerId);
+                        circleLayerId = null;
+                    }
+                }
+            }
+        });
+
+        // Xóa gợi ý khi click ngoài #searchContainer
+        document.addEventListener('click', function (e) {
+            const searchContainer = document.getElementById('searchContainer');
+            if (!searchContainer.contains(e.target)) {
+                const suggestions = document.querySelectorAll('.autocomplete-suggestions');
+                suggestions.forEach(el => el.remove());
+            }
+        });
+
+        // Vẽ đường tròn bao quanh vị trí
+        let circleLayerId = null;
+
+        function drawCircleAround(lat, lng, radiusInKm) {
+            if (circleLayerId) {
+                if (mapmodal.getLayer(circleLayerId)) mapmodal.removeLayer(circleLayerId);
+                if (mapmodal.getSource(circleLayerId)) mapmodal.removeSource(circleLayerId);
+            }
+
+            const points = 64;
+            const coords = [];
+            const R = 6371; // bán kính Trái đất
+
+            for (let i = 0; i < points; i++) {
+                const angle = (i * 360) / points;
+                const dx = radiusInKm * Math.cos(angle * Math.PI / 180);
+                const dy = radiusInKm * Math.sin(angle * Math.PI / 180);
+                const newLat = lat + (dy / R) * (180 / Math.PI);
+                const newLng = lng + (dx / R) * (180 / Math.PI) / Math.cos(lat * Math.PI / 180);
+                coords.push([newLng, newLat]);
+            }
+            coords.push(coords[0]); // Đóng vòng tròn
+
+            const circleGeoJSON = {
+                type: 'Feature',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [coords]
+                }
+            };
+
+            circleLayerId = 'circle-radius-3km';
+
+            mapmodal.addSource(circleLayerId, {
+                type: 'geojson',
+                data: circleGeoJSON
+            });
+
+            mapmodal.addLayer({
+                id: circleLayerId,
+                type: 'fill',
+                source: circleLayerId,
+                layout: {},
+                paint: {
+                    'fill-color': '#00bcd4',
+                    'fill-opacity': 0.2
+                }
+            });
+        }
+
+        // Xử lý thay đổi bán kính
+        document.getElementById('radiusSelector').addEventListener('change', function () {
+            if (selectedAddressText) {
+                const selectedParts = extractCoreAddress(selectedAddressText);
+                doSearchByAddress(selectedParts);
+            }
         });
     </script>
 
@@ -661,32 +892,72 @@
                 });
             }
 
-            $(document).on("click", ".mark-as-read", function (event) {
-                event.stopPropagation();
-                var button = $(this);
-                var id = button.data("id");
+            // Đánh dấu 1 thông báo là đã đọc
+            document.addEventListener("click", function (event) {
+                if (event.target.classList.contains("mark-as-read")) {
+                    event.stopPropagation();
 
-                $.post('/Notification/MarkAsRead', { id: id }, function (response) {
-                    if (response.success) {
-                        button.hide();
-                        button.siblings(".notification-text").removeClass("text-danger").addClass("text-muted");
-                        button.parent().append(`<span class="text-success ml-2">Đã đọc</span>`);
-                        let current = parseInt($("#notificationBadge").text()) || 0;
-                        let newCount = Math.max(current - 1, 0);
-                        if (newCount > 0) $("#notificationBadge").text(newCount);
-                        else $("#notificationBadge").hide();
-                    }
-                });
+                    const button = event.target;
+                    const id = button.getAttribute("data-id");
+
+                    fetch('/Notification/MarkAsRead', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                        },
+                        body: `id=${encodeURIComponent(id)}`
+                    })
+                    .then(res => res.json())
+                    .then(response => {
+                        if (response.success) {
+                            button.style.display = 'none';
+                            const textElement = button.parentElement.querySelector(".notification-text");
+                            if (textElement) {
+                                textElement.classList.remove("text-danger");
+                                textElement.classList.add("text-muted");
+                            }
+
+                            const readSpan = document.createElement("span");
+                            readSpan.className = "text-success ml-2";
+                            readSpan.textContent = "Đã đọc";
+                            button.parentElement.appendChild(readSpan);
+
+                            const badge = document.getElementById("notificationBadge");
+                            let current = parseInt(badge.textContent) || 0;
+                            let newCount = Math.max(current - 1, 0);
+                            if (newCount > 0) {
+                                badge.textContent = newCount;
+                            } else {
+                                badge.style.display = 'none';
+                            }
+                        }
+                    });
+                }
             });
 
-            $(document).on("click", "#markAllAsRead", function () {
-                $.post('/Notification/MarkAllAsRead', function (res) {
-                    if (res.success) {
-                        $(".mark-as-read").hide();
-                        $(".notification-text").removeClass("text-danger").addClass("text-muted");
-                        $("#notificationBadge").hide();
-                    } 
-                });
+            // Đánh dấu tất cả là đã đọc
+            document.addEventListener("click", function (event) {
+                if (event.target.id === "markAllAsRead") {
+                    fetch('/Notification/MarkAllAsRead', {
+                        method: 'POST'
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success) {
+                            const markButtons = document.querySelectorAll(".mark-as-read");
+                            markButtons.forEach(btn => btn.style.display = 'none');
+
+                            const texts = document.querySelectorAll(".notification-text");
+                            texts.forEach(txt => {
+                                txt.classList.remove("text-danger");
+                                txt.classList.add("text-muted");
+                            });
+
+                            const badge = document.getElementById("notificationBadge");
+                            badge.style.display = 'none';
+                        }
+                    });
+                }
             });
 
             setInterval(loadNotifications, 4000);

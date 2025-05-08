@@ -222,9 +222,18 @@ function showUnauthorizedMessage() {
     position: "topRight",
   });
 }
-document.addEventListener("DOMContentLoaded", function () {
+
+function updateStatus(houseId, statusText, badgeClass) {
+  const row = document.querySelector(`tr:has(button[data-id='${houseId}'])`);
+  if (!row) return;
+
+  const statusCell = row.querySelector("td:nth-child(5)");
+  statusCell.innerHTML = `<span class="${badgeClass}">${statusText}</span>`;
+}
+
+function addHideHandler() {
   document.querySelectorAll(".btn-hide").forEach((button) => {
-    button.addEventListener("click", function () {
+    button.onclick = function () {
       const houseId = this.dataset.id;
 
       iziToast.show({
@@ -259,9 +268,30 @@ document.addEventListener("DOMContentLoaded", function () {
                       title: "Thành công!",
                       message: data.message,
                       position: "topRight",
-                      timeout: 1000,
                     });
-                    setTimeout(() => location.reload(), 1000);
+
+                    updateStatus(
+                      houseId,
+                      "Đã ẩn do người đăng",
+                      "badge bg-secondary"
+                    );
+
+                    const row = document.querySelector(
+                      `tr:has(button[data-id='${houseId}'])`
+                    );
+                    const btnContainer = row.querySelector(".d-flex");
+
+                    btnContainer.querySelector(".btn-hide")?.remove();
+                    btnContainer.insertAdjacentHTML(
+                      "beforeend",
+                      `
+                                      <button class="btn btn-sm btn-success btn-show" data-id="${houseId}" title="Hiện bài đăng">
+                                          <i class="fas fa-eye"></i>
+                                      </button>
+                                  `
+                    );
+
+                    addShowHandler();
                   } else {
                     iziToast.error({
                       title: "Lỗi!",
@@ -288,11 +318,13 @@ document.addEventListener("DOMContentLoaded", function () {
           ],
         ],
       });
-    });
+    };
   });
+}
 
+function addShowHandler() {
   document.querySelectorAll(".btn-show").forEach((button) => {
-    button.addEventListener("click", function () {
+    button.onclick = function () {
       const houseId = this.dataset.id;
 
       iziToast.show({
@@ -318,8 +350,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 headers: {
                   "Content-Type": "application/x-www-form-urlencoded",
                 },
-                body: new URLSearchParams({ id: houseId }), // Gửi dưới dạng form-data
-                })
+                body: new URLSearchParams({ id: houseId }),
+              })
                 .then((response) => response.json())
                 .then((data) => {
                   if (data.success) {
@@ -327,9 +359,26 @@ document.addEventListener("DOMContentLoaded", function () {
                       title: "Thành công!",
                       message: data.message,
                       position: "topRight",
-                      timeout: 1000,
                     });
-                    setTimeout(() => location.reload(), 1000);
+
+                    updateStatus(houseId, "Đã duyệt", "badge bg-success");
+
+                    const row = document.querySelector(
+                      `tr:has(button[data-id='${houseId}'])`
+                    );
+                    const btnContainer = row.querySelector(".d-flex");
+
+                    btnContainer.querySelector(".btn-show")?.remove();
+                    btnContainer.insertAdjacentHTML(
+                      "beforeend",
+                      `
+                                      <button class="btn btn-sm btn-secondary btn-hide" data-id="${houseId}" title="Ẩn bài đăng">
+                                          <i class="fas fa-eye-slash"></i>
+                                      </button>
+                                  `
+                    );
+
+                    addHideHandler();
                   } else {
                     iziToast.error({
                       title: "Lỗi!",
@@ -356,7 +405,12 @@ document.addEventListener("DOMContentLoaded", function () {
           ],
         ],
       });
-    });
+    };
   });
-});
+}
 
+window.onload = () => {
+  filterList();
+  addHideHandler();
+  addShowHandler();
+};

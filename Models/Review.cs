@@ -7,7 +7,7 @@ namespace KLTN.Models
     public partial class Review
     {
         [Key]
-        public int IdReview { get; set; }
+        public int IdReview { get; set; } 
 
         [Required(ErrorMessage = "Bạn phải đăng nhập")]
         public int IdUser { get; set; }

@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="~/css/Admin/account.css"> 
     <style> 
         th {
-            white-space: nowrap; /* Ngăn việc xuống dòng trong tiêu đề */
             text-align: center; /* Căn giữa các tiêu đề */
         }
 
@@ -29,6 +28,13 @@
         .gap-custom {
             gap: 5rem; 
         }
+
+        .fixed-title-column {
+            width: 200px;
+            white-space: normal;     /* Cho phép xuống dòng */
+            overflow-wrap: break-word; /* Ngắt từ nếu quá dài */
+            word-break: break-word;  /* Ngắt từ nếu không thể vừa dòng */
+        }
     </style>
 </head>
 
@@ -50,7 +56,7 @@
                 <option value="Chờ duyệt">Chờ duyệt</option>
                 <option value="Đã duyệt">Đã duyệt</option>
                 <option value="Bị từ chối">Từ chối</option>
-                <option value="Đã ẩn do người đăng">Đã ẩn do người đăng</option>
+                <option value="Đã ẩn do người đăng/admin">Đã ẩn do người đăng/admin</option>
                 <option value="Đã bị ẩn do báo cáo">Đã bị ẩn do báo cáo</option>
             </select>
         </div>
@@ -102,14 +108,14 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Tiêu đề bài đăng</th>
+                    <th class="fixed-title-column">Tiêu đề bài đăng</th>
                     <th>Địa chỉ</th>
                     <th>Giá</th>
                     <th>Người đăng</th>
                     <th>Thời gian đăng</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
-                </tr>
+                </tr> 
             </thead>
             <tbody>
                 @foreach (var house in Model)
@@ -120,7 +126,7 @@
                     }
                     <tr>
                         <td>@house.IdHouse</td>
-                        <td>@house.NameHouse</td>
+                        <td class="fixed-title-column">@house.NameHouse</td>
                         <td>@house.HouseDetails.FirstOrDefault()?.Address</td>
                         <td>@house.HouseDetails.FirstOrDefault()?.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN")) VND</td>
                         <td>@house.IdUserNavigation.UserName</td>
@@ -143,7 +149,7 @@
                             else if (house.Status == HouseStatus.Hidden)
                             {
                                 <span class="badge bg-secondary text-wrap" style="white-space: normal; max-width: 100%;">
-                                    Đã ẩn do người đăng
+                                    Đã ẩn do người đăng/admin
                                 </span>
                             }
                             else
@@ -166,6 +172,18 @@
                                 {
                                     <button class="btn btn-sm btn-danger reject-house" data-id="@house.IdHouse"><i class="fas fa-times"></i> Từ chối</button>
                                 }
+                                @if (house.Status == HouseStatus.Active || house.Status == HouseStatus.Approved)
+                                {
+                                    <button class="btn btn-sm btn-secondary btn-hide" data-id="@house.IdHouse" title="Ẩn bài đăng">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </button>
+                                }
+                                @if (house.Status == HouseStatus.Hidden && !house.IsAutoHidden)
+                                {
+                                    <button class="btn btn-sm btn-success btn-show" data-id="@house.IdHouse" title="Hiện bài đăng">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                }
                             </div>
                         </td>
                     </tr>
@@ -175,8 +193,8 @@
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center mt-3" id="pagination"></ul>
         </nav>
-
     </div>
+
     <!-- Thêm thư viện iziToast -->
     <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
@@ -355,7 +373,7 @@
 
             // Hàm cập nhật trạng thái trên giao diện
             function updateStatus(id, statusText, statusClass) {
-                const statusCell = $(`tr:has(button[data-id='${id}']) td:nth-child(6)`);
+                const statusCell = $(`tr:has(button[data-id='${id}']) td:nth-child(7)`);
                 statusCell.html(`<span class="badge ${statusClass}">${statusText}</span>`);
             }
             
@@ -465,6 +483,170 @@
                 applyFilters();
                 reapplyPagination();
             });
+
+            function addHideHandler() {
+                document.querySelectorAll(".btn-hide").forEach((button) => {
+                    button.onclick = function () {
+                        const houseId = this.dataset.id;
+
+                        iziToast.show({
+                            class: "iziToast-custom",
+                            title: "Xác nhận",
+                            message: "Bạn có chắc muốn ẩn bài này? Bài đăng sẽ không hiển thị công khai!",
+                            position: "center",
+                            timeout: false,
+                            close: false,
+                            overlay: true,
+                            displayMode: "once",
+                            drag: false,
+                            icon: "fa fa-question-circle",
+                            buttons: [
+                                [
+                                    '<button><i class="fa fa-check"></i> Ẩn ngay</button>',
+                                    function (instance, toast) {
+                                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                                        fetch("/QuanLi/HideHouse", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/x-www-form-urlencoded",
+                                            },
+                                            body: new URLSearchParams({ id: houseId }),
+                                        })
+                                            .then((response) => response.json())
+                                            .then((data) => {
+                                                if (data.success) {
+                                                    iziToast.success({
+                                                        title: "Thành công!",
+                                                        message: data.message,
+                                                        position: "topRight",
+                                                    });
+
+                                                    updateStatus(houseId, "Đã ẩn do người đăng", "badge bg-secondary text-wrap");
+
+                                                    const row = document.querySelector(`tr:has(button[data-id='${houseId}'])`);
+                                                    const btnContainer = row.querySelector(".action-buttons");
+
+                                                    btnContainer.querySelector(".btn-hide")?.remove();
+                                                    btnContainer.insertAdjacentHTML("beforeend", `
+                                                        <button class="btn btn-sm btn-success btn-show" data-id="${houseId}" title="Hiện bài đăng">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    `);
+
+                                                    addShowHandler();
+                                                } else {
+                                                    iziToast.error({
+                                                        title: "Lỗi!",
+                                                        message: data.message,
+                                                        position: "topRight",
+                                                    });
+                                                }
+                                            })
+                                            .catch(() => {
+                                                iziToast.error({
+                                                    title: "Lỗi!",
+                                                    message: "Không thể thực hiện yêu cầu!",
+                                                    position: "topRight",
+                                                });
+                                            });
+                                    },
+                                    true,
+                                ],
+                                [
+                                    '<button><i class="fa fa-times"></i> Hủy</button>',
+                                    function (instance, toast) {
+                                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                                    },
+                                ],
+                            ],
+                        });
+                    };
+                });
+            }
+
+            function addShowHandler() {
+                document.querySelectorAll(".btn-show").forEach((button) => {
+                    button.onclick = function () {
+                        const houseId = this.dataset.id;
+
+                        iziToast.show({
+                            class: "iziToast-custom",
+                            title: "Xác nhận",
+                            message: "Bạn có chắc muốn hiện bài này? Bài đăng sẽ hiển thị công khai trở lại!",
+                            position: "center",
+                            timeout: false,
+                            close: false,
+                            overlay: true,
+                            displayMode: "once",
+                            drag: false,
+                            icon: "fa fa-question-circle",
+                            buttons: [
+                                [
+                                    '<button><i class="fa fa-check"></i> Hiện ngay</button>',
+                                    function (instance, toast) {
+                                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+
+                                        fetch("/QuanLi/ShowHouse", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/x-www-form-urlencoded",
+                                            },
+                                            body: new URLSearchParams({ id: houseId }),
+                                        })
+                                            .then((response) => response.json())
+                                            .then((data) => {
+                                                if (data.success) {
+                                                    iziToast.success({
+                                                        title: "Thành công!",
+                                                        message: data.message,
+                                                        position: "topRight",
+                                                    });
+
+                                                    updateStatus(houseId, "Đã duyệt", "badge bg-success");
+
+                                                    const row = document.querySelector(`tr:has(button[data-id='${houseId}'])`);
+                                                    const btnContainer = row.querySelector(".action-buttons");
+
+                                                    btnContainer.querySelector(".btn-show")?.remove();
+                                                    btnContainer.insertAdjacentHTML("beforeend", `
+                                                        <button class="btn btn-sm btn-secondary btn-hide" data-id="${houseId}" title="Ẩn bài đăng">
+                                                            <i class="fas fa-eye-slash"></i>
+                                                        </button>
+                                                    `);
+
+                                                    addHideHandler();
+                                                } else {
+                                                    iziToast.error({
+                                                        title: "Lỗi!",
+                                                        message: data.message,
+                                                        position: "topRight",
+                                                    });
+                                                }
+                                            })
+                                            .catch(() => {
+                                                iziToast.error({
+                                                    title: "Lỗi!",
+                                                    message: "Không thể thực hiện yêu cầu!",
+                                                    position: "topRight",
+                                                });
+                                            });
+                                    },
+                                    true,
+                                ],
+                                [
+                                    '<button><i class="fa fa-times"></i> Hủy</button>',
+                                    function (instance, toast) {
+                                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+                                    },
+                                ],
+                            ],
+                        });
+                    };
+                });
+            }
+            addHideHandler();
+            addShowHandler(); 
         });
     </script>
 </body>

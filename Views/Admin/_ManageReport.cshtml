@@ -191,33 +191,46 @@
 
             // Lọc theo người báo cáo
             $("#reporterFilter").on("change", function () {
-                const selectedReporter = $(this).val();
-                filterReports($("#searchInput").val(), $("#dateFilter").val(), selectedReporter);
+                filterReports(
+                    $("#searchInput").val(),
+                    $("#dateFilter").val(),
+                    $(this).val(),
+                    $("#statusFilter").val()
+                );
             });
 
             // Lọc theo ngày
             $("#dateFilter").on("change", function () {
-                const selectedDate = $(this).val();
-                filterReports($("#searchInput").val(), selectedDate, $("#reporterFilter").val());
+                filterReports(
+                    $("#searchInput").val(),
+                    $(this).val(),
+                    $("#reporterFilter").val(),
+                    $("#statusFilter").val()
+                );
             });
 
+            // Lọc theo trạng thái
             $("#statusFilter").on("change", function () {
-                filterReports($("#searchInput").val(), $("#dateFilter").val(), $("#reporterFilter").val(), $(this).val());
+                filterReports(
+                    $("#searchInput").val(),
+                    $("#dateFilter").val(),
+                    $("#reporterFilter").val(),
+                    $(this).val()
+                );
             });
 
-            // Cập nhật hàm filterReports với thêm biến selectedStatus
             function filterReports(searchText, selectedDate, selectedReporter, selectedStatus) {
                 $("table tbody tr").each(function () {
                     const reportText = $(this).text().toLowerCase();
-                    const reportDate = $(this).find("td:eq(4)").text().trim(); // cột 5
-                    const reporterName = $(this).find("td:eq(2)").text().trim(); // cột 3
-                    const statusText = $(this).find("td:eq(5)").text().trim(); // cột 6
+                    const reportDate = $(this).find("td:eq(4)").text().trim(); // cột ngày
+                    const reporterName = $(this).find("td:eq(2)").text().trim(); // cột người báo cáo
+                    const statusText = $(this).find("td:eq(5)").text().trim(); // cột trạng thái
 
-                    const formattedReportDate = formatDateForComparison(reportDate);
+                    const formattedReportDate = formatDateForComparison(reportDate); // từ dd/MM/yyyy → yyyy-MM-dd
 
                     const matchesSearch = searchText === "" || reportText.indexOf(searchText.toLowerCase()) > -1;
                     const matchesDate = selectedDate === "" || formattedReportDate === selectedDate;
-                    const matchesReporter = selectedReporter === "" || reporterName === selectedReporter;
+                    const matchesReporter = selectedReporter === "" || reporterName.trim().toLowerCase() === selectedReporter.trim().toLowerCase();
                     const matchesStatus =
                         selectedStatus === "" ||
                         (selectedStatus === "approved" && statusText.includes("Đã duyệt")) ||

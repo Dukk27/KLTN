@@ -168,14 +168,14 @@ body {
 
 .notification-text {
   display: inline-block;
-  white-space: nowrap;       /* Giữ văn bản trong một dòng */
-  overflow: hidden;          /* Ẩn phần văn bản thừa */
-  text-overflow: ellipsis;   /* Thêm "..." khi văn bản quá dài */
-  max-width: 450px;          /* Giới hạn chiều rộng của phần tử */
+  white-space: nowrap; /* Giữ văn bản trong một dòng */
+  overflow: hidden; /* Ẩn phần văn bản thừa */
+  text-overflow: ellipsis; /* Thêm "..." khi văn bản quá dài */
+  max-width: 450px; /* Giới hạn chiều rộng của phần tử */
 }
 
 #notificationList {
-  width: 500px;  /* Đặt chiều rộng phù hợp cho dropdown */
+  width: 500px; /* Đặt chiều rộng phù hợp cho dropdown */
 }
 
 .btn {
@@ -281,7 +281,7 @@ body {
     padding: 10px 15px;
   }
 
-  .navbar-nav { 
+  .navbar-nav {
     flex-direction: column;
     gap: 10px;
   }
@@ -332,5 +332,57 @@ body {
     white-space: normal;
     padding: 10px 12px;
     text-align: center;
+  }
+
+  #goongMapModal .modal-content {
+    max-height: 100vh !important;
+  }
+
+  #goongMapModal .modal-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: 70px;
+  }
+
+  #goongMapModal .position-absolute.d-flex.gap-2.align-items-center {
+    flex-direction: row; 
+    flex-wrap: wrap;
+    top: 80px;
+    left: 10px !important;
+    width: calc(100% - 30px);
+  }
+
+  #searchContainer {
+    margin-top: 50px;
+    flex: 1;
+    max-width: 200px;;
+  }
+
+  #radiusSelector {
+    margin-top: 50px;
+    width: 80px;
+  }
+
+  #searchResultsCount {
+    font-size: 14px;
+    top: 65px;
+    text-align: center;
+    width: 90%;
+  }
+
+  #goongMap {
+    min-height: 600px !important;
+  }
+
+  #goongMapModal .position-absolute.d-flex.gap-2 {
+    right: 80px !important;
+    top: 10px;
+  }
+
+  #goongMapModal .btn-close {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    z-index: 1000;
   }
 }

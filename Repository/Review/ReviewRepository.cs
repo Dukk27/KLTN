@@ -41,6 +41,7 @@ public class ReviewRepository : IReviewRepository
         return await _context
             .Reviews.Include(r => r.IdUserNavigation) // Include thông tin người dùng
             .Include(r => r.IdHouseNavigation) // Include thông tin nhà
+            .OrderByDescending(r => r.ReviewDate) // Sắp xếp theo thời gian mới nhất
             .ToListAsync();
     }
 

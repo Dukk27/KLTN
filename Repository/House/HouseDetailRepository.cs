@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using KLTN.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace KLTN.Repositories
 {

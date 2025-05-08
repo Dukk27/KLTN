@@ -5,7 +5,6 @@
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   color: #333;
   background-color: #f5f5f5;
@@ -177,6 +176,14 @@ label[for="fullAddress"]::after {
   cursor: pointer;
 }
 
+#addressSuggestions .list-group-item:hover {
+  background-color: #e6f2ff;
+  color: #0056b3;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
 /* Textarea */
 textarea.form-control {
   height: auto;
@@ -322,25 +329,6 @@ select.form-control {
 
 .section:has(#statusAvailable) {
   display: none;
-}
-
-#addressSuggestions {
-  position: absolute;
-  width: 95%;
-  background: white;
-  border: 1px solid #ccc;
-  z-index: 1000;
-  max-height: 250px;
-  overflow-y: auto;
-}
-.address-item {
-  padding: 10px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s;
-}
-.address-item:hover {
-  background: #f1f1f1;
 }
 
 #imagePreview {

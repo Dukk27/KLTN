@@ -51,7 +51,7 @@ body {
 
 /*Dòng địa chỉ max 2 dòng trong card */
 .address-truncate {
-  max-height: 3.6em; /* khoảng 2 dòng */
+  height: 3.2em; /* khoảng 2 dòng */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;

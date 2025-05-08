@@ -49,7 +49,7 @@ namespace KLTN.Helpers
                     )
                     .Include(a => a.User)
                     .Include(a => a.House)
-                    .ThenInclude(h => h.HouseDetails) // Đảm bảo lấy thông tin địa chỉ
+                    .ThenInclude(h => h.HouseDetails)
                     .ToListAsync();
 
                 foreach (var appointment in expiredAppointments)

@@ -26,6 +26,7 @@ namespace KLTN.Repositories
                 .Include(h => h.HouseType)
                 .Include(h => h.IdAmenities)
                 .Include(h => h.IdUserNavigation)
+                .OrderByDescending(h => h.HouseDetails.FirstOrDefault().TimePost)
                 .ToListAsync();
         }
 
@@ -179,6 +180,7 @@ namespace KLTN.Repositories
                 .Include(h => h.HouseType)
                 .Include(h => h.IdAmenities)
                 .Include(h => h.IdUserNavigation)
+                .Include(h => h.Reviews)
                 .AsQueryable();
 
             // if (!string.IsNullOrEmpty(searchString))
@@ -243,10 +245,17 @@ namespace KLTN.Repositories
                 query = query.Where(h => h.HouseType.Name.ToLower() == roomType.ToLower());
             }
 
-            // Filter by amenities
+            // // Filter by amenities
+            // if (amenities != null && amenities.Any())
+            // {
+            //     query = query.Where(h => h.IdAmenities.Any(a => amenities.Contains(a.Name)));
+            // }
+
             if (amenities != null && amenities.Any())
             {
-                query = query.Where(h => h.IdAmenities.Any(a => amenities.Contains(a.Name)));
+                query = query.Where(h =>
+                    h.IdAmenities.Where(a => amenities.Contains(a.Name)).Count() == amenities.Count
+                );
             }
 
             // // Sorting
@@ -288,6 +297,11 @@ namespace KLTN.Repositories
                             h.HouseDetails.FirstOrDefault() != null
                                 ? h.HouseDetails.FirstOrDefault().TimePost
                                 : DateTime.MaxValue
+                        );
+                        break;
+                    case "rating":
+                        query = query.OrderByDescending(h =>
+                            h.Reviews.Any() ? h.Reviews.Average(r => r.Rating) : 0
                         );
                         break;
                     default:

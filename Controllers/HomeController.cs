@@ -167,7 +167,7 @@ namespace KLTN.Controllers
 
             if (!string.IsNullOrEmpty(roomType))
             {
-                filterDescription += $"Loại phòng: {roomType}, ";
+                filterDescription += $"Loại phòng: {roomType}; ";
             }
             if (!string.IsNullOrEmpty(priceRange))
             {
@@ -180,45 +180,70 @@ namespace KLTN.Controllers
                 {
                     var culture = new System.Globalization.CultureInfo("vi-VN");
                     filterDescription +=
-                        $"Giá thuê: {minPrice.ToString("#,0", culture)} - {maxPrice.ToString("#,0", culture)} VND/Tháng, ";
+                        $"Giá thuê: {minPrice.ToString("#,0", culture)} - {maxPrice.ToString("#,0", culture)} VND/Tháng; ";
                 }
                 else
                 {
-                    filterDescription += $"Giá thuê: {priceRange.Replace("-", " - ")} VND/Tháng, ";
+                    filterDescription += $"Giá thuê: {priceRange.Replace("-", " - ")} VND/Tháng; ";
                 }
             }
 
             if (amenities != null && amenities.Any())
             {
-                filterDescription += $"Tiện nghi: {string.Join(", ", amenities)}, ";
-            }
-            if (!string.IsNullOrEmpty(province))
-            {
-                filterDescription += $"Tỉnh/TP: {province}, ";
-            }
-            if (!string.IsNullOrEmpty(district))
-            {
-                filterDescription += $"Quận/Huyện: {district}, ";
-            }
-            if (!string.IsNullOrEmpty(ward))
-            {
-                filterDescription += $"Phường/Xã: {ward}, ";
+                filterDescription += $"Tiện nghi: {string.Join(", ", amenities)}; ";
             }
 
             if (minArea.HasValue && maxArea.HasValue)
             {
-                filterDescription += $"Diện tích: {minArea} - {maxArea} m², ";
+                filterDescription += $"Diện tích: {minArea} - {maxArea} m² ";
             }
             else if (minArea.HasValue)
             {
-                filterDescription += $"Diện tích từ: {minArea} m², ";
+                filterDescription += $"Diện tích từ: {minArea} m² ";
             }
 
-            // Xóa dấu phẩy cuối cùng nếu có
-            if (!string.IsNullOrEmpty(filterDescription))
+            // if (!string.IsNullOrEmpty(province))
+            // {
+            //     filterDescription += $"Tỉnh/TP: {province}, ";
+            // }
+            // if (!string.IsNullOrEmpty(district))
+            // {
+            //     filterDescription += $"Quận/Huyện: {district}, ";
+            // }
+            // if (!string.IsNullOrEmpty(ward))
+            // {
+            //     filterDescription += $"Phường/Xã: {ward}, ";
+            // }
+
+            // // Xóa dấu phẩy cuối cùng nếu có
+            // if (!string.IsNullOrEmpty(filterDescription))
+            // {
+            //     filterDescription = filterDescription.Trim().TrimEnd(',');
+            // }
+
+            string locationDescription = "";
+            if (!string.IsNullOrEmpty(province))
             {
-                filterDescription = filterDescription.Trim().TrimEnd(',');
+                locationDescription += $"Tỉnh/TP: {province}, ";
             }
+            if (!string.IsNullOrEmpty(district))
+            {
+                locationDescription += $"Quận/Huyện: {district}, ";
+            }
+            if (!string.IsNullOrEmpty(ward))
+            {
+                locationDescription += $"Phường/Xã: {ward}, ";
+            }
+
+            // Nếu có địa điểm thì thêm xuống dòng và gộp vào filterDescription
+            if (!string.IsNullOrEmpty(locationDescription))
+            {
+                locationDescription = locationDescription.Trim().TrimEnd(',');
+                filterDescription += "<br/>" + locationDescription;
+            }
+
+            // Xóa dấu ; hoặc , cuối cùng nếu có (sau cùng)
+            filterDescription = filterDescription.Trim().TrimEnd(';', ',');
 
             ViewBag.FilterDescription = filterDescription;
 

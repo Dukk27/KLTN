@@ -6,7 +6,7 @@
 </head>
 
 <body> 
-    <h2 style="color: rgb(35, 164, 207); text-align: center; margin: 20px 0;">Chỉnh sửa thông tin nhà trọ</h2>
+    <h2 style="color: rgb(35, 164, 207); text-align: center; margin: 20px 0;">Chỉnh sửa thông tin bài đăng</h2>
 
     <form asp-action="EditHouse" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="House.IdHouse" />
@@ -175,11 +175,6 @@
         </div>
         <span id="amenitiesError" class="text-danger d-block mt-2"></span>
 
-        @* <div class="btn-container">
-            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-            <a asp-action="ListHouseRoom" class="btn btn-secondary">Hủy</a>
-        </div> *@
-
         <div class="d-flex justify-content-center gap-3 mt-4">
             <button type="submit" class="btn btn-primary flex-fill" style="max-width: 200px;">Lưu thay đổi</button>
             <a asp-action="ListHouseRoom" class="btn btn-secondary flex-fill" style="max-width: 200px;">Hủy</a>
@@ -194,158 +189,160 @@
     <script src="~/js/House/edit.js"></script> 
          
     <script>
-        goongjs.accessToken = 'nFXjCGo9PppMz9YGX6S2fLdWnTwQKzCCmCimGy3G';
+        document.addEventListener("DOMContentLoaded", function () {
+            goongjs.accessToken = 'nFXjCGo9PppMz9YGX6S2fLdWnTwQKzCCmCimGy3G';
 
-        let map, marker; 
+            let map, marker;
 
-        function initGoongMap() {
-            map = new goongjs.Map({
-                container: 'map',
-                style: 'https://tiles.goong.io/assets/goong_map_web.json',
-                center: [105.8544441, 21.028511], // Hà Nội mặc định
-                zoom: 14
-            });
+            function initGoongMap() {
+                map = new goongjs.Map({
+                    container: 'map',
+                    style: 'https://tiles.goong.io/assets/goong_map_web.json',
+                    center: [105.8544441, 21.028511],
+                    zoom: 14
+                });
 
-            map.addControl(new goongjs.NavigationControl());
+                map.addControl(new goongjs.NavigationControl());
 
-            marker = new goongjs.Marker({ draggable: true })
-                .setLngLat([105.8544441, 21.028511])
-                .addTo(map);
+                marker = new goongjs.Marker({ draggable: true })
+                    .setLngLat([105.8544441, 21.028511])
+                    .addTo(map);
 
-            // Lắng nghe sự kiện kéo thả marker
-            marker.on('dragend', function () {
-                const lngLat = marker.getLngLat();
-                map.flyTo({ center: [lngLat.lng, lngLat.lat], zoom: 14 });
-                reverseGeocode(lngLat.lng, lngLat.lat);
-            });
-        }
+                marker.on('dragend', function () {
+                    const lngLat = marker.getLngLat();
+                    map.flyTo({ center: [lngLat.lng, lngLat.lat], zoom: 14 });
+                    reverseGeocode(lngLat.lng, lngLat.lat);
+                });
+            }
 
-        function geocodeAddress(address, isInit = false) {
-            $.get(`https://rsapi.goong.io/Geocode?address=${encodeURIComponent(address)}&api_key=RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy`)
-            .done(function (response) {
-                if (response.results && response.results.length > 0) {
-                    if (isInit) {
-                        const firstResult = response.results[0];
-                        const lngLat = [firstResult.geometry.location.lng, firstResult.geometry.location.lat];
+            function geocodeAddress(address, isInit = false) {
+                fetch(`https://rsapi.goong.io/Geocode?address=${encodeURIComponent(address)}&api_key=RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy`)
+                    .then(res => res.json())
+                    .then(response => {
+                        if (response.results && response.results.length > 0) {
+                            if (isInit) {
+                                const firstResult = response.results[0];
+                                const lngLat = [firstResult.geometry.location.lng, firstResult.geometry.location.lat];
+                                map.setCenter(lngLat);
+                                marker.setLngLat(lngLat);
+
+                                const popup = new goongjs.Popup({ offset: 25 }).setText(firstResult.formatted_address);
+                                marker.setPopup(popup).togglePopup();
+                            } else {
+                                showSuggestions(response.results);
+                            }
+                        } else if (!isInit) {
+                            const suggestionBox = document.getElementById('addressSuggestions');
+                            suggestionBox.innerHTML = `<li class="list-group-item text-danger">Không tìm thấy địa chỉ</li>`;
+                        }
+                    })
+                    .catch(() => {
+                        if (!isInit) {
+                            const suggestionBox = document.getElementById('addressSuggestions');
+                            suggestionBox.innerHTML = `<li class="list-group-item text-danger">Lỗi khi tìm kiếm địa chỉ</li>`;
+                        }
+                    });
+            }
+
+            function showSuggestions(results) {
+                const suggestionBox = document.getElementById('addressSuggestions');
+                suggestionBox.innerHTML = '';
+
+                results.forEach((result) => {
+                    const address = result.formatted_address;
+                    const location = result.geometry.location;
+
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item list-group-item-action';
+                    listItem.textContent = address;
+
+                    listItem.addEventListener('click', function () {
+                        document.getElementById('fullAddress').value = address;
+                        document.getElementById('address').value = address;
+                        suggestionBox.innerHTML = '';
+
+                        const lngLat = [location.lng, location.lat];
                         map.setCenter(lngLat);
                         marker.setLngLat(lngLat);
 
-                        const popup = new goongjs.Popup({ offset: 25 }).setText(firstResult.formatted_address);
-                        marker.setPopup(popup).togglePopup();
-                    } else {
-                        showSuggestions(response.results);
-                    }
-                } else if (!isInit) {
-                    $('#addressSuggestions').empty().append(`<li class="list-group-item text-danger">Không tìm thấy địa chỉ</li>`);
-                }
-            })
-            .fail(function () {
-                if (!isInit) {
-                    $('#addressSuggestions').empty().append(`<li class="list-group-item text-danger">Lỗi khi tìm kiếm địa chỉ</li>`);
-                }
-            });
-        }
-
-        // Hàm gợi ý địa chỉ
-        function showSuggestions(results) {
-            const suggestionBox = $('#addressSuggestions');
-            suggestionBox.empty();
-
-            results.forEach((result) => {
-                const address = result.formatted_address;
-                const location = result.geometry.location;
-
-                const listItem = $(`<li class="list-group-item list-group-item-action">${address}</li>`);
-                listItem.on('click', function () {
-                    $('#fullAddress').val(address);
-                    $('#address').val(address); // cập nhật input thật để lưu vào DB
-                    suggestionBox.empty();
-
-                    const lngLat = [location.lng, location.lat];
-                    map.setCenter(lngLat);
-                    marker.setLngLat(lngLat);
-
-                    const popup = new goongjs.Popup({ offset: 25 }).setText(address);
-                    marker.setPopup(popup).togglePopup();
-                });
-
-                suggestionBox.append(listItem);
-            });
-        }
-
-        // Hàm này sẽ được gọi khi người dùng kéo thả marker trên bản đồ, để lấy địa chỉ từ vị trí mới
-        function reverseGeocode(lng, lat) {
-            $.get(`https://rsapi.goong.io/Geocode?latlng=${lat},${lng}&api_key=RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy`)
-                .done(function (response) {
-                    if (response.results && response.results.length > 0) {
-                        const address = response.results[0].formatted_address;
-                        $('#fullAddress').val(address);
-                        $('#address').val(address);
-
                         const popup = new goongjs.Popup({ offset: 25 }).setText(address);
                         marker.setPopup(popup).togglePopup();
-                    } else {
-                        console.warn("Không tìm thấy địa chỉ.");
-                    }
-                })
-                .fail(function () {
-                    console.error("Lỗi khi reverse geocode.");
+                    });
+
+                    suggestionBox.appendChild(listItem);
                 });
-        }
-
-        $(document).ready(function () {
-            initGoongMap();
-
-            const initialAddress = $('#fullAddress').val().trim();
-            if (initialAddress.length >= 3) {
-                geocodeAddress(initialAddress, true); // gọi với cờ "isInit"
             }
 
-            $('#fullAddress').on('input', function () {
-                const value = $(this).val().trim();
+            function reverseGeocode(lng, lat) {
+                fetch(`https://rsapi.goong.io/Geocode?latlng=${lat},${lng}&api_key=RJ9d6oO2TLx8s4Q8riMgne1hI905XhC89HxJ7fIy`)
+                    .then(res => res.json())
+                    .then(response => {
+                        if (response.results && response.results.length > 0) {
+                            const address = response.results[0].formatted_address;
+                            document.getElementById('fullAddress').value = address;
+                            document.getElementById('address').value = address;
+
+                            const popup = new goongjs.Popup({ offset: 25 }).setText(address);
+                            marker.setPopup(popup).togglePopup();
+                        } else {
+                            console.warn("Không tìm thấy địa chỉ.");
+                        }
+                    })
+                    .catch(() => {
+                        console.error("Lỗi khi reverse geocode.");
+                    });
+            }
+
+            initGoongMap();
+
+            const fullAddressInput = document.getElementById('fullAddress');
+            const addressSuggestions = document.getElementById('addressSuggestions');
+            const initialAddress = fullAddressInput.value.trim();
+            if (initialAddress.length >= 3) {
+                geocodeAddress(initialAddress, true);
+            }
+
+            fullAddressInput.addEventListener('input', function () {
+                const value = this.value.trim();
                 if (value.length >= 3) {
                     geocodeAddress(value, false);
                 } else {
-                    $('#addressSuggestions').empty();
+                    addressSuggestions.innerHTML = '';
                 }
             });
 
-            $('#fullAddress').on('keypress', function (e) {
-                if (e.which === 13) {
+            fullAddressInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
                     e.preventDefault();
-                    const val = $(this).val().trim();
+                    const val = this.value.trim();
                     if (val) {
                         geocodeAddress(val, false);
                     }
                 }
             });
-        }); 
 
-        // Định dạng giá tiền
-        $(document).ready(function () {
-            const $displayInput = $('#formattedPrice');
-            const $hiddenInput = $('#HouseDetail_Price');
+            // Format currency logic
+            const displayInput = document.getElementById('formattedPrice');
+            const hiddenInput = document.getElementById('HouseDetail_Price');
 
-            // Khi load trang
-            const rawInitial = $hiddenInput.val();
-            $displayInput.val(formatCurrencyVND(rawInitial));
+            const rawInitial = hiddenInput.value;
+            displayInput.value = formatCurrencyVND(rawInitial);
 
-            // Khi người dùng nhập
-            $displayInput.on('input', function () {
-                const raw = removeFormat($(this).val());
-                $hiddenInput.val(raw);
-                $(this).val(formatCurrencyVND(raw));
+            displayInput.addEventListener('input', function () {
+                const raw = removeFormat(this.value);
+                hiddenInput.value = raw;
+                this.value = formatCurrencyVND(raw);
             });
+
+            function removeFormat(value) {
+                return value.replace(/[^\d]/g, '');
+            }
+
+            function formatCurrencyVND(value) {
+                if (!value) return '';
+                const number = parseInt(value, 10) || 0;
+                return number.toLocaleString('vi-VN');
+            }
         });
-
-        function removeFormat(value) {
-            return value.replace(/[^\d]/g, ''); // Lấy số thuần
-        }
-
-        function formatCurrencyVND(value) {
-            if (!value) return '';
-            const number = parseInt(value, 10) || 0;
-            return number.toLocaleString('vi-VN');
-        }
     </script>
 </body>

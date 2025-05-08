@@ -95,6 +95,12 @@
                                     {
                                         <span class="badge bg-danger">Ẩn do bị báo cáo, <br>yêu cầu chỉnh sửa</span>
                                     }
+                                    else if (house.Status == HouseStatus.Hidden)
+                                    {
+                                        <span class="badge bg-secondary text-wrap" style="white-space: normal; max-width: 100%;">
+                                            Đã ẩn
+                                        </span>
+                                    } 
                                     else if (house.Status == HouseStatus.Approved || house.Status == HouseStatus.Active || house.Status == HouseStatus.Hidden)
                                     {
                                         <span class="badge bg-success">Đã duyệt</span>
@@ -145,7 +151,7 @@
         {
             <div class="alert alert-info">Hiện chưa có bài đăng nào.</div>
         }
-    </div>
+    </div> 
 
     @section Scripts { 
         <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
