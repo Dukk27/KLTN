@@ -17,7 +17,7 @@
         <h2>Danh Sách Bài Đăng Của Người Dùng @ViewBag.UserName</h2>
 
         <form id="filterForm" class="row g-3 align-items-end mb-3">
-            <div class="col-12 col-md-6 col-lg-3">
+            <div class="col-12 col-md-4 col-lg-4">
                 <div class="input-group">
                     <span class="input-group-text">
                         <i class="fas fa-search"></i>
@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-md-6 col-lg-3">
+            <div class="col-12 col-md-2 col-lg-2">
                 <select id="statusFilter" class="form-select" onchange="filterList()">
                     <option value="">-- Tất cả trạng thái --</option>
                     <option value="Pending">Chờ duyệt</option>
@@ -37,14 +37,20 @@
                 </select>
             </div>
 
-            <div class="col-12 col-md-6 col-lg-3">
+            <div class="col-12 col-md-2 col-lg-2">
                 <label for="startDate" class="form-label">Từ ngày</label>
                 <input type="date" id="startDate" class="form-control" onchange="filterList()" />
             </div>
 
-            <div class="col-12 col-md-6 col-lg-3">
+            <div class="col-12 col-md-2 col-lg-2">
                 <label for="endDate" class="form-label">Đến ngày</label>
                 <input type="date" id="endDate" class="form-control" onchange="filterList()" />
+            </div>
+
+            <div class="col-12 col-md-2 col-lg-2">
+                <button type="button" class="btn btn-secondary w-100" onclick="clearFilters()">                
+                    <i class="fas fa-times-circle"></i> Xoá lọc
+                </button>
             </div>
         </form>
 
@@ -202,6 +208,17 @@
                     row.style.display = 'none';
                 }
             });
+        }
+
+        function clearFilters() {
+            // Reset các bộ lọc
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+
+            // Gọi lại filterList để cập nhật lại danh sách
+            filterList();
         }
 
         window.onload = filterList;

@@ -32,6 +32,11 @@
                 <option value="bị khoá">Bị khoá</option>
             </select>
         </div>
+        <div class="col-12 col-md-2 mb-2">
+            <button id="clearFilters" class="btn btn-secondary w-100">
+                <i class="fas fa-times-circle"></i> Xoá lọc
+            </button>
+        </div>
     </div>
     
     @{
@@ -149,177 +154,183 @@
 
     <script>
         $(document).ready(function () {
-            $(document).ready(function () {
-                function bindEvents() {
-                    // Xử lý khoá tài khoản
-                    $(".lock-account").off("click").on("click", function () {
-                        const id = $(this).data("id");
-                        const button = $(this);
+            function bindEvents() {
+                // Xử lý khoá tài khoản
+                $(".lock-account").off("click").on("click", function () {
+                    const id = $(this).data("id");
+                    const button = $(this);
 
-                        iziToast.question({
-                            class: 'iziToast-custom',
-                            title: "Xác nhận khoá tài khoản",
-                            message: "Bạn có chắc chắn muốn khoá tài khoản này không?",
-                            position: "center",
-                            timeout: false,
-                            close: false,
-                            overlay: true,
-                            buttons: [
-                                ['<button><i class="fa fa-lock"></i> Khoá</button>', function (instance, toast) {
-                                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    iziToast.question({
+                        class: 'iziToast-custom',
+                        title: "Xác nhận khoá tài khoản",
+                        message: "Bạn có chắc chắn muốn khoá tài khoản này không?",
+                        position: "center",
+                        timeout: false,
+                        close: false,
+                        overlay: true,
+                        buttons: [
+                            ['<button><i class="fa fa-lock"></i> Khoá</button>', function (instance, toast) {
+                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
 
-                                    $.post("@Url.Action("LockAccount", "Admin")", { id: id }, function (response) {
-                                        if (response.success) {
-                                            iziToast.success({
-                                                title: "Thành công!",
-                                                message: "Tài khoản đã bị khoá.",
-                                                position: "topRight",
-                                                timeout: 1000
-                                            });
+                                $.post("@Url.Action("LockAccount", "Admin")", { id: id }, function (response) {
+                                    if (response.success) {
+                                        iziToast.success({
+                                            title: "Thành công!",
+                                            message: "Tài khoản đã bị khoá.",
+                                            position: "topRight",
+                                            timeout: 1000
+                                        });
 
-                                            // Chuyển nút "Khoá" thành "Mở khoá"
-                                            button.removeClass("btn-warning lock-account").addClass("btn-success unlock-account")
-                                                .html('<i class="fas fa-unlock"></i>')
-                                                .attr("title", "Mở khoá tài khoản");
+                                        // Chuyển nút "Khoá" thành "Mở khoá"
+                                        button.removeClass("btn-warning lock-account").addClass("btn-success unlock-account")
+                                            .html('<i class="fas fa-unlock"></i>')
+                                            .attr("title", "Mở khoá tài khoản");
 
-                                            // Cập nhật trạng thái hiển thị
-                                            button.closest("tr").find("td:nth-child(6)").html('<span class="badge bg-danger">Bị khoá</span>');
+                                        // Cập nhật trạng thái hiển thị
+                                        button.closest("tr").find("td:nth-child(6)").html('<span class="badge bg-danger">Bị khoá</span>');
 
-                                            // Gán lại sự kiện
-                                            bindEvents();
-                                        }
-                                    });
-                                }, true],
-                                ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
-                                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-                                }]
-                            ]
-                        });
+                                        // Gán lại sự kiện
+                                        bindEvents();
+                                    }
+                                });
+                            }, true],
+                            ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
+                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            }]
+                        ]
                     });
+                });
 
-                    // Xử lý mở khoá tài khoản
-                    $(".unlock-account").off("click").on("click", function () {
-                        const id = $(this).data("id");
-                        const button = $(this);
+                // Xử lý mở khoá tài khoản
+                $(".unlock-account").off("click").on("click", function () {
+                    const id = $(this).data("id");
+                    const button = $(this);
 
-                        iziToast.question({
-                            class: 'iziToast-custom',
-                            title: "Xác nhận mở khoá",
-                            message: "Bạn có chắc chắn muốn mở khoá tài khoản này không?",
-                            position: "center",
-                            timeout: false,
-                            close: false,
-                            overlay: true,
-                            buttons: [
-                                ['<button><i class="fa fa-unlock"></i> Mở khoá</button>', function (instance, toast) {
-                                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    iziToast.question({
+                        class: 'iziToast-custom',
+                        title: "Xác nhận mở khoá",
+                        message: "Bạn có chắc chắn muốn mở khoá tài khoản này không?",
+                        position: "center",
+                        timeout: false,
+                        close: false,
+                        overlay: true,
+                        buttons: [
+                            ['<button><i class="fa fa-unlock"></i> Mở khoá</button>', function (instance, toast) {
+                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
 
-                                    $.post("@Url.Action("UnlockAccount", "Admin")", { id: id }, function (response) {
-                                        if (response.success) {
-                                            iziToast.success({
-                                                title: "Thành công!",
-                                                message: "Tài khoản đã được mở khoá.",
-                                                position: "topRight",
-                                                timeout: 1000
-                                            });
+                                $.post("@Url.Action("UnlockAccount", "Admin")", { id: id }, function (response) {
+                                    if (response.success) {
+                                        iziToast.success({
+                                            title: "Thành công!",
+                                            message: "Tài khoản đã được mở khoá.",
+                                            position: "topRight",
+                                            timeout: 1000
+                                        });
 
-                                            // Chuyển nút "Mở khoá" thành "Khoá"
-                                            button.removeClass("btn-success unlock-account").addClass("btn-warning lock-account")
-                                                .html('<i class="fas fa-lock"></i>')
-                                                .attr("title", "Khoá tài khoản");
+                                        // Chuyển nút "Mở khoá" thành "Khoá"
+                                        button.removeClass("btn-success unlock-account").addClass("btn-warning lock-account")
+                                            .html('<i class="fas fa-lock"></i>')
+                                            .attr("title", "Khoá tài khoản");
 
-                                            // Cập nhật trạng thái hiển thị
-                                            button.closest("tr").find("td:nth-child(6)").html('<span class="badge bg-success">Hoạt động</span>');
+                                        // Cập nhật trạng thái hiển thị
+                                        button.closest("tr").find("td:nth-child(6)").html('<span class="badge bg-success">Hoạt động</span>');
 
-                                            // Gán lại sự kiện
-                                            bindEvents();
-                                        }
-                                    });
-                                }, true],
-                                ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
-                                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-                                }]
-                            ]
-                        });
+                                        // Gán lại sự kiện
+                                        bindEvents();
+                                    }
+                                });
+                            }, true],
+                            ['<button><i class="fa fa-times"></i> Hủy</button>', function (instance, toast) {
+                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            }]
+                        ]
                     });
-                }
-                // Gán sự kiện lần đầu
-                bindEvents();
-            });
-
-            // Tìm kiếm tài khoản theo tên, sđt hoặc email
-            $("#searchInput").on("keyup", function () {
-                const value = $(this).val().toLowerCase();
-                $("table tbody tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-                });
-            });
-
-            // Hàm lọc tài khoản theo tên, sđt, email, vai trò và trạng thái
-            function filterAccounts() {
-                const keyword = $("#searchInput").val().toLowerCase();
-                const role = $("#roleFilter").val();
-                const status = $("#statusFilter").val();
-
-                $("table tbody tr").each(function () {
-                    const rowText = $(this).text().toLowerCase();
-                    const rowRole = $(this).data("role");
-                    const rowStatus = $(this).data("status");
-
-                    const matchesKeyword = rowText.indexOf(keyword) > -1;
-                    const matchesRole = role === "" || rowRole === role;
-                    const matchesStatus = status === "" || rowStatus === status;
-
-                    $(this).toggle(matchesKeyword && matchesRole && matchesStatus);
-                });
-
-                reapplyPagination();
-            }
-
-            // Gắn sự kiện khi thay đổi bộ lọc
-            $("#searchInput, #roleFilter, #statusFilter").on("input change", function () {
-                filterAccounts();
-            });
-
-            // Hàm phân trang
-            function paginateTable(rowsPerPage) {
-                const rows = $("table tbody tr:visible");
-                const totalRows = rows.length;
-                const totalPages = Math.ceil(totalRows / rowsPerPage);
-
-                $("#pagination").empty();
-
-                for (let i = 1; i <= totalPages; i++) {
-                    $("#pagination").append(`
-                        <li class="page-item${i === 1 ? " active" : ""}">
-                            <a class="page-link" href="#">${i}</a>
-                        </li>
-                    `);
-                }
-
-                rows.hide();
-                rows.slice(0, rowsPerPage).show();
-
-                $("#pagination .page-link").on("click", function (e) {
-                    e.preventDefault();
-                    const page = parseInt($(this).text());
-
-                    $("#pagination .page-item").removeClass("active");
-                    $(this).parent().addClass("active");
-
-                    const start = (page - 1) * rowsPerPage;
-                    const end = start + rowsPerPage;
-
-                    rows.hide().slice(start, end).show();
                 });
             }
+            // Gán sự kiện lần đầu
+            bindEvents();
+        });
 
-            // Hàm áp dụng lại phân trang sau khi thay đổi bộ lọc
-            function reapplyPagination() {
-                paginateTable(10); // số dòng mỗi trang
-            }
+        // Tìm kiếm tài khoản theo tên, sđt hoặc email
+        $("#searchInput").on("keyup", function () {
+            const value = $(this).val().toLowerCase();
+            $("table tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+
+        // Hàm lọc tài khoản theo tên, sđt, email, vai trò và trạng thái
+        function filterAccounts() {
+            const keyword = $("#searchInput").val().toLowerCase();
+            const role = $("#roleFilter").val();
+            const status = $("#statusFilter").val();
+
+            $("table tbody tr").each(function () {
+                const rowText = $(this).text().toLowerCase();
+                const rowRole = $(this).data("role");
+                const rowStatus = $(this).data("status");
+
+                const matchesKeyword = rowText.indexOf(keyword) > -1;
+                const matchesRole = role === "" || rowRole === role;
+                const matchesStatus = status === "" || rowStatus === status;
+
+                $(this).toggle(matchesKeyword && matchesRole && matchesStatus);
+            });
 
             reapplyPagination();
+        }
+
+        // Gắn sự kiện khi thay đổi bộ lọc
+        $("#searchInput, #roleFilter, #statusFilter").on("input change", function () {
+            filterAccounts();
+        });
+
+        // Hàm phân trang
+        function paginateTable(rowsPerPage) {
+            const rows = $("table tbody tr:visible");
+            const totalRows = rows.length;
+            const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+            $("#pagination").empty();
+
+            for (let i = 1; i <= totalPages; i++) {
+                $("#pagination").append(`
+                    <li class="page-item${i === 1 ? " active" : ""}">
+                        <a class="page-link" href="#">${i}</a>
+                    </li>
+                `);
+            }
+
+            rows.hide();
+            rows.slice(0, rowsPerPage).show();
+
+            $("#pagination .page-link").on("click", function (e) {
+                e.preventDefault();
+                const page = parseInt($(this).text());
+
+                $("#pagination .page-item").removeClass("active");
+                $(this).parent().addClass("active");
+
+                const start = (page - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+
+                rows.hide().slice(start, end).show();
+            });
+        }
+
+        // Hàm áp dụng lại phân trang sau khi thay đổi bộ lọc
+        function reapplyPagination() {
+            paginateTable(10); // số dòng mỗi trang
+        }
+
+        reapplyPagination();
+
+        // Xử lý nút "Xoá lọc"
+        $("#clearFilters").on("click", function () {
+            $("#searchInput").val("");
+            $("#roleFilter").val("");
+            $("#statusFilter").val("");
+            filterAccounts(); // áp dụng lại bộ lọc để hiển thị tất cả
         });
     </script>
 </body>

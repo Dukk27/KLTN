@@ -2,21 +2,21 @@ let deletedImagesArray = [];
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".remove-image").forEach((button) => {
     button.addEventListener("click", function () {
-      let imgUrl = this.getAttribute("data-img");
-      let deletedImagesInput = document.getElementById("deletedImages");
+        let imgUrl = this.getAttribute("data-img");
+        let deletedImagesInput = document.getElementById("deletedImages");
 
-      // Nếu ảnh chưa được thêm vào danh sách xóa, thì thêm vào
-      if (!deletedImagesInput.value.includes(imgUrl)) {
-        deletedImagesInput.value += deletedImagesInput.value
-          ? `,${imgUrl}`
-          : imgUrl;
-        deletedImagesArray.push(imgUrl);
-        deletedImagesInput.value = deletedImagesArray.join(","); // Cập nhật danh sách xóa
-      }
+        // Nếu ảnh chưa được thêm vào danh sách xóa, thì thêm vào
+        if (!deletedImagesInput.value.includes(imgUrl)) {
+            deletedImagesInput.value += deletedImagesInput.value
+                ? `,${imgUrl}`
+                : imgUrl;
+            deletedImagesArray.push(imgUrl);
+            deletedImagesInput.value = deletedImagesArray.join(","); // Cập nhật danh sách xóa
+        }
 
-      this.parentElement.remove(); // Xóa ảnh khỏi giao diện
+        this.parentElement.remove(); // Xóa ảnh khỏi giao diện
     });
-  });
+});
 
   // Xử lý xem trước ảnh mới khi chọn file
   document
@@ -174,6 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     timeout: 1000,
                     onClosing: function () {
                       window.location.href = "/QuanLi/ListHouseRoom";
+                      // location.reload();
                     },
                   });
                 } else {
@@ -292,3 +293,4 @@ document.addEventListener("DOMContentLoaded", function () {
     updateWaterPrice(); // Đảm bảo giá trị được khởi tạo đúng khi trang load
   });
 });
+

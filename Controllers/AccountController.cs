@@ -415,7 +415,7 @@ namespace KLTN.Controllers
                 return Json(new { success = false, message = "Tài khoản không tồn tại!" });
             }
 
-            if (user.Password != currentPassword)
+            if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password))
             {
                 return Json(new { success = false, message = "Mật khẩu cũ không đúng!" });
             }
@@ -445,7 +445,7 @@ namespace KLTN.Controllers
             }
 
             // Cập nhật mật khẩu mới
-            user.Password = newPassword;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
             await _accountRepository.UpdateAccountAsync(user);
 
             return Json(new { success = true, message = "Mật khẩu đã được thay đổi thành công!" });
@@ -578,7 +578,7 @@ namespace KLTN.Controllers
             }
 
             // Cập nhật mật khẩu mới
-            user.Password = newPassword;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
             await _accountRepository.UpdateAccountAsync(user);
 
             return Json(

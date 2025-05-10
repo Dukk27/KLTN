@@ -63,9 +63,9 @@ namespace KLTN.Helpers
 
                     _context.Notifications.Add(notification);
 
-                    if (house.Status != HouseStatus.Pending)
+                    if (house.Status != HouseStatus.Expired)
                     {
-                        house.Status = HouseStatus.Pending;
+                        house.Status = HouseStatus.Expired;
                     }
                     Console.WriteLine("===> Notification mới đã được thêm.");
                 }

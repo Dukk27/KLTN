@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KLTN")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c095906a0d4621ef88ab3909d701c1c1b4e050ba")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ac2f8018aff0ba842b3d495e83c678a50d1d5aa4")]
 [assembly: System.Reflection.AssemblyProductAttribute("KLTN")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KLTN")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -16,9 +16,14 @@ namespace KLTN.Repositories
 
         public async Task<Account?> LoginAsync(string username, string password)
         {
-            return await _context.Accounts.FirstOrDefaultAsync(a =>
-                a.UserName == username && a.Password == password
-            );
+            var user = await _context.Accounts.FirstOrDefaultAsync(a => a.UserName == username);
+
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
+            {
+                return user;
+            }
+
+            return null;
         }
 
         public async Task<bool> RegisterAsync(Account account)
@@ -27,6 +32,8 @@ namespace KLTN.Repositories
             {
                 return false;
             }
+
+            account.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);
 
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();

@@ -58,6 +58,7 @@
                 <option value="Bị từ chối">Từ chối</option>
                 <option value="Đã ẩn do người đăng/admin">Đã ẩn do người đăng/admin</option>
                 <option value="Đã bị ẩn do báo cáo">Đã bị ẩn do báo cáo</option>
+                <option value="Đã ẩn do hết hạn">Đã ẩn do hết hạn</option>
             </select>
         </div>
         <div class="col-md-3">
@@ -69,12 +70,17 @@
                 }
             </select>
         </div>
+        <div class="col-12 col-md-2 mb-2">
+            <button id="clearFilters" class="btn btn-secondary w-100">
+                <i class="fas fa-times-circle"></i> Xoá lọc
+            </button>
+        </div>
     </div>
     @{
         var total = Model.Count(h => h.Status != HouseStatus.Unpaid);
         var pending = Model.Count(h => h.Status == HouseStatus.Pending);
         var approved = Model.Count(h => h.Status == HouseStatus.Approved || h.Status == HouseStatus.Active);
-        var hidden = Model.Count(h => h.Status == HouseStatus.Hidden && h.IsAutoHidden || h.Status == HouseStatus.Hidden);
+        var hidden = Model.Count(h => h.Status == HouseStatus.Hidden && h.IsAutoHidden || h.Status == HouseStatus.Hidden || h.Status == HouseStatus.Expired);
         var rejected = Model.Count(h => h.Status == HouseStatus.Rejected);
     } 
 
@@ -150,6 +156,12 @@
                             {
                                 <span class="badge bg-secondary text-wrap" style="white-space: normal; max-width: 100%;">
                                     Đã ẩn do người đăng/admin
+                                </span>
+                            }
+                            else if (house.Status == HouseStatus.Expired)
+                            {
+                                <span class="badge bg-secondary text-wrap" style="white-space: normal; max-width: 100%;">
+                                    Đã ẩn do hết hạn
                                 </span>
                             }
                             else
@@ -647,6 +659,15 @@
             }
             addHideHandler();
             addShowHandler(); 
+
+            $("#clearFilters").on("click", function () {
+                $("#searchInput").val('');
+                $("#statusFilter").val('');
+                $("#userFilter").val('');
+
+                applyFilters();
+                reapplyPagination();
+            });
         });
     </script>
 </body>

@@ -28,6 +28,7 @@
         <div class="form-group position-relative">
             <label for="fullAddress">Địa chỉ <span style="color:red">*</span></label>
             <input type="text" id="fullAddress" class="form-control" value="@Model.HouseDetail.Address" autocomplete="off" />
+            <span id="fullAddressError" class="text-danger"></span>
             <input type="hidden" id="address" name="HouseDetail.Address" value="@Model.HouseDetail.Address" />
             <ul id="addressSuggestions" class="list-group position-absolute w-100" style="z-index:1000;"></ul>
             <span asp-validation-for="HouseDetail.Address" class="text-danger"></span>
@@ -177,7 +178,7 @@
 
         <div class="d-flex justify-content-center gap-3 mt-4">
             <button type="submit" class="btn btn-primary flex-fill" style="max-width: 200px;">Lưu thay đổi</button>
-            <a asp-action="ListHouseRoom" class="btn btn-secondary flex-fill" style="max-width: 200px;">Hủy</a>
+            <a asp-action="ListHouseRoom" class="btn btn-secondary flex-fill" style="max-width: 200px;">Đóng</a>
         </div>
     </form>
 
@@ -343,6 +344,70 @@
                 const number = parseInt(value, 10) || 0;
                 return number.toLocaleString('vi-VN');
             }
-        });
+            
+            function formatCurrencyWithSuffix(value) {
+                if (!value) return '';
+
+                const match = value.trim().match(/^(\d+)(.*)$/);
+                if (!match) return value;
+
+                const numberPart = match[1];
+                const suffix = match[2].trim();
+
+                const formattedNumber = parseInt(numberPart, 10).toLocaleString('vi-VN');
+
+                return suffix ? `${formattedNumber} ${suffix}` : `${formattedNumber}`;
+            }
+
+            function removeFormatCurrency(value) {
+                const match = value.trim().match(/^([\d.,]+)(.*)$/);
+                if (!match) return value;
+
+                const rawNumber = match[1].replace(/[^\d]/g, '');
+                const suffix = match[2].trim();
+
+                return `${rawNumber}${suffix ? ' ' + suffix : ''}`;
+            }
+
+            function formatCurrency(value) {
+                if (!value) return '';
+                const number = parseInt(value.replace(/[^\d]/g, ''), 10);
+                return number.toLocaleString('vi-VN');
+            }
+
+            // Tiền điện và nước có hậu tố
+            ['TienDien', 'TienNuoc'].forEach(function (name) {
+                const input = document.querySelector(`[name="HouseDetail.${name}"]`);
+                if (input) {
+                    input.value = formatCurrencyWithSuffix(input.value);
+
+                    input.addEventListener('input', function () {
+                        const raw = removeFormatCurrency(this.value);
+                        this.value = formatCurrencyWithSuffix(raw);
+                    });
+
+                    input.addEventListener('blur', function () {
+                        const raw = removeFormatCurrency(this.value);
+                        this.value = formatCurrencyWithSuffix(raw);
+                    });
+                }
+            });
+
+            // Tiền dịch vụ chỉ có số, không hậu tố
+            ['TienDv'].forEach(function (name) {
+                const input = document.querySelector(`[name="HouseDetail.${name}"]`);
+                if (input) {
+                    input.value = formatCurrency(input.value);
+
+                    input.addEventListener('input', function () {
+                        this.value = formatCurrency(this.value);
+                    });
+
+                    input.addEventListener('blur', function () {
+                        this.value = formatCurrency(this.value);
+                    });
+                }
+            });
+        }); 
     </script>
 </body>

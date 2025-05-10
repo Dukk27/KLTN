@@ -299,6 +299,14 @@ namespace KLTN.Controllers
                 );
             }
 
+            var now = DateTime.Now;
+
+            // Nếu bài được đăng lại và hạn quá 30 ngày thì cho timepost = thời gian duyệt
+            if (house.Status == HouseStatus.Pending && houseDetail.TimePost.AddDays(30) < now)
+            {
+                houseDetail.TimePost = now;
+            }
+
             house.Status = HouseStatus.Approved;
             houseDetail.TimeUpdate = DateTime.Now;
             house.IsAutoHidden = false; // Nếu trước đó bị ẩn tự động, reset lại

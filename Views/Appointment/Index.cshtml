@@ -19,7 +19,6 @@
 
     <div class="container">
         <form id="searchFilterForm" class="row g-3 align-items-center mb-3">
-            <!-- Ô tìm kiếm -->
             <div class="col-12 col-md-3">
                 <div class="d-flex flex-column">
                     <label for="searchInput" class="form-label">Tìm kiếm</label>
@@ -27,7 +26,7 @@
                         <span class="input-group-text">
                             <i class="fas fa-search"></i>
                         </span>
-                    <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm theo tiêu đề bài đăng..." onkeyup="filterAppointments()" />
+                        <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm theo tiêu đề bài đăng..." onkeyup="filterAppointments()" />
                     </div>
                 </div>
             </div>
@@ -72,6 +71,15 @@
                 <div class="d-flex flex-column">
                     <label for="endDate" class="form-label">Đến ngày</label>
                     <input type="date" id="endDate" class="form-control" onchange="filterAppointments()" />
+                </div>
+            </div>
+
+            <!-- Nút xóa bộ lọc -->
+            <div class="col-12 col-md-1">
+                <div class="d-flex flex-column">
+                    <button type="button" class="btn btn-del" onclick="clearFilters()">
+                        <i class="fas fa-times-circle"></i> &nbsp; Xoá lọc
+                    </button>
                 </div>
             </div>
         </form>
@@ -208,6 +216,18 @@
             var month = dateParts[1];
             var year = dateParts[2];
             return `${year}-${month}-${day}`; // Định dạng ngày thành yyyy-MM-dd
+        }
+
+        function clearFilters() {
+            // Xóa giá trị của tất cả các ô lọc
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('userFilter').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+
+            // Sau khi xóa, gọi lại hàm lọc
+            filterAppointments();
         }
 
         window.onload = function () {
