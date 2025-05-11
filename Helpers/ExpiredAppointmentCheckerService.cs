@@ -76,7 +76,7 @@ namespace KLTN.Helpers
                         string body =
                             $@"
                             <p>Xin chào <b>{appointment.User.UserName}</b>,</p>
-                            <p>Lịch hẹn xem nhà của bạn vào ngày <b>{appointment.AppointmentDate:HH:mm dd/MM/yyyy}</b> tại bài đăng có tiêu đề: <b>{appointment.House?.NameHouse}</b> đã quá hạn và chưa được xác nhận.</p>
+                            <p>Lịch hẹn xem nhà của bạn vào <b>{appointment.AppointmentDate:HH:mm dd/MM/yyyy}</b> tại bài đăng có tiêu đề: <b>{appointment.House?.NameHouse}</b> đã quá hạn và chưa được xác nhận.</p>
                             <p><b>Địa chỉ:</b> {houseAddress}.</p>
                             <p>Vui lòng liên hệ chủ trọ để xác nhận lại lịch hẹn.</p>
                             <br>
@@ -107,7 +107,7 @@ namespace KLTN.Helpers
                             string body =
                                 $@"
                                     <p>Xin chào <b>{houseOwner.UserName}</b>,</p>
-                                    <p>Lịch hẹn với khách vào ngày <b>{appointment.AppointmentDate:HH:mm dd/MM/yyyy}</b> tại bài đăng có tiêu đề: <b>{appointment.House?.NameHouse}</b> đã quá hạn và chưa được xác nhận.</p>
+                                    <p>Lịch hẹn với khách vào <b>{appointment.AppointmentDate:HH:mm dd/MM/yyyy}</b> tại bài đăng có tiêu đề: <b>{appointment.House?.NameHouse}</b> đã quá hạn và chưa được xác nhận.</p>
                                     <p><b>Địa chỉ:</b> {houseAddress}.</p>
                                     <p>Vui lòng kiểm tra lại để đảm bảo quá trình đặt lịch không bị gián đoạn.</p>
                                     <br>
@@ -125,7 +125,7 @@ namespace KLTN.Helpers
                     appointment.IsNotified = true; // Đánh dấu là đã thông báo
                 }
 
-                // Gửi thông báo cho chủ trọ trước 30 phút (nếu chưa nhắc)
+                // Gửi thông báo cho chủ trọ trước 1 ngày
                 var upcomingAppointments = await context
                     .Appointments.Where(a =>
                         a.AppointmentDate > now
@@ -134,7 +134,7 @@ namespace KLTN.Helpers
                         && !a.IsReminderSent
                     )
                     .Include(a => a.House)
-                    .ThenInclude(h => h.HouseDetails) // Đảm bảo lấy thông tin địa chỉ
+                    .ThenInclude(h => h.HouseDetails) //thông tin địa chỉ
                     .ToListAsync();
 
                 foreach (var appointment in upcomingAppointments)
@@ -163,7 +163,7 @@ namespace KLTN.Helpers
                             string body =
                                 $@"
                                     <p>Xin chào <b>{houseOwner.UserName}</b>,</p>
-                                    <p>Bạn có lịch hẹn với khách vào lúc <b>{appointment.AppointmentDate:HH:mm dd/MM/yyyy}</b> tại bài đăng có tiêu đề: <b>{appointment.House?.NameHouse}</b>.</p>
+                                    <p>Bạn có lịch hẹn với khách vào <b>{appointment.AppointmentDate:HH:mm dd/MM/yyyy}</b> tại bài đăng có tiêu đề: <b>{appointment.House?.NameHouse}</b>.</p>
                                     <p><b>Địa chỉ:</b> {houseAddress}.</p>
                                     <p>Vui lòng chuẩn bị tiếp đón khách đúng giờ.</p>
                                     <br>

@@ -49,121 +49,95 @@ namespace KLTN.Controllers
             return PartialView("_ManageAccounts", accounts); // Trả về PartialView
         }
 
-        public async Task<IActionResult> Details(int id)
-        {
-            var account = await _accountRepository.GetAccountByIdAsync(id);
-            if (account == null)
-            {
-                return NotFound();
-            }
-
-            return View(account);
-        }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var account = await _accountRepository.GetAccountByIdAsync(id.Value);
-            if (account == null)
-            {
-                return NotFound();
-            }
-            return View(account);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(
-            int id,
-            [Bind("IdUser,UserName,Password,Role,PhoneNumber,Email,FreePostsUsed")] Account account
-        )
-        {
-            if (id != account.IdUser)
-            {
-                return Json(new { success = false, message = "ID tài khoản không hợp lệ." });
-            }
-
-            try
-            {
-                await _accountRepository.UpdateAccountAsync(account);
-
-                string previousPage =
-                    TempData["PreviousPage"] as string
-                    ?? Url.Action(nameof(ManageAccounts), "Admin");
-
-                return Json(
-                    new
-                    {
-                        success = true,
-                        message = "Cập nhật thông tin tài khoản thành công!",
-                        previousPage,
-                    }
-                );
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteAccount(int id)
-        {
-            var account = await _accountRepository.GetAccountByIdAsync(id);
-            if (account == null)
-            {
-                return Json(new { success = false, message = "Tài khoản không tồn tại." });
-            }
-
-            await _accountRepository.DeleteAccountAsync(id);
-            return Json(new { success = true, message = "Tài khoản đã được xóa thành công." });
-        }
-
         // Quản lý bài đăng
         public async Task<IActionResult> ManagePosts()
         {
             var posts = await _housesRepository.GetAllHousesAsync();
-            posts = posts.Where(h => h.Status != HouseStatus.Unpaid).ToList();
+            posts = posts
+                .Where(h => h.Status != HouseStatus.Unpaid)
+                .OrderByDescending(h => h.Status == HouseStatus.Pending)
+                .ToList();
             return PartialView("_ManagePosts", posts);
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeletePost(int id)
+        public async Task<IActionResult> ApprovePost(int id)
         {
-            try
+            var house = await _housesRepository.GetHouseWithDetailsAsync(id);
+            if (house == null)
             {
-                var house = await _housesRepository.GetHouseWithDetailsAsync(id);
-                if (house == null)
-                {
-                    return Json(new { success = false, message = "Bài đăng không tồn tại." });
-                }
-
-                await _housesRepository.DeleteAsync(id);
-
-                // Gửi thông báo cho chủ bài đăng
-                var notification = new Notification
-                {
-                    UserId = house.IdUser,
-                    Message = $"Bài đăng có tiêu đề: {house.NameHouse} đã bị xóa bởi Admin.",
-                    CreatedAt = DateTime.Now,
-                    IsRead = false,
-                };
-
-                _context.Notifications.Add(notification);
-                await _context.SaveChangesAsync();
-
-                return Json(new { success = true, message = "Xóa bài đăng thành công." });
+                return Json(new { success = false, message = "Bài đăng không tồn tại." });
             }
-            catch
+
+            var houseDetail = house.HouseDetails.FirstOrDefault();
+            if (houseDetail == null)
             {
                 return Json(
-                    new { success = false, message = "Đã xảy ra lỗi trong quá trình xóa bài đăng." }
+                    new { success = false, message = "Thông tin chi tiết bài đăng không tồn tại." }
                 );
             }
+
+            var now = DateTime.Now;
+
+            // Nếu bài được đăng lại và hạn quá 30 ngày thì cho timepost = thời gian duyệt
+            if (house.Status == HouseStatus.Pending && houseDetail.TimePost.AddDays(30) < now)
+            {
+                houseDetail.TimePost = now;
+            }
+
+            house.Status = HouseStatus.Approved;
+            houseDetail.TimeUpdate = DateTime.Now;
+            house.IsAutoHidden = false; // Nếu trước đó bị ẩn tự động, reset lại
+            house.ReportVersion += 1; // Reset lượt report bằng cách tăng version
+            await _housesRepository.UpdateAsync(house);
+
+            // Gửi thông báo cho chủ bài đăng
+            var notification = new Notification
+            {
+                UserId = house.IdUser,
+                Message = $"Bài đăng có tiêu đề: {house.NameHouse} đã được duyệt!",
+                CreatedAt = DateTime.Now,
+                IsRead = false,
+            };
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Bài đăng đã được duyệt." });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectPost(int id, string reason)
+        {
+            if (string.IsNullOrWhiteSpace(reason))
+            {
+                return Json(new { success = false, message = "Vui lòng nhập lý do từ chối." });
+            }
+
+            var house = await _housesRepository.GetHouseWithDetailsAsync(id);
+            if (house == null)
+            {
+                return Json(new { success = false, message = "Bài đăng không tồn tại." });
+            }
+
+            house.Status = HouseStatus.Rejected;
+            await _housesRepository.UpdateAsync(house);
+
+            // Gửi thông báo cho chủ bài đăng kèm lý do
+            var notification = new Notification
+            {
+                UserId = house.IdUser,
+                Message = $"Bài đăng có tiêu đề: {house.NameHouse} đã bị từ chối.\nLý do: {reason}",
+                CreatedAt = DateTime.Now,
+                IsRead = false,
+            };
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
+
+            return Json(
+                new { success = true, message = "Bài đăng đã bị từ chối và lý do đã được gửi." }
+            );
         }
 
         [HttpPost]
@@ -280,86 +254,6 @@ namespace KLTN.Controllers
                     new { success = false, message = "Lỗi khi xóa bình luận: " + ex.Message }
                 );
             }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ApprovePost(int id)
-        {
-            var house = await _housesRepository.GetHouseWithDetailsAsync(id);
-            if (house == null)
-            {
-                return Json(new { success = false, message = "Bài đăng không tồn tại." });
-            }
-
-            var houseDetail = house.HouseDetails.FirstOrDefault();
-            if (houseDetail == null)
-            {
-                return Json(
-                    new { success = false, message = "Thông tin chi tiết bài đăng không tồn tại." }
-                );
-            }
-
-            var now = DateTime.Now;
-
-            // Nếu bài được đăng lại và hạn quá 30 ngày thì cho timepost = thời gian duyệt
-            if (house.Status == HouseStatus.Pending && houseDetail.TimePost.AddDays(30) < now)
-            {
-                houseDetail.TimePost = now;
-            }
-
-            house.Status = HouseStatus.Approved;
-            houseDetail.TimeUpdate = DateTime.Now;
-            house.IsAutoHidden = false; // Nếu trước đó bị ẩn tự động, reset lại
-            house.ReportVersion += 1; // Reset lượt report bằng cách tăng version
-            await _housesRepository.UpdateAsync(house);
-
-            // Gửi thông báo cho chủ bài đăng
-            var notification = new Notification
-            {
-                UserId = house.IdUser,
-                Message = $"Bài đăng có tiêu đề: {house.NameHouse} đã được duyệt!",
-                CreatedAt = DateTime.Now,
-                IsRead = false,
-            };
-
-            _context.Notifications.Add(notification);
-            await _context.SaveChangesAsync();
-
-            return Json(new { success = true, message = "Bài đăng đã được duyệt." });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> RejectPost(int id, string reason)
-        {
-            if (string.IsNullOrWhiteSpace(reason))
-            {
-                return Json(new { success = false, message = "Vui lòng nhập lý do từ chối." });
-            }
-
-            var house = await _housesRepository.GetHouseWithDetailsAsync(id);
-            if (house == null)
-            {
-                return Json(new { success = false, message = "Bài đăng không tồn tại." });
-            }
-
-            house.Status = HouseStatus.Rejected;
-            await _housesRepository.UpdateAsync(house);
-
-            // Gửi thông báo cho chủ bài đăng kèm lý do
-            var notification = new Notification
-            {
-                UserId = house.IdUser,
-                Message = $"Bài đăng có tiêu đề: {house.NameHouse} đã bị từ chối.\nLý do: {reason}",
-                CreatedAt = DateTime.Now,
-                IsRead = false,
-            };
-
-            _context.Notifications.Add(notification);
-            await _context.SaveChangesAsync();
-
-            return Json(
-                new { success = true, message = "Bài đăng đã bị từ chối và lý do đã được gửi." }
-            );
         }
 
         // Quản lý loại nhà
@@ -620,43 +514,6 @@ namespace KLTN.Controllers
                 .ToList();
 
             return PartialView("_ManageChat", groupedMessages);
-        }
-
-        [HttpPost]
-        public IActionResult DeleteChat(string conversationId)
-        {
-            if (string.IsNullOrEmpty(conversationId) || !conversationId.Contains("-"))
-            {
-                return Json(new { success = false, message = "ConversationId không hợp lệ!" });
-            }
-
-            var ids = conversationId.Split('-');
-            if (
-                ids.Length != 2
-                || !int.TryParse(ids[0], out int id1)
-                || !int.TryParse(ids[1], out int id2)
-            )
-            {
-                return Json(new { success = false, message = "Lỗi khi phân tích ConversationId!" });
-            }
-
-            // Lấy tất cả tin nhắn của cuộc hội thoại này
-            var messages = _context
-                .Messages.Where(m =>
-                    (m.SenderId == id1 && m.ReceiverId == id2)
-                    || (m.SenderId == id2 && m.ReceiverId == id1)
-                )
-                .ToList();
-
-            if (!messages.Any())
-            {
-                return Json(new { success = false, message = "Không có tin nhắn để xóa!" });
-            }
-
-            _context.Messages.RemoveRange(messages);
-            _context.SaveChanges();
-
-            return Json(new { success = true, message = "Đã xóa hội thoại thành công!" });
         }
 
         [HttpPost]

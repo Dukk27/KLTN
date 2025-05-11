@@ -255,13 +255,6 @@ namespace KLTN.Controllers
             return View(model);
         }
 
-        [Authorize(Policy = "AdminPolicy")]
-        public async Task<IActionResult> Manage()
-        {
-            var accounts = await _accountRepository.GetAllAccountsAsync();
-            return View(accounts);
-        }
-
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -451,19 +444,6 @@ namespace KLTN.Controllers
             return Json(new { success = true, message = "Mật khẩu đã được thay đổi thành công!" });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DeleteAccount(int id)
-        {
-            var account = await _accountRepository.GetAccountByIdAsync(id);
-            if (account == null)
-            {
-                return Json(new { success = false, message = "Tài khoản không tồn tại." });
-            }
-
-            await _accountRepository.DeleteAccountAsync(id);
-            return Json(new { success = true, message = "Tài khoản đã được xóa thành công." });
-        }
-
         // Giao diện quên mật khẩu
         public IActionResult ForgotPassword()
         {
@@ -589,24 +569,6 @@ namespace KLTN.Controllers
                     redirectUrl = Url.Action("Login", "Account"),
                 }
             );
-        }
-
-        [Authorize]
-        public async Task<IActionResult> Profile()
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null)
-            {
-                return RedirectToAction("Login");
-            }
-
-            var account = await _accountRepository.GetAccountByIdAsync(userId.Value);
-            if (account == null)
-            {
-                return NotFound();
-            }
-
-            return PartialView("_Profile", account);
         }
 
         [HttpGet]

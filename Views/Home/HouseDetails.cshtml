@@ -191,13 +191,44 @@
                                 <td><i class="fas fa-user" style="color: #007bff;"></i><strong>Người liên hệ 1</strong></td>
                                 <td>@Model.IdUserNavigation?.UserName</td>
                                 <td><i class="fas fa-phone" style="color: #17a2b8;"></i> <strong>Số điện thoại</strong></td>
-                                <td colspan="3">@Model.IdUserNavigation?.PhoneNumber</td>
+                                @{
+                                    var phone = Model.IdUserNavigation?.PhoneNumber;
+                                    var maskedPhone = phone?.Length >= 6 ? phone.Substring(0, 6) + "****" : "*******";
+                                }
+                                <td colspan="3">
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <a href="tel:@phone" style="text-decoration: none;" title="Gọi ngay">
+                                            @phone
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" onclick="loginRedirect()" style="text-decoration: none;" title="Đăng nhập để xem">@maskedPhone</a>
+                                    }
+                                </td>
                             </tr>
+
                             <tr>
                                 <td><i class="fas fa-user" style="color: #007bff;"></i><strong>Người liên hệ 2</strong></td>
                                 <td>@detail.ContactName2</td>
                                 <td><i class="fas fa-phone" style="color: #17a2b8;"></i> <strong>Số điện thoại 2</strong></td>
-                                <td colspan="3">@detail.ContactPhone2</td>
+                                @{
+                                    var phone2 = detail.ContactPhone2;
+                                    var maskedPhone2 = phone2?.Length >= 6 ? phone2.Substring(0, 6) + "****" : "*******";
+                                }
+                                <td colspan="3">
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <a href="tel:@phone2" style="text-decoration: none;" title="Gọi ngay">
+                                            @phone2
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" onclick="loginRedirect()" style="text-decoration: none;" title="Đăng nhập để xem">@maskedPhone2</a>
+                                    }
+                                </td>
                             </tr>
                             <tr>
                                 <td> <i class="fas fa-ruler-combined" style="color: #6c757d;"></i><strong>Diện tích</strong>
@@ -285,6 +316,7 @@
             <div id="appointmentOverlay" class="appointment-overlay"></div>
             <div id="appointmentForm" class="appointment-form">
                 <h3>Đặt Lịch Hẹn Xem Nhà</h3>
+                <label style="margin-bottom: 10px"><i>Vui lòng đặt lịch hẹn trước thời điểm hiện tại ít nhất 1 giờ</i></label>
 
                 <div class="form-group">
                     <label for="appointmentDateTime">Thời gian hẹn gặp <span style="color:red">*</span></label>
@@ -459,7 +491,6 @@
                                     </p>
                                     <p class="card-text"><strong>Loại nhà trọ:</strong> @otherHouse.HouseType?.Name</p>
                                     <p class="card-text"><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy")</p>
-                                    @* <a href="@Url.Action("Detail", "Home", new { id = otherHouse.IdHouse })" class="btn btn-sm btn-primary mt-auto">Xem Chi Tiết</a> *@
                                 </div>
                             </a>
                         </div>
@@ -493,7 +524,6 @@
                                     </p>
                                     <p class="card-text"><strong>Loại nhà trọ:</strong> @house.HouseType?.Name</p>
                                     <p class="card-text"><strong>Ngày đăng:</strong> @timePost.ToString("dd/MM/yyyy")</p>
-                                    @* <a href="@Url.Action("Detail", "Home", new { id = house.IdHouse })" class="btn btn-sm btn-primary mt-auto">Xem Chi Tiết</a> *@
                                 </div>
                             </a>
                         </div>
@@ -781,5 +811,26 @@
                 }
             ]
         });
+
+        function loginRedirect() {
+            const path = window.location.pathname.toLowerCase(); // Lấy đường dẫn hiện tại và chuyển thành chữ thường
+            const query = window.location.search; // Lấy query string (các tham số trong URL)
+            let returnUrl = '';
+
+            // Kiểm tra nếu đường dẫn bắt đầu bằng "/home/detail"
+            if (path.startsWith('/home/detail')) {
+                returnUrl = path + query; // Nếu đúng, gán returnUrl bằng đường dẫn + query string
+            }
+
+            console.log(returnUrl);
+
+            if (returnUrl) {
+                // Chuyển hướng đến trang đăng nhập với returnUrl
+                window.location.href = '/account/login?returnUrl=' + encodeURIComponent(returnUrl);
+            } else {
+                // Nếu không phải là trang chi tiết, chuyển hướng đến trang đăng nhập mà không có returnUrl
+                window.location.href = '/account/login';
+            }
+        }
     </script>
 </body>

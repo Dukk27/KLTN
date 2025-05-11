@@ -184,7 +184,6 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
         }
         
-
         const appointmentData = { HouseId: houseId, AppointmentDate: dateTime };
 
         try {

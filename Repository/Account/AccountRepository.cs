@@ -65,12 +65,6 @@ namespace KLTN.Repositories
             return await _context.Accounts.FindAsync(id);
         }
 
-        // public async Task UpdateAccountAsync(Account account)
-        // {
-        //     _context.Accounts.Update(account);
-        //     await _context.SaveChangesAsync();
-        // }
-
         public async Task UpdateAccountAsync(Account account)
         {
             var existingAccount = await _context.Accounts.FindAsync(account.IdUser);

@@ -49,75 +49,12 @@
                             </ul>
                         </div>
                     </td>
-                    @* <td>
-                        <button class="btn btn-danger btn-sm delete-chat" data-conversation="@chat.ConversationId">
-                            Xóa hội thoại
-                        </button>
-                    </td> *@
                 </tr>
             }
         </tbody>
     </table>
 
     <script>
-        document.addEventListener("click", function (event) {
-            if (event.target.classList.contains("delete-chat")) {
-                let button = event.target;
-                let conversationId = button.getAttribute("data-conversation");
-
-                iziToast.question({
-                    class: "iziToast-custom",
-                    timeout: 20000,
-                    close: false,
-                    overlay: true,
-                    displayMode: "once",
-                    id: "question",
-                    title: "Xác nhận",
-                    message: "Bạn có chắc muốn xóa cuộc hội thoại này?",
-                    position: "center",
-                    icon: "fa fa-question-circle",
-                    buttons: [
-                        ["<button><b>Đồng ý</b></button>", function (instance, toast) {
-                            fetch("/Admin/DeleteChat", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                                body: new URLSearchParams({ conversationId: conversationId })
-                            })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        iziToast.success({
-                                            title: "Thành công",
-                                            message: "Hội thoại đã được xóa!",
-                                            position: "topRight",
-                                            timeout: 1000
-                                        });
-
-                                        let row = button.closest("tr");
-                                        if (row) {
-                                            row.style.transition = "opacity 0.5s";
-                                            row.style.opacity = "0";
-                                            setTimeout(() => row.remove(), 500);
-                                        }
-                                    } else {
-                                        iziToast.error({
-                                            title: "Lỗi",
-                                            message: data.message,
-                                            position: "topRight"
-                                        });
-                                    }
-                                });
-
-                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                        }, true],
-
-                        ["<button>Hủy</button>", function (instance, toast) {
-                            instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                        }]
-                    ]
-                });
-            }
-        });
         // Tìm kiếm 
         $("#searchInput").on("keyup", function () {
             const value = $(this).val().toLowerCase();

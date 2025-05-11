@@ -89,8 +89,21 @@
                         data-status="@(account.IsLocked ? "bị khoá" : "hoạt động")">
                         <td>@account.IdUser</td>
                         <td>@account.UserName</td>
-                        <td>@account.PhoneNumber</td>
-                        <td>@account.Email</td>
+                        <td>
+                            @{
+                                var phone = account.PhoneNumber;
+                                var maskedPhone = phone.Substring(0, 6) + "****";
+                            }
+                            @maskedPhone
+                        </td>
+                        <td>
+                            @{
+                                var email = account.Email;
+                                var atIndex = email.IndexOf('@');
+                                var maskedEmail = email.Substring(0, atIndex - 4) + "****" + email.Substring(atIndex);
+                            }
+                            @maskedEmail
+                        </td>
                         <td>
                             @switch (account.Role)
                             {
@@ -116,11 +129,6 @@
                             }
                         </td>
                         <td>
-                            @* <a href="@Url.Action("Details", "Admin", new { id = account.IdUser })" class="btn btn-sm btn-primary"
-                                title="Xem chi tiết tài khoản">
-                                <i class="fas fa-eye"></i>
-                            </a> *@
-
                             @if (account.IsLocked)
                             {
                                 <button class="btn btn-sm btn-success unlock-account" data-id="@account.IdUser"
@@ -134,11 +142,6 @@
                                     <i class="fas fa-lock"></i>
                                 </button>
                             }
-                            
-                            @* <button class="btn btn-sm btn-danger delete-account" data-id="@account.IdUser" title="Xoá tài khoản">
-                                <i class="fas fa-trash-alt"></i>
-                            </button> *@
-
                         </td>
                     </tr>
                 }

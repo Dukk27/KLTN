@@ -11,11 +11,11 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Lịch Hẹn Của Tôi</li>
+                <li class="breadcrumb-item active" aria-current="page">Lịch hẹn tôi đã đặt</li>
             </ol>
         </nav>
 
-        <h2>Lịch Hẹn Tôi Đã Đặt</h2>
+        <h2>Lịch hẹn tôi đã đặt</h2>
         
         <div class="container">
             <form id="searchFilterForm" class="row g-3 align-items-center mb-3">
@@ -81,7 +81,7 @@
         else
         {
             <div class="table-responsive">
-                <table class="table table-bordered table-hover text-center align-middle">
+                <table class="table table-bordered table-hover align-middle">
                     <thead class="table-secondary">
                         <tr>
                             <th>Tên bài đăng</th>
@@ -95,6 +95,8 @@
                     <tbody>
                         @foreach (var appt in Model)
                         {
+                            var isExpired = appt.AppointmentDate < DateTime.Now && appt.Status == AppointmentStatus.Pending;
+
                             var currentUserId = Context.Session.GetInt32("UserId") ?? 0;
                             var otherUserId = appt.House?.IdUserNavigation?.IdUser ?? 0;
                             var conversationId = currentUserId < otherUserId
@@ -109,17 +111,17 @@
                                 </td>
                                 <td>@appt.House?.IdUserNavigation?.UserName</td>
                                 <td>
-                                    <div>@appt.House?.IdUserNavigation?.PhoneNumber</div>
-                                    <div>@appt.House?.IdUserNavigation?.Email</div>
+                                    <div><i class="fas fa-phone me-1"></i>@appt.House?.IdUserNavigation?.PhoneNumber</div>
+                                    <div><i class="fas fa-envelope me-1"></i>@appt.House?.IdUserNavigation?.Email</div>
                                 </td>
                                 <td>@appt.AppointmentDate.ToString("dd/MM/yyyy HH:mm")</td>
                                 <td>
-                                    <span class="badge @(appt.Status == AppointmentStatus.Pending ? "bg-warning text-dark" : appt.Status == AppointmentStatus.Confirmed ? "bg-success" : "bg-danger")">
-                                        @(appt.Status == AppointmentStatus.Pending ? "Chờ xác nhận" : appt.Status == AppointmentStatus.Confirmed ? "Đã được xác nhận" : "Đã bị hủy")
+                                    <span class="badge @(isExpired ? "bg-secondary" : (appt.Status == AppointmentStatus.Pending ? "bg-warning text-dark" : appt.Status == AppointmentStatus.Confirmed ? "bg-success" : "bg-danger"))">
+                                        @(isExpired ? "Chưa được xác nhận (quá hạn)" : appt.Status == AppointmentStatus.Pending ? "Chờ xác nhận" : appt.Status == AppointmentStatus.Confirmed ? "Đã được xác nhận" : "Đã bị hủy")
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="@Url.Action("ChatList", "Chat", new { conversationId = conversationId })" class="btn btn-sm btn-primary mb-1">
+                                    <a href="@Url.Action("ChatList", "Chat", new { conversationId = conversationId })" class="btn btn-sm btn-primary mb-1" style="max-width: 200px">
                                         <i class="fas fa-comments"></i> Nhắn tin với chủ trọ
                                     </a>
                                 </td>

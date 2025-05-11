@@ -26,7 +26,6 @@ builder
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDistributedMemoryCache();
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession(options =>
 {

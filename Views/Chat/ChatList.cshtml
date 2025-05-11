@@ -16,14 +16,14 @@
             <li class="breadcrumb-item">
                 @if (User.IsInRole("Admin"))
                 {
-                    <a href="@Url.Action("Index", "Admin")">Trang Chủ</a>
+                    <a href="@Url.Action("Index", "Admin")">Trang chủ</a>
                 }
                 else
                 {
-                    <a href="@Url.Action("Index", "Home")">Trang Chủ</a>
+                    <a href="@Url.Action("Index", "Home")">Trang chủ</a>
                 } 
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Tin Nhắn</li>
+            <li class="breadcrumb-item active" aria-current="page">Tin nhắn</li>
         </ol>
     </nav>
 

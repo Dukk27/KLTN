@@ -72,7 +72,8 @@ namespace KLTN.Controllers
             ViewBag.SelectedAmenities = amenities;
             ViewBag.MinArea = minArea;
             ViewBag.MaxArea = maxArea;
-            // Truy vấn tìm kiếm theo địa chỉ
+
+            // Truy vấn tìm kiếm
             var houses = await _houseRepository.GetFilteredHousesAsync(
                 searchString,
                 priceRange,
@@ -248,37 +249,6 @@ namespace KLTN.Controllers
             ViewBag.FilterDescription = filterDescription;
 
             return View(viewModel);
-        }
-
-        public async Task<IActionResult> HousesByType(int id)
-        {
-            var houses = await _houseRepository.GetHousesByTypeAsync(id);
-
-            if (houses == null || !houses.Any())
-            {
-                // Trả về thông báo cho người dùng khi không có nhà trọ trong danh mục
-                TempData["Message"] =
-                    "Không có nhà trọ nào thuộc danh mục này. Vui lòng chọn danh mục khác.";
-            }
-            var selectedHouseType = await _context.HouseType.FirstOrDefaultAsync(ht =>
-                ht.IdHouseType == id
-            );
-            if (selectedHouseType == null)
-            {
-                return NotFound();
-            }
-            var houseTypes = await _houseTypeRepository.GetAllHouseTypes();
-
-            var viewModel = new HomeViewModel
-            {
-                Houses = houses,
-                HouseTypes = houseTypes,
-                SelectedHouseType = selectedHouseType,
-                IsChuTro = User.IsInRole("ChuTro"),
-                IsAdmin = User.IsInRole("Admin"),
-            };
-
-            return View("HousesListPartial", viewModel);
         }
 
         public async Task<IActionResult> Detail(int id)

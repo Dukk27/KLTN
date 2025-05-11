@@ -11,11 +11,11 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Danh Sách Lịch Hẹn</li>
+            <li class="breadcrumb-item active" aria-current="page">Lịch hẹn</li>
         </ol>
     </nav>
  
-    <h2>Danh Sách Lịch Hẹn</h2>
+    <h2>Danh sách lịch hẹn</h2>
 
     <div class="container">
         <form id="searchFilterForm" class="row g-3 align-items-center mb-3">
@@ -109,7 +109,7 @@
     else
     {
         <div class="table-responsive">
-            <table class="table table-bordered table-hover text-center align-middle">
+            <table class="table table-bordered table-hover align-middle">
                 <thead class="table-secondary">
                     <tr>
                         <th>Bài đăng</th>
@@ -123,6 +123,9 @@
                 <tbody>
                     @foreach (var appt in Model)
                     {
+                        
+                        var isExpired = appt.AppointmentDate < DateTime.Now && appt.Status == AppointmentStatus.Pending;
+
                         var currentUserId = Context.Session.GetInt32("UserId") ?? 0;
                         var otherUserId = appt.User?.IdUser ?? 0;
                         var conversationId = currentUserId < otherUserId
@@ -137,32 +140,36 @@
                             </td>
                             <td>@appt.User?.UserName</td>
                             <td>
-                                <div>@appt.User?.PhoneNumber</div>
-                                <div>@appt.User?.Email</div>
+                                <div><i class="fas fa-phone me-1"></i>@appt.User?.PhoneNumber</div>
+                                <div><i class="fas fa-envelope me-1"></i>@appt.User?.Email</div>
                             </td>
                             <td>@appt.AppointmentDate.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>
-                                <span class="badge @(appt.Status == AppointmentStatus.Pending ? "bg-warning text-dark" : appt.Status == AppointmentStatus.Confirmed ? "bg-success" : "bg-danger")">
-                                    @(appt.Status == AppointmentStatus.Pending ? "Cần xác nhận" : appt.Status == AppointmentStatus.Confirmed ? "Đã xác nhận" : "Đã hủy")
+                                <span class="badge @(isExpired ? "bg-secondary" : (appt.Status == AppointmentStatus.Pending ? "bg-warning text-dark" : appt.Status == AppointmentStatus.Confirmed ? "bg-success" : "bg-danger"))">
+                                    @(isExpired ? "Chưa xác nhận (quá hạn)" : appt.Status == AppointmentStatus.Pending ? "Cần xác nhận" : appt.Status == AppointmentStatus.Confirmed ? "Đã xác nhận" : "Đã hủy")
                                 </span>
                             </td>
                             <td class="action-buttons">
-                                <a href="@Url.Action("ChatList", "Chat", new { conversationId = conversationId })"
-                                class="btn btn-sm btn-primary mb-1">
-                                    <i class="fas fa-comments"></i> Nhắn tin với @appt.User?.UserName
-                                </a>
+                                <div class="d-flex flex-column" style="max-width: 200px">
+                                    <a href="@Url.Action("ChatList", "Chat", new { conversationId = conversationId })"
+                                    class="btn btn-sm btn-primary mb-1 btn-nhantin">
+                                        <i class="fas fa-comments"></i> Nhắn tin với @appt.User?.UserName
+                                    </a>
 
-                                @if (appt.Status == AppointmentStatus.Pending)
-                                {
-                                    <div class="button-group">
-                                        <button class="btn btn-sm btn-success confirm-btn" data-id="@appt.AppointmentId">Xác nhận</button>
-                                        <button class="btn btn-sm btn-danger cancel-btn" data-id="@appt.AppointmentId">Hủy</button>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="text-muted" style="font-style: italic">Không khả dụng</div>
-                                }
+                                    @if (appt.Status == AppointmentStatus.Pending && !isExpired)
+                                    {
+                                        <div class="d-flex justify-content-between button-group ">
+                                            <button class="btn btn-sm btn-success flex-fill confirm-btn" data-id="@appt.AppointmentId">Xác nhận</button>
+                                            <button class="btn btn-sm btn-danger flex-fill cancel-btn" data-id="@appt.AppointmentId">Hủy</button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-muted" style="font-style: italic; text-align: center">
+                                            @(isExpired ? "Đã hết hạn" : "Không khả dụng")
+                                        </div>
+                                    }
+                                </div>
                             </td>
                         </tr>
                     }

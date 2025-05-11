@@ -133,24 +133,6 @@
     }
 
     <div class="layout-wrapper">
-        @* @if (ViewData["ShowSidebar"] as bool? == true)
-        {
-            <aside class="sidebar">
-                <ul class="sidebar-menu">
-                    <p style="color: #1168AA; font-weight: bold; text-align:center; font-size: 22px">@User.Identity.Name</p>
-                    <a href="@Url.Action("Edit", "Account")"><i class="fas fa-user"></i> Thông tin cá nhân</a>
-
-                    @if (User.IsInRole("ChuTro"))
-                    {
-                        <li><a href="@Url.Action("ListHouseRoom", "QuanLi")"><i class="fas fa-file-alt"></i> Quản lý bài đăng</a></li>
-                        <li><a href="@Url.Action("Index", "Appointment")"><i class="fas fa-calendar"></i> Lịch hẹn</a></li>
-                    }
-
-                    <li><a href="@Url.Action("ChatList", "Chat")"><i class="fas fa-comments"></i> Tin nhắn</a></li>
-                </ul>
-            </aside>
-        } *@
-
         <main class="main-content">
             @RenderBody()
         </main>
@@ -214,7 +196,7 @@
 
                                     <a asp-action="ListHouseRoom" asp-controller="QuanLi" id="managePosts" asp-route-userId="@ViewBag.userId"
                                         class="btn ml-2 btn-responsive @(currentController == "quanli" && currentAction == "listhouseroom" ? "active" : "")" style="height: 45px; margin-top: 4px">
-                                        <i class="fas fa-file-alt"></i> Quản lý tin
+                                        <i class="fas fa-file-alt"></i> Quản lý bài đăng
                                     </a>
 
                                     <button id="showCreateHouseForm" class="btn-warning ml-2 btn-responsive" style="height: 45px">
@@ -306,9 +288,8 @@
                     <!-- Container chứa cả ô tìm kiếm và dropdown -->
                     <div class="position-absolute d-flex gap-2 align-items-center" style="top: 80px; left: 30px; z-index: 1001;">
                         <div id="searchContainer" style="min-width: 350px; border-radius: 6px; border: 1px solid black;">
-                            <input id="searchAddressInput" type="text" class="form-control" placeholder="Nhập địa chỉ nhà trọ..." />
+                            <input id="searchAddressInput" type="text" class="form-control" placeholder="Nhập vị trí cần tìm..." />
                         </div>
-
                         <div>
                             <select id="radiusSelector" class="form-select">
                                 <option value="1">1 km</option>

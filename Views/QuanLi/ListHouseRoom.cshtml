@@ -8,13 +8,13 @@
 <body>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Danh Sách Bài Đăng Của @ViewBag.UserName</li>
+            <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Quản lý bài đăng</li>
         </ol>
     </nav> 
 
     <div class="container user-houses-page"> 
-        <h2>Danh Sách Bài Đăng Của Người Dùng @ViewBag.UserName</h2>
+        <h2>Danh sách bài đăng của tôi</h2>
 
         <form id="filterForm" class="row g-3 align-items-end mb-3">
             <div class="col-12 col-md-4 col-lg-4">
@@ -59,7 +59,7 @@
             <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle" id="housesTable">
                     <thead class="table-secondary">
-                        <tr class="text-center">
+                        <tr>
                             <th>Tiêu đề bài đăng</th>
                             <th>Địa Chỉ</th>
                             <th>Giá</th>
@@ -73,7 +73,7 @@
                             <th>Hành Động</th>
                         </tr>
                     </thead>
-                    <tbody class="text-center">
+                    <tbody>
                         @foreach (var house in Model.Houses)
                         {
                             <tr class="house-row"

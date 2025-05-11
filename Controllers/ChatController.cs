@@ -270,57 +270,6 @@ namespace KLTN.Controllers
             return View(conversations);
         }
 
-        [HttpPost]
-        public IActionResult DeleteConversation([FromForm] string conversationId)
-        {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return Json(new { success = false, message = "Bạn chưa đăng nhập!" });
-            }
-
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null)
-            {
-                return Json(new { success = false, message = "Không tìm thấy tài khoản của bạn!" });
-            }
-
-            if (string.IsNullOrEmpty(conversationId) || !conversationId.Contains("-"))
-            {
-                return Json(new { success = false, message = "ConversationId không hợp lệ!" });
-            }
-
-            var ids = conversationId.Split('-');
-            if (
-                ids.Length != 2
-                || !int.TryParse(ids[0], out int id1)
-                || !int.TryParse(ids[1], out int id2)
-            )
-            {
-                return Json(new { success = false, message = "Lỗi khi phân tích ConversationId!" });
-            }
-
-            int receiverId = (userId.Value == id1) ? id2 : id1;
-
-            // Lấy tất cả tin nhắn trong cuộc hội thoại
-            var messages = _context
-                .Messages.Where(m =>
-                    (m.SenderId == userId && m.ReceiverId == receiverId)
-                    || (m.SenderId == receiverId && m.ReceiverId == userId)
-                )
-                .ToList();
-
-            if (!messages.Any())
-            {
-                return Json(new { success = false, message = "Không có tin nhắn để xóa!" });
-            }
-
-            // Xóa tin nhắn khỏi database
-            _context.Messages.RemoveRange(messages);
-            _context.SaveChanges();
-
-            return Json(new { success = true, message = "Đã xóa hội thoại thành công!" });
-        }
-
         // API endpoint để lấy số tin nhắn chưa đọc
         public IActionResult GetUnreadMessagesCount()
         {

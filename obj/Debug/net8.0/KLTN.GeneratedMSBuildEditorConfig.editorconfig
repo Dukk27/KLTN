@@ -34,14 +34,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN/KLTN/Views/Account/Manage.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxNYW5hZ2UuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/KLTN/KLTN/Views/Account/Profile.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxQcm9maWxlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/KLTN/KLTN/Views/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -52,14 +44,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/KLTN/KLTN/Views/Account/VerifyOtp.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxWZXJpZnlPdHAuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/KLTN/KLTN/Views/Admin/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/KLTN/KLTN/Views/Admin/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/KLTN/KLTN/Views/Admin/Index.cshtml]
@@ -118,20 +102,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxDaGF0TGlzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/KLTN/KLTN/Views/Chat/_ChatList.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxfQ2hhdExpc3QuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/KLTN/KLTN/Views/Home/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFcnJvci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/KLTN/KLTN/Views/Home/HouseDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIb3VzZURldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/KLTN/KLTN/Views/Home/HousesListPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIb3VzZXNMaXN0UGFydGlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/KLTN/KLTN/Views/Home/Index.cshtml]

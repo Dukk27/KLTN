@@ -41,8 +41,24 @@ namespace KLTN.Controllers
             appointment.UserId = userId.Value;
             appointment.Status = AppointmentStatus.Pending;
 
+            // Kiểm tra lịch hẹn phải ít nhất sau 1 tiếng so với thời điểm hiện tại
+            if (appointment.AppointmentDate < DateTime.Now.AddHours(1))
+            {
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Thời gian hẹn gặp phải cách thời điểm hiện tại ít nhất 1 tiếng.",
+                    }
+                );
+            }
+
             // Gửi thông báo cho chủ nhà
-            var house = _context.Houses.Find(appointment.HouseId);
+            var house = _context
+                .Houses.Include(h => h.IdUserNavigation) // để lấy thông tin email chủ nhà
+                .Include(h => h.HouseDetails) // để lấy địa chỉ
+                .FirstOrDefault(h => h.IdHouse == appointment.HouseId);
+
             if (house != null)
             {
                 var notification = new Notification
@@ -61,6 +77,25 @@ namespace KLTN.Controllers
             _context.Appointments.Add(appointment);
             _context.SaveChanges();
 
+            // Gửi email cho chủ nhà
+            if (house?.IdUserNavigation != null)
+            {
+                string toEmail = house.IdUserNavigation.Email;
+                string subject = "Bạn có một lịch hẹn mới!";
+                string body =
+                    $@"
+                    <p>Xin chào <b>{house.IdUserNavigation.UserName}</b>,</p>
+                    <p>Người dùng <b>{user.UserName}</b> vừa đặt lịch hẹn xem nhà.</p>
+                    <p><b>Thời gian:</b> {appointment.AppointmentDate:HH:mm dd/MM/yyyy}</p>
+                    <p><b>Bài đăng:</b> {house.NameHouse}</p>
+                    <p><b>Địa chỉ:</b> {house .HouseDetails.FirstOrDefault() ?.Address ?? "Không có địa chỉ"}</p>
+                    <p>Vui lòng đăng nhập hệ thống để xác nhận hoặc từ chối lịch hẹn.</p>
+                    <br>
+                    <p>Trân trọng,<br>Hệ Thống Đặt Lịch Hẹn</p>";
+
+                _emailService.SendEmailAsync("Appointment", toEmail, subject, body);
+            }
+
             return Json(
                 new
                 {
@@ -69,22 +104,6 @@ namespace KLTN.Controllers
                 }
             );
         }
-
-        // // Hiển thị danh sách lịch hẹn
-        // [Authorize]
-        // public IActionResult Index()
-        // {
-        //     var userId = HttpContext.Session.GetInt32("UserId");
-
-        //     var appointments = _context
-        //         .Appointments.Include(a => a.User)
-        //         .Include(a => a.House)
-        //         .Where(a => a.House.IdUser == userId && a.AppointmentDate >= DateTime.Now) // Lọc theo chủ bài đăng
-        //         .OrderBy(a => a.AppointmentDate)
-        //         .ToList();
-
-        //     return View(appointments);
-        // }
 
         [Authorize]
         public IActionResult Index(string filter = "valid")
@@ -106,7 +125,10 @@ namespace KLTN.Controllers
                 query = query.Where(a => a.AppointmentDate >= now);
             }
 
-            var appointments = query.OrderBy(a => a.AppointmentDate).ToList();
+            var appointments = query
+                .OrderBy(a => a.Status == AppointmentStatus.Pending ? 0 : 1) // Pending lên đầu
+                .ThenBy(a => a.AppointmentDate)
+                .ToList();
 
             ViewBag.Filter = filter;
             return View(appointments);
@@ -159,7 +181,7 @@ namespace KLTN.Controllers
                 string body =
                     $@"
                     <p>Xin chào <b>{appointment.User.UserName}</b>,</p>
-                    <p>Lịch hẹn xem nhà của bạn vào ngày <b>{appointment.AppointmentDate:HH:mm dd/MM/yyyy}</b> 
+                    <p>Lịch hẹn xem nhà của bạn vào <b>{appointment.AppointmentDate:HH:mm dd/MM/yyyy}</b> 
                     tại bài đăng có tiêu đề: <b>{appointment .House ?.NameHouse}</b> đã được xác nhận.</p>
                     <p><b>Địa chỉ:</b> {appointment .House?.HouseDetails.FirstOrDefault() ?.Address ?? "Không có địa chỉ"}</p>
                     <p>Vui lòng đến đúng giờ!</p>
@@ -218,13 +240,13 @@ namespace KLTN.Controllers
             if (appointment.User != null)
             {
                 string toEmail = appointment.User.Email;
-                string subject = "Lịch hẹn của bạn đã bị hủy!";
+                string subject = "Lịch hẹn của bạn đã bị từ chối!";
                 string body =
                     $@"
                     <p>Xin chào <b>{appointment.User.UserName}</b>,</p>
-                    <p>Lịch hẹn xem nhà của bạn vào ngày <b>{appointment.AppointmentDate:HH:mm dd/MM/yyyy}</b> 
-                    tại bài đăng có tiêu đề: <b>{appointment .House ?.NameHouse}</b> đã bị hủy bởi chủ nhà.</p>
-                    <p>Vui lòng kiểm tra lại các lịch hẹn của bạn trên hệ thống.</p>
+                    <p>Lịch hẹn xem nhà của bạn vào <b>{appointment.AppointmentDate:HH:mm dd/MM/yyyy}</b> 
+                    tại bài đăng có tiêu đề: <b>{appointment .House ?.NameHouse}</b> đã bị từ chối.</p>
+                    <p>Vui lòng liên hệ với chủ nhà để sắp xếp lịch hẹn khác.</p>
                     <br>
                     <p>Trân trọng,<br>Hệ Thống Đặt Lịch Hẹn</p>";
 
@@ -232,47 +254,8 @@ namespace KLTN.Controllers
             }
 
             return Json(
-                new { success = true, message = "Lịch hẹn đã bị hủy và thông báo đã được gửi!" }
+                new { success = true, message = "Lịch hẹn đã bị từ chối và thông báo đã được gửi!" }
             );
-        }
-
-        [HttpPost]
-        [Authorize]
-        public IActionResult DeleteSelected([FromBody] List<int> appointmentIds)
-        {
-            if (appointmentIds == null || !appointmentIds.Any())
-            {
-                return Json(new { success = false, message = "Không có lịch hẹn nào được chọn." });
-            }
-
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null)
-            {
-                return Json(
-                    new
-                    {
-                        success = false,
-                        message = "Bạn cần đăng nhập để thực hiện thao tác này.",
-                    }
-                );
-            }
-
-            var appointmentsToDelete = _context
-                .Appointments.Include(a => a.House)
-                .Where(a => a.House.IdUser == userId && appointmentIds.Contains(a.AppointmentId))
-                .ToList();
-
-            if (!appointmentsToDelete.Any())
-            {
-                return Json(
-                    new { success = false, message = "Không tìm thấy lịch hẹn hợp lệ để xóa." }
-                );
-            }
-
-            _context.Appointments.RemoveRange(appointmentsToDelete);
-            _context.SaveChanges();
-
-            return Json(new { success = true, message = "Đã xóa các lịch hẹn đã chọn!" });
         }
 
         // Hiển thị lịch hẹn của người dùng đã đặt

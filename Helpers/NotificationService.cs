@@ -63,7 +63,7 @@ namespace KLTN.Helpers
 
                     _context.Notifications.Add(notification);
 
-                    if (house.Status != HouseStatus.Expired)
+                    if (house.Status != HouseStatus.Expired && house.Status != HouseStatus.Pending)
                     {
                         house.Status = HouseStatus.Expired;
                     }
